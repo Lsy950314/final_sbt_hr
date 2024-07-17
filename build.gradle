@@ -23,9 +23,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc11' // 확인 필요
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.oracle.database.jdbc:ojdbc8:19.8.0.0'
+    implementation 'com.oracle.database.security:oraclepki:19.8.0.0'
+    implementation 'com.oracle.database.security:osdt_core:19.8.0.0'
+    implementation 'com.oracle.database.security:osdt_cert:19.8.0.0'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 test {
