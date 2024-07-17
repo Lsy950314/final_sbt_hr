@@ -8,6 +8,7 @@ class SbtFinalHrApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
