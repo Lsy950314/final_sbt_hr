@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees List</title>
+</head>
+<body>
+<div th:each="employee : ${Employees}">
+    <span th:text="${employee.employeeID}"></span>
+    <span th:text="${employee.name}"></span>
+    <span th:text="${employee.address}"></span>
+    <span th:text="${#dates.format(employee.lastProjectEndDate, 'yyyy-MM-dd')}"></span>
+    <span th:text="${#dates.format(employee.currentProjectEndDate, 'yyyy-MM-dd')}"></span>
+</div>
+</body>
+</html>
