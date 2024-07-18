@@ -1,9 +1,6 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Skills {
 
-    private String skillName;
-
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private long skillId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skill_seq")
+    @SequenceGenerator(name = "skill_seq", sequenceName = "skill_sequence", allocationSize = 1)
+    private Long skillid; // 변경된 필드명
+
+    private String skillname; // 변경된 필드명
 }

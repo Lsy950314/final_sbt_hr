@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Skills List</title>
+    <style>
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            font-size: 18px;
+        }
+        .header, .row {
+            display: flex;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .header {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .cell {
+            flex: 1;
+        }
+    </style>
+    <script>
+        function updateSkill(id) {
+
+        }
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="cell">Skill ID</div>
+        <div class="cell">Skill Name</div>
+    </div>
+    <div th:each="skill : ${skills}" class="row">
+        <div class="cell" th:text="${skill.skillid}"></div>
+        <div class="cell" th:text="${skill.skillname}"></div>
+        <button th:onclick="updateSkill(${skill.skillid})"> 수정하기 </button>
+    </div>
+</div>
+</body>
+</html>

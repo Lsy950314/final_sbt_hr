@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert Skill</title>
+</head>
+<body>
+<form th:action="@{/insertSkill}" th:object="${skillRequest}" method="post">
+    <input th:field="*{skillname}" type="text" placeholder="Enter skill name">
+    <button type="submit">등록하기</button>
+</form>
+</body>
+</html>
