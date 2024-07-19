@@ -18,4 +18,17 @@ public class EmployeesPracticeRequest {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
+
+//    public Employees_practice toEntity() {
+//        Employees_practice employees_practice = new Employees_practice();
+//        employees_practice.setEmployeeID(employeeID);
+//        employees_practice.setName(name);
+//        employees_practice.setAddress(address);
+//        employees_practice.setLastProjectEndDate(lastProjectEndDate);
+//        employees_practice.setCurrentProjectEndDate(currentProjectEndDate);
+//        return employees_practice;
+//    }
+
+
+
 }
