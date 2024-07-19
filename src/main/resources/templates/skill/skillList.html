@@ -3,31 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Skills List</title>
-    <style>
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            font-size: 18px;
-        }
-        .header, .row {
-            display: flex;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-        .header {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        .cell {
-            flex: 1;
-        }
-    </style>
-    <script>
-        function updateSkill(id) {
-
-        }
-
-    </script>
 </head>
 <body>
 <div class="container">
@@ -38,8 +13,34 @@
     <div th:each="skill : ${skills}" class="row">
         <div class="cell" th:text="${skill.skillid}"></div>
         <div class="cell" th:text="${skill.skillname}"></div>
-        <button th:onclick="updateSkill(${skill.skillid})"> 수정하기 </button>
+        <button th:onclick="'updateSkill('+${skill.skillid}+')'"> 수정하기 </button>
     </div>
 </div>
 </body>
+<script>
+    function updateSkill(pk) {
+        location.href="/skillUpdate?id="+pk;
+    }
+
+</script>
+<style>
+    .container {
+        width: 50%;
+        margin: 50px auto;
+        font-size: 18px;
+    }
+    .header, .row {
+        display: flex;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+    .header {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    .cell {
+        flex: 1;
+    }
+</style>
+
 </html>

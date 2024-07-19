@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SkillsRequest {
-    private String skillname; // 변경된 필드명
+    private String skill_name; // 변경된 필드명
 
     public Skills toEntity() {
         Skills skills = new Skills();
-        skills.setSkillname(skillname);
+        skills.setSkill_name(skill_name);
         return skills;
     }
 }

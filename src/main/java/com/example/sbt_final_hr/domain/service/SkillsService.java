@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SkillsService {
@@ -13,6 +14,10 @@ public class SkillsService {
 
     public SkillsService(SkillsRepository skillsRepository) {
         this.skillsRepository = skillsRepository;
+    }
+
+    public Skills getSkillsById(int id) {
+        return skillsRepository.getSkillsById((long) id);
     }
 
     public List<Skills> getAllSkills(){
