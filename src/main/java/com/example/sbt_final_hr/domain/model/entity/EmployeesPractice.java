@@ -32,4 +32,10 @@ public class EmployeesPractice {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
+
+
+//    @Override
+//    public String toString() {
+//        return "Employees_practice [EmployeeID=" + employeeID + ", Name=" + name + ", Address=" + address + ", lastProjectEndDate=" + lastProjectEndDate + ", currentProjectEndDate=" + currentProjectEndDate + "]";
+//    }
 }
