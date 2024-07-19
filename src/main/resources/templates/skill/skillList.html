@@ -10,37 +10,70 @@
         <div class="cell">Skill ID</div>
         <div class="cell">Skill Name</div>
     </div>
-    <div th:each="skill : ${skills}" class="row">
-        <div class="cell" th:text="${skill.skillid}"></div>
-        <div class="cell" th:text="${skill.skillname}"></div>
-        <button th:onclick="'updateSkill('+${skill.skillid}+')'"> 수정하기 </button>
+    <div th:each="skill : ${skills}" class="row" th:id="'skill-' + ${skill.skillId}">
+        <div class="cell" th:text="${skill.skillId}"></div>
+        <div class="cell" th:text="${skill.skillName}"></div>
+        <button th:onclick="'updateSkill(' + ${skill.skillId} + ')'">수정하기</button>
+        <button th:onclick="'deleteSkill(' + ${skill.skillId} + ')'">삭제하기</button>
     </div>
+    <div> <button onclick="insertSkill()">등록하기</button></div>
 </div>
-</body>
+
 <script>
-    function updateSkill(pk) {
-        location.href="/skillUpdate?id="+pk;
+    function insertSkill(){
+        location.href="/insertSkill";
     }
 
+    function updateSkill(pk) {
+        location.href = "/skillUpdate?id=" + pk;
+    }
+
+    function deleteSkill(pk) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            fetch('/skillDelete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: pk })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Skill deleted successfully");
+                        document.getElementById('skill-' + pk).remove(); // 페이지 새로고침 대신 DOM 요소 제거
+                    } else {
+                        alert("Error deleting skill");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Error deleting skill");
+                });
+        }
+    }
 </script>
+
 <style>
     .container {
         width: 50%;
         margin: 50px auto;
         font-size: 18px;
     }
+
     .header, .row {
         display: flex;
         padding: 12px;
         border-bottom: 1px solid #ddd;
     }
+
     .header {
         background-color: #f2f2f2;
         font-weight: bold;
     }
+
     .cell {
         flex: 1;
     }
 </style>
-
+</body>
 </html>

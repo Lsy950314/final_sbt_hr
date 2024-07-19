@@ -5,10 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-<form th:object="${skillsRequest}" th:action="/skillUpdate" method="post">
-    <div>id : <input th:field="${skills.id}" style="display: none"> <span th:text="${skills.id}"> </span></div>
-    <div>skillName<input th:field="${skills.skillname}"> :</div>
+<form th:object="${skillsRequest}" th:action="@{/skillUpdate}" method="post">
+    <div>id : <input th:field="*{skillId}" type="hidden"> <span th:text="*{skillId}"> </span></div>
+    <div>skillName<input th:field="*{skillName}"></div>
     <button> 수정하기 </button>
 </form>
+
+<form th:action="@{/skillUpdate}" method="post">
+    <div>id : <input type="hidden" th:name="skillId" th:id="skillId" th:value="${skillsRequest.skillId}"> <span th:text="${skillsRequest.skillId}"> </span></div>
+    <div>skillName: <input th:name="skillName" th:id="skillName" th:value="${skillsRequest.skillName}"></div>
+    <button type="submit"> 수정하기 </button>
+</form>
+
 </body>
 </html>
