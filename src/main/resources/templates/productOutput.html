@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="product : ${products}">
+
+    <span th:text="${product.id}"></span>
+    <span th:text="${product.name}"></span>
+    <span th:text="${product.price}"></span>
+    <button th:onclick="'update('+${product.id}+')'">과자수정</button>
+</div>
+<form th:object="${productRequest}" method="post">
+    id : <input th:field="*{id}"> <button>과자삭제</button>
+</form>
+<script>
+    function update(id) {
+
+        location.href = "/productUpdate?id=" +id;
+
+    }
+
+
+</script>
+</body>
+</html>

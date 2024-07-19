@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:object="${productRequest}" method="post" >
+
+    ID:<input th:field ="${product.id}" style="display: none"> <span th:text="${product.id}"></span> <br>
+    과자이름:<input th:field="${product.name}"><br>
+    과자가격:<input th:field="${product.price}"><br>
+    <button>과자수정</button>
+</form>
+</body>
+</html>
