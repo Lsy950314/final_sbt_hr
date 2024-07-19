@@ -3,14 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Employees List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-<div th:each="employee : ${Employees}">
-    <span th:text="${employee.employeeID}"></span>
-    <span th:text="${employee.name}"></span>
-    <span th:text="${employee.address}"></span>
-    <span th:text="${#dates.format(employee.lastProjectEndDate, 'yyyy-MM-dd')}"></span>
-    <span th:text="${#dates.format(employee.currentProjectEndDate, 'yyyy-MM-dd')}"></span>
-</div>
+<table>
+    <thead>
+    <tr>
+        <th>Employee ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Last Project End Date</th>
+        <th>Current Project End Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="employee : ${Employees}">
+        <td th:text="${employee.employeeID}"></td>
+        <td th:text="${employee.name}"></td>
+        <td th:text="${employee.address}"></td>
+        <td th:text="${#dates.format(employee.lastProjectEndDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#dates.format(employee.currentProjectEndDate, 'yyyy-MM-dd')}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

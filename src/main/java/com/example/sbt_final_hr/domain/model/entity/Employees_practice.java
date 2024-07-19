@@ -23,7 +23,9 @@ public class Employees_practice {
     private Long employeeID;
     private String name;
     private String address;
+    @Temporal(TemporalType.DATE)
     private Date lastProjectEndDate;
+    @Temporal(TemporalType.DATE)
     private Date currentProjectEndDate;
 
     @Override
