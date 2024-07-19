@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:object="${productRequest}" method="post" action="/createProduct">
+
+    과자이름:<input th:field="*{name}"><br>
+    과자가격:<input th:field="*{price}"><br>
+    <button>과자등록</button>
+</form>
+</body>
+</html>
