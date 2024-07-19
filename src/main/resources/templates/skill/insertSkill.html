@@ -6,7 +6,7 @@
 </head>
 <body>
 <form th:action="@{/insertSkill}" th:object="${skillRequest}" method="post">
-    <input th:field="*{skillname}" type="text" placeholder="Enter skill name">
+    <input th:field="*{skillName}" type="text" placeholder="Enter skill name">
     <button type="submit">등록하기</button>
 </form>
 </body>

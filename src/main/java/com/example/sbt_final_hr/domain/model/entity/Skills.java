@@ -16,7 +16,9 @@ public class Skills {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skill_seq")
     @SequenceGenerator(name = "skill_seq", sequenceName = "skill_sequence", allocationSize = 1)
-    private Long skill_id; // 변경된 필드명
+    @Column(name = "skill_id")
+    private Long skillId;
 
-    private String skill_name; // 변경된 필드명
-}
+    @Column(name = "skill_name")
+    private String skillName;
+    }
