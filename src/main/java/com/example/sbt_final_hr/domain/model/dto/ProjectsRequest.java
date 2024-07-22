@@ -4,25 +4,31 @@ import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 public class ProjectsRequest {
 
     private Long projectId;
     private String projectName;
     private String workLocation;
     private String clientCompany;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private int status = -1;
     private Double latitude;
     private Double longitude;
     private String contactPhone;
     private String contactName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
     private Long projectTypeId;
 
@@ -42,5 +48,21 @@ public class ProjectsRequest {
         project.setRegistrationDate(this.registrationDate);
         project.setProjectType(projectType);
         return project;
+    }
+
+    public void fromEntity(Projects project) {
+        this.projectId = project.getProjectId();
+        this.projectName = project.getProjectName();
+        this.workLocation = project.getWorkLocation();
+        this.clientCompany = project.getClientCompany();
+        this.startDate = project.getStartDate();
+        this.endDate = project.getEndDate();
+        this.status = project.getStatus();
+        this.latitude = project.getLatitude();
+        this.longitude = project.getLongitude();
+        this.contactPhone = project.getContactPhone();
+        this.contactName = project.getContactName();
+        this.registrationDate = project.getRegistrationDate();
+        this.projectTypeId = project.getProjectType().getProjectTypeId();
     }
 }

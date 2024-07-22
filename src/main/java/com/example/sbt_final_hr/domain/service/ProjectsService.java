@@ -34,4 +34,21 @@ public class ProjectsService {
         projectsRepository.save(project);
     }
 
+    public void updateProject(ProjectsRequest projectsRequest) {
+        ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
+                .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
+
+        // 기존 프로젝트를 찾고 등록일은 변경하지 않도록 설정
+        Projects existingProject = projectsRepository.findById(projectsRequest.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectsRequest.getProjectId()));
+
+        Projects project = projectsRequest.toEntity(projectType);
+        project.setRegistrationDate(existingProject.getRegistrationDate()); // 기존 등록일 유지
+        projectsRepository.save(project);
+    }
+
+    public Projects getProjectById(Long id) {
+           return projectsRepository.findById(id).orElseThrow();
+    }
+
 }

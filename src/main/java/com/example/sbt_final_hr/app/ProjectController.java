@@ -11,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @Controller
 public class ProjectController {
@@ -37,8 +40,27 @@ public class ProjectController {
     @PostMapping("/createProject")
     public String createProject(@ModelAttribute ProjectsRequest projectsRequest) {
         projectsService.createProject(projectsRequest);
-        return "project/insertProject";
+        return "redirect:/createProject";
+    }
 
+    @GetMapping("/updateProject")
+    public String updateProject(@RequestParam Map<String, String> payload, Model model) {
+        long id = Long.parseLong(payload.get("id"));
+        Projects projects = projectsService.getProjectById(id);
+        ProjectsRequest projectsRequest = new ProjectsRequest();
+        projectsRequest.fromEntity(projects);
+        System.out.println(projects);
+        System.out.println("ProjectsRequest: " + projectsRequest);
+        model.addAttribute("projectsRequest", projectsRequest);
+        model.addAttribute("apiKey", apiKey);
+        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+        return "project/updateProject";
+    }
+
+    @PostMapping("/updateProject")
+    public String updateProject(@ModelAttribute ProjectsRequest projectsRequest) {
+        projectsService.updateProject(projectsRequest);
+        return "redirect:/updateProject?id=" + projectsRequest.getProjectId();
     }
 
 }

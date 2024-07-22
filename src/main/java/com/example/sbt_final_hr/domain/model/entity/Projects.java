@@ -3,6 +3,8 @@ package com.example.sbt_final_hr.domain.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "projects")
 @Getter
 @Setter
+@ToString
 public class Projects {
 
     @Id
@@ -28,9 +31,11 @@ public class Projects {
     private String clientCompany;
 
     @Column(name = "start_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     @Column(name = "end_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     @Column(name = "status", nullable = false)
@@ -49,6 +54,7 @@ public class Projects {
     private String contactName = "担当者";
 
     @Column(name = "registration_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
 
     @ManyToOne
