@@ -1,11 +1,8 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +16,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmployeesPractice {
+public class Employees {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
     @SequenceGenerator(name = "employee_seq", sequenceName = "EMPLOYEE_SEQ", allocationSize = 1)
     private Long employeeId;
-
     private String name;
     private String address;
-
+    private double latitude;
+    private double longitude;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastProjectEndDate;
 
@@ -35,14 +32,16 @@ public class EmployeesPractice {
     private LocalDate currentProjectEndDate;
 
 
-    public EmployeesPracticeRequest toDto() {
-        EmployeesPracticeRequest employeesPracticeRequest = new EmployeesPracticeRequest();
-        employeesPracticeRequest.setEmployeeId(this.employeeId);
-        employeesPracticeRequest.setName(this.name);
-        employeesPracticeRequest.setAddress(this.address);
-        employeesPracticeRequest.setLastProjectEndDate(this.lastProjectEndDate);
-        employeesPracticeRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-        return employeesPracticeRequest;
+    public EmployeesRequest toDto() {
+        EmployeesRequest employeesRequest = new EmployeesRequest();
+        employeesRequest.setEmployeeId(this.employeeId);
+        employeesRequest.setName(this.name);
+        employeesRequest.setAddress(this.address);
+        employeesRequest.setLatitude(this.latitude);
+        employeesRequest.setLongitude(this.longitude);
+        employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
+        employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
+        return employeesRequest;
     }
 
 }

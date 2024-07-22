@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Controller
 public class SkillsController {
+    
 
     private final SkillsService skillsService;
 

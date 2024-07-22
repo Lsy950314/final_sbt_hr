@@ -6,6 +6,12 @@
 </head>
 <body>
 <h1>Employees List</h1>
+
+<form th:action="@{/employees}" method="get">
+    <label for="name">Search by Name:</label>
+    <input type="text" id="name" name="name" placeholder="Enter name"/>
+    <button type="submit">Search</button>
+</form>
 <table>
     <thead>
     <tr>
@@ -32,5 +38,6 @@
     </tbody>
 </table>
 <a href="/employees/new">Create New Employee</a>
+
 </body>
 </html>
