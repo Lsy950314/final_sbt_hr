@@ -58,16 +58,16 @@ public class EmployeesPracticeController {
 
 
 
-    @GetMapping("/edit/{id}")
-    public String showEditEmployeeForm(@PathVariable Long id, Model model) {
-        Optional<EmployeesPractice> employeesPractice = employeesPracticeService.findById(id);
-        if (employeesPractice.isPresent()) {
-            model.addAttribute("employeeRequest", employeesPractice.get().toDto());
-            return "editEmployee";
-        } else {
-            return "redirect:/employees";
-        }
-    }
+//    @GetMapping("/edit/{id}")
+//    public String showEditEmployeeForm(@PathVariable Long id, Model model) {
+//        Optional<EmployeesPractice> employeesPractice = employeesPracticeService.findById(id);
+//        if (employeesPractice.isPresent()) {
+//            model.addAttribute("employeeRequest", employeesPractice.get().toDto());
+//            return "editEmployee";
+//        } else {
+//            return "redirect:/employees";
+//        }
+//    }
 
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeeRequest") EmployeesPracticeRequest employeesPracticeRequest, BindingResult result) {
