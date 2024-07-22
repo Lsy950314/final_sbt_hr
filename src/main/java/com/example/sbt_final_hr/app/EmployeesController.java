@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.app;
 
 
+import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
@@ -20,29 +21,35 @@ public class EmployeesController {
 
     @GetMapping("/geocoding")
     public String geoCodingAPIPractice() {
-        return "GeocodingAPIPractice";
+        return "practice/GeocodingAPIPractice";
     }
 
     @GetMapping("/places")
     public String placeAPIPractice() {
-        return "placesAPIPractice";
+        return "practice/placesAPIPractice";
     }
 
     //Create
-    @GetMapping("/newemployee")
-    public String newEmployee(Model model) {
-        model.addAttribute("employeesRequest", new EmployeesRequest());
-        return "createemployee";
-    }
+//    @GetMapping("/test")
+//    public String test() {
+//        return "employees/test";
+//    }
 
+    @GetMapping("/newemployee")
+    public String showCreateEmployeeForm(Model model) {
+        model.addAttribute("employeesRequest", new EmployeesRequest());
+        return "employees/createemployee";
+    }
 
 
     @PostMapping("/createemployee")
     public String createEmployee(@ModelAttribute("employeesRequest")EmployeesRequest employeesRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            return "createEmployee";
-        }
+//        if (result.hasErrors()) {
+//            System.out.println("직원 등록 실패 ");
+//            return "employees/createemployee";
+//        }
         employeesService.save(employeesRequest.toEntity());
+//        System.out.println("직원 등록 성공 ");
         return "redirect:/employees";
     }
 
@@ -56,6 +63,13 @@ public class EmployeesController {
             model.addAttribute("employees", employeesService.findAll());
         }
         return "employees/employeesList";
+    }
+
+    //DELETE:
+    @GetMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        employeesService.deleteById(id);
+        return "redirect:/employees";
     }
 
 

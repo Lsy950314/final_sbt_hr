@@ -20,8 +20,8 @@ public class EmployeesRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
     private byte[] photo;
-    private Integer preferredLanguage;
-    private Integer preferredProjectType;
+    private Long preferredLanguage;
+    private Long preferredProjectType;
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;

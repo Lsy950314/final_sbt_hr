@@ -18,8 +18,8 @@
         <th>ID</th>
         <th>Name</th>
         <th>Address</th>
-        <th>위도-숨길예정</th>
-        <th>경도-숨길예정</th>
+        <th style="display:none;">위도</th>
+        <th style="display:none;">경도</th>
         <th>Last Project End Date</th>
         <th>Current Project End Date</th>
         <th>Photo</th>
@@ -35,15 +35,15 @@
         <td th:text="${employee.employeeId}">1</td>
         <td th:text="${employee.name}">John Doe</td>
         <td th:text="${employee.address}">123 Main St</td>
-        <td th:text="${employee.latitude}">35.6895</td>
-        <td th:text="${employee.longitude}">139.6917</td>
+        <td th:text="${employee.latitude}" style="display:none;">35.6895</td>
+        <td th:text="${employee.longitude}" style="display:none;">139.6917</td>
         <td th:text="${employee.lastProjectEndDate}">2024-07-01</td>
         <td th:text="${employee.currentProjectEndDate}">2024-07-31</td>
         <td>
-            <img th:src="@{'data:image/jpeg;base64,' + ${employee.photo}}" alt="Employee Photo" width="100" height="100"/>
+            <img th:src="${employee.photo != null ? 'data:img/jpeg;base64,' + employee.photo : '/img/default-photo.jpeg'}" alt="Employee Photo" width="100" height="100"/>
         </td>
-        <td th:text="${employee.preferredLanguage}">Java</td>
-        <td th:text="${employee.preferredProjectType}">Web Development</td>
+        <td th:text="${employee.skill.skillName}">Java</td>
+        <td th:text="${employee.projectType.projectTypeName}">Web Development</td>
         <td th:text="${employee.contactNumber}">123-456-7890</td>
         <td th:text="${employee.hireDate}">2022-01-01</td>
         <td>
@@ -54,9 +54,9 @@
     </tbody>
 </table>
 <a href="/employees/newemployee">Create New Employee</a>
-넣어야 하는 기능 등 : 검색기능 / 위도경도는 숨겨야함 /</br>
-사진은 등록 안하면 기본사진 넣고, 등록시 사진 넣으면 그 사진 나오게 해야함 </br>
-선호 언어, 선호 업계는 숫자 말고 외래키로 연결된 그 언어나 업계 </br>
-update, delete , create 기능
+넣어야 하는 기능 등 : 검색기능完/ 위도경도는 숨겨야함(나중에)/</br>
+사진은 등록 안하면 기본사진 넣고, 등록시 사진 넣으면 그 사진 나오게 해야함->기본사진 잘 안나오는중  </br>
+선호 언어, 선호 업계는 숫자 말고 외래키로 연결된 그 언어나 업계完 </br>
+update, delete完 , create
 </body>
 </html>

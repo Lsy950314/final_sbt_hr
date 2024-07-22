@@ -35,15 +35,20 @@ public class Employees {
     @Lob
     private byte[] photo;
     @Column(name = "preferred_language")
-    private Integer preferredLanguage;
+    private Long preferredLanguage;
+
     @Column(name = "preferred_project_type")
-    private Integer preferredProjectType;
+    private Long preferredProjectType;
+
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
+
+
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
+
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
@@ -58,6 +63,7 @@ public class Employees {
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
         employeesRequest.setPhoto(this.photo);
+        //preferredLanguage랑 preferredProjectType은 타입을 Interger에서 Long으로 변경.(외래키로 선호 언어, 선호 업계 보여주기 위해서)
         employeesRequest.setPreferredLanguage(this.preferredLanguage);
         employeesRequest.setPreferredProjectType(this.preferredProjectType);
         employeesRequest.setContactNumber(this.contactNumber);
