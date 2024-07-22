@@ -54,22 +54,22 @@ public class EmployeesPractice {
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
 
-    public EmployeesRequest toDto() {
-        EmployeesRequest employeesRequest = new EmployeesRequest();
-        employeesRequest.setEmployeeId(this.employeeId);
-        employeesRequest.setName(this.name);
-        employeesRequest.setAddress(this.address);
-        employeesRequest.setLatitude(this.latitude);
-        employeesRequest.setLongitude(this.longitude);
-        employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
-        employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-        employeesRequest.setPhoto(this.photo);
-        employeesRequest.setPreferredLanguage(this.preferredLanguage);
-        employeesRequest.setPreferredProjectType(this.preferredProjectType);
-        employeesRequest.setContactNumber(this.contactNumber);
-        employeesRequest.setHireDate(this.hireDate);
-        return employeesRequest;
-    }
+//    public EmployeesRequest toDto() {
+//        EmployeesRequest employeesRequest = new EmployeesRequest();
+//        employeesRequest.setEmployeeId(this.employeeId);
+//        employeesRequest.setName(this.name);
+//        employeesRequest.setAddress(this.address);
+//        employeesRequest.setLatitude(this.latitude);
+//        employeesRequest.setLongitude(this.longitude);
+//        employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
+//        employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
+//        employeesRequest.setPhoto(this.photo);
+//        employeesRequest.setPreferredLanguage(this.preferredLanguage);
+//        employeesRequest.setPreferredProjectType(this.preferredProjectType);
+//        employeesRequest.setContactNumber(this.contactNumber);
+//        employeesRequest.setHireDate(this.hireDate);
+//        return employeesRequest;
+//    }
 
 
 }

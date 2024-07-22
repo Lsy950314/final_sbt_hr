@@ -19,6 +19,13 @@ public class EmployeesRequest {
     private LocalDate lastProjectEndDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
+    private byte[] photo;
+    private Integer preferredLanguage;
+    private Integer preferredProjectType;
+    private String contactNumber;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate hireDate;
+
 
     public Employees toEntity() {
         Employees employees = new Employees();

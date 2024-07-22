@@ -22,35 +22,28 @@ public class Employees {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
     @SequenceGenerator(name = "employee_seq", sequenceName = "EMPLOYEE_SEQ", allocationSize = 1)
     private Long employeeId;
-
     private String name;
     private String address;
-
+    private double latitude;
+    private double longitude;
     @Column(name= "last_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastProjectEndDate;
-
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
     @Lob
     private byte[] photo;
-
     @Column(name = "preferred_language")
     private Integer preferredLanguage;
-
     @Column(name = "preferred_project_type")
     private Integer preferredProjectType;
-
     private String contactNumber;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
-
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
-
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;

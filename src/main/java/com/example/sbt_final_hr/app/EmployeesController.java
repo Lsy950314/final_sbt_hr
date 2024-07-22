@@ -2,15 +2,15 @@ package com.example.sbt_final_hr.app;
 
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/employees")
@@ -46,12 +46,17 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
+
+    //READ: 직원 리스트
     @GetMapping
-    public String listEmployees() {
+    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
+        if (name != null && !name.isEmpty()) {
+            model.addAttribute("employees", employeesService.findByName(name));
+        } else {
+            model.addAttribute("employees", employeesService.findAll());
+        }
         return "employees/employeesList";
     }
-
-
 
 
 
