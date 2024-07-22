@@ -16,14 +16,5 @@ public class SkillsRequest {
         skills.setSkillId(this.skillId);
         return skills;
     }
-//    아래처럼 toEntity()에서 변환만 잘 이루어진다면 반드시 entity의 속성명과 같을 필요는 없음
-//    private Long id; // 
-//    private String name; //
-//
-//    public Skills toEntity() {
-//        Skills skills = new Skills();
-//        skills.setSkillId(this.id);
-//        skills.setSkillName(this.name);
-//        return skills;
-//    }
+
 }
