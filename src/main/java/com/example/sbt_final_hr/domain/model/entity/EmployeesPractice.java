@@ -1,11 +1,8 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,21 +25,51 @@ public class EmployeesPractice {
     private String name;
     private String address;
 
+    @Column(name= "last_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastProjectEndDate;
 
+    @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
+    @Lob
+    private byte[] photo;
 
+    @Column(name = "preferred_language")
+    private Integer preferredLanguage;
 
-    public EmployeesPracticeRequest toDto() {
-        EmployeesPracticeRequest employeesPracticeRequest = new EmployeesPracticeRequest();
-        employeesPracticeRequest.setEmployeeId(this.employeeId);
-        employeesPracticeRequest.setName(this.name);
-        employeesPracticeRequest.setAddress(this.address);
-        employeesPracticeRequest.setLastProjectEndDate(this.lastProjectEndDate);
-        employeesPracticeRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-        return employeesPracticeRequest;
+    @Column(name = "preferred_project_type")
+    private Integer preferredProjectType;
+
+    private String contactNumber;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate hireDate;
+
+    @ManyToOne
+    @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
+    private Skill skill;
+
+    @ManyToOne
+    @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
+    private ProjectType projectType;
+
+    public EmployeesRequest toDto() {
+        EmployeesRequest employeesRequest = new EmployeesRequest();
+        employeesRequest.setEmployeeId(this.employeeId);
+        employeesRequest.setName(this.name);
+        employeesRequest.setAddress(this.address);
+        employeesRequest.setLatitude(this.latitude);
+        employeesRequest.setLongitude(this.longitude);
+        employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
+        employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
+        employeesRequest.setPhoto(this.photo);
+        employeesRequest.setPreferredLanguage(this.preferredLanguage);
+        employeesRequest.setPreferredProjectType(this.preferredProjectType);
+        employeesRequest.setContactNumber(this.contactNumber);
+        employeesRequest.setHireDate(this.hireDate);
+        return employeesRequest;
     }
+
 
 }
