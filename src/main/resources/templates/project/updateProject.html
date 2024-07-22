@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            width: 45%;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const apiKey = [[${apiKey}]];
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.async = true;
+        document.head.appendChild(script);
+
+        function initAutocomplete() {
+            const input = document.getElementById('workLocation');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.setFields(['geometry', 'formatted_address']);
+
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+
+                document.getElementById('latitude').value = place.geometry.location.lat();
+                document.getElementById('longitude').value = place.geometry.location.lng();
+            });
+        }
+
+        window.onload = function () {
+            initAutocomplete();
+        };
+        /*]]>*/
+    </script>
+</head>
+<body>
+<h1>Update Project</h1>
+<form th:action="@{/updateProject}" th:object="${projectsRequest}" method="post" class="form-container">
+    <div class="form-group">
+        <label for="projectName">Project Name:</label>
+        <input type="text" id="projectName" th:field="*{projectName}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="workLocation">Work Location:</label>
+        <input type="text" id="workLocation" th:field="*{workLocation}" required>
+        <input type="hidden" id="latitude" th:field="*{latitude}">
+        <input type="hidden" id="longitude" th:field="*{longitude}">
+    </div>
+
+    <div class="form-group">
+        <label for="clientCompany">Client Company:</label>
+        <input type="text" id="clientCompany" th:field="*{clientCompany}">
+    </div>
+
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" th:field="*{startDate}">
+    </div>
+
+    <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" th:field="*{endDate}">
+    </div>
+
+    <div class="form-group">
+        <label for="contactPhone">Contact Phone:</label>
+        <input type="text" id="contactPhone" th:field="*{contactPhone}" value="010-1234-5678">
+    </div>
+
+    <div class="form-group">
+        <label for="contactName">Contact Name:</label>
+        <input type="text" id="contactName" th:field="*{contactName}" value="担当者">
+    </div>
+
+    <div class="form-group">
+        <label for="projectTypeId">Project Type:</label>
+        <select id="projectTypeId" th:field="*{projectTypeId}" required>
+            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
+                Project Type
+            </option>
+        </select>
+    </div>
+
+    <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
+    <input type="hidden" id="status" th:field="*{status}" value="-1">
+
+    <button type="submit">Create Project</button>
+</form>
+
+<div th:if="${error}">
+    <p th:text="${error}" style="color:red;"></p>
+</div>
+</body>
+</html>
