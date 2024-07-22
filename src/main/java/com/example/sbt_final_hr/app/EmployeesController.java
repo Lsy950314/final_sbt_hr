@@ -44,10 +44,10 @@ public class EmployeesController {
 
     @PostMapping("/createemployee")
     public String createEmployee(@ModelAttribute("employeesRequest")EmployeesRequest employeesRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            System.out.println("직원 등록 실패 ");
-            return "employees/createemployee";
-        }
+//        if (result.hasErrors()) {
+//            System.out.println("직원 등록 실패 ");
+//            return "employees/createemployee";
+//        }
         employeesService.save(employeesRequest.toEntity());
         System.out.println("직원 등록 성공 ");
         return "redirect:/employees";
