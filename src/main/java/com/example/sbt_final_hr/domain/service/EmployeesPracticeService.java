@@ -24,6 +24,11 @@ public class EmployeesPracticeService {
         return employeesPracticeRepository.findAll();
     }
 
+    public List<EmployeesPractice> findByName(String name) {
+        return employeesPracticeRepository.findByNameContainingIgnoreCase(name);
+    }
+
+
     public Optional<EmployeesPractice> findById(Long id) {
         return employeesPracticeRepository.findById(id);
     }
@@ -31,4 +36,6 @@ public class EmployeesPracticeService {
     public void deleteById(Long id) {
         employeesPracticeRepository.deleteById(id);
     }
+
+
 }
