@@ -5,8 +5,10 @@ import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.ProjectTypesRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
+import com.google.maps.model.GeocodingResult;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,20 +25,13 @@ public class ProjectsService {
        return projectsRepository.findAll();
     }
 
-    public Projects createProject(ProjectsRequest projectsRequest) {
+    public void createProject(ProjectsRequest projectsRequest) {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
-
-        // 기본 값 설정
-        if (projectsRequest.getContactPhone() == null) {
-            projectsRequest.setContactPhone("010-1234-5678");
-        }
-        if (projectsRequest.getContactName() == null) {
-            projectsRequest.setContactName("担当者");
-        }
+        projectsRequest.setRegistrationDate(LocalDateTime.now());
 
         Projects project = projectsRequest.toEntity(projectType);
-        return projectsRepository.save(project);
+        projectsRepository.save(project);
     }
 
 }
