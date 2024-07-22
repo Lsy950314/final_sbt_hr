@@ -2,9 +2,49 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Insert Skill</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Project</title>
 </head>
 <body>
+<h1>Insert New Project</h1>
+<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post">
+    <label for="projectName">Project Name:</label>
+    <input type="text" id="projectName" th:field="*{projectName}" required><br><br>
 
+    <label for="workLocation">Work Location:</label>
+    <input type="text" id="workLocation" th:field="*{workLocation}"><br><br>
+
+    <label for="clientCompany">Client Company:</label>
+    <input type="text" id="clientCompany" th:field="*{clientCompany}"><br><br>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" th:field="*{startDate}"><br><br>
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" th:field="*{endDate}"><br><br>
+
+    <label for="status">Status:</label>
+    <input type="number" id="status" th:field="*{status}" value="-1"><br><br>
+
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude" th:field="*{latitude}"><br><br>
+
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude" th:field="*{longitude}"><br><br>
+
+    <label for="contactPhone">Contact Phone:</label>
+    <input type="text" id="contactPhone" th:field="*{contactPhone}" value="010-1234-5678"><br><br>
+
+    <label for="contactName">Contact Name:</label>
+    <input type="text" id="contactName" th:field="*{contactName}" value="担当者"><br><br>
+
+    <label for="registrationDate">Registration Date:</label>
+    <input type="datetime-local" id="registrationDate" th:field="*{registrationDate}"><br><br>
+
+    <label for="projectTypeId">Project Type ID:</label>
+    <input type="number" id="projectTypeId" th:field="*{projectTypeId}" required><br><br>
+
+    <button type="submit">Create Project</button>
+</form>
 </body>
 </html>
