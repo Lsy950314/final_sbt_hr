@@ -48,11 +48,11 @@ public class EmployeesPractice {
 
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
-    private Skill skill;
+    private Skills skill;
 
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
-    private ProjectType projectType;
+    private ProjectTypes projectType;
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
