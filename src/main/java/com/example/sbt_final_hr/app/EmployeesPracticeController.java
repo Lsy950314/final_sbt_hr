@@ -1,8 +1,6 @@
 package com.example.sbt_final_hr.app;
 
-import com.example.sbt_final_hr.domain.model.dto.SkillsRequest;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesPractice;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesPracticeService;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Controller

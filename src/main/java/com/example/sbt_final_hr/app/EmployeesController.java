@@ -1,11 +1,9 @@
 package com.example.sbt_final_hr.app;
 
 
-import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
