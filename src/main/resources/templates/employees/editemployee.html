@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Employee</title>
+    <title>Edit Employee</title>
     <meta charset="UTF-8">
 </head>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
@@ -52,8 +52,10 @@
     }
 </style>
 <body onload="initMap()">
-<h1>Create Employee</h1>
-<form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+<h1>Edit Employee</h1>
+<form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{employeeId}"/>
+
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
 
@@ -97,7 +99,7 @@
     <label for="hireDate">Hire Date:</label>
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
 
-    <button type="submit">Create Employee</button>
+    <button type="submit">Update Employee</button>
 </form>
 
 <a href="/employees">Back to Employees List</a>
