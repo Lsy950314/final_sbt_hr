@@ -23,15 +23,49 @@
 
       .menus > li {
         width: 300px;
-        height: 60px;
+        height: 40px;
         justify-content: center;
         align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-align: center;
+        font-size: 18px;
+      }
+
+      .menus {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .menus li:hover {
+        background: linear-gradient(45deg, #1e90ff, #00bfff);
+        color: #fff;
+        border-top-right-radius: 40px;
+        border-bottom-right-radius: 40px;
       }
 
       .contents {
         background-color: #f5f5f5;
         width: 1500px;
         height: 1080px;
+      }
+
+      .members {
+        width: 1280px;
+        height: 800px;
+        background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
+        border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
+        border-radius: 15px; /* 둥근 모서리 */
+        backdrop-filter: blur(10px); /* 글라스 효과 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #333; /* 어두운 글자색 */
+        font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
+        text-align: center;
       }
     </style>
   </head>
@@ -47,6 +81,8 @@
 
       <div class="contents">
         <p style="font-size: 26px">社員リスト</p>
+
+        <div class="members"></div>
       </div>
     </div>
   </body>
