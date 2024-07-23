@@ -54,4 +54,8 @@ public class SkillsService {
     public List<Skills> getSkillsByNameLikeAndIdGreaterThan(String name, Long id) {
         return skillsRepository.findByNameLikeAndIdGreaterThan(name, id);
     }
+
+
+
+
 }
