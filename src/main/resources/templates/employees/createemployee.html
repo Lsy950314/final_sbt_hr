@@ -9,6 +9,7 @@
     let map;
     let marker;
     let autocomplete;
+    let skillCount = 0;
 
     function initMap() {
         const initialLocation = { lat: 35.6895, lng: 139.6917 };
@@ -44,11 +45,79 @@
             document.getElementById('longitude').value = place.geometry.location.lng();
         });
     }
+
+    function toggleProgrammingExperience(value) {
+        const experienceDiv = document.getElementById('programmingExperience');
+        if (value === 'yes') {
+            experienceDiv.style.display = 'block';
+        } else {
+            experienceDiv.style.display = 'none';
+            clearExperienceFields();
+        }
+    }
+
+    function clearExperienceFields() {
+        const experienceDiv = document.getElementById('programmingExperience');
+        while (experienceDiv.firstChild) {
+            experienceDiv.removeChild(experienceDiv.firstChild);
+        }
+    }
+
+    function addProgrammingExperience() {
+        skillCount++;
+
+        const experienceDiv = document.getElementById('programmingExperience');
+        const newExperienceDiv = document.createElement('div');
+        newExperienceDiv.id = 'skill_' + skillCount;
+
+        const languageSelect = document.createElement('select');
+        languageSelect.name = 'skills[' + skillCount + '].language';
+        languageSelect.required = true;
+
+        // Assuming skills are dynamically populated from the backend
+        const languages = [
+            { skillId: 1, skillName: 'Java' },
+            { skillId: 2, skillName: 'Python' },
+            { skillId: 3, skillName: 'JavaScript' }
+            // Add more languages as needed
+        ];
+
+        languages.forEach(language => {
+            const option = document.createElement('option');
+            option.value = language.skillId;
+            option.text = language.skillName;
+            languageSelect.appendChild(option);
+        });
+
+        const careerInput = document.createElement('input');
+        careerInput.type = 'number';
+        careerInput.name = 'skills[' + skillCount + '].career';
+        careerInput.min = 1;
+        careerInput.max = 120;
+        careerInput.placeholder = 'Months';
+        careerInput.required = true;
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = function() {
+            experienceDiv.removeChild(newExperienceDiv);
+        };
+
+        newExperienceDiv.appendChild(languageSelect);
+        newExperienceDiv.appendChild(careerInput);
+        newExperienceDiv.appendChild(removeButton);
+
+        experienceDiv.appendChild(newExperienceDiv);
+    }
 </script>
 <style>
     #map {
         height: 350px;
         width: 350px;
+    }
+    #programmingExperience {
+        display: none;
     }
 </style>
 <body onload="initMap()">
@@ -96,6 +165,16 @@
 
     <label for="hireDate">Hire Date:</label>
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
+
+    <!-- New Programming Experience Section -->
+    <label>프로그래밍 경력이 있습니까?</label>
+    <input type="radio" name="programmingExperience" value="yes" onclick="toggleProgrammingExperience('yes')"> 예
+    <input type="radio" name="programmingExperience" value="no" onclick="toggleProgrammingExperience('no')" checked> 아니오
+    <br/>
+
+    <div id="programmingExperience"></div>
+    <button type="button" onclick="addProgrammingExperience()">프로그래밍 경력 추가</button>
+    <br/>
 
     <button type="submit">Create Employee</button>
 </form>
