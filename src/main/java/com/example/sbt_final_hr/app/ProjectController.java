@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProjectController {
@@ -72,17 +74,43 @@ public class ProjectController {
         Projects projects = projectsService.getProjectById(id);
         ProjectsRequest projectsRequest = new ProjectsRequest();
         projectsRequest.fromEntity(projects);
+        projectsRequest.setProjectRequirements(projectRequirementsService.getRequirementsByProjectId(id)
+                .stream()
+                .map(requirements -> {
+                    ProjectRequirementsRequest request = new ProjectRequirementsRequest();
+                    request.fromEntity(requirements);
+                    return request;
+                }).collect(Collectors.toList()));
+
         model.addAttribute("projectsRequest", projectsRequest);
         model.addAttribute("apiKey", apiKey);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+        model.addAttribute("skills", skillsService.getAllSkills());
         return "project/updateProject";
     }
 
     @PostMapping("/updateProject")
     public String updateProject(@ModelAttribute ProjectsRequest projectsRequest) {
+        // 기존 등록일을 유지하기 위해 현재 등록일을 가져옵니다.
+        Projects existingProject = projectsService.getProjectById(projectsRequest.getProjectId());
+        projectsRequest.setRegistrationDate(existingProject.getRegistrationDate());
+
         projectsService.updateProject(projectsRequest);
+
+        if (projectsRequest.getProjectRequirements() != null) {
+            for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
+                if (requirementsRequest.getId() != null) {
+                    projectRequirementsService.updateProjectRequirements(requirementsRequest, existingProject);
+                } else {
+                    ProjectRequirements projectRequirements = requirementsRequest.toEntity(existingProject);
+                    projectRequirementsService.createProjectRequirements(projectRequirements);
+                }
+            }
+        }
+
         return "redirect:/updateProject?id=" + projectsRequest.getProjectId();
     }
+
 
     @GetMapping("/deleteProject")
     public String deleteProject(@RequestParam Map<String, String> payload, Model model) {
