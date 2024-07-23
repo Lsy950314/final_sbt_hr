@@ -42,10 +42,10 @@
         <td>
             <img th:src="${employee.photo != null ? 'data:img/jpeg;base64,' + employee.photo : '/img/default-photo.jpeg'}" alt="Employee Photo" width="100" height="100"/>
         </td>
-        <td th:text="${employee.skill.skillName}">Java</td>
-        <td th:text="${employee.projectType.projectTypeName}">Web Development</td>
-        <td th:text="${employee.contactNumber}">123-456-7890</td>
-        <td th:text="${employee.hireDate}">2022-01-01</td>
+        <td th:text="${employee.skill != null && employee.skill.skillName != null ? employee.skill.skillName : 'No Skill'}">No Skill</td>
+        <td th:text="${employee.projectType != null && employee.projectType.projectTypeName != null ? employee.projectType.projectTypeName : 'No Project Type'}">No Project Type</td>
+        <td th:text="${employee.contactNumber != null ? employee.contactNumber : 'No Contact Number'}">123-456-7890</td>
+        <td th:text="${employee.hireDate != null ? employee.hireDate : 'Unknown'}">2022-01-01</td>
         <td>
             <a th:href="@{/employees/edit/{id}(id=${employee.employeeId})}">Edit</a>
             <a th:href="@{/employees/delete/{id}(id=${employee.employeeId})}">Delete</a>

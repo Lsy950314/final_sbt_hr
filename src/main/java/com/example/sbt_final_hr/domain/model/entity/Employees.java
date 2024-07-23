@@ -41,6 +41,7 @@ public class Employees {
     private Long preferredProjectType;
 
     private String contactNumber;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
 
