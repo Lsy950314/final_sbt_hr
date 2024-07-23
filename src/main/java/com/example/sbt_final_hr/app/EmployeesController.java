@@ -61,6 +61,7 @@ public class EmployeesController {
         return "employees/employeeslist";
     }
 
+    //건우 뷰 CSS 짜기 용
     @GetMapping("/list2")
     public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
         if (name != null && !name.isEmpty()) {
