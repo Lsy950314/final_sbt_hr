@@ -1,11 +1,15 @@
 package com.example.sbt_final_hr.domain.service;
 
+import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
+import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
+import com.example.sbt_final_hr.domain.model.entity.Skills;
+import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectTypesRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
-import com.google.maps.model.GeocodingResult;
+import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,10 +19,14 @@ import java.util.List;
 public class ProjectsService {
     private final ProjectsRepository projectsRepository;
     private final ProjectTypesRepository projectTypesRepository;
+    private final SkillsRepository skillsRepository;
+    private final ProjectRequirementsRepository projectRequirementsRepository;
 
-    public ProjectsService(ProjectsRepository projectsRepository, ProjectTypesRepository projectTypesRepository) {
+    public ProjectsService(ProjectsRepository projectsRepository, ProjectTypesRepository projectTypesRepository, SkillsRepository skillsRepository, ProjectRequirementsRepository projectRequirementsRepository) {
         this.projectsRepository = projectsRepository;
         this.projectTypesRepository = projectTypesRepository;
+        this.skillsRepository = skillsRepository;
+        this.projectRequirementsRepository = projectRequirementsRepository;
     }
 
     public List<Projects> getAllProjects() {
@@ -33,13 +41,14 @@ public class ProjectsService {
         return projectsRepository.findById(id).orElseThrow();
     }
 
-    public void createProject(ProjectsRequest projectsRequest) {
+    public Projects createProject(ProjectsRequest projectsRequest) {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
         projectsRequest.setRegistrationDate(LocalDateTime.now());
 
         Projects project = projectsRequest.toEntity(projectType);
         projectsRepository.save(project);
+        return project;
     }
 
     public void updateProject(ProjectsRequest projectsRequest) {

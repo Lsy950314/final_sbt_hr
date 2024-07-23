@@ -1,10 +1,14 @@
 package com.example.sbt_final_hr.app;
 
+import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
+import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
+import com.example.sbt_final_hr.domain.service.ProjectRequirementsService;
 import com.example.sbt_final_hr.domain.service.ProjectTypesService;
 import com.example.sbt_final_hr.domain.service.ProjectsService;
+import com.example.sbt_final_hr.domain.service.SkillsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +23,17 @@ import java.util.Map;
 public class ProjectController {
     private final ProjectsService projectsService;
     private final ProjectTypesService projectTypesService;
+    private final ProjectRequirementsService projectRequirementsService;
+    private final SkillsService skillsService;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
 
-    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService) {
+    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService) {
         this.projectsService = projectsService;
         this.projectTypesService = projectTypesService;
+        this.projectRequirementsService = projectRequirementsService;
+        this.skillsService = skillsService;
     }
 
     @GetMapping("/createProject")
@@ -34,13 +42,28 @@ public class ProjectController {
         model.addAttribute("projectsRequest", projectsRequest);
         model.addAttribute("apiKey", apiKey);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+        model.addAttribute("skills", skillsService.getAllSkills());
         return "project/insertProject";
     }
 
     @PostMapping("/createProject")
     public String createProject(@ModelAttribute ProjectsRequest projectsRequest) {
-        projectsService.createProject(projectsRequest);
+        Projects project = projectsService.createProject(projectsRequest);
+
+        if (projectsRequest.getProjectRequirements() != null) {
+            for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
+                ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
+                projectRequirementsService.createProjectRequirements(projectRequirements);
+            }
+        }
+
         return "redirect:/createProject";
+    }
+
+    @GetMapping("/readAllProjects")
+    public String readAllProjects(Model model) {
+        model.addAttribute("projects", projectsService.getAllProjects());
+        return "project/readAllProjects"; // 가상의 주소
     }
 
     @GetMapping("/updateProject")
