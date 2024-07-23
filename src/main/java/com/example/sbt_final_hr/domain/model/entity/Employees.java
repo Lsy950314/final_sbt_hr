@@ -1,6 +1,5 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
-import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Base64;
 
 @Entity
 @NoArgsConstructor
@@ -22,28 +22,23 @@ public class Employees {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
     @SequenceGenerator(name = "employee_seq", sequenceName = "EMPLOYEE_SEQ", allocationSize = 1)
     private Long employeeId;
-
     private String name;
     private String address;
-
+    private double latitude;
+    private double longitude;
     @Column(name= "last_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastProjectEndDate;
-
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
     @Lob
-    private byte[] photo;
-
+    private byte[] photo; // byte[] 형으로 유지 : 7월 22일
     @Column(name = "preferred_language")
-    private Integer preferredLanguage;
-
+    private Long preferredLanguage;
     @Column(name = "preferred_project_type")
-    private Integer preferredProjectType;
-
+    private Long preferredProjectType;
     private String contactNumber;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
 
@@ -71,6 +66,4 @@ public class Employees {
         employeesRequest.setHireDate(this.hireDate);
         return employeesRequest;
     }
-
-
 }

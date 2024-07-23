@@ -77,19 +77,11 @@
     <label for="photo">Photo:</label>
     <input type="file" id="photo" th:field="*{photo}"/><br/>
 
-    <div class="form-group">
-        <label for="preferredLanguage">Preferred Language:</label>
-        <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
-        </select>
-    </div>
+    <label for="preferredLanguage">Preferred Language:</label>
+    <input type="text" id="preferredLanguage" th:field="*{preferredLanguage}" placeholder="Enter preferred language"/><br/>
 
-    <div class="form-group">
-        <label for="preferredProjectType">Preferred Project Type:</label>
-        <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Select Project Type</option>
-        </select>
-    </div>
+    <label for="preferredProjectType">Preferred Project Type:</label>
+    <input type="text" id="preferredProjectType" th:field="*{preferredProjectType}" placeholder="Enter preferred project type"/><br/>
 
     <label for="contactNumber">Contact Number:</label>
     <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
@@ -99,7 +91,6 @@
 
     <button type="submit">Create Employee</button>
 </form>
-
 <a href="/employees">Back to Employees List</a>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Project</title>
+    <title>Update Project</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,32 +11,31 @@
             flex-direction: column;
             align-items: center;
         }
+
         .form-container {
             display: flex;
-            flex-direction: column;
-            max-width: 800px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            justify-content: space-between;
         }
+
         .form-group {
+            display: flex;
+            flex-direction: column;
             margin: 10px;
+            width: 45%;
         }
+
         .form-group label {
             margin-bottom: 5px;
         }
+
         .form-group input, .form-group select {
             padding: 8px;
             font-size: 16px;
-            width: 100%;
         }
-        .requirements-container {
-            display: flex;
-            flex-direction: column;
-            margin: 10px;
-        }
-        .requirement-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-top: 10px;
-        }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -50,7 +49,7 @@
 
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true; // 비동기 로드 설정
+        script.async = true;
         document.head.appendChild(script);
 
         function initAutocomplete() {
@@ -58,7 +57,7 @@
             const autocomplete = new google.maps.places.Autocomplete(input);
             autocomplete.setFields(['geometry', 'formatted_address']);
 
-            autocomplete.addListener('place_changed', function() {
+            autocomplete.addListener('place_changed', function () {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
                     alert("No details available for input: '" + place.name + "'");
@@ -70,20 +69,27 @@
             });
         }
 
-        window.onload = function() {
+        window.onload = function () {
             initAutocomplete();
+            // 기존 프로젝트 요구사항을 추가
+            [[${projectsRequest.projectRequirements}]].forEach((requirement, index) => {
+                addRequirement(requirement.skill.skillId, requirement.requiredExperience, requirement.requiredCount, index);
+            });
         };
 
-        function addRequirement() {
+        function addRequirement(skillId = '', requiredExperience = '', requiredCount = '', index = null) {
             const requirementsContainer = document.getElementById('requirementsContainer');
-            const index = requirementsContainer.children.length;
+            if (index === null) {
+                index = requirementsContainer.children.length;
+            }
 
             const requirementItem = document.createElement('div');
             requirementItem.classList.add('requirement-item');
 
             let skillOptions = '';
             skills.forEach(skill => {
-                skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+                const selected = skill.skillId === skillId ? 'selected' : '';
+                skillOptions += `<option value="${skill.skillId}" ${selected}>${skill.skillName}</option>`;
             });
 
             requirementItem.innerHTML = `
@@ -95,21 +101,29 @@
                 </div>
                 <div class="form-group">
                     <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" required>
+                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" value="${requiredExperience}" required>
                 </div>
                 <div class="form-group">
                     <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
+                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
                 </div>
             `;
             requirementsContainer.appendChild(requirementItem);
+        }
+
+        function beforeSubmit() {
+            const registrationDateField = document.createElement('input');
+            registrationDateField.type = 'hidden';
+            registrationDateField.name = 'registrationDate';
+            registrationDateField.value = new Date().toISOString();
+            document.getElementById('projectForm').appendChild(registrationDateField);
         }
         /*]]>*/
     </script>
 </head>
 <body>
-<h1>Insert New Project</h1>
-<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container">
+<h1>Update Project</h1>
+<form th:action="@{/updateProject}" th:object="${projectsRequest}" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
     <div class="form-group">
         <label for="projectName">Project Name:</label>
         <input type="text" id="projectName" th:field="*{projectName}" required>
@@ -157,13 +171,12 @@
     <div class="form-group">
         <button type="button" onclick="addRequirement()">Add Requirement</button>
     </div>
-
     <div id="requirementsContainer" class="requirements-container"></div>
 
     <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
     <input type="hidden" id="status" th:field="*{status}" value="-1">
 
-    <button type="submit">Create Project</button>
+    <button type="submit">Update Project</button>
 </form>
 
 <div th:if="${error}">

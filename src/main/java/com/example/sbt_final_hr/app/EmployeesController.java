@@ -1,61 +1,100 @@
 package com.example.sbt_final_hr.app;
 
-
-import com.example.sbt_final_hr.domain.model.dto.EmployeesPracticeRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
-import oracle.jdbc.proxy.annotation.Post;
+import com.example.sbt_final_hr.domain.service.ProjectTypesService;
+import com.example.sbt_final_hr.domain.service.SkillsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/employees")
 public class EmployeesController {
-    @Autowired
     private EmployeesService employeesService;
+    private ProjectTypesService projectTypesService;
+    private SkillsService skillsService;
 
-    @GetMapping("/geocoding")
-    public String geoCodingAPIPractice() {
-        return "GeocodingAPIPractice";
+    @Autowired
+    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService) {
+        this.employeesService = employeesService;
+        this.projectTypesService = projectTypesService;
+        this.skillsService = skillsService;
     }
 
-    @GetMapping("/places")
-    public String placeAPIPractice() {
-        return "placesAPIPractice";
-    }
-
-    //Create
     @GetMapping("/newemployee")
-    public String newEmployee(Model model) {
+    public String showCreateEmployeeForm(Model model) {
         model.addAttribute("employeesRequest", new EmployeesRequest());
-        return "createemployee";
+        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+        model.addAttribute("skills", skillsService.getAllSkills());
+        return "employees/createemployee";
     }
-
-
 
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest")EmployeesRequest employeesRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            return "createEmployee";
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+        try {
+            employeesService.save(employeesRequest.toEntity());
+        } catch (Exception e) {
+            result.rejectValue("photo", "error.employeesRequest", "Failed to process the photo.");
+            return "employees/createemployee";
         }
+        return "redirect:/employees";
+    }
+
+
+
+    // READ: 직원 리스트
+    @GetMapping
+    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
+        if (name != null && !name.isEmpty()) {
+            model.addAttribute("employees", employeesService.findByName(name));
+        } else {
+            model.addAttribute("employees", employeesService.findAll());
+        }
+        return "employees/employeeslist";
+    }
+
+    @GetMapping("/list2")
+    public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
+        if (name != null && !name.isEmpty()) {
+            model.addAttribute("employees", employeesService.findByName(name));
+        } else {
+            model.addAttribute("employees", employeesService.findAll());
+        }
+        return "employees/employeeslist2";
+    }
+
+    //UPDATE:
+        @GetMapping("/edit/{id}")
+    public String showEditEmployeeForm(@PathVariable Long id, Model model) {
+        Optional<Employees> employees = employeesService.findById(id);
+        if (employees.isPresent()) {
+            model.addAttribute("employeesRequest", employees.get().toDto());
+            model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+            model.addAttribute("skills", skillsService.getAllSkills());
+            return "employees/editEmployee";
+        } else {
+            return "redirect:/employees";
+        }
+    }
+
+    @PostMapping("/update")
+    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,BindingResult result) {
         employeesService.save(employeesRequest.toEntity());
         return "redirect:/employees";
     }
 
-    @GetMapping
-    public String listEmployees() {
-        return "employees/employeesList";
+    // DELETE:
+    @GetMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        employeesService.deleteById(id);
+        return "redirect:/employees";
     }
-
-
-
-
-
-
 }
