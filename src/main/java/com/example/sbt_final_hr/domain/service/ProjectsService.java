@@ -25,6 +25,14 @@ public class ProjectsService {
        return projectsRepository.findAll();
     }
 
+    public void deleteProject(Long id) {
+        projectsRepository.deleteById(id);
+    }
+
+    public Projects getProjectById(Long id) {
+        return projectsRepository.findById(id).orElseThrow();
+    }
+
     public void createProject(ProjectsRequest projectsRequest) {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
@@ -47,8 +55,6 @@ public class ProjectsService {
         projectsRepository.save(project);
     }
 
-    public Projects getProjectById(Long id) {
-           return projectsRepository.findById(id).orElseThrow();
-    }
+
 
 }

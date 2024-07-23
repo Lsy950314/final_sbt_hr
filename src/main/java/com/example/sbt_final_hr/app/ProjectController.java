@@ -49,8 +49,6 @@ public class ProjectController {
         Projects projects = projectsService.getProjectById(id);
         ProjectsRequest projectsRequest = new ProjectsRequest();
         projectsRequest.fromEntity(projects);
-        System.out.println(projects);
-        System.out.println("ProjectsRequest: " + projectsRequest);
         model.addAttribute("projectsRequest", projectsRequest);
         model.addAttribute("apiKey", apiKey);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
@@ -61,6 +59,14 @@ public class ProjectController {
     public String updateProject(@ModelAttribute ProjectsRequest projectsRequest) {
         projectsService.updateProject(projectsRequest);
         return "redirect:/updateProject?id=" + projectsRequest.getProjectId();
+    }
+
+    @GetMapping("/deleteProject")
+    public String deleteProject(@RequestParam Map<String, String> payload, Model model) {
+        long id = Long.parseLong(payload.get("id"));
+        projectsService.deleteProject(id);
+        System.out.println("삭제 성공");
+        return "redirect:/createProject";
     }
 
 }
