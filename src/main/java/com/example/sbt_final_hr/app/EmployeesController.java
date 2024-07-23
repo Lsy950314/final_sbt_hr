@@ -68,7 +68,7 @@ public class EmployeesController {
         } else {
             model.addAttribute("employees", employeesService.findAll());
         }
-        return "employees/employeeslist2";
+        return "Employees_practice/employees";
     }
 
     //UPDATE:

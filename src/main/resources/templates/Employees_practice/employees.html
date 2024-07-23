@@ -60,12 +60,16 @@
         border-radius: 15px; /* 둥근 모서리 */
         backdrop-filter: blur(10px); /* 글라스 효과 */
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        /*display: flex;*/
         color: #333; /* 어두운 글자색 */
         font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
         text-align: center;
+
+      }
+
+      .members > div {
+        display: flex;
+        margin-right: 40px;
       }
     </style>
   </head>
@@ -82,7 +86,15 @@
       <div class="contents">
         <p style="font-size: 26px">社員リスト</p>
 
-        <div class="members"></div>
+        <div class="members">
+          <div th:each="e : ${employees}">
+            <div th:text="${e.name}"></div>
+            <div>dd</div>
+            <div>dd</div>
+            <div th:text="${e.address}"></div>
+            <div th:text="${e.currentProjectEndDate}"></div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
