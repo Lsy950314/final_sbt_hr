@@ -13,16 +13,11 @@
         }
         .form-container {
             display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            justify-content: space-between;
+            flex-direction: column;
+            max-width: 800px;
         }
         .form-group {
-            display: flex;
-            flex-direction: column;
             margin: 10px;
-            width: 45%;
         }
         .form-group label {
             margin-bottom: 5px;
@@ -30,6 +25,17 @@
         .form-group input, .form-group select {
             padding: 8px;
             font-size: 16px;
+            width: 100%;
+        }
+        .requirements-container {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+        }
+        .requirement-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
         }
         button {
             margin-top: 20px;
@@ -40,9 +46,11 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         const apiKey = [[${apiKey}]];
+        const skills = /*[[${skills}]]*/ '[]'; // skills 변수를 Thymeleaf로 전달
+
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true;
+        script.async = true; // 비동기 로드 설정
         document.head.appendChild(script);
 
         function initAutocomplete() {
@@ -65,6 +73,37 @@
         window.onload = function() {
             initAutocomplete();
         };
+
+        function addRequirement() {
+            const requirementsContainer = document.getElementById('requirementsContainer');
+            const index = requirementsContainer.children.length;
+
+            const requirementItem = document.createElement('div');
+            requirementItem.classList.add('requirement-item');
+
+            let skillOptions = '';
+            skills.forEach(skill => {
+                skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+            });
+
+            requirementItem.innerHTML = `
+                <div class="form-group">
+                    <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+                    <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
+                        ${skillOptions}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
+                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
+                </div>
+            `;
+            requirementsContainer.appendChild(requirementItem);
+        }
         /*]]>*/
     </script>
 </head>
@@ -114,6 +153,12 @@
             <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Project Type</option>
         </select>
     </div>
+
+    <div class="form-group">
+        <button type="button" onclick="addRequirement()">Add Requirement</button>
+    </div>
+
+    <div id="requirementsContainer" class="requirements-container"></div>
 
     <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
     <input type="hidden" id="status" th:field="*{status}" value="-1">

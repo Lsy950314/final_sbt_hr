@@ -34,7 +34,7 @@ public class ProjectsRequest {
     private Long projectTypeId;
 
     private List<ProjectRequirementsRequest> projectRequirements; // 요구스킬 스택을 위한 추가 부분
-    
+
     public Projects toEntity(ProjectTypes projectType) {
         Projects project = new Projects();
         project.setProjectId(this.projectId);
