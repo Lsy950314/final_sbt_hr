@@ -14,6 +14,9 @@ public class EmployeesSkillRequest {
     private Long skillLanguage;
     private Integer skillCareer;
 
+    private String skillName;  // 프로그래밍 언어명 때문에 추가된 부분
+    private String Name;// 직원이름 때문에 추가된 부분
+
     public EmployeesSkill toEntity(Employees employee, Skills skill) {
         EmployeesSkill employeesSkill = new EmployeesSkill();
         employeesSkill.setEmployeesSkillId(this.employeesSkillId);
@@ -23,5 +26,7 @@ public class EmployeesSkillRequest {
         return employeesSkill;
     }
     //맞는지 모르겠다.
+
+    // 새롭게 추가된 toDto 메서드
 
 }

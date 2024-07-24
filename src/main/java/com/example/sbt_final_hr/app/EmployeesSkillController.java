@@ -16,9 +16,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/employees-skills")
 public class EmployeesSkillController {
+    private EmployeesSkillService employeesSkillService;
+    private SkillsService skillsService;
+    private EmployeesService employeesService;
 
     @Autowired
-    private EmployeesSkillService employeesSkillService;
+    private EmployeesSkillController(EmployeesService employeesService, SkillsService skillsService, EmployeesSkillService employeesSkillService){
+        this.employeesService = employeesService;
+        this.skillsService = skillsService;
+        this.employeesSkillService = employeesSkillService;
+
+    }
+
+
 
     @Autowired
     private EmployeesRepository employeesRepository;
@@ -26,10 +36,29 @@ public class EmployeesSkillController {
     @Autowired
     private SkillsRepository skillsRepository;
 
-    @GetMapping
+//    @GetMapping
+//    public String getAllEmployeesSkills(Model model) {
+//        List<EmployeesSkillRequest> skills = employeesSkillService.getAllEmployeesSkills();
+//        model.addAttribute("skills", skills);
+//        model.addAttribute("employees", employeesService.findAll());
+//        model.addAttribute("skills", skillsService.getAllSkills());
+//        return "employees/employees-skills";
+//    }
+
+
+    @GetMapping("/skills2")
     public String getAllEmployeesSkills(Model model) {
-        List<EmployeesSkillRequest> skills = employeesSkillService.getAllEmployeesSkills();
-        model.addAttribute("skills", skills);
+        List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
+        model.addAttribute("employeesskills", employeesskills);
+
+        return "employees/employees-skills2";
+    }
+
+    @GetMapping
+    public String getAllEmployeesSkills2(Model model) {
+        List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
+        model.addAttribute("employeesskills", employeesskills);
+
         return "employees/employees-skills";
     }
 
