@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -21,4 +23,8 @@ public class Skills {
 
     @Column(name = "skill_name")
     private String skillName;
+
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
+    private List<EmployeesSkill> employeesSkills;
+
     }

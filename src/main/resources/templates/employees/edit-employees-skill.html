@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Employee Skill</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Edit Employee Skill</h1>
+<form th:action="@{/employees-skills/edit/{id}(id=${skill.employeesSkillId})}" th:object="${skill}" method="post">
+    <input type="hidden" th:field="*{employeesSkillId}" />
+    <label for="employeeId">Employee ID:</label>
+    <input type="text" id="employeeId" th:field="*{employeeId}" /><br/>
+
+    <label for="skillLanguage">Skill ID:</label>
+    <input type="text" id="skillLanguage" th:field="*{skillLanguage}" /><br/>
+
+    <label for="skillCareer">Skill Career:</label>
+    <input type="text" id="skillCareer" th:field="*{skillCareer}" /><br/>
+
+    <button type="submit">Save</button>
+</form>
+<a href="/employees-skills">Back to List</a>
+</body>
+</html>

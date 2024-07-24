@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employees Skills</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Employees Skills</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Employee ID</th>
+        <th>Skill ID</th>
+        <th>Skill Career</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="skill : ${skills}">
+        <td th:text="${skill.employeesSkillId}"></td>
+        <td th:text="${skill.employeeId}"></td>
+        <td th:text="${skill.skillLanguage}"></td>
+        <td th:text="${skill.skillCareer}"></td>
+        <td>
+            <a th:href="@{/employees-skills/edit/{id}(id=${skill.employeesSkillId})}">Edit</a>
+            <a th:href="@{/employees-skills/delete/{id}(id=${skill.employeesSkillId})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/employees-skills/create">Create New Skill</a>
+</body>
+</html>

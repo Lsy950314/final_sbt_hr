@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Employee Skill</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Create Employee Skill</h1>
+<form th:action="@{/employees-skills}" method="post">
+    <label for="employeeId">Employee ID:</label>
+    <input type="text" id="employeeId" name="employeeId"/><br/>
+
+    <label for="skillLanguage">Skill ID:</label>
+    <input type="text" id="skillLanguage" name="skillLanguage"/><br/>
+
+    <label for="skillCareer">Skill Career:</label>
+    <input type="text" id="skillCareer" name="skillCareer"/><br/>
+
+    <button type="submit">Create</button>
+</form>
+<a href="/employees-skills">Back to List</a>
+</body>
+</html>
