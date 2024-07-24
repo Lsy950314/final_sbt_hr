@@ -17,4 +17,8 @@ public class ProjectTypesService {
     public List<ProjectTypes> getAllProjectTypes() {
         return projectTypesRepository.findAll();
     }
+
+    public ProjectTypes getProjectTypeById(Long id) {
+        return projectTypesRepository.findById(id).get();
+    }
 }
