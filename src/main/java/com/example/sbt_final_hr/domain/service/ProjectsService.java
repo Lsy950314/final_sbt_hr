@@ -62,6 +62,7 @@ public class ProjectsService {
         Projects project = projectsRequest.toEntity(projectType);
         project.setRegistrationDate(existingProject.getRegistrationDate()); // 기존 등록일 유지
         projectsRepository.save(project);
+        System.out.println("업데이트 성공");
     }
 
 

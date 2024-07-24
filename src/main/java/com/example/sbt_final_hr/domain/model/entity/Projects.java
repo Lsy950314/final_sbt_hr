@@ -54,7 +54,7 @@ public class Projects {
     private String contactName = "担当者";
 
     @Column(name = "registration_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime registrationDate;
 
     @ManyToOne

@@ -36,5 +36,10 @@ public class ProjectRequirementsService {
         ProjectRequirements projectRequirements = request.toEntity(project);
         projectRequirementsRepository.save(projectRequirements);
     }
+
+    public void deleteByProjectId(Long projectId) {
+       List<ProjectRequirements> requirements = projectRequirementsRepository.findByProject_ProjectId(projectId);
+        projectRequirementsRepository.deleteAll(requirements);
+    }
 }
 
