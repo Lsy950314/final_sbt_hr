@@ -7,6 +7,7 @@ import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -49,19 +50,37 @@ public class ProjectController {
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
     @GetMapping("/getInfoByProjectID")
-    public void getInfoByProjectID(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+    public void getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
         List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
 
-        redirectAttributes.addFlashAttribute("projectId", id);
-        redirectAttributes.addFlashAttribute("projectRequirements", projectRequirements);
-        redirectAttributes.addFlashAttribute("employeesProjects", employeesProjects);
-        redirectAttributes.addFlashAttribute("employees", employees);
+        session.setAttribute("projectId", id);
+        session.setAttribute("projectRequirements", projectRequirements);
+        session.setAttribute("employeesProjects", employeesProjects);
+        session.setAttribute("employees", employees);
     }
 
     @GetMapping("/matchManagement")
-    public String matchManagement(Model model, @RequestParam Map<String, String> payload) {
+    public String matchManagement(HttpSession session, Model model, SessionStatus sessionStatus) {
+        Long projectId = (Long) session.getAttribute("projectId");
+        List<ProjectRequirements> projectRequirements = (List<ProjectRequirements>) session.getAttribute("projectRequirements");
+        List<EmployeesProjects> employeesProjects = (List<EmployeesProjects>) session.getAttribute("employeesProjects");
+        List<Employees> employees = (List<Employees>) session.getAttribute("employees");
+        if (projectId == null || projectRequirements == null || employeesProjects == null || employees == null) {
+            // 모달창을 띄우고 시간이 지난 후에 배정 관리 페이지 버튼을 누르는 바람에
+            // 세션이 만료된 경우, 에러 페이지로 리다이렉트하거나 적절한 처리를 수행
+            return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
+        }
+        sessionStatus.setComplete();
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("projectRequirements", projectRequirements);
+        model.addAttribute("employeesProjects", employeesProjects);
+        model.addAttribute("employees", employees);
+
+
+
         return "project/matchManagement";
     }
 
