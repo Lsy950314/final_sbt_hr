@@ -77,7 +77,7 @@
             margin-right: 10px;
             float: left;
             width: 200px; /* 각 div의 고정된 너비 */
-
+            height: 40px;
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
         }
@@ -134,6 +134,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
             cursor: pointer; /* 커서 변경 */
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+            text-decoration: none;
         }
 
         .header, .row {
@@ -171,7 +172,7 @@
     </div>
 
     <div class="contents">
-        <p style="font-size: 26px">社員リスト</p>
+        <p style="font-size: 26px">プロジェクトリスト</p>
 
         <div class="members">
             <div class="header">
@@ -190,7 +191,7 @@
                 <div th:text="${p.startDate}"></div>
                 <div th:text="${p.endDate}"></div>
 
-                <div><button class="modal-button">詳細を見る</button></div>
+                <div><a th:href="'/getInfoByProjectID?id=' + ${p.projectId}" class="modal-button">詳細を見る</a></div>
             </div>
         </div>
 
@@ -198,7 +199,9 @@
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <p>モーダルコンテンツ</p>
+                <div id="modal-body">
+                    <p>Loading...</p>
+                </div>
             </div>
         </div>
 
@@ -210,27 +213,60 @@
 
 
 <script>
-    // JavaScript to handle modal
     document.addEventListener('DOMContentLoaded', (event) => {
         var modal = document.getElementById("modal");
-        var btns = document.querySelectorAll(".modal-button");
+        var modalBody = document.getElementById("modal-body");
+        var links = document.querySelectorAll(".modal-button");
         var span = document.getElementsByClassName("close-button")[0];
 
-        btns.forEach(function(btn) {
-            btn.onclick = function() {
+        links.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent the default link action
+
+                var url = new URL(link.href);
+                var projectId = url.searchParams.get("id");
+
+                modalBody.innerHTML = "<p>Loading...</p>";
                 modal.style.display = "block";
-            }
+
+                // Fetch project info from the server
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Populate modal with project data
+                        modalBody.innerHTML = `
+                    <p>プロジェクトID: ${data.projectId}</p>
+                    <p>プロジェクト要件: ${JSON.stringify(data.projectRequirements)}</p>
+                    <p>従業員プロジェクト: ${JSON.stringify(data.employeesProjects)}</p>
+                    <p>従業員: ${JSON.stringify(data.employees)}</p>
+                `;
+                    })
+                    .catch(error => {
+                        modalBody.innerHTML = "<p>データを取得できませんでした。</p>";
+                        console.error('Error fetching project data:', error);
+                    });
+            });
         });
 
-        span.onclick = function() {
+        span.addEventListener('click', function() {
             modal.style.display = "none";
-        }
+        });
 
-        window.onclick = function(event) {
+        window.addEventListener('click', function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        }
+        });
     });
 
 </script>
