@@ -10,7 +10,7 @@
     let marker;
     let autocomplete;
     let skillCount = 0;
-
+    //구글 맵을 초기화하고 사용자가 입력한 주소에 따라 위치를 설정합니다.
     function initMap() {
         const initialLocation = { lat: 35.6895, lng: 139.6917 };
 
@@ -45,7 +45,7 @@
             document.getElementById('longitude').value = place.geometry.location.lng();
         });
     }
-
+    //'프로그래밍 경력' 여부에 따라 관련 입력 필드의 표시 여부를 토글합니다.
     function toggleProgrammingExperience(value) {
         const experienceDiv = document.getElementById('programmingExperience');
         if (value === 'yes') {
@@ -55,14 +55,14 @@
             clearExperienceFields();
         }
     }
-
+    //프로그래밍 경력 필드를 초기화합니다.
     function clearExperienceFields() {
         const experienceDiv = document.getElementById('programmingExperience');
         while (experienceDiv.firstChild) {
             experienceDiv.removeChild(experienceDiv.firstChild);
         }
     }
-
+    //새로운 프로그래밍 경력 입력 필드를 동적으로 추가합니다.
     function addProgrammingExperience() {
         skillCount++;
 
@@ -149,8 +149,10 @@
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
         <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
+<!--th:field 속성은 Thymeleaf를 사용하여 모델의 preferredLanguage 필드와 바인딩됩니다.-->
             <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
         </select>
+<!--skill.skillId는 옵션의 값으로 설정되고, skill.skillName은 옵션의 텍스트로 설정됩니다.-->
     </div>
 
     <div class="form-group">

@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -49,6 +50,9 @@ public class Employees {
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<EmployeesSkill> skills;  // 일대다 관계 정의
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
