@@ -70,7 +70,56 @@
       .members > div {
         display: flex;
         margin-right: 40px;
+        overflow: hidden; /* Clearfix 효과를 위해 추가 */
       }
+      .members > div > div {
+        margin-left: 10px;
+        margin-right: 10px;
+        float: left;
+        width: 200px; /* 각 div의 고정된 너비 */
+
+        margin-bottom: 10px; /* 간격을 주기 위해 추가 */
+        box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+      }
+
+
+
+      .modal {
+        display: none; /* 숨김 처리 */
+        position: fixed; /* 모달을 화면 중앙에 고정 */
+        z-index: 1; /* 다른 콘텐츠 위에 표시 */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 중앙 정렬 */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* 너비 조정 */
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+
     </style>
   </head>
   <body>
@@ -93,9 +142,43 @@
             <div>dd</div>
             <div th:text="${e.address}"></div>
             <div th:text="${e.currentProjectEndDate}"></div>
+            <div><button class="modal-button">詳細を見る</button></div>
           </div>
         </div>
+        <!-- 모달 구조 -->
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </body>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    // 모달 관련 스크립트
+    var modal = document.getElementById("myModal");
+    var btns = document.querySelectorAll(".modal-button");
+    var span = document.getElementsByClassName("close")[0];
+
+    btns.forEach(function(button) {
+      button.onclick = function() {
+        modal.style.display = "block";
+      }
+    });
+
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  });
+
+</script>
 </html>
