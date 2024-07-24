@@ -136,6 +136,27 @@
         transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
       }
 
+      .header, .row {
+        display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+      }
+
+      .header > div {
+        font-weight: bold;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .row > div {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .row > div:nth-child(6) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
     </style>
   </head>
@@ -153,6 +174,14 @@
         <p style="font-size: 26px">社員リスト</p>
 
         <div class="members">
+          <div class="header">
+            <div>名前</div>
+            <div>評価</div>
+            <div>Column2</div>
+            <div>住所</div>
+            <div>プロジェクト終了日</div>
+            <div>詳細を見る</div>
+          </div>
           <div th:each="e : ${employees}">
             <div th:text="${e.name}"></div>
             <div>dd</div>
@@ -166,7 +195,7 @@
         <div id="myModal" class="modal">
           <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Some text in the Modal..</p>
+            <p>사원정보 ㅇㅇ</p>
           </div>
         </div>
 
