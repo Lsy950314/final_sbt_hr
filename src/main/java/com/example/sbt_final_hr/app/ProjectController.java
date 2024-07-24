@@ -79,8 +79,6 @@ public class ProjectController {
         model.addAttribute("employeesProjects", employeesProjects);
         model.addAttribute("employees", employees);
 
-
-
         return "project/matchManagement";
     }
 
