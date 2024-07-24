@@ -16,14 +16,18 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeesSkillService {
 
-    @Autowired
-    private EmployeesSkillRepository employeesSkillRepository;
+    private final EmployeesSkillRepository employeesSkillRepository;
+    private final EmployeesRepository employeeRepository;
+    private final SkillsRepository skillRepository;
 
     @Autowired
-    private EmployeesRepository employeeRepository;
-
-    @Autowired
-    private SkillsRepository skillRepository;
+    public EmployeesSkillService(EmployeesSkillRepository employeesSkillRepository,
+                                 EmployeesRepository employeeRepository,
+                                 SkillsRepository skillRepository) {
+        this.employeesSkillRepository = employeesSkillRepository;
+        this.employeeRepository = employeeRepository;
+        this.skillRepository = skillRepository;
+    }
 
     public List<EmployeesSkillRequest> getAllEmployeesSkills() {
         return employeesSkillRepository.findAll().stream()

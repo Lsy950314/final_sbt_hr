@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name="Employees_Skill")
 public class EmployeesSkill {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="emplyees_skill_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="employees_skill_seq")
     @SequenceGenerator(name = "employees_skill_seq", sequenceName = "Employees_Skill_SEQ", allocationSize = 1)
     @Column(name = "Employees_Skill_ID")
     private Long employeesSkillId;
@@ -43,11 +43,17 @@ public class EmployeesSkill {
     public EmployeesSkillRequest toDto() {
         EmployeesSkillRequest employeesSkillRequest = new EmployeesSkillRequest();
         employeesSkillRequest.setEmployeesSkillId(this.employeesSkillId);
-        employeesSkillRequest.setEmployeeId(this.employee.getEmployeeId());
+        employeesSkillRequest.setName(this.employee.getName());
+        //되나?
         employeesSkillRequest.setSkillLanguage(this.skill.getSkillId());
+        //되나?
+        employeesSkillRequest.setSkillName(this.skill.getSkillName());
         employeesSkillRequest.setSkillCareer(this.skillCareer);
         return employeesSkillRequest;
     }
+
+
+
 
 }
 
