@@ -29,7 +29,7 @@ public class ProjectsRequest {
     private Double longitude;
     private String contactPhone;
     private String contactName;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime registrationDate;
     private Long projectTypeId;
 

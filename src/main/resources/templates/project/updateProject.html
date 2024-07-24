@@ -110,14 +110,6 @@
             `;
             requirementsContainer.appendChild(requirementItem);
         }
-
-        function beforeSubmit() {
-            const registrationDateField = document.createElement('input');
-            registrationDateField.type = 'hidden';
-            registrationDateField.name = 'registrationDate';
-            registrationDateField.value = new Date().toISOString();
-            document.getElementById('projectForm').appendChild(registrationDateField);
-        }
         /*]]>*/
     </script>
 </head>
@@ -173,6 +165,7 @@
     </div>
     <div id="requirementsContainer" class="requirements-container"></div>
 
+    <input type="hidden" id="projectId" th:field="*{projectId}">
     <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
     <input type="hidden" id="status" th:field="*{status}" value="-1">
 
