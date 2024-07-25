@@ -10,8 +10,12 @@
     <label for="employeeId">Employee ID:</label>
     <input type="text" id="employeeId" name="employeeId"/><br/>
 
-    <label for="skillLanguage">Skill ID:</label>
-    <input type="text" id="skillLanguage" name="skillLanguage"/><br/>
+    <div class="form-group">
+        <label for="skillLanguage">Skill Language:</label>
+        <select id="skillLanguage" name="skillLanguage" required>
+            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
+        </select>
+    </div>
 
     <label for="skillCareer">Skill Career:</label>
     <input type="text" id="skillCareer" name="skillCareer"/><br/>

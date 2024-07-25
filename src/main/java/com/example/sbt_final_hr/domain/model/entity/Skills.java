@@ -1,5 +1,6 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Skills {
     private String skillName;
 
     @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<EmployeesSkill> employeesSkills;
 
     }

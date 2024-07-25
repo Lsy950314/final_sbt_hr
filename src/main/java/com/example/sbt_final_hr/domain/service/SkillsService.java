@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SkillsService {
@@ -54,6 +55,12 @@ public class SkillsService {
     public List<Skills> getSkillsByNameLikeAndIdGreaterThan(String name, Long id) {
         return skillsRepository.findByNameLikeAndIdGreaterThan(name, id);
     }
+
+    public Optional<Skills> findById(Long id) {
+        return skillsRepository.findById(id);
+    }
+
+
 
 
 

@@ -149,10 +149,10 @@
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
         <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-<!--th:field 속성은 Thymeleaf를 사용하여 모델의 preferredLanguage 필드와 바인딩됩니다.-->
+            <!--th:field 속성은 Thymeleaf를 사용하여 모델의 preferredLanguage 필드와 바인딩됩니다.-->
             <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
         </select>
-<!--skill.skillId는 옵션의 값으로 설정되고, skill.skillName은 옵션의 텍스트로 설정됩니다.-->
+        <!--skill.skillId는 옵션의 값으로 설정되고, skill.skillName은 옵션의 텍스트로 설정됩니다.-->
     </div>
 
     <div class="form-group">
