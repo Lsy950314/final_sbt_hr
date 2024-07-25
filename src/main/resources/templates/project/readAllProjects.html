@@ -136,8 +136,8 @@
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
         }
 
-        .header, .row {
-            display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+        .header {
+            display: flex;
         }
 
         .header > div {
@@ -157,6 +157,17 @@
             justify-content: center;
             align-items: center;
         }
+
+
+
+
+
+    .modal-projects > div{
+        display: flex;
+
+    }
+
+
 
     </style>
 </head>
@@ -180,7 +191,7 @@
                 <div>クライアント会社</div>
                 <div>プロジェクト開始日</div>
                 <div>プロジェクト終了日</div>
-                <div>詳細を見る</div>
+
             </div>
             <div th:each="p : ${projects}">
                 <div th:text="${p.projectId}"></div>
@@ -198,19 +209,30 @@
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <div th:each="p : ${projects}">
+                <div class="header">
+                    <div>プロジェクトID</div>
+                    <div>プロジェクト名</div>
+                    <div>クライアント会社</div>
+                    <div>プロジェクト開始日</div>
+                    <div>プロジェクト終了日</div>
+                    <div>詳細を見る</div>
+                </div>
+
+                <div class="modal-projects">
+                    <div th:each="p : ${projects}">
                     <div th:text="${p.projectId}"></div>
                     <div th:text="${p.projectName}"></div>
                     <!--                <div th:text="${p.projectType}"></div>-->
                     <div th:text="${p.clientCompany}"></div>
                     <div th:text="${p.startDate}"></div>
                     <div th:text="${p.endDate}"></div>
+                </div>
             </div>
+            </div>
+
+
         </div>
-
-
     </div>
-</div>
 
 
 
