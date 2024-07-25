@@ -36,15 +36,6 @@ public class EmployeesSkillController {
     @Autowired
     private SkillsRepository skillsRepository;
 
-//    @GetMapping
-//    public String getAllEmployeesSkills(Model model) {
-//        List<EmployeesSkillRequest> skills = employeesSkillService.getAllEmployeesSkills();
-//        model.addAttribute("skills", skills);
-//        model.addAttribute("employees", employeesService.findAll());
-//        model.addAttribute("skills", skillsService.getAllSkills());
-//        return "employees/employees-skills";
-//    }
-
 
     @GetMapping("/skills2")
     public String getAllEmployeesSkills(Model model) {

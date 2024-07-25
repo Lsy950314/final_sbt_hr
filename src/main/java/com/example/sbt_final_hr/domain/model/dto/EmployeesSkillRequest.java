@@ -12,6 +12,9 @@ public class EmployeesSkillRequest {
     private Long employeesSkillId;
     private Long employeeId;
     private Long skillLanguage;
+//    //7월 25일 시도중
+//    private Long employee;
+//    private Long skill;
     private Integer skillCareer;
 
     private String skillName;  // 프로그래밍 언어명 때문에 추가된 부분

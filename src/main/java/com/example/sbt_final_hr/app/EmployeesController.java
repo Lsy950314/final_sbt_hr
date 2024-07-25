@@ -2,6 +2,8 @@ package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
+import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.ProjectTypesService;
 import com.example.sbt_final_hr.domain.service.SkillsService;
@@ -47,6 +49,7 @@ public class EmployeesController {
         }
         return "redirect:/employees";
     }
+
 
 
 
