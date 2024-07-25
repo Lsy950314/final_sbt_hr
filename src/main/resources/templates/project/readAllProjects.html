@@ -72,6 +72,7 @@
             margin-right: 40px;
             /*overflow: hidden; !* Clearfix 효과를 위해 추가 *!*/
         }
+
         .members > div > div {
             margin-left: 10px;
             margin-right: 10px;
@@ -80,6 +81,7 @@
             height: 40px;
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+
         }
 
 
@@ -186,17 +188,15 @@
             <div th:each="p : ${projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
-<!--                <div th:text="${p.projectType}"></div>-->
                 <div th:text="${p.clientCompany}"></div>
                 <div th:text="${p.startDate}"></div>
                 <div th:text="${p.endDate}"></div>
-
-                <div><a th:href="'/getInfoByProjectID?id=' + ${p.projectId}" class="modal-button">詳細を見る</a></div>
+                <div><a th:href="'/getInfoByProjectID?id=' + ${p.projectId}" class="modal-button" data-id="${p.projectId}">詳細を見る</a></div>
             </div>
         </div>
 
         <!-- Modal Popup -->
-        <div id="modal" class="modal">
+        <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
                 <div id="modal-body">
@@ -205,71 +205,52 @@
             </div>
         </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // 모달 관련 스크립트
+                var modal = document.getElementById("myModal");
+                var btns = document.querySelectorAll(".modal-button");
+                var span = document.getElementsByClassName("close-button")[0];
 
-    </div>
-</div>
-
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        var modal = document.getElementById("modal");
-        var modalBody = document.getElementById("modal-body");
-        var links = document.querySelectorAll(".modal-button");
-        var span = document.getElementsByClassName("close-button")[0];
-
-        links.forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent the default link action
-
-                var url = new URL(link.href);
-                var projectId = url.searchParams.get("id");
-
-                modalBody.innerHTML = "<p>Loading...</p>";
-                modal.style.display = "block";
-
-                // Fetch project info from the server
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
+                btns.forEach(function(button) {
+                    button.onclick = function(event) {
+                        event.preventDefault();
+                        var projectId = this.getAttribute('data-id');
+                        fetch(`/getInfoByProjectID?id=${projectId}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json(); // JSON 데이터로 파싱
+                            })
+                            .then(data => {
+                                document.getElementById('modal-body').innerHTML = `
+                                <p>Project ID: ${data.projectId}</p>
+                                <p>Project Name: ${data.projectName}</p>
+                                <p>Client Company: ${data.clientCompany}</p>
+                                <p>Start Date: ${data.startDate}</p>
+                                <p>End Date: ${data.endDate}</p>
+                            `;
+                                modal.style.display = "block";
+                            })
+                            .catch(error => {
+                                document.getElementById('modal-body').innerHTML = `<p>Error loading data: ${error.message}</p>`;
+                                modal.style.display = "block";
+                            });
                     }
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Populate modal with project data
-                        modalBody.innerHTML = `
-                    <p>プロジェクトID: ${data.projectId}</p>
-                    <p>プロジェクト要件: ${JSON.stringify(data.projectRequirements)}</p>
-                    <p>従業員プロジェクト: ${JSON.stringify(data.employeesProjects)}</p>
-                    <p>従業員: ${JSON.stringify(data.employees)}</p>
-                `;
-                    })
-                    .catch(error => {
-                        modalBody.innerHTML = "<p>データを取得できませんでした。</p>";
-                        console.error('Error fetching project data:', error);
-                    });
+                });
+
+                span.onclick = function() {
+                    modal.style.display = "none";
+                }
+
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
             });
-        });
-
-        span.addEventListener('click', function() {
-            modal.style.display = "none";
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
-    });
-
-</script>
+        </script>
 </body>
 
 </html>
