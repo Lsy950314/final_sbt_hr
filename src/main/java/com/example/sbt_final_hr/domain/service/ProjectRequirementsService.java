@@ -32,6 +32,10 @@ public class ProjectRequirementsService {
         projectRequirementsRepository.save(projectRequirements);
     }
 
+    public boolean existsProjectRequirements(Long projectId, Long skillId, int requirementExperience) {
+        return projectRequirementsRepository.existsByProject_ProjectIdAndSkill_SkillIdAndRequiredExperience(projectId, skillId, requirementExperience);
+    }
+
     public void updateProjectRequirements(ProjectRequirementsRequest request, Projects project) {
         ProjectRequirements projectRequirements = request.toEntity(project);
         projectRequirementsRepository.save(projectRequirements);
