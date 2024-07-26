@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Project List</title>
     <style>
+        /* 기존 스타일 */
         body {
             width: 1920px;
             height: 1080px;
@@ -72,6 +73,7 @@
             margin-right: 40px;
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
         }
+
         .members > div > div {
             margin-left: 10px;
             margin-right: 10px;
@@ -81,7 +83,6 @@
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
         }
-
 
 
         .modal {
@@ -125,8 +126,7 @@
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */
-                    #87cefa  /* 파란색 계열 끝 색상 */
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
@@ -159,16 +159,10 @@
         }
 
 
+        .modal-projects > div {
+            display: flex;
 
-
-
-    .modal-projects > div{
-        display: flex;
-
-    }
-
-
-
+        }
     </style>
 </head>
 <body>
@@ -196,72 +190,69 @@
             <div th:each="p : ${projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
-<!--                <div th:text="${p.projectType}"></div>-->
                 <div th:text="${p.clientCompany}"></div>
                 <div th:text="${p.startDate}"></div>
                 <div th:text="${p.endDate}"></div>
-
-                <div><button class="modal-button">詳細を見る</button></div>
+                <div>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
+                </div>
             </div>
         </div>
 
-        <!-- Modal Popup -->
+        <!-- 모달 팝업 -->
         <div id="modal" class="modal">
             <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <div class="header">
-                    <div>プロジェクトID</div>
-                    <div>プロジェクト名</div>
-                    <div>クライアント会社</div>
-                    <div>プロジェクト開始日</div>
-                    <div>プロジェクト終了日</div>
-                    <div>詳細を見る</div>
-                </div>
-
-                <div class="modal-projects">
-                    <div th:each="p : ${projects}">
-                    <div th:text="${p.projectId}"></div>
-                    <div th:text="${p.projectName}"></div>
-                    <!--                <div th:text="${p.projectType}"></div>-->
-                    <div th:text="${p.clientCompany}"></div>
-                    <div th:text="${p.startDate}"></div>
-                    <div th:text="${p.endDate}"></div>
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <div id="modal-body">
+                    <!-- 여기에 동적으로 내용이 추가됩니다 -->
                 </div>
             </div>
-            </div>
-
-
         </div>
     </div>
-
-
-
+</div>
 
 <script>
-    // JavaScript to handle modal
-    document.addEventListener('DOMContentLoaded', (event) => {
-        var modal = document.getElementById("modal");
-        var btns = document.querySelectorAll(".modal-button");
-        var span = document.getElementsByClassName("close-button")[0];
+    function showProjectDetails(projectId) {
+        fetch(`/getInfoByProjectID?id=${projectId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                const modalBody = document.getElementById('modal-body');
+                modalBody.innerHTML = `
+                    <div>프로젝트ID: ${data.projectId}</div>
+                    <div>프로젝트要件:
+                        <ul>
+                            ${data.projectRequirements.map(req => `<li>${req.description}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>従業員プロジェクト:
+                        <ul>
+                            ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>従業員:
+                        <ul>
+                            ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                openModal();
+            });
+    }
 
-        btns.forEach(function(btn) {
-            btn.onclick = function() {
-                modal.style.display = "block";
-            }
-        });
+    function openModal() {
+        document.getElementById('modal').style.display = 'block';
+    }
 
-        span.onclick = function() {
-            modal.style.display = "none";
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == document.getElementById('modal')) {
+            closeModal();
         }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    });
-
+    }
 </script>
 </body>
-
 </html>
