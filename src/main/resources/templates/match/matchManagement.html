@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-sss
+    <div th:each="f : ${filteredEmployees}">
+        <div th:text="'이름 = ' + ${f.getName()}"></div>
+        <div th:text="'선호스킬 = '+ ${f.getSkill().skillName}"></div>
+        <div th:text="''"></div>
+    </div>
 
 </body>
 </html>
