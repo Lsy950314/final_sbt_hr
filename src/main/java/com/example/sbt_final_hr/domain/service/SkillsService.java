@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SkillsService {
@@ -34,5 +35,4 @@ public class SkillsService {
     public void deleteSkills(Long id) {
         skillsRepository.deleteById(id);
     }
-
 }
