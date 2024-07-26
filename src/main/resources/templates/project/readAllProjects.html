@@ -160,11 +160,28 @@
             display: flex;
         }
 
-        #modal-body{
+        /* 모달 본문 */
+
+        #modal-body {
             display: flex;
+
+            gap: 20px;
         }
-        #modal-body div{
-            margin-right: 30px;
+
+        #modal-body > div {
+            padding: 20px;
+            border: 1px solid #1e90ff;
+            border-radius: 10px;
+            background: #f0f8ff;
+            color: #000;
+        }
+
+
+
+        .modal-projectRequirements li {
+            border-bottom: 1px solid #1e90ff;
+            padding: 5px 0;
+            color: #333;
         }
 
 
@@ -228,7 +245,7 @@
                 modalBody.innerHTML = `
                     <div>プロジェクトID: ${data.projectId}</div>
                     <div>プロジェクト要件:
-                        <ul>
+                        <ul class="modal-projectRequirements">
                             ${data.projectRequirements.map(req => `
                                 <li>
                                     スキル: ${req.skill.skillName},
