@@ -65,7 +65,6 @@
             color: #333; /* 어두운 글자색 */
             font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
             text-align: center;
-
         }
 
         .members > div {
@@ -79,11 +78,9 @@
             margin-right: 10px;
             float: left;
             width: 200px; /* 각 div의 고정된 너비 */
-
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
         }
-
 
         .modal {
             display: none; /* 숨김 처리 */
@@ -158,10 +155,8 @@
             align-items: center;
         }
 
-
         .modal-projects > div {
             display: flex;
-
         }
     </style>
 </head>
@@ -216,13 +211,18 @@
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
-                    <div>프로젝트ID: ${data.projectId}</div>
-                    <div>프로젝트要件:
+                    <div>プロジェクトID: ${data.projectId}</div>
+                    <div>プロジェクト要件:
                         <ul>
-                            ${data.projectRequirements.map(req => `<li>${req.description}</li>`).join('')}
+                            ${data.projectRequirements.map(req => `
+                                <li>
+                                    スキル: ${req.skill.skillName},
+                                    必要経験: ${req.requiredExperience}ヶ月,
+                                    必要人数: ${req.requiredCount}人
+                                </li>
+                            `).join('')}
                         </ul>
                     </div>
                     <div>従業員プロジェクト:
@@ -237,6 +237,9 @@
                     </div>
                 `;
                 openModal();
+            })
+            .catch(error => {
+                console.error('Error fetching project details:', error);
             });
     }
 
