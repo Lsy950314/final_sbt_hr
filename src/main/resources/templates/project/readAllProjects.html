@@ -224,6 +224,9 @@
 
 <script>
     function showProjectDetails(projectId) {
+        function navigateToMatchManagement() {
+            window.location.href = /*[[@{/matchManagement}]]*/ '/matchManagement';
+        }
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
@@ -252,6 +255,9 @@
                             ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
                         </div>
                     </div>
+                    <div>
+        <button onclick="navigateToMatchManagement()">버튼</button>
+    </div>
                 `;
                 openModal();
             })
