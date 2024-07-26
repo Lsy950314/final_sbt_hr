@@ -25,8 +25,5 @@ public class Skills {
     @Column(name = "skill_name")
     private String skillName;
 
-    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<EmployeesSkill> employeesSkills;
 
     }

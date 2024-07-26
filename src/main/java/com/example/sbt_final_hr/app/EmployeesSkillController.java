@@ -29,13 +29,10 @@ public class EmployeesSkillController {
 
     }
 
-
-
-    @Autowired
-    private EmployeesRepository employeesRepository;
-
-    @Autowired
-    private SkillsRepository skillsRepository;
+    @GetMapping("/check")
+    public String check() {
+        return "employees/check";
+    }
 
 
     @GetMapping("/skills2")
