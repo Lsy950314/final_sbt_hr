@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProjectRequirementsRepository extends JpaRepository<ProjectRequirements, Long> {
     List<ProjectRequirements> findByProject_ProjectId(Long projectId);
+
+    boolean existsByProject_ProjectIdAndSkill_SkillIdAndRequiredExperience(Long projectId, Long skillId, int requiredExperience);
 }
