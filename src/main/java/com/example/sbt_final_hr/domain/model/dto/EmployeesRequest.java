@@ -26,8 +26,19 @@ public class EmployeesRequest {
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
+    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
+//    private List<EmployeesSkillRequest.SkillDTO> skills; // 프로그래밍 경력 -> 시도하는거 망하면 복구해야함
+    private List<ProgrammingExperience> skills;
+    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
+    @Getter
+    @Setter
+    public static class ProgrammingExperience {
+        private Long skillLanguage;
+        private Integer skillCareer;
+        //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
 
-    private List<EmployeesSkillRequest.SkillDTO> skills; // 프로그래밍 경력
+    }
+
 
     public Employees toEntity() {
         Employees employees = new Employees();
