@@ -10,25 +10,17 @@ import lombok.Setter;
 @Setter
 public class EmployeesSkillRequest {
     private Long employeesSkillId;
-    private Long employeeId;
-    private Long skillLanguage;
+    private Employees employee;
+    private Skills skill;
     private Integer skillCareer;
-    private String skillName;
-    private String name;
 
-    @Getter
-    @Setter
-    public static class SkillDTO {
-        private Long skillLanguage;
-        private Integer skillCareer;
-    }
-
-    public EmployeesSkill toEntity(Employees employee, Skills skill) {
+    public EmployeesSkill toEntity(Employees employee) {
         EmployeesSkill employeesSkill = new EmployeesSkill();
         employeesSkill.setEmployeesSkillId(this.employeesSkillId);
         employeesSkill.setEmployee(employee);
-        employeesSkill.setSkill(skill);
+        employeesSkill.setSkill(this.skill);
         employeesSkill.setSkillCareer(this.skillCareer);
         return employeesSkill;
+
     }
 }

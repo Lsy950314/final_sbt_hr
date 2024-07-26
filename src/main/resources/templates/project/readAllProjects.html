@@ -224,9 +224,7 @@
 
 <script>
     function showProjectDetails(projectId) {
-        function navigateToMatchManagement() {
-            window.location.href = /*[[@{/matchManagement}]]*/ '/matchManagement';
-        }
+
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
@@ -264,6 +262,10 @@
             .catch(error => {
                 console.error('Error fetching project details:', error);
             });
+    }
+
+    function navigateToMatchManagement() {
+        window.location.href = /*[[@{/matchManagement}]]*/ '/matchManagement';
     }
 
     function openModal() {

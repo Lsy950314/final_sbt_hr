@@ -51,10 +51,17 @@ public class ProjectController {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
         List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
-
+        
+        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션 써보는 중
         session.setAttribute("projectId", id);
+        
+        // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
+        
+        // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
         session.setAttribute("employeesProjects", employeesProjects);
+        
+        // 해당 프로젝트에 참여중인 사원들
         session.setAttribute("employees", employees);
 
         Map<String, Object> response = new HashMap<>();

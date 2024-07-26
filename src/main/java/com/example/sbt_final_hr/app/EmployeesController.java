@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,24 +36,6 @@ public class EmployeesController {
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
     }
-    //7월 26일 15시 새로운 시도중
-    //내가만든 개쓰레기 코드-get
-//    @GetMapping("/newemployee")
-//    public String showCreateEmployeeForm(Model model) {
-//        List<Skills> skills = skillsService.getAllSkills();
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            String skillsJson = mapper.writeValueAsString(skills);
-//            model.addAttribute("skillsJson", skillsJson);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//            // Handle the exception appropriately
-//        }
-//        model.addAttribute("employeesRequest", new EmployeesRequest());
-//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-//        model.addAttribute("skills", skills);
-//        return "employees/createemployee";
-//    }
 
     //7월 26일 15시 새로운 시도중
     //팀장 코드 참고해서 수정중-get
@@ -87,16 +70,13 @@ public class EmployeesController {
     //7월 26일 15시 새로운 시도중
     //팀장 코드 참고해서 수정중-post
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
         Employees employee = employeesService.save(employeesRequest.toEntity());
-        if(employeesRequest.getEmployeesskill() != null) {
-            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesskill() ) {
-
-
-
+        if(employeesRequest.getEmployeesSkillRequests() != null) {
+            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
-
-
         }
         return "redirect:/employees";
     }
@@ -155,7 +135,7 @@ public class EmployeesController {
     }
 
     @PostMapping("/update")
-    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) throws IOException {
         employeesService.save(employeesRequest.toEntity());
         return "redirect:/employees";
     }
