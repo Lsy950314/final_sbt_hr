@@ -3,7 +3,6 @@ package com.example.sbt_final_hr.domain.model.dto;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -11,7 +10,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 public class EmployeesRequest {
     private Long employeeId;
     private String name;

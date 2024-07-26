@@ -3,7 +3,6 @@ package com.example.sbt_final_hr.app;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
@@ -35,24 +34,6 @@ public class EmployeesController {
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
     }
-    //7월 26일 15시 새로운 시도중
-    //내가만든 개쓰레기 코드-get
-//    @GetMapping("/newemployee")
-//    public String showCreateEmployeeForm(Model model) {
-//        List<Skills> skills = skillsService.getAllSkills();
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            String skillsJson = mapper.writeValueAsString(skills);
-//            model.addAttribute("skillsJson", skillsJson);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//            // Handle the exception appropriately
-//        }
-//        model.addAttribute("employeesRequest", new EmployeesRequest());
-//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-//        model.addAttribute("skills", skills);
-//        return "employees/createemployee";
-//    }
 
     //7월 26일 15시 새로운 시도중
     //팀장 코드 참고해서 수정중-get
