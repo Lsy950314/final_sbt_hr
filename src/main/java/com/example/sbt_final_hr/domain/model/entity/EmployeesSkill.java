@@ -15,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name="Employees_Skill")
+@Table(name = "employees_skill", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"employee_id", "skill_language"})
+})
 public class EmployeesSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="employees_skill_seq")

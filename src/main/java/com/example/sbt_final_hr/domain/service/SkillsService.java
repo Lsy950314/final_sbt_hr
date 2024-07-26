@@ -35,4 +35,10 @@ public class SkillsService {
     public void deleteSkills(Long id) {
         skillsRepository.deleteById(id);
     }
+
+    public Optional<Skills> findById(Long id) {
+        return skillsRepository.findById(id);
+    }
+
+
 }
