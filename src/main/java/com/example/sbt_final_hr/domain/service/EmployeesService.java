@@ -70,14 +70,14 @@ public class EmployeesService {
         employee.setHireDate(dto.getHireDate());
         employee = employeesRepository.save(employee);
 
-        for (EmployeesRequest.ProgrammingExperience experience : dto.getSkills()) {
-            Skills skill = skillsRepository.findById(experience.getSkillLanguage()).orElseThrow(() -> new RuntimeException("Skill not found"));
-            EmployeesSkill employeesSkill = new EmployeesSkill();
-            employeesSkill.setEmployee(employee);
-            employeesSkill.setSkill(skill);
-            employeesSkill.setSkillCareer(experience.getSkillCareer());
-            employeesSkillRepository.save(employeesSkill);
-        }
+//        for (EmployeesRequest.ProgrammingExperience experience : dto.getSkills()) {
+//            Skills skill = skillsRepository.findById(experience.getSkillLanguage()).orElseThrow(() -> new RuntimeException("Skill not found"));
+//            EmployeesSkill employeesSkill = new EmployeesSkill();
+//            employeesSkill.setEmployee(employee);
+//            employeesSkill.setSkill(skill);
+//            employeesSkill.setSkillCareer(experience.getSkillCareer());
+//            employeesSkillRepository.save(employeesSkill);
+//        }
 
 
         //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.

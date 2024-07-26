@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
 </head>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
-<script>
+<script th:inline="javascript">
     let map;
     let marker;
     let autocomplete;
     let skillCount = 0;
-    //구글 맵을 초기화하고 사용자가 입력한 주소에 따라 위치를 설정합니다.
+
+    const skills = /*[[${skills}]]*/[];
+
     function initMap() {
         const initialLocation = { lat: 35.6895, lng: 139.6917 };
 
@@ -45,89 +47,52 @@
             document.getElementById('longitude').value = place.geometry.location.lng();
         });
     }
-    //'프로그래밍 경력' 여부에 따라 관련 입력 필드의 표시 여부를 토글합니다.
-    function toggleProgrammingExperience(value) {
-        const experienceDiv = document.getElementById('programmingExperience');
-        if (value === 'yes') {
-            experienceDiv.style.display = 'block';
-        } else {
-            experienceDiv.style.display = 'none';
-            clearExperienceFields();
-        }
-    }
-    //프로그래밍 경력 필드를 초기화합니다.
-    function clearExperienceFields() {
-        const experienceDiv = document.getElementById('programmingExperience');
-        while (experienceDiv.firstChild) {
-            experienceDiv.removeChild(experienceDiv.firstChild);
-        }
-    }
-    //새로운 프로그래밍 경력 입력 필드를 동적으로 추가합니다.
-    function addProgrammingExperience() {
-        skillCount++;
 
-        const experienceDiv = document.getElementById('programmingExperience');
-        const newExperienceDiv = document.createElement('div');
-        newExperienceDiv.id = 'skill_' + skillCount;
+    function addSkillCareer() {
+        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const index = skillCareerContainer.children.length;
 
-        const languageSelect = document.createElement('select');
-        languageSelect.name = 'skills[' + skillCount + '].language';
-        languageSelect.required = true;
+        const skillCareerItem = document.createElement('div');
+        skillCareerItem.classList.add('skillCareer-item');
 
-        // Assuming skills are dynamically populated from the backend
-        const languages = [
-            { skillId: 1, skillName: 'Java' },
-            { skillId: 2, skillName: 'Python' },
-            { skillId: 3, skillName: 'JavaScript' }
-            // Add more languages as needed
-        ];
-
-        languages.forEach(language => {
-            const option = document.createElement('option');
-            option.value = language.skillId;
-            option.text = language.skillName;
-            languageSelect.appendChild(option);
+        let skillOptions = '';
+        skills.forEach(skill => {
+            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
         });
 
-        const careerInput = document.createElement('input');
-        careerInput.type = 'number';
-        careerInput.name = 'skills[' + skillCount + '].career';
-        careerInput.min = 1;
-        careerInput.max = 120;
-        careerInput.placeholder = 'Months';
-        careerInput.required = true;
-
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.textContent = 'Remove';
-        removeButton.onclick = function() {
-            experienceDiv.removeChild(newExperienceDiv);
-        };
-
-        newExperienceDiv.appendChild(languageSelect);
-        newExperienceDiv.appendChild(careerInput);
-        newExperienceDiv.appendChild(removeButton);
-
-        experienceDiv.appendChild(newExperienceDiv);
+        skillCareerItem.innerHTML = `
+            <div class="form-group">
+                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
+                <select id="employeesskill[${index}].skill.skillId" name="employeesskill[${index}].skill.skillId" required>
+                    ${skillOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="employeesskill[${index}].skillcareer">Skill Career:</label>
+                <input type="number" id="employeesskill[${index}].skillcareer" name="employeesskill[${index}].skillcareer" required>
+            </div>
+        `;
+        skillCareerContainer.appendChild(skillCareerItem);
     }
+
+    window.onload = function() {
+        initMap();
+    };
 </script>
 <style>
     #map {
         height: 350px;
         width: 350px;
     }
-    #programmingExperience {
-        display: none;
-    }
 </style>
 <body onload="initMap()">
 <h1>Create Employee</h1>
 <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
     <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
+    <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
 
     <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}" placeholder="Enter address"/><br/>
+    <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
 
     <label for="latitude">Latitude:</label>
     <input type="text" id="latitude" th:field="*{latitude}" readonly/><br/>
@@ -149,10 +114,8 @@
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
         <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-            <!--th:field 속성은 Thymeleaf를 사용하여 모델의 preferredLanguage 필드와 바인딩됩니다.-->
             <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
         </select>
-        <!--skill.skillId는 옵션의 값으로 설정되고, skill.skillName은 옵션의 텍스트로 설정됩니다.-->
     </div>
 
     <div class="form-group">
@@ -168,14 +131,12 @@
     <label for="hireDate">Hire Date:</label>
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
 
-    <!-- New Programming Experience Section -->
-    <label>프로그래밍 경력이 있습니까?</label>
-    <input type="radio" name="programmingExperience" value="yes" onclick="toggleProgrammingExperience('yes')"> 예
-    <input type="radio" name="programmingExperience" value="no" onclick="toggleProgrammingExperience('no')" checked> 아니오
-    <br/>
+    <!-- Skill Career 섹션 -->
+    <div id="skillCareerContainer"></div>
+    <div class="form-group">
+        <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
+    </div>
 
-    <div id="programmingExperience"></div>
-    <button type="button" onclick="addProgrammingExperience()">프로그래밍 경력 추가</button>
     <br/>
 
     <button type="submit">Create Employee</button>

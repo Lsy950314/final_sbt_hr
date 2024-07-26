@@ -52,4 +52,12 @@ public class EmployeesSkillService {
     public void deleteEmployeesSkill(Long id) {
         employeesSkillRepository.deleteById(id);
     }
+
+    public EmployeesSkill createOrUpdateEmployeesSkill(EmployeesSkill employeesSkill) {
+        return employeesSkillRepository.save(employeesSkill);
+    }
+
+
+
+
 }

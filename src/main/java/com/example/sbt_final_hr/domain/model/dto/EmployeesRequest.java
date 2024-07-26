@@ -3,6 +3,7 @@ package com.example.sbt_final_hr.domain.model.dto;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class EmployeesRequest {
     private Long employeeId;
     private String name;
@@ -28,16 +30,8 @@ public class EmployeesRequest {
     private LocalDate hireDate;
     //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
 //    private List<EmployeesSkillRequest.SkillDTO> skills; // 프로그래밍 경력 -> 시도하는거 망하면 복구해야함
-    private List<ProgrammingExperience> skills;
-    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
-    @Getter
-    @Setter
-    public static class ProgrammingExperience {
-        private Long skillLanguage;
-        private Integer skillCareer;
-        //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
+    private List<EmployeesSkillRequest> employeesskill;
 
-    }
 
 
     public Employees toEntity() {
