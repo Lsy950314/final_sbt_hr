@@ -232,25 +232,25 @@
                 modalBody.innerHTML = `
                     <div>プロジェクトID: ${data.projectId}</div>
                     <div>プロジェクト要件:
-                        <ul class="modal-projectRequirements">
+                        <div class="modal-projectRequirements">
                             ${data.projectRequirements.map(req => `
-                                <li>
+                                <div>
                                     スキル: ${req.skill.skillName},
                                     必要経験: ${req.requiredExperience}ヶ月,
                                     必要人数: ${req.requiredCount}人 + test
-                                </li>
+                                </div>
                             `).join('')}
-                        </ul>
+                        </div>
                     </div>
                     <div>従業員プロジェクト:
-                        <ul>
+                        <div>
                             ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
-                        </ul>
+                        </div>
                     </div>
                     <div>従業員:
-                        <ul>
+                        <div>
                             ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
-                        </ul>
+                        </div>
                     </div>
                 `;
                 openModal();
