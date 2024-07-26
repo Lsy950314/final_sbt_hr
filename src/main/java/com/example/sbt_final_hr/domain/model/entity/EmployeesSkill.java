@@ -15,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name="Employees_Skill")
+@Table(name = "employees_skill", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"employee_id", "skill_language"})
+})
 public class EmployeesSkill {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="employees_skill_seq")
@@ -43,12 +45,8 @@ public class EmployeesSkill {
     public EmployeesSkillRequest toDto() {
         EmployeesSkillRequest employeesSkillRequest = new EmployeesSkillRequest();
         employeesSkillRequest.setEmployeesSkillId(this.employeesSkillId);
-        employeesSkillRequest.setEmployeeId(this.employee.getEmployeeId()); // 추가 부분
-        employeesSkillRequest.setName(this.employee.getName());
-        //되나?
-        employeesSkillRequest.setSkillLanguage(this.skill.getSkillId());
-        //되나?
-        employeesSkillRequest.setSkillName(this.skill.getSkillName());
+        employeesSkillRequest.setEmployee(this.employee);
+        employeesSkillRequest.setSkill(this.skill);
         employeesSkillRequest.setSkillCareer(this.skillCareer);
         return employeesSkillRequest;
     }

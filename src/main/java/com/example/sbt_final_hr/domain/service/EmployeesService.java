@@ -10,6 +10,7 @@ import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,20 +65,20 @@ public class EmployeesService {
         employee.setLongitude(dto.getLongitude());
         employee.setLastProjectEndDate(dto.getLastProjectEndDate());
         employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(dto.getPreferredLanguage());
-        employee.setPreferredProjectType(dto.getPreferredProjectType());
+        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
+        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
         employee.setContactNumber(dto.getContactNumber());
         employee.setHireDate(dto.getHireDate());
         employee = employeesRepository.save(employee);
 
-        for (EmployeesRequest.ProgrammingExperience experience : dto.getSkills()) {
-            Skills skill = skillsRepository.findById(experience.getSkillLanguage()).orElseThrow(() -> new RuntimeException("Skill not found"));
-            EmployeesSkill employeesSkill = new EmployeesSkill();
-            employeesSkill.setEmployee(employee);
-            employeesSkill.setSkill(skill);
-            employeesSkill.setSkillCareer(experience.getSkillCareer());
-            employeesSkillRepository.save(employeesSkill);
-        }
+//        for (EmployeesRequest.ProgrammingExperience experience : dto.getSkills()) {
+//            Skills skill = skillsRepository.findById(experience.getSkillLanguage()).orElseThrow(() -> new RuntimeException("Skill not found"));
+//            EmployeesSkill employeesSkill = new EmployeesSkill();
+//            employeesSkill.setEmployee(employee);
+//            employeesSkill.setSkill(skill);
+//            employeesSkill.setSkillCareer(experience.getSkillCareer());
+//            employeesSkillRepository.save(employeesSkill);
+//        }
 
 
         //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.

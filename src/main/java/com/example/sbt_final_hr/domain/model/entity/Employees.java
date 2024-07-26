@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 
 @Entity
@@ -34,7 +33,7 @@ public class Employees {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
     @Lob
-    private byte[] photo; // byte[] 형으로 유지 : 7월 22일
+    private byte[] photo;
     @Column(name = "preferred_language")
     private Long preferredLanguage;
     @Column(name = "preferred_project_type")
@@ -52,26 +51,21 @@ public class Employees {
     private ProjectTypes projectType;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    private List<EmployeesSkill> skills;  // 일대다 관계 정의
+    private List<EmployeesSkill> skills;
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
-        employeesRequest.setEmployeeId(this.employeeId);
         employeesRequest.setName(this.name);
         employeesRequest.setAddress(this.address);
         employeesRequest.setLatitude(this.latitude);
         employeesRequest.setLongitude(this.longitude);
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-        employeesRequest.setPhoto(this.photo);
-        employeesRequest.setPreferredLanguage(this.preferredLanguage);
-        employeesRequest.setPreferredProjectType(this.preferredProjectType);
+        // Add conversion from byte[] to MultipartFile if needed
+        employeesRequest.setPreferredLanguage(this.preferredLanguage.toString());
+        employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
         return employeesRequest;
-
-
-
-
     }
 }

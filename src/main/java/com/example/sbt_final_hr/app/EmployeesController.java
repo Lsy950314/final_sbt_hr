@@ -3,6 +3,7 @@ package com.example.sbt_final_hr.app;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,40 +37,69 @@ public class EmployeesController {
         this.employeesSkillService = employeesSkillService;
     }
 
+    //7월 26일 15시 새로운 시도중
+    //팀장 코드 참고해서 수정중-get
     @GetMapping("/newemployee")
     public String showCreateEmployeeForm(Model model) {
-        List<Skills> skills = skillsService.getAllSkills();
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String skillsJson = mapper.writeValueAsString(skills);
-            model.addAttribute("skillsJson", skillsJson);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            // Handle the exception appropriately
-        }
-        model.addAttribute("employeesRequest", new EmployeesRequest());
+        EmployeesRequest employeesRequest = new EmployeesRequest();
+        model.addAttribute("employeesRequest", employeesRequest);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-        model.addAttribute("skills", skills);
+        model.addAttribute("skills", skillsService.getAllSkills());
         return "employees/createemployee";
     }
 
+    //7월 26일 15시 새로운 시도중
+    //내가만든 개쓰레기 코드-post
+//    @PostMapping("/createemployee")
+//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+//        try {
+//            Employees employee = employeesService.save(employeesRequest.toEntity());
+//            for (EmployeesRequest.ProgrammingExperience skillDTO : employeesRequest.getSkills()) {
+//                EmployeesSkillRequest skillRequest = new EmployeesSkillRequest();
+//                skillRequest.setEmployeeId(employee.getEmployeeId());
+//                skillRequest.setSkillLanguage(skillDTO.getSkillLanguage());
+//                skillRequest.setSkillCareer(skillDTO.getSkillCareer());
+//                employeesSkillService.createOrUpdateEmployeesSkill(skillRequest);
+//            }
+//        } catch (Exception e) {
+//            result.rejectValue("photo", "error.employeesRequest", "Failed to process the photo.");
+//            return "employees/createemployee";
+//        }
+//        return "redirect:/employees";
+//    }
+    //7월 26일 15시 새로운 시도중
+    //팀장 코드 참고해서 수정중-post
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
-        try {
-            Employees employee = employeesService.save(employeesRequest.toEntity());
-            for (EmployeesRequest.ProgrammingExperience skillDTO : employeesRequest.getSkills()) {
-                EmployeesSkillRequest skillRequest = new EmployeesSkillRequest();
-                skillRequest.setEmployeeId(employee.getEmployeeId());
-                skillRequest.setSkillLanguage(skillDTO.getSkillLanguage());
-                skillRequest.setSkillCareer(skillDTO.getSkillCareer());
-                employeesSkillService.createOrUpdateEmployeesSkill(skillRequest);
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
+        Employees employee = employeesService.save(employeesRequest.toEntity());
+        if(employeesRequest.getEmployeesSkillRequests() != null) {
+            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
-        } catch (Exception e) {
-            result.rejectValue("photo", "error.employeesRequest", "Failed to process the photo.");
-            return "employees/createemployee";
         }
         return "redirect:/employees";
     }
+    //7월 26일 16시 50분 새로운 시도중
+//    @PostMapping("/createemployee")
+//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+//        Employees employee = employeesService.save(employeesRequest.toEntity());
+//        if (employeesRequest.getEmployeesskill() != null) {
+//            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesskill()) {
+//                // skillId를 통해서 skill 객체를 불러옴
+//                Optional<Skills> optionalSkill = skillsService.findById(employeesSkillRequest.getSkillLanguage());
+//                if (optionalSkill.isPresent()) {
+//                    EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee, optionalSkill.get());
+//                    employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill.toDto());
+//                }
+//            }
+//        }
+//        return "redirect:/employees";
+//    }
+
+
+
+
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
@@ -104,7 +135,7 @@ public class EmployeesController {
     }
 
     @PostMapping("/update")
-    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) throws IOException {
         employeesService.save(employeesRequest.toEntity());
         return "redirect:/employees";
     }
