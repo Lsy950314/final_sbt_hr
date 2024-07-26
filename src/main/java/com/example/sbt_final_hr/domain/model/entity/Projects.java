@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "projects")
@@ -60,4 +61,13 @@ public class Projects {
     @ManyToOne
     @JoinColumn(name = "project_type_id", nullable = false)
     private ProjectTypes projectType;
+
+    public double getTotalProjectDurationInMonths() {
+        if (startDate == null || endDate == null) {
+            return 0;
+        }
+
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return daysBetween / 30.4375; // 평균 일수를 사용하여 개월 수로 변환
+    }
 }

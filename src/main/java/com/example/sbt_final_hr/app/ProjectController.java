@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ public class ProjectController {
     private final ProjectRequirementsService projectRequirementsService;
     private final SkillsService skillsService;
     private final EmployeesProjectsService employeesProjectsService;
-    private final EmployeesService employeesService;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
@@ -39,7 +37,6 @@ public class ProjectController {
         this.projectRequirementsService = projectRequirementsService;
         this.skillsService = skillsService;
         this.employeesProjectsService = employeesProjectsService;
-        this.employeesService = employeesService;
     }
 
     @GetMapping("/readAllProjects")
@@ -60,8 +57,6 @@ public class ProjectController {
         session.setAttribute("employeesProjects", employeesProjects);
         session.setAttribute("employees", employees);
     }
-
-
 
     @GetMapping("/createProject")
     public String createProject(Model model) {
