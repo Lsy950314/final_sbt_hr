@@ -159,6 +159,15 @@
         .modal-projects > div {
             display: flex;
         }
+
+        #modal-body{
+            display: flex;
+        }
+        #modal-body div{
+            margin-right: 30px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -195,6 +204,7 @@
             </div>
         </div>
 
+
         <!-- 모달 팝업 -->
         <div id="modal" class="modal">
             <div class="modal-content">
@@ -207,11 +217,13 @@
     </div>
 </div>
 
+
 <script>
     function showProjectDetails(projectId) {
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
                     <div>プロジェクトID: ${data.projectId}</div>
