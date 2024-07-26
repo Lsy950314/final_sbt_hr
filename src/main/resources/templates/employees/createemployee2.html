@@ -115,7 +115,9 @@
 </style>
 <body onload="initMap()">
 <h1>Create Employee</h1>
-<form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+<!--<form th:action="@{/employees-skills/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">-->
+<form th:action="@{/employeeslist.html}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+
   <label for="name">Name:</label>
   <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
 

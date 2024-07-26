@@ -56,7 +56,7 @@ public class EmployeesController {
     public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
         try {
             Employees employee = employeesService.save(employeesRequest.toEntity());
-            for (EmployeesSkillRequest.SkillDTO skillDTO : employeesRequest.getSkills()) {
+            for (EmployeesRequest.ProgrammingExperience skillDTO : employeesRequest.getSkills()) {
                 EmployeesSkillRequest skillRequest = new EmployeesSkillRequest();
                 skillRequest.setEmployeeId(employee.getEmployeeId());
                 skillRequest.setSkillLanguage(skillDTO.getSkillLanguage());
