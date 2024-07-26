@@ -47,7 +47,6 @@ public class EmployeesSkillController {
     public String getAllEmployeesSkills2(Model model) {
         List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
         model.addAttribute("employeesskills", employeesskills);
-
         return "employees/employees-skills";
     }
 
