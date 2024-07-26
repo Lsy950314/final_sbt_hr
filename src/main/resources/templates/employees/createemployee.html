@@ -63,13 +63,13 @@
         skillCareerItem.innerHTML = `
             <div class="form-group">
                 <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-                <select id="employeesskill[${index}].skill.skillId" name="employeesskill[${index}].skill.skillId" required>
+                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
                     ${skillOptions}
                 </select>
             </div>
             <div class="form-group">
-                <label for="employeesskill[${index}].skillcareer">Skill Career:</label>
-                <input type="number" id="employeesskill[${index}].skillcareer" name="employeesskill[${index}].skillcareer" required>
+                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
+                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
             </div>
         `;
         skillCareerContainer.appendChild(skillCareerItem);

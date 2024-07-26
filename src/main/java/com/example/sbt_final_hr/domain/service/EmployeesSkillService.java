@@ -41,10 +41,10 @@ public class EmployeesSkillService {
     }
 
     public void createOrUpdateEmployeesSkill(EmployeesSkillRequest dto) {
-        Employees employee = employeeRepository.findById(dto.getEmployeeId()).orElseThrow(() -> new RuntimeException("Employee not found"));
-        Skills skill = skillRepository.findById(dto.getSkillLanguage()).orElseThrow(() -> new RuntimeException("Skill not found"));
+        Employees employee = employeeRepository.findById(dto.getEmployeesSkillId()).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Skills skill = skillRepository.findById(dto.getEmployeesSkillId()).orElseThrow(() -> new RuntimeException("Skill not found"));
 
-        EmployeesSkill employeesSkill = dto.toEntity(employee, skill);
+        EmployeesSkill employeesSkill = dto.toEntity(employee);
         employeesSkillRepository.save(employeesSkill);
     }
 
@@ -52,8 +52,8 @@ public class EmployeesSkillService {
         employeesSkillRepository.deleteById(id);
     }
 
-    public EmployeesSkill createOrUpdateEmployeesSkill(EmployeesSkill employeesSkill) {
-        return employeesSkillRepository.save(employeesSkill);
+    public void createOrUpdateEmployeesSkill(EmployeesSkill employeesSkill) {
+        employeesSkillRepository.save(employeesSkill);
     }
 
 

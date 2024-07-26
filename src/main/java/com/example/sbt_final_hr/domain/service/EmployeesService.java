@@ -10,6 +10,7 @@ import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,8 +65,8 @@ public class EmployeesService {
         employee.setLongitude(dto.getLongitude());
         employee.setLastProjectEndDate(dto.getLastProjectEndDate());
         employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(dto.getPreferredLanguage());
-        employee.setPreferredProjectType(dto.getPreferredProjectType());
+        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
+        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
         employee.setContactNumber(dto.getContactNumber());
         employee.setHireDate(dto.getHireDate());
         employee = employeesRepository.save(employee);

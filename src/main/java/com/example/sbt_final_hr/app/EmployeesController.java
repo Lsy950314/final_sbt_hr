@@ -3,6 +3,7 @@ package com.example.sbt_final_hr.app;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,16 +70,13 @@ public class EmployeesController {
     //7월 26일 15시 새로운 시도중
     //팀장 코드 참고해서 수정중-post
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
         Employees employee = employeesService.save(employeesRequest.toEntity());
-        if(employeesRequest.getEmployeesskill() != null) {
-            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesskill() ) {
-
-
-
+        if(employeesRequest.getEmployeesSkillRequests() != null) {
+            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
-
-
         }
         return "redirect:/employees";
     }
@@ -136,7 +135,7 @@ public class EmployeesController {
     }
 
     @PostMapping("/update")
-    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) {
+    public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, BindingResult result) throws IOException {
         employeesService.save(employeesRequest.toEntity());
         return "redirect:/employees";
     }
