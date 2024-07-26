@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Create Employee Skill</h1>
+<!-- 폼 제출 시 데이터를 전송할 URL/ URL은 컨트롤러에서 매핑된 URL로, 폼 데이터가 POST 메서드를 사용하여 서버로 전송될 때 이를 처리할 컨트롤러 메서드-->
 <form th:action="@{/employees-skills}" method="post">
     <label for="employeeId">Employee ID:</label>
     <input type="text" id="employeeId" name="employeeId"/><br/>
