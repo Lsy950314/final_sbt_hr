@@ -23,8 +23,4 @@ public class Skills {
 
     @Column(name = "skill_name")
     private String skillName;
-
-    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
-    private List<EmployeesSkill> employeesSkills;
-
     }
