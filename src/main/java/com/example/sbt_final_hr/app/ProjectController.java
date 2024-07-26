@@ -2,23 +2,20 @@ package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
+import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
-import com.example.sbt_final_hr.domain.service.ProjectRequirementsService;
-import com.example.sbt_final_hr.domain.service.ProjectTypesService;
-import com.example.sbt_final_hr.domain.service.ProjectsService;
-import com.example.sbt_final_hr.domain.service.SkillsService;
+import com.example.sbt_final_hr.domain.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,15 +25,17 @@ public class ProjectController {
     private final ProjectTypesService projectTypesService;
     private final ProjectRequirementsService projectRequirementsService;
     private final SkillsService skillsService;
+    private final EmployeesProjectsService employeesProjectsService;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
 
-    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService) {
+    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService) {
         this.projectsService = projectsService;
         this.projectTypesService = projectTypesService;
         this.projectRequirementsService = projectRequirementsService;
         this.skillsService = skillsService;
+        this.employeesProjectsService = employeesProjectsService;
     }
 
     @GetMapping("/readAllProjects")
@@ -44,6 +43,29 @@ public class ProjectController {
         model.addAttribute("projects", projectsService.getAllProjects());
         return "project/readAllProjects"; // 가상의 주소
     }
+
+    // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
+    @GetMapping("/getInfoByProjectID")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
+        List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
+        List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
+        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
+
+        session.setAttribute("projectId", id);
+        session.setAttribute("projectRequirements", projectRequirements);
+        session.setAttribute("employeesProjects", employeesProjects);
+        session.setAttribute("employees", employees);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("projectId", id);
+        response.put("projectRequirements", projectRequirements);
+        response.put("employeesProjects", employeesProjects);
+        response.put("employees", employees);
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("/createProject")
     public String createProject(Model model) {
@@ -97,11 +119,17 @@ public class ProjectController {
         Projects project = projectsRequest.toEntity(projectTypesService.getProjectTypeById(projectsRequest.getProjectTypeId()));
         if (projectsRequest.getProjectRequirements() != null) {
             for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
+                Long projectId = project.getProjectId();
+                Long skillId = requirementsRequest.getSkill().getSkillId();
+                int requiredExperience = requirementsRequest.getRequiredExperience();
+
                 if (requirementsRequest.getId() != null) {
                     projectRequirementsService.updateProjectRequirements(requirementsRequest, project);
                 } else {
-                    ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
-                    projectRequirementsService.createProjectRequirements(projectRequirements);
+                    if (!projectRequirementsService.existsProjectRequirements(projectId, skillId, requiredExperience)) {
+                        ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
+                        projectRequirementsService.createProjectRequirements(projectRequirements);
+                    }
                 }
             }
         }

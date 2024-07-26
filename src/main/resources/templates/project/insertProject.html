@@ -45,12 +45,12 @@
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const apiKey = [[${apiKey}]];
-        const skills = /*[[${skills}]]*/ '[]'; // skills 변수를 Thymeleaf로 전달
+        const apiKey = /*[[${apiKey}]]*/ '';
+        const skills = /*[[${skills}]]*/ '[]';
 
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true; // 비동기 로드 설정
+        script.async = true;
         document.head.appendChild(script);
 
         function initAutocomplete() {
@@ -139,12 +139,12 @@
 
     <div class="form-group">
         <label for="contactPhone">Contact Phone:</label>
-        <input type="text" id="contactPhone" th:field="*{contactPhone}" value="010-1234-5678">
+        <input type="text" id="contactPhone" th:field="*{contactPhone}">
     </div>
 
     <div class="form-group">
         <label for="contactName">Contact Name:</label>
-        <input type="text" id="contactName" th:field="*{contactName}" value="担当者">
+        <input type="text" id="contactName" th:field="*{contactName}">
     </div>
 
     <div class="form-group">
