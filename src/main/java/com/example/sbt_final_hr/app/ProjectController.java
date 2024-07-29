@@ -39,8 +39,8 @@ public class ProjectController {
     }
 
     @GetMapping("/readAllProjects")
-    public String readAllProjects(Model model) {
-        model.addAttribute("projects", projectsService.getAllProjects());
+    public String readAllProjects(HttpSession httpSession) {
+        httpSession.setAttribute("projects", projectsService.getAllProjects());
         return "project/readAllProjects"; // 가상의 주소
     }
 

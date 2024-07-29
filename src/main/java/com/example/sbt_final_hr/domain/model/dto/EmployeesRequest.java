@@ -43,9 +43,9 @@ public class EmployeesRequest {
         employee.setPreferredProjectType(Long.parseLong(this.preferredProjectType));
         employee.setContactNumber(this.contactNumber);
         employee.setHireDate(this.hireDate);
-        if (this.photo != null && !this.photo.isEmpty()) {
-            employee.setPhoto(this.photo.getBytes());
-        }
+//        if (this.photo != null && !this.photo.isEmpty()) {
+//            employee.setPhoto(this.photo.getBytes());
+//        }
         return employee;
     }
 }

@@ -35,14 +35,12 @@ public class MatchController {
             // 세션이 만료된 경우, 에러 페이지로 리다이렉트하거나 적절한 처리를 수행
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
-        // 세션 무효화
-        session.invalidate();
 
-        // 필요한 경우, 특정 속성만 제거
-        // session.removeAttribute("projectId");
-        // session.removeAttribute("projectRequirements");
-        // session.removeAttribute("employeesProjects");
-        // session.removeAttribute("employees");
+        session.removeAttribute("projectId");
+        session.removeAttribute("projectRequirements");
+        session.removeAttribute("employeesProjects");
+        session.removeAttribute("employees");
+
         Projects projects = projectsService.getProjectById(projectId);
 
         System.out.println(projects);
@@ -61,18 +59,10 @@ public class MatchController {
         // 해당 프로젝트에 참여중인 사원들
         model.addAttribute("employees", employees);
 
-        // 스킬스택 요구 조건을 만족한 사원들
-        List<Employees> filteredEmployees = matchService.filterEmployeesByProjectRequirements(projects);
-        System.out.println("기준1 만족 사원" + filteredEmployees);
+        List<Employees> filteredEmployees = matchService.filterEmployeesForProject(projects);
+
         model.addAttribute("filteredEmployees", filteredEmployees);
 
-        List<Employees> filteredEmployeesByCommutingTime = matchService.filterByCommutingTime(projects);
-        model.addAttribute("filteredEmployeesByCommutingTime" , filteredEmployeesByCommutingTime);
-        System.out.println("기준3 만족 사원" + filteredEmployeesByCommutingTime);
         return "match/matchManagement";
     }
-
-
-
-
 }
