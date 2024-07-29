@@ -4,12 +4,13 @@
     <title>매치 관리</title>
 </head>
 <body>
-<div th:each="f : ${filteredEmployees}">
-    <div th:text="'이름 = ' + ${f.getName()}"></div>
-    <div th:text="'선호스킬 = '+ ${f.getSkill() != null ? f.getSkill().getSkillName() : 'N/A'}"></div>
-    <div th:each="s, stat : ${f.getSkills()}">
+<div th:each="e : ${employeeEntries}">
+    <div th:text="'이름 = ' + ${e.key.getName()}"></div>
+    <div th:text="'선호스킬 = '+ ${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'}"></div>
+    <div th:each="s, stat : ${e.key.getSkills()}">
         <div th:text="'보유스킬' + (${stat.index} + 1) + ': ' + ${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'} + ' ' + ${s.getSkillCareer()} + '개월'"></div>
     </div>
+    <div th:text="'예상 소요시간 : ' + ${e.value} + '분'"></div>
 </div>
 </body>
 </html>
