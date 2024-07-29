@@ -32,8 +32,8 @@ public class Employees {
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
-    @Lob
-    private byte[] photo;
+//    @Lob
+//    private byte[] photo;
     @Column(name = "preferred_language")
     private Long preferredLanguage;
     @Column(name = "preferred_project_type")

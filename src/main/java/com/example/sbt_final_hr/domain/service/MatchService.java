@@ -1,12 +1,8 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
@@ -16,7 +12,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,87 +19,35 @@ import java.util.stream.Collectors;
 @Service
 public class MatchService {
     private final EmployeesRepository employeesRepository;
-    private final ProjectsRepository projectsRepository;
-    private final ProjectRequirementsRepository projectRequirementsRepository;
-
-    public MatchService(EmployeesRepository employeesRepository, ProjectsRepository projectsRepository, ProjectRequirementsRepository projectRequirementsRepository) {
-        this.employeesRepository = employeesRepository;
-        this.projectsRepository = projectsRepository;
-        this.projectRequirementsRepository = projectRequirementsRepository;
-    }
-    //3번조건 때문에 추가중
-
-
-    //private static final JsonFactory  JSON_FACTORY = GsonFactory.getDefaultInstance();
-
-
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-
-
-    // 첫 번째 조건: 프로젝트의 요구조건(스킬스택)에 부합하는 사원 필터링
-    public List<Employees> filterEmployeesByProjectRequirements(Projects project) {
-        List<Employees> allEmployees = employeesRepository.findAll();
-
-        List<ProjectRequirements> projectRequirements = projectRequirementsRepository.findByProject_ProjectId(project.getProjectId());
-//        System.out.println(projectRequirements);
-        return allEmployees.stream()
-                .filter(employee -> hasRequiredSkills(employee, projectRequirements))
-                .collect(Collectors.toList());
+    public MatchService(EmployeesRepository employeesRepository) {
+        this.employeesRepository = employeesRepository;
     }
 
-    // 사원이 프로젝트 요구사항을 충족하는지 확인하는 메서드
-    private boolean hasRequiredSkills(Employees employee, List<ProjectRequirements> projectRequirements) {
-        List<EmployeesSkill> employeeSkills = employee.getSkills();
-//        System.out.println("Employee: " + employee.getName());
-//        System.out.println("Employee Skills: " + employeeSkills);
-
-        for (ProjectRequirements requirement : projectRequirements) {
-//            System.out.println("Requirement: " + requirement.getSkill().getSkillName() + ", Required Experience: " + requirement.getRequiredExperience());
-
-            boolean matches = employeeSkills.stream().anyMatch(skill -> {
-                boolean skillNameMatches = skill.getSkill().getSkillName().equals(requirement.getSkill().getSkillName());
-                boolean experienceMatches = skill.getSkillCareer() >= requirement.getRequiredExperience();
-
-//                System.out.println("Checking skill: " + skill.getSkill().getSkillName() + ", Career: " + skill.getSkillCareer());
-//                System.out.println("Skill Name Matches: " + skillNameMatches + ", Experience Matches: " + experienceMatches);
-
-                return skillNameMatches && experienceMatches;
-            });
-
-            if (matches) {
-//                System.out.println("Requirement met: " + requirement.getSkill().getSkillName());
-                return true; // 하나라도 부합하면 true 반환
-            }
-        }
-
-        return false; // 모든 요구조건에 부합하지 않으면 false 반환
+    public List<Employees> findEmployeesByProjectRequirements(Projects project) {
+        return employeesRepository.findEmployeesByProjectRequirements(project.getProjectId());
     }
 
-
-    public List<Employees> filterByProjectDates(List<Employees> employees, LocalDate projectStartDate) {
+    public List<Employees> filterByProjectDates(List<Employees> employees, Projects project) {
         return employees.stream()
-                .filter(employee -> employee.getCurrentProjectEndDate() != null && employee.getCurrentProjectEndDate().isBefore(projectStartDate))
+                .filter(employee -> employee.getCurrentProjectEndDate() == null || employee.getCurrentProjectEndDate().isBefore(project.getStartDate()))
                 .collect(Collectors.toList());
     }
 
-
-
-
+    // 세 조건을 모두 만족시키는 사원 필터링
     //3번째 조건 : 통근시간 기준으로 자르기 일단 90분
-    public List<Employees> filterByCommutingTime(Projects projects) {
+    public List<Employees> filterByCommutingTime(List<Employees> employees ,Projects projects) {
         //1.프로젝트 위치 정보 추출
         double projectLatitude = projects.getLatitude();
         double projectLongitude = projects.getLongitude();
 
-        //2.모든 직원 데이터 조회
-        List<Employees> allEmployees = employeesRepository.findAll();
 
         //최대 통근시간 기준 90분, 100분, 110분
         int maxCommutingTimeInMinutes  = 90;
 
-        return allEmployees.stream()
+        return employees.stream()
                 .filter(employee -> {
                     double employeeLatitude = employee.getLatitude();
                     double employeeLongitude = employee.getLongitude();
@@ -147,6 +90,40 @@ public class MatchService {
         // 6. 경로를 찾을 수 없는 경우 최대 값을 반환
         return Integer.MAX_VALUE; // 경로를 찾을 수 없는 경우
     }
+
+    public List<Employees> filterEmployeesForProject(Projects project) {
+        long startTime = System.currentTimeMillis();
+
+        long step1StartTime = System.currentTimeMillis();
+        List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
+        long step1EndTime = System.currentTimeMillis();
+
+        System.out.println("조건1 : " + filteredEmployeesByRequirements);
+
+        long step2StartTime = System.currentTimeMillis();
+        List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
+        long step2EndTime = System.currentTimeMillis();
+        System.out.println("조건2 : " + availableEmployees);
+
+        long step3StartTime = System.currentTimeMillis();
+        List<Employees> finalEmployees = filterByCommutingTime(availableEmployees, project);
+        long step3EndTime = System.currentTimeMillis();
+        System.out.println("조건3 : " + finalEmployees);
+
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Total time: " + (endTime - startTime) + " milliseconds");
+        System.out.println("Step 1 (filterEmployeesByProjectRequirements) took: " + (step1EndTime - step1StartTime) + " milliseconds");
+        System.out.println("Step 2 (filterByProjectDates) took: " + (step2EndTime - step2StartTime) + " milliseconds");
+        System.out.println("Step 3 (filterByCommutingTime) took: " + (step3EndTime - step3StartTime) + " milliseconds");
+
+        return finalEmployees;
+    }
+
+
+
+
 
     //3번째 조건 : 통근시간 기준으로 자르기 일단 90분
 //    public List<Employees> filterByCommutingTime(Projects project) {
