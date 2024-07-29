@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>매치 관리</title>
 </head>
 <body>
-    <div th:each="f : ${filteredEmployees}">
-        <div th:text="'이름 = ' + ${f.getName()}"></div>
-        <div th:text="'선호스킬 = '+ ${f.getSkill().skillName}"></div>
-        <div th:text="''"></div>
+<div th:each="f : ${filteredEmployees}">
+    <div th:text="'이름 = ' + ${f.getName()}"></div>
+    <div th:text="'선호스킬 = '+ ${f.getSkill() != null ? f.getSkill().getSkillName() : 'N/A'}"></div>
+    <div th:each="s, stat : ${f.getSkills()}">
+        <div th:text="'보유스킬' + (${stat.index} + 1) + ': ' + ${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'} + ' ' + ${s.getSkillCareer()} + '개월'"></div>
     </div>
-
+</div>
 </body>
 </html>

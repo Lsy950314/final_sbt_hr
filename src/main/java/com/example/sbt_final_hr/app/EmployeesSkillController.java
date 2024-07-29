@@ -29,11 +29,6 @@ public class EmployeesSkillController {
 
     }
 
-    @GetMapping("/check")
-    public String check() {
-        return "employees/check";
-    }
-
 
     @GetMapping("/skills2")
     public String getAllEmployeesSkills(Model model) {

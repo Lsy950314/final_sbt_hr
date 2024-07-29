@@ -74,6 +74,11 @@
         `;
         skillCareerContainer.appendChild(skillCareerItem);
     }
+    /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
+
+name="employeesSkillRequests[0].skill.skillId"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkill().getSkillId()와 매핑됩니다.
+name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkillCareer()와 매핑됩니다.
+이를 통해 EmployeesRequest 객체의 employeesSkillRequests 리스트 필드가 자동으로 설정되고, 리스트 내 각 EmployeesSkillRequest 객체의 skill 필드와 skillCareer 필드가 설정됩니다.*/
 
     window.onload = function() {
         initMap();
