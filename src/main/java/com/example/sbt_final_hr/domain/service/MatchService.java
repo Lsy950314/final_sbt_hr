@@ -35,10 +35,10 @@ public class MatchService {
     //3번조건 때문에 추가중
 
 
+    //private static final JsonFactory  JSON_FACTORY = GsonFactory.getDefaultInstance();
 
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    //private static final JsonFactory  JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
 
