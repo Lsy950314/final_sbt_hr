@@ -1,74 +1,51 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
     private final EmployeesRepository employeesRepository;
-    private final ProjectsRepository projectsRepository;
-    private final ProjectRequirementsRepository projectRequirementsRepository;
 
-    public MatchService(EmployeesRepository employeesRepository, ProjectsRepository projectsRepository, ProjectRequirementsRepository projectRequirementsRepository) {
+    public MatchService(EmployeesRepository employeesRepository) {
         this.employeesRepository = employeesRepository;
-        this.projectsRepository = projectsRepository;
-        this.projectRequirementsRepository = projectRequirementsRepository;
     }
 
-    // 첫 번째 조건: 프로젝트의 요구조건(스킬스택)에 부합하는 사원 필터링
-    public List<Employees> filterEmployeesByProjectRequirements(List<Employees> employees,Projects project) {
-//        List<Employees> allEmployees = employeesRepository.findAll();
+    public List<Employees> findEmployeesByProjectRequirements(Projects project) {
+        return employeesRepository.findEmployeesByProjectRequirements(project.getProjectId());
+    }
 
-        List<ProjectRequirements> projectRequirements = projectRequirementsRepository.findByProject_ProjectId(project.getProjectId());
-//        System.out.println(projectRequirements);
+    public List<Employees> filterByProjectDates(List<Employees> employees, Projects project) {
         return employees.stream()
-                .filter(employee -> hasRequiredSkills(employee, projectRequirements))
+                .filter(employee -> employee.getCurrentProjectEndDate() != null && employee.getCurrentProjectEndDate().isBefore(project.getStartDate()))
                 .collect(Collectors.toList());
     }
 
-    // 사원이 프로젝트 요구사항을 충족하는지 확인하는 메서드. 조건1에서
-    private boolean hasRequiredSkills(Employees employee, List<ProjectRequirements> projectRequirements) {
-        List<EmployeesSkill> employeeSkills = employee.getSkills();
-//        System.out.println("Employee: " + employee.getName());
-//        System.out.println("Employee Skills: " + employeeSkills);
+    // 두 조건을 모두 만족시키는 사원 필터링
+    public List<Employees> filterEmployeesForProject(Projects project) {
+        long startTime = System.currentTimeMillis();
 
-        for (ProjectRequirements requirement : projectRequirements) {
-//            System.out.println("Requirement: " + requirement.getSkill().getSkillName() + ", Required Experience: " + requirement.getRequiredExperience());
+        long step1StartTime = System.currentTimeMillis();
+        List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
+        long step1EndTime = System.currentTimeMillis();
 
-            boolean matches = employeeSkills.stream().anyMatch(skill -> {
-                boolean skillNameMatches = skill.getSkill().getSkillName().equals(requirement.getSkill().getSkillName());
-                boolean experienceMatches = skill.getSkillCareer() >= requirement.getRequiredExperience();
+        long step2StartTime = System.currentTimeMillis();
+        List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
+        long step2EndTime = System.currentTimeMillis();
 
-//                System.out.println("Checking skill: " + skill.getSkill().getSkillName() + ", Career: " + skill.getSkillCareer());
-//                System.out.println("Skill Name Matches: " + skillNameMatches + ", Experience Matches: " + experienceMatches);
+        long endTime = System.currentTimeMillis();
 
-                return skillNameMatches && experienceMatches;
-            });
+        System.out.println("Total time: " + (endTime - startTime) + " milliseconds");
+        System.out.println("Step 1 (filterEmployeesByProjectRequirements) took: " + (step1EndTime - step1StartTime) + " milliseconds");
+        System.out.println("Step 2 (filterByProjectDates) took: " + (step2EndTime - step2StartTime) + " milliseconds");
 
-            if (matches) {
-//                System.out.println("Requirement met: " + requirement.getSkill().getSkillName());
-                return true; // 하나라도 부합하면 true 반환
-            }
-        }
-
-        return false; // 모든 요구조건에 부합하지 않으면 false 반환
+        return availableEmployees;
     }
 
-
-    public List<Employees> filterByProjectDates(List<Employees> employees, LocalDate projectStartDate) {
-        return employees.stream()
-                .filter(employee -> employee.getCurrentProjectEndDate() != null && employee.getCurrentProjectEndDate().isBefore(projectStartDate))
-                .collect(Collectors.toList());
-    }
 
 }

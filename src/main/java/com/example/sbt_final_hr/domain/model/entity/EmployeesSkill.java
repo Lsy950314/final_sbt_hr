@@ -37,7 +37,7 @@ public class EmployeesSkill {
     //chatgpt는 skillLanguage 말고 skill 이렇게 쓰라는데 모르겠네. DB컬럼명과 혼동된다고해서.
     //skillLanguage->skill
     @Column(name = "Skill_Career", nullable = false)
-    private Integer skillCareer;
+    private int skillCareer;
 //
 //    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 //    private List<EmployeesSkill> skills;

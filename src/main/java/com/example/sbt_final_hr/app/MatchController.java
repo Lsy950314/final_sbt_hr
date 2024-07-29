@@ -65,9 +65,11 @@ public class MatchController {
         model.addAttribute("employees", employees);
 
         // 스킬스택 요구 조건을 만족한 사원들
-        List<Employees> allEmployees = employeesService.findAll();
-        List<Employees> filteredEmployees = matchService.filterEmployeesByProjectRequirements(allEmployees, projects);
-//        System.out.println("기준1 만족 사원" + filteredEmployees);
+//           List<Employees> filteredEmployees= matchService.testFilter(projects);
+        // 시간이 너무 걸려서 이 방법 말고 직접 쿼리문 작성해서 db 에서 처리시키는 안 채택
+
+        List<Employees> filteredEmployees = matchService.filterEmployeesForProject(projects);
+
         model.addAttribute("filteredEmployees", filteredEmployees);
 
         return "match/matchManagement";
