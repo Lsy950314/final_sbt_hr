@@ -63,9 +63,16 @@ public class MatchController {
 
         // 스킬스택 요구 조건을 만족한 사원들
         List<Employees> filteredEmployees = matchService.filterEmployeesByProjectRequirements(projects);
-//        System.out.println("기준1 만족 사원" + filteredEmployees);
+        System.out.println("기준1 만족 사원" + filteredEmployees);
         model.addAttribute("filteredEmployees", filteredEmployees);
 
+        List<Employees> filteredEmployeesByCommutingTime = matchService.filterByCommutingTime(projects);
+        model.addAttribute("filteredEmployeesByCommutingTime" , filteredEmployeesByCommutingTime);
+        System.out.println("기준3 만족 사원" + filteredEmployeesByCommutingTime);
         return "match/matchManagement";
     }
+
+
+
+
 }
