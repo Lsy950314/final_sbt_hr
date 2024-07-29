@@ -113,8 +113,12 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
-    <label for="photo">Photo:</label>
-    <input type="file" id="photo" th:field="*{photo}"/><br/>
+    <div class="row mb-3">
+        <div style="text-align: start; margin: 6px 0;">직원 사진</div>
+        <div class="mb-3 mb-md-0">
+            <input class="form-control" th:field="*{image}" type="file" min="0">
+        </div>
+    </div>
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
