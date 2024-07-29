@@ -1,7 +1,5 @@
 package com.example.sbt_final_hr.domain.model.entity;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
-import com.example.sbt_final_hr.domain.model.dto.SkillsRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,7 +35,7 @@ public class EmployeesSkill {
     //chatgpt는 skillLanguage 말고 skill 이렇게 쓰라는데 모르겠네. DB컬럼명과 혼동된다고해서.
     //skillLanguage->skill
     @Column(name = "Skill_Career", nullable = false)
-    private Integer skillCareer;
+    private int skillCareer;
 //
 //    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
 //    private List<EmployeesSkill> skills;
