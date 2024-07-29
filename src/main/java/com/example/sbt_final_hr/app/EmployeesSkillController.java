@@ -81,13 +81,4 @@ public class EmployeesSkillController {
         return "redirect:/employees-skills";
     }
 
-    @GetMapping("/modal-data")
-    public String getModalData(Model model) {
-
-        List<Skills> skills = skillsService.getAllSkills();
-        System.out.println("Skills: " + skills);
-        model.addAttribute("skills", skills);
-        return "Employees_practice/employees"; // "Employees_practice/employees.html" 템플릿 파일을 반환
-    }
-
 }
