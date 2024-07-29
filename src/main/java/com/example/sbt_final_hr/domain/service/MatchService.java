@@ -12,8 +12,11 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,105 +41,80 @@ public class MatchService {
 
     // 세 조건을 모두 만족시키는 사원 필터링
     //3번째 조건 : 통근시간 기준으로 자르기 일단 90분
-    public List<Employees> filterByCommutingTime(List<Employees> employees ,Projects projects) {
-        //1.프로젝트 위치 정보 추출
+    public Map<Employees, Integer> filterByCommutingTime(List<Employees> employees, Projects projects) {
+        // 1. 프로젝트 위치 정보 추출
         double projectLatitude = projects.getLatitude();
         double projectLongitude = projects.getLongitude();
 
-        //1-1 프로젝트 위치 정보가 찍히는지 확인. 예시인 오사카 역은 좌표가 34.700648,135.4933488 나와야 한다.
-        System.out.println("filterByCommutingTime메서드의 1.프로젝트 위치 정보 찍히는지 확인");
-        System.out.println(projectLatitude);
-        System.out.println(projectLongitude);
-        //잘 나옴
+        // 최대 통근시간 기준 (예: 90분)
+        int maxCommutingTimeInMinutes = 90;
 
+        // 통근 시간 캐시
+        Map<String, Integer> transitTimeCache = new HashMap<>();
 
-        //최대 통근시간 기준 90분, 100분, 110분
-        int maxCommutingTimeInMinutes  = 90;
-
-        return employees.stream()
-                .filter(employee -> {
+        List<CompletableFuture<AbstractMap.SimpleEntry<Employees, Integer>>> futures = employees.stream()
+                .map(employee -> CompletableFuture.supplyAsync(() -> {
                     double employeeLatitude = employee.getLatitude();
                     double employeeLongitude = employee.getLongitude();
-                    System.out.println("각 직원의 좌표 정보 출력");
-                    System.out.println("Employee ID: " + employee.getEmployeeId());
-                    System.out.println("Employee Latitude: " + employeeLatitude);
-                    System.out.println("Employee Longitude: " + employeeLongitude);
-                    //잘 나옴
+                    String cacheKey = employeeLatitude + "," + employeeLongitude + "->" + projectLatitude + "," + projectLongitude;
 
+                    // 캐시에서 통근 시간 조회
+                    if (transitTimeCache.containsKey(cacheKey)) {
+                        return new AbstractMap.SimpleEntry<>(employee, transitTimeCache.get(cacheKey));
+                    }
 
                     try {
                         int transitTimeInMinutes = getTransitTimeInMinutes(employeeLatitude, employeeLongitude, projectLatitude, projectLongitude);
-                        System.out.println("통근 시간 정보 출력");
-                        System.out.println("Transit Time for Employee ID " + employee.getEmployeeId() + ": " + transitTimeInMinutes + " minutes");
-                        //잘 나옴
-                        return transitTimeInMinutes <= maxCommutingTimeInMinutes;
+                        transitTimeCache.put(cacheKey, transitTimeInMinutes); // 캐시에 저장
+                        return new AbstractMap.SimpleEntry<>(employee, transitTimeInMinutes);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        return false;
+                        return new AbstractMap.SimpleEntry<>(employee, -1); // 에러 발생 시 -1로 설정
                     }
-                })
-                .collect(Collectors.toList());
+                })).collect(Collectors.toList());
 
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .filter(entry -> entry.getValue() <= maxCommutingTimeInMinutes && entry.getValue() != -1)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    //Google Directions API를 사용하여 두 좌표 간의 대중교통 경로 시간을 계산합니다.
+    // Google Directions API를 사용하여 두 좌표 간의 대중교통 경로 시간을 계산합니다.
     private int getTransitTimeInMinutes(double employeeLatitude, double employeeLongitude, double projectLatitude, double projectLongitude) throws IOException {
-        System.out.println("getTransitTimeInMinutes메서드에 매개변수가 잘 전달되었는지 확인중");
-        System.out.println("Employee Latitude: " + employeeLatitude);
-        System.out.println("Employee Longitude: " + employeeLongitude);
-        System.out.println("Project Latitude: " + projectLatitude);
-        System.out.println("Project Longitude: " + projectLongitude);
-        //잘 나옴
-
-
-
-        //1. HTTP 요청을 생성하는 팩토리 객체 생성
+        // 1. HTTP 요청을 생성하는 팩토리 객체 생성
         HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(request -> request.setParser(JSON_FACTORY.createJsonObjectParser()));
-        //??Map<String, Object> directionsResponse = response.parseAs(Map.class, JSON_FACTORY); // GsonFactory를 사용하여 JSON 응답을 파싱
+
         // 2. Google Directions API의 요청 URL 설정
         GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/directions/json");
-
-
         url.put("origin", employeeLatitude + "," + employeeLongitude);
         url.put("destination", projectLatitude + "," + projectLongitude);
-        //url.put("mode", "transit"); //대중교통 모드
-        url.put("modes", "transit"); //걷기 모드
+        url.put("modes", "transit");
+        url.put("key", "AIzaSyD66g27MXhvDFVCYdrAsu60XM91URf2UFY"); // 여기에 실제 API 키를 입력하세요.
 
-        url.put("key", "AIzaSyD66g27MXhvDFVCYdrAsu60XM91URf2UFY");
+
         // 3. HTTP GET 요청을 실행하고 응답을 받아옴
         HttpResponse response = requestFactory.buildGetRequest(url).execute();
-        int statusCode = response.getStatusCode();
-        System.out.println("HTTP Status Code: " + statusCode);
-        if (statusCode != 200) {
-            System.out.println("Error: " + response.parseAsString());
-            return Integer.MAX_VALUE;
-        }
         Map<String, Object> directionsResponse = response.parseAs(Map.class);
-        System.out.println(" HTTP GET 요청에 대한 응답을 출력");
-        System.out.println(directionsResponse);
-
-        //https://maps.googleapis.com/maps/api/directions/json?origin=34.6885789,135.534485&destination=34.7024854,135.4959506&mode=walking&key=AIzaSyD66g27MXhvDFVCYdrAsu60XM91URf2UFY
-        //저렇게 하면 걷는모드로 하면 나오긴 나오는데 에휴
-        //https://maps.googleapis.com/maps/api/directions/json?origin=35.6703,139.7715&destination=34.7024854,135.4959506&modes=transit&key=AIzaSyD66g27MXhvDFVCYdrAsu60XM91URf2UFY
-        //transit 은 modes 라고 해야함.
 
         // 4. 응답에서 경로 정보를 추출
         List<Map<String, Object>> routes = (List<Map<String, Object>>) directionsResponse.get("routes");
 
         if (routes != null && !routes.isEmpty()) {
             List<Map<String, Object>> legs = (List<Map<String, Object>>) routes.get(0).get("legs");
+
             if (legs != null && !legs.isEmpty()) {
                 Map<String, Object> duration = (Map<String, Object>) legs.get(0).get("duration");
+
                 if (duration != null) {
                     return ((Number) duration.get("value")).intValue() / 60; // 초 단위를 분 단위로 변환
                 }
             }
         }
-        // 6. 경로를 찾을 수 없는 경우 최대 값을 반환
+        // 5. 경로를 찾을 수 없는 경우 최대 값을 반환
         return Integer.MAX_VALUE; // 경로를 찾을 수 없는 경우
     }
 
-    public List<Employees> filterEmployeesForProject(Projects project) {
+    public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
         long startTime = System.currentTimeMillis();
 
         long step1StartTime = System.currentTimeMillis();
@@ -151,7 +129,7 @@ public class MatchService {
         System.out.println("조건2 : " + availableEmployees);
 
         long step3StartTime = System.currentTimeMillis();
-        List<Employees> finalEmployees = filterByCommutingTime(availableEmployees, project);
+        Map<Employees, Integer> finalEmployees = filterByCommutingTime(availableEmployees, project);
         long step3EndTime = System.currentTimeMillis();
         System.out.println("조건3 : " + finalEmployees);
 
@@ -162,6 +140,7 @@ public class MatchService {
         System.out.println("Step 1 (filterEmployeesByProjectRequirements) took: " + (step1EndTime - step1StartTime) + " milliseconds");
         System.out.println("Step 2 (filterByProjectDates) took: " + (step2EndTime - step2StartTime) + " milliseconds");
         System.out.println("Step 3 (filterByCommutingTime) took: " + (step3EndTime - step3StartTime) + " milliseconds");
+
         return finalEmployees;
     }
 
