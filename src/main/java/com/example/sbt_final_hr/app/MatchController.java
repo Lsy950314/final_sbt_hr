@@ -63,9 +63,6 @@ public class MatchController {
 
         model.addAttribute("filteredEmployees", filteredEmployees);
 
-        List<Employees> filteredEmployeesByCommutingTime = matchService.filterByCommutingTime(projects);
-        model.addAttribute("filteredEmployeesByCommutingTime" , filteredEmployeesByCommutingTime);
-        System.out.println("기준3 만족 사원" + filteredEmployeesByCommutingTime);
         return "match/matchManagement";
     }
 }
