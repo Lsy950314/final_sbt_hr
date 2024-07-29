@@ -197,6 +197,12 @@
           <div class="modal-content">
             <span class="close">&times;</span>
             <p>사원정보 ㅇㅇ</p>
+            <div th:each="e : ${employees}">
+              <div th:text="${e.name}"></div>
+              <div th:text="${e.address}"></div>
+              <div th:text="${e.currentProjectEndDate}"></div>
+
+            </div>
           </div>
         </div>
 
