@@ -1,7 +1,5 @@
 package com.example.sbt_final_hr.domain.model.entity;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
-import com.example.sbt_final_hr.domain.model.dto.SkillsRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -197,7 +197,7 @@
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
             </div>
-            <div th:each="p : ${projects}">
+            <div th:each="p : ${session.projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
                 <div th:text="${p.clientCompany}"></div>
