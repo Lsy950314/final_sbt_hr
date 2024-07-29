@@ -26,17 +26,17 @@ public class MatchService {
     }
 
     // 첫 번째 조건: 프로젝트의 요구조건(스킬스택)에 부합하는 사원 필터링
-    public List<Employees> filterEmployeesByProjectRequirements(Projects project) {
-        List<Employees> allEmployees = employeesRepository.findAll();
+    public List<Employees> filterEmployeesByProjectRequirements(List<Employees> employees,Projects project) {
+//        List<Employees> allEmployees = employeesRepository.findAll();
 
         List<ProjectRequirements> projectRequirements = projectRequirementsRepository.findByProject_ProjectId(project.getProjectId());
 //        System.out.println(projectRequirements);
-        return allEmployees.stream()
+        return employees.stream()
                 .filter(employee -> hasRequiredSkills(employee, projectRequirements))
                 .collect(Collectors.toList());
     }
 
-    // 사원이 프로젝트 요구사항을 충족하는지 확인하는 메서드
+    // 사원이 프로젝트 요구사항을 충족하는지 확인하는 메서드. 조건1에서
     private boolean hasRequiredSkills(Employees employee, List<ProjectRequirements> projectRequirements) {
         List<EmployeesSkill> employeeSkills = employee.getSkills();
 //        System.out.println("Employee: " + employee.getName());

@@ -4,6 +4,7 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
+import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.MatchService;
 import com.example.sbt_final_hr.domain.service.ProjectsService;
 import jakarta.servlet.http.HttpSession;
@@ -18,10 +19,12 @@ import java.util.List;
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService) {
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService;
     }
 
     @GetMapping("/matchManagement")
@@ -62,7 +65,8 @@ public class MatchController {
         model.addAttribute("employees", employees);
 
         // 스킬스택 요구 조건을 만족한 사원들
-        List<Employees> filteredEmployees = matchService.filterEmployeesByProjectRequirements(projects);
+        List<Employees> allEmployees = employeesService.findAll();
+        List<Employees> filteredEmployees = matchService.filterEmployeesByProjectRequirements(allEmployees, projects);
 //        System.out.println("기준1 만족 사원" + filteredEmployees);
         model.addAttribute("filteredEmployees", filteredEmployees);
 
