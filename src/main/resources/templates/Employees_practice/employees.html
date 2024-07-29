@@ -201,8 +201,19 @@
               <div th:text="${e.name}"></div>
               <div th:text="${e.address}"></div>
               <div th:text="${e.currentProjectEndDate}"></div>
-
             </div>
+
+
+              <!-- 직원 정보 및 기술 정보 표시 -->
+              <div>
+                <h3>Skills</h3>
+                <ul>
+                  <li th:each="skill : ${skills}" th:text="${skill.skillName}"></li>
+                </ul>
+              </div>
+
+
+
           </div>
         </div>
 
