@@ -32,9 +32,9 @@ public class Employees {
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
-//    @Lob
-//    private byte[] photo;
+    //13:05 SEMI 참고해서 만드는중
     private String image;
+    //13:05 SEMI 참고해서 만드는중
     @Column(name = "preferred_language")
     private Long preferredLanguage;
     @Column(name = "preferred_project_type")

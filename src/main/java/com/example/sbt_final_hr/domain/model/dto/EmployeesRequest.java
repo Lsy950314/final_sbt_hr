@@ -27,13 +27,31 @@ public class EmployeesRequest {
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
-    private MultipartFile imageFile;  // MultipartFile 타입의 필드 추가
-    private String image; // String 타입의 필드
-    //이 코드가 있어서 createemployee뷰에서 직원 프로그래밍 경력 관련 데이터들을 받아서 넘기는듯
+    //13:05 SEMI 참고해서 만드는중, chat gpt
+    private MultipartFile imageFile;
+    //13:05 SEMI 참고해서 만드는중, chat gpt
     private List<EmployeesSkillRequest> employeesSkillRequests;
-
+//13:05 SEMI 참고해서 만드는중, chat gpt
+//    public Employees toEntity() throws IOException {
+//        Employees employee = new Employees();
+//        employee.setName(this.name);
+//        employee.setAddress(this.address);
+//        employee.setLatitude(this.latitude);
+//        employee.setLongitude(this.longitude);
+//        employee.setLastProjectEndDate(this.lastProjectEndDate);
+//        employee.setCurrentProjectEndDate(this.currentProjectEndDate);
+//        employee.setPreferredLanguage(Long.parseLong(this.preferredLanguage));
+//        employee.setPreferredProjectType(Long.parseLong(this.preferredProjectType));
+//        employee.setContactNumber(this.contactNumber);
+//        employee.setHireDate(this.hireDate);
+//        return employee;
+//    }
+    //박살나면 이 코드로 복구
+//13:05 SEMI 참고해서 만드는중, chat gpt
+//13:05 SEMI 참고해서 만드는중, chat gpt
     public Employees toEntity() throws IOException {
         Employees employee = new Employees();
+        employee.setEmployeeId(this.employeeId); // 추가추가추가추가추가추가추가
         employee.setName(this.name);
         employee.setAddress(this.address);
         employee.setLatitude(this.latitude);
@@ -44,9 +62,20 @@ public class EmployeesRequest {
         employee.setPreferredProjectType(Long.parseLong(this.preferredProjectType));
         employee.setContactNumber(this.contactNumber);
         employee.setHireDate(this.hireDate);
-//        if (this.photo != null && !this.photo.isEmpty()) {
-//            employee.setPhoto(this.photo.getBytes());
-//        }
         return employee;
     }
+    //13:05 SEMI 참고해서 만드는중, chat gpt
+    // 이미지 경로를 받아서 엔티티로 변환하는 오버로딩 메서드
+    public Employees toEntity(String imgPath) throws IOException {
+        Employees employee = toEntity(); // 기본 메서드 호출
+        employee.setImage(imgPath); // 이미지를 String으로 변환하여 설정
+        return employee;
+    }
+
+
+
+
+
+
+
 }

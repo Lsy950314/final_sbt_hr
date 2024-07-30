@@ -4,12 +4,14 @@ import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
+import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
 import com.example.sbt_final_hr.domain.service.ProjectTypesService;
 import com.example.sbt_final_hr.domain.service.SkillsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/employees")
@@ -36,18 +38,43 @@ public class EmployeesController {
         this.employeesSkillService = employeesSkillService;
     }
 
-    //7월 26일 15시 새로운 시도중
-    //팀장 코드 참고해서 수정중-get
-    @GetMapping("/newemployee")
-    public String showCreateEmployeeForm(Model model) {
+//    @GetMapping("/newemployee")
+//    public String showCreateEmployeeForm(Model model) {
+//        EmployeesRequest employeesRequest = new EmployeesRequest();
+//        model.addAttribute("employeesRequest", employeesRequest);
+//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+//        model.addAttribute("skills", skillsService.getAllSkills());
+//        return "employees/createemployee";
+//    }
+    //7월 30일 12:43 사진 추가되는 사원 등록 페이지로 시도중
+//    @GetMapping("/newemployeewithphoto")
+//    public String showCreateEmployeeFormWithPhoto(Model model) {
+//        EmployeesRequest employeesRequest = new EmployeesRequest();
+//        model.addAttribute("employeesRequest", employeesRequest);
+//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+//        model.addAttribute("skills", skillsService.getAllSkills());
+//        return "employees/createemployee(photo)";
+//    }
+
+    //7월 30일 13:28 사진 추가되는 사원 등록 페이지로 시도중
+    @GetMapping("/newemployeewithphoto")
+    public String showCreateEmployeeFormWithPhoto(Model model) {
         EmployeesRequest employeesRequest = new EmployeesRequest();
         model.addAttribute("employeesRequest", employeesRequest);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
         model.addAttribute("skills", skillsService.getAllSkills());
-        return "employees/createemployee";
+        return "employees/createemployee(photo)";
     }
+//7월 30일 13:36 사진 추가되는 사원 등록 페이지로 시도중
+//    @GetMapping("/newemployee")
+//    public String showCreateEmployeeFormWithPhoto(Model model) {
+//        EmployeesRequest employeesRequest = new EmployeesRequest();
+//        model.addAttribute("employeesRequest", employeesRequest);
+//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+//        model.addAttribute("skills", skillsService.getAllSkills());
+//        return "employees/createemployee_photo";
+//    }
 
-    //오전 7월 30일 09:56
 //    @PostMapping("/createemployee")
 //    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
 //        Employees employee = employeesService.save(employeesRequest.toEntity());
@@ -59,57 +86,25 @@ public class EmployeesController {
 //        }
 //        return "redirect:/employees";
 //    }
-    //오전 7월 30일 09:56
-//    @PostMapping("/createemployee")
-//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @ModelAttribute("image") MultipartFile image) throws IOException {
-//        // Handle image upload
-//        if (!image.isEmpty()) {
-//            String imagePath = employeesService.saveImage(image);
-//            employeesRequest.setImage(imagePath);
-//        }
-//
+
+    //7월 30일 12:43 사진 추가되는 사원 등록 페이지로 시도중
+//    @PostMapping("/createemployee2")
+//    public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
 //        Employees employee = employeesService.save(employeesRequest.toEntity());
-//
-//        if (employeesRequest.getEmployeesSkillRequests() != null) {
-//            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+//        if(employeesRequest.getEmployeesSkillRequests() != null) {
+//            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
 //                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
 //                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
 //            }
 //        }
-//
 //        return "redirect:/employees";
 //    }
-    //오전 7월 30일 10:36
-//    @PostMapping("/createemployee")
-//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @RequestParam("image") MultipartFile image) throws IOException {
-//        // Handle image upload
-//        if (!image.isEmpty()) {
-//            String imagePath = employeesService.saveImage(image);
-//            employeesRequest.setImage(imagePath);
-//        }
-//
-//        Employees employee = employeesService.save(employeesRequest.toEntity());
-//
-//        if (employeesRequest.getEmployeesSkillRequests() != null) {
-//            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
-//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
-//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
-//            }
-//        }
-//
-//        return "redirect:/employees";
-//    }
-
-    //오전 7월 30일 10:47
-    @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @RequestParam("image") MultipartFile image) throws IOException {
-        // Handle image upload
-        if (!image.isEmpty()) {
-            String imagePath = employeesService.saveImage(image);
-            employeesRequest.setImage(imagePath);
-        }
-
-        Employees employee = employeesService.save(employeesRequest.toEntity());
+    //7월 30일 13:29 사진 추가되는 사원 등록 페이지로 시도중
+    @PostMapping("/createemployee2")
+    public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
+                                          @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        String imagePath = employeesService.saveImage(imageFile);
+        Employees employee = employeesService.save(employeesRequest.toEntity(imagePath));
 
         if (employeesRequest.getEmployeesSkillRequests() != null) {
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
@@ -117,9 +112,12 @@ public class EmployeesController {
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
         }
-
         return "redirect:/employees";
     }
+
+
+
+
 
 
 
@@ -141,41 +139,6 @@ public class EmployeesController {
             model.addAttribute("employees", employeesService.findAll());
         }
         return "Employees_practice/employees";
-    }
-
-    @PostMapping("/getModalData")
-    public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
-        Long id = request.get("id");
-        Optional<Employees> employees = employeesService.findById(id);
-        if (employees.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        Employees employee = employees.get();
-        List<EmployeesSkill> employeeSkills = employee.getSkills();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("employeeId", employee.getEmployeeId());
-        response.put("name", employee.getName());
-        response.put("address", employee.getAddress());
-        response.put("lastProjectEndDate", employee.getLastProjectEndDate() != null ? employee.getLastProjectEndDate().format(formatter) : null);
-        response.put("currentProjectEndDate", employee.getCurrentProjectEndDate() != null ? employee.getCurrentProjectEndDate().format(formatter) : null);
-        response.put("contactNumber", employee.getContactNumber());
-        response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
-        response.put("preferredLanguage", employee.getPreferredLanguage());
-        response.put("preferredProjectType", employee.getPreferredProjectType());
-
-        List<Map<String, Object>> skills = new ArrayList<>();
-        for (EmployeesSkill skill : employeeSkills) {
-            Map<String, Object> skillInfo = new HashMap<>();
-            skillInfo.put("skillName", skill.getSkill().getSkillName());
-            skillInfo.put("skillCareer", skill.getSkillCareer());
-            skills.add(skillInfo);
-        }
-        response.put("skills", skills);
-
-        return ResponseEntity.ok(response);
-
     }
 
     @GetMapping("/edit/{id}")
