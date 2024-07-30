@@ -101,21 +101,58 @@
                 </div>
                 <div class="form-group">
                     <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" value="${requiredExperience}" required>
+                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
                 </div>
                 <div class="form-group">
                     <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
                     <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
                 </div>
+                <button type="button" onclick="removeRequirement(this)">Remove</button>
             `;
             requirementsContainer.appendChild(requirementItem);
+        }
+        function removeRequirement(button) {
+            const requirementItem = button.parentElement;
+            requirementItem.remove();
+        }
+
+        function validateForm() {
+            const requirementsContainer = document.getElementById('requirementsContainer');
+            if (requirementsContainer.children.length === 0) {
+                alert('At least one requirement must be added.');
+                return false;
+            }
+
+            // 각 필드가 채워져 있는지 확인
+            const requirementItems = document.querySelectorAll('.requirement-item');
+            for (const item of requirementItems) {
+                const skill = item.querySelector('select');
+                const experience = item.querySelector('input[name$=".requiredExperience"]');
+                const count = item.querySelector('input[name$=".requiredCount"]');
+                if (!skill.value || !experience.value || !count.value) {
+                    alert('All requirement fields must be filled out.');
+                    return false;
+                }
+
+                if (parseFloat(experience.value) <= 0) {
+                    alert('Required Experience must be a positive number.');
+                    return false;
+                }
+
+                if (parseFloat(count.value) <= 0) {
+                    alert('Required Count must be a positive number.');
+                    return false;
+                }
+            }
+
+            return true;
         }
         /*]]>*/
     </script>
 </head>
 <body>
 <h1>Update Project</h1>
-<form th:action="@{/updateProject}" th:object="${projectsRequest}" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
+<form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
     <div class="form-group">
         <label for="projectName">Project Name:</label>
         <input type="text" id="projectName" th:field="*{projectName}" required>
