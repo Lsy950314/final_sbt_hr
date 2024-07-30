@@ -159,6 +159,70 @@
       align-items: center;
     }
 
+    #employee-info {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    #employee-info .label {
+      font-weight: bold;
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-right: 1px solid #ddd;
+    }
+
+    #employee-info .value {
+      padding: 10px;
+      border-left: 1px solid #ddd;
+    }
+
+    #employee-info, #employee-skills {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    #employee-info .label, #employee-skills .label {
+      font-weight: bold;
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-right: 1px solid #ddd;
+    }
+
+    #employee-info .value, #employee-skills .value {
+      padding: 10px;
+      border-left: 1px solid #ddd;
+    }
+
+    #skills-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #skills-list li {
+      margin-bottom: 5px;
+      padding: 5px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+
+
   </style>
 </head>
 <body>
@@ -227,15 +291,30 @@
                   const employeeDetails = document.getElementById("employeeDetails");
                   if (employeeDetails) {
                     employeeDetails.innerHTML = `
-                        <p>Employee ID: ${data.employeeId}</p>
-                        <p>Name: ${data.name}</p>
-                        <p>Address: ${data.address}</p>
-                        <p>Last Project End Date: ${data.lastProjectEndDate}</p>
-                        <p>Current Project End Date: ${data.currentProjectEndDate}</p>
-                        <p>Contact Number: ${data.contactNumber}</p>
-                        <p>Hire Date: ${data.hireDate}</p>
-                        <p>Preferred Language: ${data.preferredLanguage}</p>
-                        <p>Preferred Project Type: ${data.preferredProjectType}</p>
+                       <div id="employee-info">
+    <p class="label">Employee ID:</p>
+    <p class="value">${data.employeeId}</p>
+    <p class="label">Name:</p>
+    <p class="value">${data.name}</p>
+    <p class="label">Address:</p>
+    <p class="value">${data.address}</p>
+    <p class="label">Last Project End Date:</p>
+    <p class="value">${data.lastProjectEndDate}</p>
+    <p class="label">Current Project End Date:</p>
+    <p class="value">${data.currentProjectEndDate}</p>
+    <p class="label">Contact Number:</p>
+    <p class="value">${data.contactNumber}</p>
+    <p class="label">Hire Date:</p>
+    <p class="value">${data.hireDate}</p>
+    <p class="label">Preferred Language:</p>
+    <p class="value">${data.preferredLanguage}</p>
+    <p class="label">Preferred Project Type:</p>
+    <p class="value">${data.preferredProjectType}</p>
+    <p class="label">Skills & Career : </p>
+<div class="value">
+
+</div>
+</div>
                     `;
 
                     // 스킬 정보 추가
