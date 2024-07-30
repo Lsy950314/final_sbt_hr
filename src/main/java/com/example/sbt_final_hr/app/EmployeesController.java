@@ -4,7 +4,6 @@ import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
 import com.example.sbt_final_hr.domain.service.ProjectTypesService;
@@ -38,8 +37,8 @@ public class EmployeesController {
         this.employeesSkillService = employeesSkillService;
     }
 
-
-    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
+    //7월 26일 15시 새로운 시도중
+    //팀장 코드 참고해서 수정중-get
     @GetMapping("/newemployee")
     public String showCreateEmployeeFormWithPhoto(Model model) {
         EmployeesRequest employeesRequest = new EmployeesRequest();
@@ -49,7 +48,39 @@ public class EmployeesController {
         return "employees/createemployee";
     }
 
-    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
+    //오전 7월 30일 09:56
+//    @PostMapping("/createemployee")
+//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
+//        Employees employee = employeesService.save(employeesRequest.toEntity());
+//        if(employeesRequest.getEmployeesSkillRequests() != null) {
+//            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
+//            }
+//        }
+//        return "redirect:/employees";
+//    }
+    //오전 7월 30일 09:56
+//    @PostMapping("/createemployee")
+//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @ModelAttribute("image") MultipartFile image) throws IOException {
+//        // Handle image upload
+//        if (!image.isEmpty()) {
+//            String imagePath = employeesService.saveImage(image);
+//            employeesRequest.setImage(imagePath);
+//        }
+//
+//        Employees employee = employeesService.save(employeesRequest.toEntity());
+//
+//        if (employeesRequest.getEmployeesSkillRequests() != null) {
+//            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
+//            }
+//        }
+//
+//        return "redirect:/employees";
+//    }
+    //오전 7월 30일 10:36
     @PostMapping("/createemployee")
     public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                           @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
@@ -62,6 +93,7 @@ public class EmployeesController {
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
         }
+
         return "redirect:/employees";
     }
 
@@ -90,6 +122,41 @@ public class EmployeesController {
             model.addAttribute("employees", employeesService.findAll());
         }
         return "Employees_practice/employees";
+    }
+
+    @PostMapping("/getModalData")
+    public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
+        Long id = request.get("id");
+        Optional<Employees> employees = employeesService.findById(id);
+        if (employees.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Employees employee = employees.get();
+        List<EmployeesSkill> employeeSkills = employee.getSkills();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("employeeId", employee.getEmployeeId());
+        response.put("name", employee.getName());
+        response.put("address", employee.getAddress());
+        response.put("lastProjectEndDate", employee.getLastProjectEndDate() != null ? employee.getLastProjectEndDate().format(formatter) : null);
+        response.put("currentProjectEndDate", employee.getCurrentProjectEndDate() != null ? employee.getCurrentProjectEndDate().format(formatter) : null);
+        response.put("contactNumber", employee.getContactNumber());
+        response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
+        response.put("preferredLanguage", employee.getPreferredLanguage());
+        response.put("preferredProjectType", employee.getPreferredProjectType());
+
+        List<Map<String, Object>> skills = new ArrayList<>();
+        for (EmployeesSkill skill : employeeSkills) {
+            Map<String, Object> skillInfo = new HashMap<>();
+            skillInfo.put("skillName", skill.getSkill().getSkillName());
+            skillInfo.put("skillCareer", skill.getSkillCareer());
+            skills.add(skillInfo);
+        }
+        response.put("skills", skills);
+
+        return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("/edit/{id}")

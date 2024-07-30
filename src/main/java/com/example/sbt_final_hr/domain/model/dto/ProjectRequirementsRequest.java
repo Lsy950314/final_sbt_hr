@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class ProjectRequirementsRequest {
     private Long id;
+    private Projects project;
     private Skills skill;
     private int requiredExperience;
     private int requiredCount;
@@ -17,9 +18,7 @@ public class ProjectRequirementsRequest {
 
     public ProjectRequirements toEntity(Projects project) {
         ProjectRequirements projectRequirements = new ProjectRequirements();
-        if (this.id != null) {
-            projectRequirements.setId(this.id); // 업데이트 시 ID 설정
-        }
+        projectRequirements.setId(this.id); // 업데이트 시 ID 설정
         projectRequirements.setProject(project);
         projectRequirements.setSkill(this.skill);
         projectRequirements.setRequiredExperience(this.requiredExperience);
@@ -30,6 +29,7 @@ public class ProjectRequirementsRequest {
 
     public void fromEntity(ProjectRequirements projectRequirements) {
         this.id = projectRequirements.getId();
+        this.project = projectRequirements.getProject();
         this.skill = projectRequirements.getSkill();
         this.requiredExperience = projectRequirements.getRequiredExperience();
         this.requiredCount = projectRequirements.getRequiredCount();

@@ -11,32 +11,39 @@
             flex-direction: column;
             align-items: center;
         }
+
         .form-container {
             display: flex;
             flex-direction: column;
             max-width: 800px;
         }
+
         .form-group {
             margin: 10px;
         }
+
         .form-group label {
             margin-bottom: 5px;
         }
+
         .form-group input, .form-group select {
             padding: 8px;
             font-size: 16px;
             width: 100%;
         }
+
         .requirements-container {
             display: flex;
             flex-direction: column;
             margin: 10px;
         }
+
         .requirement-item {
             border: 1px solid #ccc;
             padding: 10px;
             margin-top: 10px;
         }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -58,7 +65,7 @@
             const autocomplete = new google.maps.places.Autocomplete(input);
             autocomplete.setFields(['geometry', 'formatted_address']);
 
-            autocomplete.addListener('place_changed', function() {
+            autocomplete.addListener('place_changed', function () {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
                     alert("No details available for input: '" + place.name + "'");
@@ -70,8 +77,10 @@
             });
         }
 
-        window.onload = function() {
+        window.onload = function () {
             initAutocomplete();
+            // 최소 하나의 요구 조건을 추가
+            addRequirement();
         };
 
         function addRequirement() {
@@ -87,29 +96,74 @@
             });
 
             requirementItem.innerHTML = `
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
-                    <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
-                        ${skillOptions}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" required>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
-                </div>
-            `;
+    <div class="form-group">
+        <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+        <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
+            ${skillOptions}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
+        <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" required>
+    </div>
+    <div class="form-group">
+        <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+        <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
+    </div>
+    <button type="button" onclick="removeRequirement(this)">Remove</button>
+`;
             requirementsContainer.appendChild(requirementItem);
         }
+
+        function removeRequirement(button) {
+            const requirementsContainer = document.getElementById('requirementsContainer');
+            if (requirementsContainer.children.length > 1) {
+                const requirementItem = button.parentElement;
+                requirementItem.remove();
+            } else {
+                alert('At least one requirement must be present.');
+            }
+        }
+
+        function validateForm() {
+            const requirementsContainer = document.getElementById('requirementsContainer');
+            if (requirementsContainer.children.length === 0) {
+                alert('At least one requirement must be added.');
+                return false;
+            }
+
+            // 각 필드가 채워져 있는지 확인
+            const requirementItems = document.querySelectorAll('.requirement-item');
+            for (const item of requirementItems) {
+                const skill = item.querySelector('select');
+                const experience = item.querySelector('input[name$=".requiredExperience"]');
+                const count = item.querySelector('input[name$=".requiredCount"]');
+                if (!skill.value || !experience.value || !count.value) {
+                    alert('All requirement fields must be filled out.');
+                    return false;
+                }
+
+                if (parseFloat(experience.value) <= 0) {
+                    alert('Required Experience must be a positive number.');
+                    return false;
+                }
+
+                if (parseFloat(count.value) <= 0) {
+                    alert('Required Count must be a positive number.');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         /*]]>*/
     </script>
 </head>
 <body>
 <h1>Insert New Project</h1>
-<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container">
+<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
+      onsubmit="return validateForm()">
     <div class="form-group">
         <label for="projectName">Project Name:</label>
         <input type="text" id="projectName" th:field="*{projectName}" required>
@@ -150,7 +204,9 @@
     <div class="form-group">
         <label for="projectTypeId">Project Type:</label>
         <select id="projectTypeId" th:field="*{projectTypeId}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Project Type</option>
+            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
+                Project Type
+            </option>
         </select>
     </div>
 
