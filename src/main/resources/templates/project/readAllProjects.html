@@ -171,6 +171,50 @@
         /*    color: #333;*/
         /*}*/
 
+        #project-info {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin: 20px 0;
+        }
+
+        #project-info .data-row {
+            display: table-row;
+        }
+
+        #project-info .label, #project-info .value {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        #project-info .label {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            width: 20%;
+        }
+
+        #project-info .value {
+            width: 80%;
+        }
+
+        .modal-projectRequirements div {
+            margin-bottom: 10px;
+        }
+
+        #project-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #project-info li {
+            margin-bottom: 5px;
+        }
+
+
 
     </style>
 </head>
@@ -233,28 +277,40 @@
                 console.log(data)
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
-                    <div>プロジェクトID: ${data.projectId}</div>
-                    <div>プロジェクト要件:
-                        <div class="modal-projectRequirements">
-                            ${data.projectRequirements.map(req => `
-                                <div>
-                                    スキル: ${req.skill.skillName},
-                                    必要経験: ${req.requiredExperience}ヶ月,
-                                    必要人数: ${req.requiredCount}人 + test
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <div>従業員プロジェクト:
-                        <div>
-                            ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
-                        </div>
-                    </div>
-                    <div>従業員:
-                        <div>
-                            ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
-                        </div>
-                    </div>
+                    <div id="project-info">
+    <div class="data-row">
+        <div class="label">プロジェクトID:</div>
+        <div class="value">${data.projectId}</div>
+    </div>
+    <div class="data-row">
+        <div class="label">プロジェクト要件:</div>
+        <div class="value modal-projectRequirements">
+            ${data.projectRequirements.map(req => `
+                <div>
+                    スキル: ${req.skill.skillName},
+                    必要経験: ${req.requiredExperience}ヶ月,
+                    必要人数: ${req.requiredCount}人 + test
+                </div>
+            `).join('')}
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="label">従業員プロジェクト:</div>
+        <div class="value">
+            <ul>
+                ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
+            </ul>
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="label">従業員:</div>
+        <div class="value">
+            <ul>
+                ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
+            </ul>
+        </div>
+    </div>
+</div>
 
                     <div>
         <button onclick="navigateToMatchManagement()">버튼</button>
