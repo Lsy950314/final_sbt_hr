@@ -23,6 +23,17 @@
         }
 
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
+        document.addEventListener('DOMContentLoaded', ()=>{
+            document.querySelectorAll('.match-btn').forEach(button => {
+                button.addEventListener('click', ()=>{
+                    matchEmployeeProject()
+                })
+            })
+        })
+
+        function matchEmployeeProject(){
+            alert('match')
+        }
     </script>
 
     <style>
@@ -184,6 +195,7 @@
         </div>
     </div>
 </div>
+
     </div>
     <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
     <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
