@@ -34,6 +34,7 @@
             align-items: center;
             padding: 20px;
             margin-left: 150px;
+            width: 300px;
             max-width: 300px;
         }
 
@@ -68,11 +69,13 @@
         }
 
         .employee-list {
+            margin-left: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            margin: 0 auto;
+            /*margin: 0 auto;*/
+            width: 600px;
             max-width: 800px;
         }
 
@@ -146,10 +149,11 @@
 </head>
 <body>
 
-<div class="contents">
+<div class="contents" style="display: flex">
 
 
 <!--<div> -&#45;&#45; 프로젝트 인력 요구사항 -&#45;&#45;</div>-->
+    <div>
 <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
     <div class="project-requirement">
         <div class="requirement-skill" th:text="'필요스킬 ' + ${pr.getSkill().getSkillName()}"></div>
@@ -159,11 +163,13 @@
         <br>
     </div>
 </div>
-
+    </div>
 
 
 
 <!--<div> -&#45;&#45;조건 만족 사원-&#45;&#45;</div>-->
+    <div>
+
 <div class="employee-list" th:each="e : ${employeeEntries}">
     <div class="employee-entry">
         <div class="employee-name" th:text="'이름 = ' + ${e.key.getName()}"></div>
@@ -178,6 +184,7 @@
         </div>
     </div>
 </div>
+    </div>
     <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
     <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
     <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
@@ -187,7 +194,7 @@
     <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
     <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 REQUIRED_COUNT 값 1 증가 -->
     <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
-    <br>
+<!--    <br>-->
 </div>
 </body>
 </html>
