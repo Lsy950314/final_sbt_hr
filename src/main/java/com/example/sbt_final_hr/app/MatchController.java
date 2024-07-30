@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MatchController {
@@ -23,6 +25,12 @@ public class MatchController {
         this.matchService = matchService;
         this.projectsService = projectsService;
     }
+
+    @GetMapping("/check")
+    public String check(){
+        return "employees/check";
+    }
+
 
     @GetMapping("/matchManagement")
     public String matchManagement(HttpSession session, Model model, SessionStatus sessionStatus) {
@@ -36,10 +44,10 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-        session.removeAttribute("projectId");
-        session.removeAttribute("projectRequirements");
-        session.removeAttribute("employeesProjects");
-        session.removeAttribute("employees");
+//        session.removeAttribute("projectId");
+//        session.removeAttribute("projectRequirements");
+//        session.removeAttribute("employeesProjects");
+//        session.removeAttribute("employees");
 
         Projects projects = projectsService.getProjectById(projectId);
 
@@ -59,9 +67,10 @@ public class MatchController {
         // 해당 프로젝트에 참여중인 사원들
         model.addAttribute("employees", employees);
 
-        List<Employees> filteredEmployees = matchService.filterEmployeesForProject(projects);
+        Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
+        List<Map.Entry<Employees, Integer>> employeeEntries = new ArrayList<>(filteredEmployeesTransitTimes.entrySet());
 
-        model.addAttribute("filteredEmployees", filteredEmployees);
+        model.addAttribute("employeeEntries", employeeEntries);
 
         return "match/matchManagement";
     }

@@ -80,4 +80,5 @@ public class EmployeesSkillController {
         employeesSkillService.deleteEmployeesSkill(id);
         return "redirect:/employees-skills";
     }
+
 }
