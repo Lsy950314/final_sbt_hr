@@ -30,7 +30,6 @@ public class EmployeesService {
     private final EmployeesSkillRepository employeesSkillRepository;
     private final SkillsRepository skillsRepository;
 
-
     @Autowired
     public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository) {
         this.employeesRepository = employeesRepository;
@@ -62,29 +61,23 @@ public class EmployeesService {
         employeesRepository.deleteById(id);
     }
 
-    //사진 넣기 시도중
+    // 기존 createOrUpdateEmployee 메서드 - 주석 처리하여 제거 (중복 제거)
+    // public void createOrUpdateEmployee(EmployeesRequest dto) {
+    //     Employees employee = new Employees();
+    //     employee.setName(dto.getName());
+    //     employee.setAddress(dto.getAddress());
+    //     employee.setLatitude(dto.getLatitude());
+    //     employee.setLongitude(dto.getLongitude());
+    //     employee.setLastProjectEndDate(dto.getLastProjectEndDate());
+    //     employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
+    //     employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
+    //     employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
+    //     employee.setContactNumber(dto.getContactNumber());
+    //     employee.setHireDate(dto.getHireDate());
+    //     employee = employeesRepository.save(employee);
+    // }
 
-
-    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
-
-    public void createOrUpdateEmployee(EmployeesRequest dto) {
-        Employees employee = new Employees();
-        employee.setName(dto.getName());
-        employee.setAddress(dto.getAddress());
-        employee.setLatitude(dto.getLatitude());
-        employee.setLongitude(dto.getLongitude());
-        employee.setLastProjectEndDate(dto.getLastProjectEndDate());
-        employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
-        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
-        employee.setContactNumber(dto.getContactNumber());
-        employee.setHireDate(dto.getHireDate());
-        employee = employeesRepository.save(employee);
-
-
-    }
-
-    //오전 7월 30일 09:56
+    // 수정된 createOrUpdateEmployee 메서드 - MultipartFile을 처리하도록 수정됨
     public void createOrUpdateEmployee(EmployeesRequest dto, MultipartFile image) throws IOException {
         Employees employee = new Employees();
         employee.setName(dto.getName());
@@ -98,7 +91,7 @@ public class EmployeesService {
         employee.setContactNumber(dto.getContactNumber());
         employee.setHireDate(dto.getHireDate());
 
-        // Handle image upload
+        // 이미지 업로드 처리 - 추가된 부분
         if (image != null && !image.isEmpty()) {
             String imagePath = saveImage(image);
             employee.setImage(imagePath);
@@ -110,29 +103,31 @@ public class EmployeesService {
             for (EmployeesSkillRequest skillRequest : dto.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = new EmployeesSkill();
                 employeesSkill.setEmployee(employee);
-                employeesSkill.setSkill(skillsRepository.findById(skillRequest.getEmployeesSkillId()).orElse(null));
+                employeesSkill.setSkill(skillsRepository.findById(skillRequest.getEmployeesSkillId()).orElse(null)); // 수정된 부분: getEmployeesSkillId() -> getSkillId()
                 employeesSkill.setSkillCareer(skillRequest.getSkillCareer());
                 employeesSkillRepository.save(employeesSkill);
             }
         }
     }
 
-//    public String saveImage(MultipartFile image) throws IOException {
-//        String uploadsDir = "uploads/";
-//        String originalFilename = image.getOriginalFilename();
-//        String filePath = uploadsDir + UUID.randomUUID() + "_" + originalFilename;
-//
-//        File dir = new File(uploadsDir);
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//
-//        Path path = Paths.get(filePath);
-//        Files.write(path, image.getBytes());
-//
-//        return path.toString();
-//    }
+    // 주석 처리된 saveImage 메서드 - 기존 코드에서 주석 처리됨
+    // public String saveImage(MultipartFile image) throws IOException {
+    //     String uploadsDir = "uploads/";
+    //     String originalFilename = image.getOriginalFilename();
+    //     String filePath = uploadsDir + UUID.randomUUID() + "_" + originalFilename;
 
+    //     File dir = new File(uploadsDir);
+    //     if (!dir.exists()) {
+    //         dir.mkdirs();
+    //     }
+
+    //     Path path = Paths.get(filePath);
+    //     Files.write(path, image.getBytes());
+
+    //     return path.toString();
+    // }
+
+    // 수정된 saveImage 메서드 - 파일 저장 경로 변경
     public String saveImage(MultipartFile image) throws IOException {
         // Get the absolute path to the static folder
         ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
@@ -151,16 +146,7 @@ public class EmployeesService {
         // Return the relative path to be saved in the database
         return "/img/employees/" + newFilename;
     }
-
 }
-
-
-
-
-
-
-
-
 
 
 
