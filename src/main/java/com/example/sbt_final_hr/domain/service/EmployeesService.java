@@ -97,6 +97,8 @@ public String saveImage(MultipartFile image) throws IOException {
     String newFilename = UUID.randomUUID() + "_" + originalFilename;
     Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
 
+    System.out.println(filePath + " " + newFilename);
+
     Files.write(filePath, image.getBytes());
 
     // Return the relative path to be saved in the database

@@ -38,69 +38,19 @@ public class EmployeesController {
         this.employeesSkillService = employeesSkillService;
     }
 
-//    @GetMapping("/newemployee")
-//    public String showCreateEmployeeForm(Model model) {
-//        EmployeesRequest employeesRequest = new EmployeesRequest();
-//        model.addAttribute("employeesRequest", employeesRequest);
-//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-//        model.addAttribute("skills", skillsService.getAllSkills());
-//        return "employees/createemployee";
-//    }
-    //7월 30일 12:43 사진 추가되는 사원 등록 페이지로 시도중
-//    @GetMapping("/newemployeewithphoto")
-//    public String showCreateEmployeeFormWithPhoto(Model model) {
-//        EmployeesRequest employeesRequest = new EmployeesRequest();
-//        model.addAttribute("employeesRequest", employeesRequest);
-//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-//        model.addAttribute("skills", skillsService.getAllSkills());
-//        return "employees/createemployee(photo)";
-//    }
 
-    //7월 30일 13:28 사진 추가되는 사원 등록 페이지로 시도중
-    @GetMapping("/newemployeewithphoto")
+    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
+    @GetMapping("/newemployee")
     public String showCreateEmployeeFormWithPhoto(Model model) {
         EmployeesRequest employeesRequest = new EmployeesRequest();
         model.addAttribute("employeesRequest", employeesRequest);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
         model.addAttribute("skills", skillsService.getAllSkills());
-        return "employees/createemployee(photo)";
+        return "employees/createemployee";
     }
-//7월 30일 13:36 사진 추가되는 사원 등록 페이지로 시도중
-//    @GetMapping("/newemployee")
-//    public String showCreateEmployeeFormWithPhoto(Model model) {
-//        EmployeesRequest employeesRequest = new EmployeesRequest();
-//        model.addAttribute("employeesRequest", employeesRequest);
-//        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-//        model.addAttribute("skills", skillsService.getAllSkills());
-//        return "employees/createemployee_photo";
-//    }
 
-//    @PostMapping("/createemployee")
-//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
-//        Employees employee = employeesService.save(employeesRequest.toEntity());
-//        if(employeesRequest.getEmployeesSkillRequests() != null) {
-//            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
-//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
-//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
-//            }
-//        }
-//        return "redirect:/employees";
-//    }
-
-    //7월 30일 12:43 사진 추가되는 사원 등록 페이지로 시도중
-//    @PostMapping("/createemployee2")
-//    public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
-//        Employees employee = employeesService.save(employeesRequest.toEntity());
-//        if(employeesRequest.getEmployeesSkillRequests() != null) {
-//            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
-//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
-//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
-//            }
-//        }
-//        return "redirect:/employees";
-//    }
-    //7월 30일 13:29 사진 추가되는 사원 등록 페이지로 시도중
-    @PostMapping("/createemployee2")
+    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
+    @PostMapping("/createemployee")
     public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                           @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
         String imagePath = employeesService.saveImage(imageFile);
@@ -114,6 +64,7 @@ public class EmployeesController {
         }
         return "redirect:/employees";
     }
+
 
 
 

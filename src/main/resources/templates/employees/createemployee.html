@@ -92,7 +92,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 </style>
 <body onload="initMap()">
 <h1>Create Employee(Photo)</h1>
-<form th:action="@{/employees/createemployee2}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+<form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
 
