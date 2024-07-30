@@ -40,7 +40,7 @@
         <td th:text="${employee.lastProjectEndDate}">2024-07-01</td>
         <td th:text="${employee.currentProjectEndDate}">2024-07-31</td>
         <td>
-            <img th:src="${employee.photo != null ? 'data:image/jpeg;base64,' + employee.photo : '/img/default-photo.jpeg'}" alt="Employee Photo" width="100" height="100"/>
+            <img th:src="${employee.image != null ? 'data:image/jpeg;base64,' + employee.image : '/img/default-photo.jpeg'}" alt="Employee Photo" width="100" height="100"/>
         </td>
         <td th:text="${employee.skill != null && employee.skill.skillName != null ? employee.skill.skillName : 'No Skill'}">No Skill</td>
         <td th:text="${employee.projectType != null && employee.projectType.projectTypeName != null ? employee.projectType.projectTypeName : 'No Project Type'}">No Project Type</td>
