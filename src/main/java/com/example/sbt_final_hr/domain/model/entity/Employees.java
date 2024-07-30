@@ -56,17 +56,25 @@ public class Employees {
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
+        employeesRequest.setEmployeeId(this.employeeId); // employeeId 추가
         employeesRequest.setName(this.name);
         employeesRequest.setAddress(this.address);
         employeesRequest.setLatitude(this.latitude);
         employeesRequest.setLongitude(this.longitude);
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-
         employeesRequest.setPreferredLanguage(this.preferredLanguage.toString());
         employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
         return employeesRequest;
     }
+
+
+
+
+
+
+
+
 }

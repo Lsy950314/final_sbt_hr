@@ -85,15 +85,14 @@
 </style>
 <body onload="initMap()">
 <h1>Edit Employee</h1>
-수정시 구글 맵 로딩이 안됨:수정하면 무조건 주소 없어짐 / 사진이 기존 경로or이미지가 안들어가있음 / 사원의 보유한 프로그래밍 경력이 안나옴 <hr>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
-    <input type="text" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
+    <input type="hidden" th:field="*{employeeId}"/>  <!-- 숨겨진 필드로 ID 추가 -->
 
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
 
     <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}"/><br/>
+    <input type="text" id="address" th:field="*{address}" placeholder="Enter address"/><br/>
 
     <label for="latitude">Latitude:</label>
     <input type="text" id="latitude" th:field="*{latitude}" readonly/><br/>
