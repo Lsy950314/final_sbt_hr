@@ -34,6 +34,7 @@ public class Employees {
     private LocalDate currentProjectEndDate;
 //    @Lob
 //    private byte[] photo;
+    private String image;
     @Column(name = "preferred_language")
     private Long preferredLanguage;
     @Column(name = "preferred_project_type")
@@ -61,7 +62,7 @@ public class Employees {
         employeesRequest.setLongitude(this.longitude);
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-        // Add conversion from byte[] to MultipartFile if needed
+
         employeesRequest.setPreferredLanguage(this.preferredLanguage.toString());
         employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);

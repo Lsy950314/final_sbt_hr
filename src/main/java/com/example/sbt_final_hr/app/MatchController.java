@@ -26,6 +26,12 @@ public class MatchController {
         this.projectsService = projectsService;
     }
 
+    @GetMapping("/check")
+    public String check(){
+        return "employees/check";
+    }
+
+
     @GetMapping("/matchManagement")
     public String matchManagement(HttpSession session, Model model, SessionStatus sessionStatus) {
         Long projectId = (Long) session.getAttribute("projectId");
