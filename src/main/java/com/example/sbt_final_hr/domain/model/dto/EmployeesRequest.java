@@ -27,7 +27,8 @@ public class EmployeesRequest {
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
-    private MultipartFile image;
+    private MultipartFile imageFile;  // MultipartFile 타입의 필드 추가
+    private String image; // String 타입의 필드
     //이 코드가 있어서 createemployee뷰에서 직원 프로그래밍 경력 관련 데이터들을 받아서 넘기는듯
     private List<EmployeesSkillRequest> employeesSkillRequests;
 

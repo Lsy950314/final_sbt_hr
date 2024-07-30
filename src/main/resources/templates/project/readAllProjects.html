@@ -110,8 +110,7 @@
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */
-                    #87cefa  /* 파란색 계열 끝 색상 */
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
@@ -164,7 +163,6 @@
         /*}*/
 
 
-
         /*.modal-projectRequirements li {*/
         /*    border-bottom: 1px solid #1e90ff;*/
         /*    padding: 5px 0;*/
@@ -214,23 +212,22 @@
             margin-bottom: 5px;
         }
 
-#add-projects{
-    margin-left: 870px;
-    font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-    font-size: 13px; /* 글자 크기 */
-    color: #fff; /* 텍스트 색상 */
-    background: linear-gradient(
-            45deg,
-            #4a90e2, /* 파란색 계열 시작 색상 */
-            #87cefa  /* 파란색 계열 끝 색상 */
-    ); /* 버튼 배경색 그라데이션 */
-    border: none; /* 기본 테두리 제거 */
-    border-radius: 20px; /* 둥근 테두리 */
-    padding: 5px 10px; /* 내부 여백 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-    cursor: pointer; /* 커서 변경 */
-    transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
-}
+        #add-projects {
+            margin-left: 870px;
+            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
+            font-size: 13px; /* 글자 크기 */
+            color: #fff; /* 텍스트 색상 */
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+            ); /* 버튼 배경색 그라데이션 */
+            border: none; /* 기본 테두리 제거 */
+            border-radius: 20px; /* 둥근 테두리 */
+            padding: 5px 10px; /* 내부 여백 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
+            cursor: pointer; /* 커서 변경 */
+            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+        }
 
     </style>
 </head>
@@ -238,15 +235,16 @@
 <div style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li>Dashboard</li>
-            <li>社員リスト</li>
-            <li>Projects</li>
+            <li><a href="">Dashboard</a></li>
+            <li><a href="/employees/list2">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
         </ul>
     </div>
 
 
     <div class="contents">
-        <p style="font-size: 26px">プロジェクトリスト  <span ><button id="add-projects">プロジェクト追加</button></span> </p>
+        <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
+        </p>
 
         <div class="members">
             <div class="header">
@@ -264,13 +262,11 @@
                 <div th:text="${p.startDate}"></div>
                 <div th:text="${p.endDate}"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
+                    </button>
                 </div>
             </div>
         </div>
-
-
-
 
 
         <!-- 모달 팝업 -->
@@ -287,6 +283,19 @@
 
 
 <script>
+    function createProject(){
+        location.href="/createProject"
+    }
+
+    function updateProject(projectId) {
+        location.href="/updateProject?id=" + projectId;
+    }
+    function deleteProject(projectId) {
+       if ( confirm("정말로 삭제하시겠습니까?") ){
+           location.href="/deleteProject?id=" + projectId;
+       }
+    }
+
     function showProjectDetails(projectId) {
 
         fetch(`/getInfoByProjectID?id=${projectId}`)
@@ -327,13 +336,21 @@
                 ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
             </ul>
         </div>
-   <button>수정</button>  <button>삭제</button> </div>
+   <button id="update-btn">수정</button>  <button id="delete-btn" >삭제</button> </div>
 </div>
 
                     <div>
         <button onclick="navigateToMatchManagement()">매치버튼</button>
     </div>
                 `;
+
+                document.getElementById('update-btn').addEventListener('click', function () {
+                    updateProject(projectId);
+                })
+
+                document.getElementById('delete-btn').addEventListener('click', function () {
+                    deleteProject(projectId);
+                })
                 openModal();
             })
             .catch(error => {

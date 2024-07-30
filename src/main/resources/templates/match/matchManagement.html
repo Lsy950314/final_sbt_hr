@@ -2,15 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>매치 관리</title>
+    <script>
+        function calculateMonthsDifference(endDate) {
+            const currentDate = new Date();
+            const end = new Date(endDate);
+            const yearsDifference = currentDate.getFullYear() - end.getFullYear();
+            const monthsDifference = (yearsDifference * 12) + (currentDate.getMonth() - end.getMonth());
+            const daysDifference = currentDate.getDate() - end.getDate();
+            const totalMonths = monthsDifference + (daysDifference / 30); // approximate days to month fraction
+            return totalMonths.toFixed(1); // to one decimal place
+        }
+
+        function updateWaitingPeriods() {
+            const elements = document.querySelectorAll('.waiting-period');
+            elements.forEach(element => {
+                const endDate = element.getAttribute('data-end-date');
+                const monthsDifference = calculateMonthsDifference(endDate);
+                element.textContent = `${monthsDifference} 개월`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
+    </script>
 </head>
 <body>
+<div> --- 프로젝트 인력 요구사항 ---</div>
+<div th:each="pr : ${projectRequirements}">
+    <div th:text="'필요스킬 ' + ${pr.getSkill().getSkillName()}"></div>
+    <div th:text="'필요경력 ' + ${pr.getRequiredExperience()}"></div>
+    <div th:text="'필요인원 ' + ${pr.getRequiredCount()}"></div>
+    <div th:text="'충족인원 ' + ${pr.fulfilledCount}"></div>
+</div>
+<div> ---조건 만족 사원---</div>
 <div th:each="e : ${employeeEntries}">
     <div th:text="'이름 = ' + ${e.key.getName()}"></div>
-    <div th:text="'선호스킬 = '+ ${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'}"></div>
+    <div th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
     <div th:each="s, stat : ${e.key.getSkills()}">
-        <div th:text="'보유스킬' + (${stat.index} + 1) + ': ' + ${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'} + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+        <div th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
     </div>
-    <div th:text="'예상 소요시간 : ' + ${e.value} + '분'"></div>
+    <div th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
+    <div th:attr="data-end-date=${e.key.getLastProjectEndDate()}" class="waiting-period">대기기간 계산 중...</div>
+    <div>
+        <button> 배정하기</button>
+    </div>
+    <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
+    <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
+    <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
+    <!--    어떤 projectRequirements 에 배정할지 골라서 yes/no 컨펌 받은다음   -->
+    <!--    업데이트 할 항목들: -->
+    <!--    1. EMPLOYEES 테이블의 CURRENT_PROJECT_END_DATE 를 배정 관리중인 PROJECTS 테이블의 END_DATE 값으로 -->
+    <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
+    <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 REQUIRED_COUNT 값 1 증가 -->
+    <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
+    <br>
 </div>
 </body>
 </html>
