@@ -1,236 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      body {
-        width: 1920px;
-        height: 1280px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    body {
+      width: 1920px;
+      height: 1280px;
+    }
 
-      ul {
-        list-style: none;
-      }
+    ul {
+      list-style: none;
+    }
 
-      .menu {
-        background-color: #1e90ff;
-        width: 350px;
-        height: 1080px;
-      }
+    .menu {
+      background-color: #1e90ff;
+      width: 350px;
+      height: 1080px;
+    }
 
-      .menus > li {
-        width: 300px;
-        height: 40px;
-        justify-content: center;
-        align-items: center;
-        padding: 15px 20px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        text-align: center;
-        font-size: 18px;
-      }
+    .menus > li {
+      width: 300px;
+      height: 40px;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-align: center;
+      font-size: 18px;
+    }
 
-      .menus {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
+    .menus {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-      .menus li:hover {
-        background: linear-gradient(45deg, #1e90ff, #00bfff);
-        color: #fff;
-        border-top-right-radius: 40px;
-        border-bottom-right-radius: 40px;
-      }
+    .menus li:hover {
+      background: linear-gradient(45deg, #1e90ff, #00bfff);
+      color: #fff;
+      border-top-right-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
 
-      .contents {
-        background-color: #f5f5f5;
-        width: 1500px;
-        height: 1080px;
-      }
+    .contents {
+      background-color: #f5f5f5;
+      width: 1500px;
+      height: 1080px;
+    }
 
-      .members {
-        width: 1280px;
-        height: 1000px;
-        background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
-        border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
-        border-radius: 15px; /* 둥근 모서리 */
-        backdrop-filter: blur(10px); /* 글라스 효과 */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-        /*display: flex;*/
-        color: #333; /* 어두운 글자색 */
-        font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
-        text-align: center;
-        overflow: hidden;
+    .members {
+      width: 1280px;
+      height: 1000px;
+      background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
+      border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
+      border-radius: 15px; /* 둥근 모서리 */
+      backdrop-filter: blur(10px); /* 글라스 효과 */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+      /*display: flex;*/
+      color: #333; /* 어두운 글자색 */
+      font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
+      text-align: center;
+      overflow: hidden;
 
-      }
+    }
 
-      .members > div {
-        display: flex;
-        margin-right: 40px;
-        overflow: hidden; /* Clearfix 효과를 위해 추가 */
-      }
-      .members > div > div {
-        margin-left: 10px;
-        margin-right: 10px;
-        float: left;
-        width: 200px; /* 각 div의 고정된 너비 */
+    .members > div {
+      display: flex;
+      margin-right: 40px;
+      overflow: hidden; /* Clearfix 효과를 위해 추가 */
+    }
+    .members > div > div {
+      margin-left: 10px;
+      margin-right: 10px;
+      float: left;
+      width: 200px; /* 각 div의 고정된 너비 */
 
-        margin-bottom: 10px; /* 간격을 주기 위해 추가 */
-        box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-      }
+      margin-bottom: 10px; /* 간격을 주기 위해 추가 */
+      box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+    }
 
 
 
-      .modal {
-        display: none; /* 숨김 처리 */
-        position: fixed; /* 모달을 화면 중앙에 고정 */
-        z-index: 1; /* 다른 콘텐츠 위에 표시 */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
-      }
+    .modal {
+      display: none; /* 숨김 처리 */
+      position: fixed; /* 모달을 화면 중앙에 고정 */
+      z-index: 1; /* 다른 콘텐츠 위에 표시 */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+    }
 
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; /* 중앙 정렬 */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%; /* 너비 조정 */
-      }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto; /* 중앙 정렬 */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%; /* 너비 조정 */
+    }
 
-      .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-      }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-      .close:hover,
-      .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-      }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
-      .modal-button {
-        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-        font-size: 1rem; /* 글자 크기 */
-        color: #fff; /* 텍스트 색상 */
-        background: linear-gradient(
-                45deg,
-                #4a90e2, /* 파란색 계열 시작 색상 */
-                #87cefa  /* 파란색 계열 끝 색상 */
-        ); /* 버튼 배경색 그라데이션 */
-        border: none; /* 기본 테두리 제거 */
-        border-radius: 20px; /* 둥근 테두리 */
-        padding: 10px 20px; /* 내부 여백 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-        cursor: pointer; /* 커서 변경 */
-        transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
-      }
+    .modal-button {
+      font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
+      font-size: 1rem; /* 글자 크기 */
+      color: #fff; /* 텍스트 색상 */
+      background: linear-gradient(
+              45deg,
+              #4a90e2, /* 파란색 계열 시작 색상 */
+              #87cefa  /* 파란색 계열 끝 색상 */
+      ); /* 버튼 배경색 그라데이션 */
+      border: none; /* 기본 테두리 제거 */
+      border-radius: 20px; /* 둥근 테두리 */
+      padding: 10px 20px; /* 내부 여백 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
+      cursor: pointer; /* 커서 변경 */
+      transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+    }
 
-      .header, .row {
-        display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
-      }
+    .header, .row {
+      display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+    }
 
-      .header > div {
-        font-weight: bold;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-      }
+    .header > div {
+      font-weight: bold;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
 
-      .row > div {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-      }
+    .row > div {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
 
-      .row > div:nth-child(6) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    .row > div:nth-child(6) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    </style>
-  </head>
-  <body>
-    <div style="display: flex">
-      <div class="menu">
-        <ul class="menus">
-          <li>Dashboard</li>
-          <li>社員リスト</li>
-          <li>Projects</li>
-        </ul>
+  </style>
+</head>
+<body>
+<div style="display: flex">
+  <div class="menu">
+    <ul class="menus">
+      <li>Dashboard</li>
+      <li>社員リスト</li>
+      <li>Projects</li>
+    </ul>
+  </div>
+
+  <div class="contents">
+    <p style="font-size: 26px">社員リスト</p>
+
+    <div class="members">
+      <div class="header">
+        <div>名前</div>
+        <div>評価</div>
+        <div>Column2</div>
+        <div>住所</div>
+        <div>プロジェクト終了日</div>
+        <div>詳細を見る</div>
       </div>
-
-      <div class="contents">
-        <p style="font-size: 26px">社員リスト</p>
-
-        <div class="members">
-          <div class="header">
-            <div>名前</div>
-            <div>評価</div>
-            <div>Column2</div>
-            <div>住所</div>
-            <div>プロジェクト終了日</div>
-            <div>詳細を見る</div>
-          </div>
-          <div th:each="e : ${employees}">
-            <div th:text="${e.name}"></div>
-            <div>dd</div>
-            <div>dd</div>
-            <div th:text="${e.address}"></div>
-            <div th:text="${e.currentProjectEndDate}"></div>
-            <div><button class="modal-button">詳細を見る</button></div>
-          </div>
-        </div>
-        <!-- 모달 구조 -->
-        <div id="myModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>사원정보 ㅇㅇ</p>
-            <div th:each="e : ${employees}">
-              <div th:text="${e.name}"></div>
-              <div th:text="${e.address}"></div>
-              <div th:text="${e.currentProjectEndDate}"></div>
-            </div>
-
-
-              <!-- 직원 정보 및 기술 정보 표시 -->
-              <div>
-                <h3>Skills</h3>
-                <ul>
-                  <li th:each="skill : ${skills}" th:text="${skill.skillName}"></li>
-                </ul>
-              </div>
-
-
-
-          </div>
-        </div>
-
+      <div th:each="e : ${employees}">
+        <div th:text="${e.name}"></div>
+        <div>dd</div>
+        <div>dd</div>
+        <div th:text="${e.address}"></div>
+        <div th:text="${e.currentProjectEndDate}"></div>
+        <div><button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button></div>
       </div>
     </div>
-  </body>
+    <!-- 모달 구조 -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="employeeDetails"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
-    // 모달 관련 스크립트
-    var modal = document.getElementById("myModal");
-    var btns = document.querySelectorAll(".modal-button");
-    var span = document.getElementsByClassName("close")[0];
+    const modal = document.getElementById("myModal");
+    const btns = document.querySelectorAll(".modal-button");
+    const span = document.getElementsByClassName("close")[0];
 
-    btns.forEach(function(button) {
-      button.onclick = function() {
-        modal.style.display = "block";
-      }
+    btns.forEach(button => {
+      button.addEventListener('click', function() {
+        const employeeId = this.getAttribute("data-employee-id");
+
+        // AJAX 요청
+        fetch('/employees/getModalData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: employeeId })
+        })
+                .then(response => response.json())
+                .then(data => {
+                  // 데이터가 null이 아닌지 확인
+                  const employeeDetails = document.getElementById("employeeDetails");
+                  if (employeeDetails) {
+                    employeeDetails.innerHTML = `
+                        <p>Employee ID: ${data.employeeId}</p>
+                        <p>Name: ${data.name}</p>
+                        <p>Address: ${data.address}</p>
+                        <p>Last Project End Date: ${data.lastProjectEndDate}</p>
+                        <p>Current Project End Date: ${data.currentProjectEndDate}</p>
+                        <p>Contact Number: ${data.contactNumber}</p>
+                        <p>Hire Date: ${data.hireDate}</p>
+                        <p>Preferred Language: ${data.preferredLanguage}</p>
+                        <p>Preferred Project Type: ${data.preferredProjectType}</p>
+                    `;
+
+                    // 스킬 정보 추가
+                    if (data.skills && data.skills.length > 0) {
+                      const skillsList = document.createElement('ul');
+                      data.skills.forEach(skill => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `Skill: ${skill.skillName}, Career: ${skill.skillCareer} years`;
+                        skillsList.appendChild(listItem);
+                      });
+                      employeeDetails.appendChild(skillsList);
+                    }
+                  }
+                  modal.style.display = "block";
+                })
+                .catch(error => console.error('Error:', error));
+      });
     });
 
     span.onclick = function() {
