@@ -4,7 +4,7 @@
     <title>Edit Employee</title>
     <meta charset="UTF-8">
 </head>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
 <script th:inline="javascript">
     let map;
     let marker;
@@ -85,7 +85,7 @@
 </style>
 <body onload="initMap()">
 <h1>Edit Employee</h1>
-수정시 구글 맵 로딩이 안됨:수정하면 무조건 주소 없어짐 / 사진이 기존 경로or이미지가 안들어가있음 / 사원의 보유한 프로그래밍 경력이 안나옴 <hr>
+사진이 기존 경로or이미지가 안들어가있음 / 사원의 보유한 프로그래밍 경력이 안나옴 <hr>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
     <input type="text" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
 
