@@ -124,7 +124,6 @@ public class ProjectController {
         Projects project = projectsService.updateProject(projectsRequest);
         projectRequirementsService.deleteByProjectId(project.getProjectId());
 
-        // 새로운 요구 조건 생성
         if (projectsRequest.getProjectRequirements() != null) {
             for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
                 ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
