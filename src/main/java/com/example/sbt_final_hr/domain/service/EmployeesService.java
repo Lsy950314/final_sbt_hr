@@ -99,7 +99,7 @@ public class EmployeesService {
         employee.setHireDate(dto.getHireDate());
 
         // Handle image upload
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             String imagePath = saveImage(image);
             employee.setImage(imagePath);
         }

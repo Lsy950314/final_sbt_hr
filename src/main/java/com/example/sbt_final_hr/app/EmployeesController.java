@@ -60,8 +60,28 @@ public class EmployeesController {
 //        return "redirect:/employees";
 //    }
     //오전 7월 30일 09:56
+//    @PostMapping("/createemployee")
+//    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @ModelAttribute("image") MultipartFile image) throws IOException {
+//        // Handle image upload
+//        if (!image.isEmpty()) {
+//            String imagePath = employeesService.saveImage(image);
+//            employeesRequest.setImage(imagePath);
+//        }
+//
+//        Employees employee = employeesService.save(employeesRequest.toEntity());
+//
+//        if (employeesRequest.getEmployeesSkillRequests() != null) {
+//            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+//                EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
+//                employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
+//            }
+//        }
+//
+//        return "redirect:/employees";
+//    }
+    //오전 7월 30일 10:36
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @ModelAttribute("image") MultipartFile image) throws IOException {
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @RequestParam("image") MultipartFile image) throws IOException {
         // Handle image upload
         if (!image.isEmpty()) {
             String imagePath = employeesService.saveImage(image);
@@ -79,6 +99,7 @@ public class EmployeesController {
 
         return "redirect:/employees";
     }
+
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
