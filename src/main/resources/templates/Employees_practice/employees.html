@@ -244,9 +244,9 @@
 <div style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li>Dashboard</li>
-            <li>社員リスト</li>
-            <li>Projects</li>
+            <li><a href="">Dashboard</a></li>
+            <li><a href="/employees/list2">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
         </ul>
     </div>
 
@@ -294,7 +294,6 @@
         btns.forEach(button => {
             button.addEventListener('click', function () {
                 const employeeId = this.getAttribute("data-employee-id");
-
                 // AJAX 요청
                 fetch('/employees/getModalData', {
                     method: 'POST',
@@ -349,11 +348,12 @@
                             }
                         }
                         document.getElementById('update-btn').addEventListener('click', function () {
-                            updateEmployee();
+                            updateEmployee(employeeId);
                         })
                         document.getElementById('delete-btn').addEventListener('click', function () {
-                            deleteEmployee();
+                            deleteEmployee(employeeId);
                         })
+
                         modal.style.display = "block";
                     })
                     .catch(error => console.error('Error:', error));
@@ -369,15 +369,14 @@
                 modal.style.display = "none";
             }
         }
-
-        function updateEmployee(employeeId) {
-            alert('update')
-        }
-
-        function deleteEmployee() {
-            alert('delete')
-        }
     });
+    function updateEmployee(employeeId) {
+        alert('update' + employeeId)
+    }
+
+    function deleteEmployee(employeeId) {
+        alert('delete' + employeeId)
+    }
 
     function createEmployee() {
         location.href = "/employees/newemployee"
