@@ -39,4 +39,7 @@ public class EmployeesProjects {
     @Column(name = "registration_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
+
+    @Column(name ="project_duration", nullable = false)
+    private Long projectDuration;
 }
