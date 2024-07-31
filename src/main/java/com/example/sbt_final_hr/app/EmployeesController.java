@@ -12,6 +12,7 @@ import com.example.sbt_final_hr.domain.service.SkillsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Controller
 @RequestMapping("/employees")
@@ -85,6 +86,41 @@ public class EmployeesController {
             model.addAttribute("employees", employeesService.findAll());
         }
         return "Employees_practice/employees";
+    }
+
+    @PostMapping("/getModalData")
+    public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
+        Long id = request.get("id");
+        Optional<Employees> employees = employeesService.findById(id);
+        if (employees.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Employees employee = employees.get();
+        List<EmployeesSkill> employeeSkills = employee.getSkills();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("employeeId", employee.getEmployeeId());
+        response.put("name", employee.getName());
+        response.put("address", employee.getAddress());
+        response.put("lastProjectEndDate", employee.getLastProjectEndDate() != null ? employee.getLastProjectEndDate().format(formatter) : null);
+        response.put("currentProjectEndDate", employee.getCurrentProjectEndDate() != null ? employee.getCurrentProjectEndDate().format(formatter) : null);
+        response.put("contactNumber", employee.getContactNumber());
+        response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
+        response.put("preferredLanguage", employee.getPreferredLanguage());
+        response.put("preferredProjectType", employee.getPreferredProjectType());
+
+        List<Map<String, Object>> skills = new ArrayList<>();
+        for (EmployeesSkill skill : employeeSkills) {
+            Map<String, Object> skillInfo = new HashMap<>();
+            skillInfo.put("skillName", skill.getSkill().getSkillName());
+            skillInfo.put("skillCareer", skill.getSkillCareer());
+            skills.add(skillInfo);
+        }
+        response.put("skills", skills);
+
+        return ResponseEntity.ok(response);
+
     }
 
 
