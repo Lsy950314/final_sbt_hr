@@ -58,10 +58,10 @@ public class EmployeesRequest {
     public String getExistingImage() {
         return existingImage;
     }
-
-    public void setExistingImage(String existingImage) {
-        this.existingImage = existingImage;
-    }
+//
+//    public void setExistingImage(String existingImage) {
+//        this.existingImage = existingImage;
+//    }
     //7월 31일 10:20 사진 관련 작업중
 
 

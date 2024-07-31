@@ -47,7 +47,7 @@
     }
 
     function addSkillCareer() {
-        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const skillCareerContainer = document.getElementById('newSkillCareerContainer');
         const index = skillCareerContainer.children.length;
 
         const skillCareerItem = document.createElement('div');
@@ -85,9 +85,8 @@
 </style>
 <body onload="initMap()">
 <h1>Edit Employee</h1>
-사진이 기존 경로or이미지가 안들어가있음 / 사원의 보유한 프로그래밍 경력이 안나옴 <hr>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
-    <input type="text" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
+    <input type="hidden" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
 
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
@@ -109,25 +108,15 @@
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
-<!--    <label for="imageFile">Upload New Image:</label>-->
-<!--    <input type="file" id="imageFile" name="imageFile" th:field="*{imageFile}"/><br/>-->
-
     <!-- 기존 이미지 보여주기 -->
     <div id="existingImageContainer" th:if="*{image}">
         <label>Existing Image:</label><br/>
         <img th:src="@{${employeesRequest.image}}" alt="Employee Image"/><br/>
-<!--        <img th:src="@{${employee.getImage()}}" alt="Employee Image"/><br/>-->
     </div>
 
     <label for="imageFile">Upload New Image:</label>
     <input type="file" id="imageFile" name="imageFile"/><br/>
     <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/><br/>
-
-
-
-
-
-
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
@@ -149,24 +138,27 @@
     <label for="hireDate">Hire Date:</label>
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
 
-    <!-- Skill Career 섹션 -->
-    <div id="skillCareerContainer">
-        <div th:each="employeesSkillRequest, iterStat : ${employeesRequest.employeesSkillRequests}">
-            <div class="skillCareer-item">
-                <div class="form-group">
-                    <label for="employeesSkillRequests[${iterStat.index}].skill.skillId">Skill:</label>
-                    <select id="employeesSkillRequests[${iterStat.index}].skill.skillId" name="employeesSkillRequests[${iterStat.index}].skill.skillId" required>
-                        <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}"
-                                th:selected="${skill.skillId == employeesSkillRequest.skill.skillId}">Select Skill</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="employeesSkillRequests[${iterStat.index}].skillCareer">Skill Career:</label>
-                    <input type="number" id="employeesSkillRequests[${iterStat.index}].skillCareer" name="employeesSkillRequests[${iterStat.index}].skillCareer" th:value="${employeesSkillRequest.skillCareer}" required>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 추가된 Skill Career 섹션 -->
+    <h3>기존 등록된 사원 프로그래밍 경력</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Skill</th>
+            <th>Career (Months)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employeesSkillRequest : ${employeesRequest.employeesSkillRequests}">
+            <td th:text="${employeesSkillRequest.skill.skillName}"></td>
+            <td th:text="${employeesSkillRequest.skillCareer}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 추가된 Skill Career 섹션 끝 -->
+
+    <!-- 새로운 Skill Career 추가 -->
+    <h3>New Programming Skills</h3>
+    <div id="newSkillCareerContainer"></div>
     <div class="form-group">
         <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
     </div>

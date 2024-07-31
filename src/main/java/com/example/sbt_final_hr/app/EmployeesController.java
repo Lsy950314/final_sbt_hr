@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/employees")
@@ -140,14 +141,27 @@ public class EmployeesController {
             System.out.println("Employee image: " + employee.getImage());
 
 
+
             // 사원의 프로그래밍 경력 출력
             List<EmployeesSkill> skills = employee.getSkills();
             for (EmployeesSkill skill : skills) {
                 System.out.println("SkillID: " + skill.getSkill().getSkillId() + ", Skill: " + skill.getSkill().getSkillName() + ", Career: " + skill.getSkillCareer());
             }
 
-            model.addAttribute("employeesRequest", employee.toDto());
-            //System.out.println("Employee image: " + employees );
+            EmployeesRequest employeesRequest = employee.toDto();
+            List<EmployeesSkillRequest> skillRequests = skills.stream()
+                    .map(EmployeesSkill::toDto)
+                    .collect(Collectors.toList());
+
+            employeesRequest.setEmployeesSkillRequests(skillRequests);
+            System.out.println("Employees Skill Requests:");
+            for (EmployeesSkillRequest skillRequest : employeesRequest.getEmployeesSkillRequests()) {
+                System.out.println("  Skill ID: " + skillRequest.getSkill().getSkillId());
+                System.out.println("  Skill Name: " + skillRequest.getSkill().getSkillName());
+                System.out.println("  Skill Career: " + skillRequest.getSkillCareer());
+            }
+
+            model.addAttribute("employeesRequest", employeesRequest);
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
             return "employees/editEmployee";
@@ -174,15 +188,11 @@ public class EmployeesController {
 
         Employees employee = employeesRequest.toEntity();
 
-        // 디버깅: 엔티티의 ID가 설정되었는지 확인
-        System.out.println("디버깅: 엔티티의 ID등의 정보들이 설정되었는지 확인");
-        System.out.println("Employee ID: " + employee.getEmployeeId());
-        System.out.println("Employee latitude: " + employee.getLatitude());
-        System.out.println("Employee longitude: " + employee.getLongitude());
-        System.out.println("Employee image: " + employee.getImage());
-
         employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
 
+        // 기존 스킬 삭제 : 13:23 추가
+        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());
+        // 새로운 스킬 저장
         if (employeesRequest.getEmployeesSkillRequests() != null) {
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
