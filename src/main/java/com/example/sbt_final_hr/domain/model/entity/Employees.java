@@ -32,21 +32,22 @@ public class Employees {
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
-//    @Lob
-//    private byte[] photo;
+    //13:05 SEMI 참고해서 만드는중
     private String image;
-    @Column(name = "preferred_language")
-    private Long preferredLanguage;
-    @Column(name = "preferred_project_type")
-    private Long preferredProjectType;
+    //13:05 SEMI 참고해서 만드는중
+
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
 
+
+    @Column(name = "preferred_language")
+    private Long preferredLanguage;
+    @Column(name = "preferred_project_type")
+    private Long preferredProjectType;
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
-
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
@@ -56,17 +57,27 @@ public class Employees {
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
+        employeesRequest.setEmployeeId(this.employeeId); // employeeId 추가
         employeesRequest.setName(this.name);
         employeesRequest.setAddress(this.address);
         employeesRequest.setLatitude(this.latitude);
         employeesRequest.setLongitude(this.longitude);
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-
         employeesRequest.setPreferredLanguage(this.preferredLanguage.toString());
         employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
+        employeesRequest.setImage(this.image);
+
         return employeesRequest;
     }
+
+
+
+
+
+
+
+
 }

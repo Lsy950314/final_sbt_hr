@@ -20,12 +20,15 @@ public class EmployeesProjectsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
 
+    private Long projectDuration;
+
     public EmployeesProjects toEntity() {
         EmployeesProjects employeesProjects = new EmployeesProjects();
         employeesProjects.setEmployee(this.employee);
         employeesProjects.setProject(this.project);
         employeesProjects.setSkill(this.skill);
         employeesProjects.setRegistrationDate(LocalDateTime.now());
+        employeesProjects.setProjectDuration(this.projectDuration);
         return employeesProjects;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "employees_skill", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"employee_id", "skill_language"})
+        @UniqueConstraint(columnNames = {"Employee_ID", "Skill_Language"})
 })
 public class EmployeesSkill {
     @Id

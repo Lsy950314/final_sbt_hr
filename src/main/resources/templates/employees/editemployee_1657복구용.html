@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Employee</title>
+    <title>Edit Employee</title>
     <meta charset="UTF-8">
 </head>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 <script th:inline="javascript">
     let map;
     let marker;
     let autocomplete;
-    let skillCount = 0;
-
     const skills = /*[[${skills}]]*/[];
 
     function initMap() {
@@ -62,8 +60,8 @@
 
         skillCareerItem.innerHTML = `
             <div class="form-group">
-                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
+                <label for="employeesSkillRequests[${index}].skill.skillId">Skill:</label>
+                <select id="employeesSkillRequests[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
                     ${skillOptions}
                 </select>
             </div>
@@ -74,11 +72,6 @@
         `;
         skillCareerContainer.appendChild(skillCareerItem);
     }
-    /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
-
-name="employeesSkillRequests[0].skill.skillId"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkill().getSkillId()와 매핑됩니다.
-name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkillCareer()와 매핑됩니다.
-이를 통해 EmployeesRequest 객체의 employeesSkillRequests 리스트 필드가 자동으로 설정되고, 리스트 내 각 EmployeesSkillRequest 객체의 skill 필드와 skillCareer 필드가 설정됩니다.*/
 
     window.onload = function() {
         initMap();
@@ -91,13 +84,15 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     }
 </style>
 <body onload="initMap()">
-<h1>Create Employee(Photo)</h1>
-<form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+<h1>Edit Employee</h1>
+<form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{employeeId}"/>  <!-- 숨겨진 필드로 ID 추가 -->
+
     <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
+    <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
 
     <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+    <input type="text" id="address" th:field="*{address}" placeholder="Enter address"/><br/>
 
     <label for="latitude">Latitude:</label>
     <input type="text" id="latitude" th:field="*{latitude}" readonly/><br/>
@@ -113,10 +108,8 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
-    <div class="form-group">
-        <label for="imageFile">Upload Image:</label>
-        <input type="file" id="imageFile" name="imageFile" required>
-    </div>
+    <label for="imageFile">Upload New Image:</label>
+    <input type="file" id="imageFile" name="imageFile" th:field="*{imageFile}"/><br/>
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
@@ -139,14 +132,28 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
 
     <!-- Skill Career 섹션 -->
-    <div id="skillCareerContainer"></div>
+    <div id="skillCareerContainer">
+        <div th:each="employeesSkillRequest, iterStat : ${employeesRequest.employeesSkillRequests}">
+            <div class="skillCareer-item">
+                <div class="form-group">
+                    <label for="employeesSkillRequests[${iterStat.index}].skill.skillId">Skill:</label>
+                    <select id="employeesSkillRequests[${iterStat.index}].skill.skillId" name="employeesSkillRequests[${iterStat.index}].skill.skillId" required>
+                        <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}"
+                                th:selected="${skill.skillId == employeesSkillRequest.skill.skillId}">Select Skill</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employeesSkillRequests[${iterStat.index}].skillCareer">Skill Career:</label>
+                    <input type="number" id="employeesSkillRequests[${iterStat.index}].skillCareer" name="employeesSkillRequests[${iterStat.index}].skillCareer" th:value="${employeesSkillRequest.skillCareer}" required>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="form-group">
         <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
     </div>
 
-    <br/>
-
-    <button type="submit">Create Employee</button>
+    <button type="submit">Update Employee</button>
 </form>
 
 <a href="/employees">Back to Employees List</a>
