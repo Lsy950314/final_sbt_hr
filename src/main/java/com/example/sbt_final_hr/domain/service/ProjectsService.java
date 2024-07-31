@@ -1,11 +1,8 @@
 package com.example.sbt_final_hr.domain.service;
 
-import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
-import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectTypesRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
@@ -51,7 +48,7 @@ public class ProjectsService {
         return project;
     }
 
-    public void updateProject(ProjectsRequest projectsRequest) {
+    public Projects updateProject(ProjectsRequest projectsRequest) {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
 
@@ -63,6 +60,7 @@ public class ProjectsService {
         project.setRegistrationDate(existingProject.getRegistrationDate()); // 기존 등록일 유지
         projectsRepository.save(project);
         System.out.println("업데이트 성공");
+        return existingProject;
     }
 
 

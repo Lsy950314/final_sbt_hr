@@ -2,15 +2,211 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>매치 관리</title>
+    <script>
+        function calculateMonthsDifference(endDate) {
+            const currentDate = new Date();
+            const end = new Date(endDate);
+            const yearsDifference = currentDate.getFullYear() - end.getFullYear();
+            const monthsDifference = (yearsDifference * 12) + (currentDate.getMonth() - end.getMonth());
+            const daysDifference = currentDate.getDate() - end.getDate();
+            const totalMonths = monthsDifference + (daysDifference / 30); // approximate days to month fraction
+            return totalMonths.toFixed(1); // to one decimal place
+        }
+
+        function updateWaitingPeriods() {
+            const elements = document.querySelectorAll('.waiting-period');
+            elements.forEach(element => {
+                const endDate = element.getAttribute('data-end-date');
+                const monthsDifference = calculateMonthsDifference(endDate);
+                element.textContent = `${monthsDifference} 개월`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
+        document.addEventListener('DOMContentLoaded', ()=>{
+            document.querySelectorAll('.match-btn').forEach(button => {
+                button.addEventListener('click', ()=>{
+                    matchEmployeeProject()
+                })
+            })
+        })
+
+        function matchEmployeeProject(){
+            alert('match')
+        }
+    </script>
+
+    <style>
+
+
+        .project-requirements-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin-left: 150px;
+            width: 300px;
+            max-width: 300px;
+        }
+
+        .project-requirement {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .requirement-skill,
+        .requirement-experience,
+        .requirement-count,
+        .fulfilled-count {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .requirement-skill {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .requirement-experience,
+        .requirement-count,
+        .fulfilled-count {
+            color: #666;
+        }
+
+        .employee-list {
+            margin-left: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            /*margin: 0 auto;*/
+            width: 600px;
+            max-width: 800px;
+        }
+
+        .employee-entry {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-name,
+        .employee-preferred-skill,
+        .employee-skill,
+        .commute-time,
+        .waiting-period {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .employee-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .employee-preferred-skill {
+            font-style: italic;
+            color: #666;
+        }
+
+        .employee-skill {
+            padding-left: 10px;
+            border-left: 3px solid #007bff;
+        }
+
+        .commute-time {
+            color: #ff5722;
+        }
+
+        .waiting-period {
+            color: #4caf50;
+        }
+
+        .assign-button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .assign-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .assign-button:hover {
+            background-color: #0056b3;
+        }
+
+
+
+    </style>
 </head>
 <body>
-<div th:each="e : ${employeeEntries}">
-    <div th:text="'이름 = ' + ${e.key.getName()}"></div>
-    <div th:text="'선호스킬 = '+ ${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'}"></div>
-    <div th:each="s, stat : ${e.key.getSkills()}">
-        <div th:text="'보유스킬' + (${stat.index} + 1) + ': ' + ${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'} + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+
+<div class="contents" style="display: flex">
+
+
+<!--<div> -&#45;&#45; 프로젝트 인력 요구사항 -&#45;&#45;</div>-->
+    <div>
+<div class="project-requirements-list" th:each="pr : ${projectRequirements}">
+    <div class="project-requirement">
+        <div class="requirement-skill" th:text="'필요스킬 ' + ${pr.getSkill().getSkillName()}"></div>
+        <div class="requirement-experience" th:text="'필요경력 ' + ${pr.getRequiredExperience()}"></div>
+        <div class="requirement-count" th:text="'필요인원 ' + ${pr.getRequiredCount()}"></div>
+        <div class="fulfilled-count" th:text="'충족인원 ' + ${pr.fulfilledCount}"></div>
+        <br>
     </div>
-    <div th:text="'예상 소요시간 : ' + ${e.value} + '분'"></div>
+</div>
+    </div>
+
+
+
+<!--<div> -&#45;&#45;조건 만족 사원-&#45;&#45;</div>-->
+    <div>
+
+<div class="employee-list" th:each="e : ${employeeEntries}">
+    <div class="employee-entry">
+        <div class="employee-name" th:text="'이름 = ' + ${e.key.getName()}"></div>
+        <div class="employee-preferred-skill" th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
+        <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
+            <div class="employee-skill" th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+        </div>
+        <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
+        <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
+        <div class="assign-button-container">
+            <button class="assign-button">배정하기</button>
+        </div>
+    </div>
+</div>
+
+    </div>
+    <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
+    <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
+    <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
+    <!--    어떤 projectRequirements 에 배정할지 골라서 yes/no 컨펌 받은다음   -->
+    <!--    업데이트 할 항목들: -->
+    <!--    1. EMPLOYEES 테이블의 CURRENT_PROJECT_END_DATE 를 배정 관리중인 PROJECTS 테이블의 END_DATE 값으로 -->
+    <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
+    <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 FULFILLED_COUNT 값 1 증가 -->
+    <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
+<!--    <br>-->
 </div>
 </body>
 </html>

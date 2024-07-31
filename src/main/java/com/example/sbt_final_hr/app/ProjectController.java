@@ -121,27 +121,17 @@ public class ProjectController {
 
     @PostMapping("/updateProject")
     public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest) {
-        projectsService.updateProject(projectsRequest);
+        Projects project = projectsService.updateProject(projectsRequest);
+        projectRequirementsService.deleteByProjectId(project.getProjectId());
 
-        Projects project = projectsRequest.toEntity(projectTypesService.getProjectTypeById(projectsRequest.getProjectTypeId()));
         if (projectsRequest.getProjectRequirements() != null) {
             for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
-                Long projectId = project.getProjectId();
-                Long skillId = requirementsRequest.getSkill().getSkillId();
-                int requiredExperience = requirementsRequest.getRequiredExperience();
-
-                if (requirementsRequest.getId() != null) {
-                    projectRequirementsService.updateProjectRequirements(requirementsRequest, project);
-                } else {
-                    if (!projectRequirementsService.existsProjectRequirements(projectId, skillId, requiredExperience)) {
-                        ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
-                        projectRequirementsService.createProjectRequirements(projectRequirements);
-                    }
-                }
+                ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
+                projectRequirementsService.createProjectRequirements(projectRequirements);
             }
         }
 
-        return "redirect:/updateProject?id=" + projectsRequest.getProjectId();
+        return "redirect:/updateProject?id=" + project.getProjectId();
     }
 
     @GetMapping("/deleteProject")

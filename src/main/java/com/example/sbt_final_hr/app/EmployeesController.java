@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -46,18 +47,27 @@ public class EmployeesController {
         return "employees/createemployee";
     }
 
-
+    //오전 7월 30일 10:36
     @PostMapping("/createemployee")
-    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest) throws IOException {
+    public String createEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest, @RequestParam("image") MultipartFile image) throws IOException {
+        // Handle image upload
+        if (!image.isEmpty()) {
+            String imagePath = employeesService.saveImage(image);
+            employeesRequest.setImage(imagePath);
+        }
+
         Employees employee = employeesService.save(employeesRequest.toEntity());
-        if(employeesRequest.getEmployeesSkillRequests() != null) {
-            for(EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
+
+        if (employeesRequest.getEmployeesSkillRequests() != null) {
+            for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
             }
         }
+
         return "redirect:/employees";
     }
+
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,9 @@ public class MatchController {
 
         // 해당 프로젝트에 참여중인 사원들
         model.addAttribute("employees", employees);
+
+        // 현재 시간 정보와 프로젝트 종료일을 통해 대기 기간을 얻어내기 위해서
+        model.addAttribute("currentDate", LocalDate.now());
 
         Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
         List<Map.Entry<Employees, Integer>> employeeEntries = new ArrayList<>(filteredEmployeesTransitTimes.entrySet());
