@@ -109,8 +109,25 @@
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
+<!--    <label for="imageFile">Upload New Image:</label>-->
+<!--    <input type="file" id="imageFile" name="imageFile" th:field="*{imageFile}"/><br/>-->
+
+    <!-- 기존 이미지 보여주기 -->
+    <div id="existingImageContainer" th:if="*{image}">
+        <label>Existing Image:</label><br/>
+        <img th:src="@{${employeesRequest.image}}" alt="Employee Image"/><br/>
+<!--        <img th:src="@{${employee.getImage()}}" alt="Employee Image"/><br/>-->
+    </div>
+
     <label for="imageFile">Upload New Image:</label>
-    <input type="file" id="imageFile" name="imageFile" th:field="*{imageFile}"/><br/>
+    <input type="file" id="imageFile" name="imageFile"/><br/>
+    <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/><br/>
+
+
+
+
+
+
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>

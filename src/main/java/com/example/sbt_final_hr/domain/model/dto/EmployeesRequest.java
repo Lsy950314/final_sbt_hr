@@ -31,6 +31,8 @@ public class EmployeesRequest {
     private String image;  // 이미지 경로 필드 추가
     private List<EmployeesSkillRequest> employeesSkillRequests;
 
+    private String existingImage; //사진 수정 때문에
+
     public Employees toEntity() throws IOException {
         Employees employee = new Employees();
         employee.setEmployeeId(this.employeeId); // ID 설정
@@ -52,4 +54,17 @@ public class EmployeesRequest {
         this.setImage(imgPath); // 이미지를 설정합니다.
         return this.toEntity();
     }
+    //7월 31일 10:20 사진 관련 작업중
+    public String getExistingImage() {
+        return existingImage;
+    }
+
+    public void setExistingImage(String existingImage) {
+        this.existingImage = existingImage;
+    }
+    //7월 31일 10:20 사진 관련 작업중
+
+
+
+
 }

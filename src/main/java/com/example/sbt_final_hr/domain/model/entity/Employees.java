@@ -67,6 +67,8 @@ public class Employees {
         employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
+        employeesRequest.setImage(this.image);
+
         return employeesRequest;
     }
 

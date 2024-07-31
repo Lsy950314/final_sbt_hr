@@ -101,6 +101,8 @@ public class EmployeesController {
             System.out.println("Employee latitude: " + employee.getLatitude());
             System.out.println("Employee longitude: " + employee.getLongitude());
             System.out.println("Employee image: " + employee.getImage());
+
+
             // 사원의 프로그래밍 경력 출력
             List<EmployeesSkill> skills = employee.getSkills();
             for (EmployeesSkill skill : skills) {
@@ -108,6 +110,7 @@ public class EmployeesController {
             }
 
             model.addAttribute("employeesRequest", employee.toDto());
+            //System.out.println("Employee image: " + employees );
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
             return "employees/editEmployee";
@@ -124,7 +127,12 @@ public class EmployeesController {
                                  BindingResult result) throws IOException {
         if (!imageFile.isEmpty()) {
             String imagePath = employeesService.saveImage(imageFile);
+            System.out.println("update요청시 imagePath나오나? " + imagePath);
             employeesRequest.setImage(imagePath);
+            //Employees employee = employeesService.save(employeesRequest.toEntity(imagePath)); <-create에서는 이렇게
+        } else {
+            // 새로운 이미지가 업로드되지 않은 경우
+            employeesRequest.setImage(employeesRequest.getExistingImage());
         }
 
         Employees employee = employeesRequest.toEntity();
