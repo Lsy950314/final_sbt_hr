@@ -333,15 +333,17 @@
     <p class="label">Preferred Project Type:</p>
     <p class="value">${data.preferredProjectType}</p>
     <p class="label">Skills & Career : </p>
+
 <div class="value">
 
 </div>
 
-<div> <button id="update-btn">수정</button>  <button id="delete-btn">삭제</button> <button onclick="navigateToMatchManagement()">매치버튼</button></div>
+<div> <span style="display: flex"> <button id="update-btn">수정</button>  <button id="delete-btn">삭제</button></span> <button onclick="navigateToMatchManagement()">매치버튼</button></div>
 
 
 </div>
                     `;
+
 
                             // 스킬 정보 추가
                             if (data.skills && data.skills.length > 0) {

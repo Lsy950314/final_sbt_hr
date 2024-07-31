@@ -234,6 +234,60 @@
             text-decoration: none;
         }
 
+        #button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* update-btn 스타일 */
+        #update-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6c757d; /* 회색 계열 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* update-btn 호버 효과 */
+        #update-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* update-btn 활성화 효과 */
+        #update-btn:active {
+            background-color: #545b62;
+            transform: translateY(0);
+        }
+
+        /* delete-btn 스타일 */
+        #delete-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6c757d; /* 회색 계열 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* delete-btn 호버 효과 */
+        #delete-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* delete-btn 활성화 효과 */
+        #delete-btn:active {
+            background-color: #545b62;
+            transform: translateY(0);
+        }
+
+
     </style>
 </head>
 <body>
@@ -341,7 +395,10 @@
                 ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
             </ul>
         </div>
-   <button id="update-btn">수정</button>  <button id="delete-btn" >삭제</button> </div>
+    <div id="button-container">
+    <button id="update-btn">수정</button>
+    <button id="delete-btn">삭제</button>
+</div> </div>
 </div>
 
                     <div>
