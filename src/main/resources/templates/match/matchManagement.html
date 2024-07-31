@@ -215,6 +215,22 @@
         </div>
 
     </div>
+
+    <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
+    <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
+    <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
+    <!--    어떤 projectRequirements 에 배정할지 골라서 yes/no 컨펌 받은다음   -->
+    <!--    업데이트 할 항목들: -->
+    <!--    1. EMPLOYEES 테이블의 CURRENT_PROJECT_END_DATE 를 배정 관리중인 PROJECTS 테이블의 END_DATE 값으로 -->
+    <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
+    <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 REQUIRED_COUNT 값 1 증가 -->
+    <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
+
+
+
+
+
+
 </div>
 </body>
 </html>
