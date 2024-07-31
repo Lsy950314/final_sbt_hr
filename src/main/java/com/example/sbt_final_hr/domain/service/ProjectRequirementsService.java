@@ -32,13 +32,11 @@ public class ProjectRequirementsService {
         projectRequirementsRepository.save(projectRequirements);
     }
 
-    public boolean existsProjectRequirements(Long projectId, Long skillId, int requirementExperience) {
-        return projectRequirementsRepository.existsByProject_ProjectIdAndSkill_SkillIdAndRequiredExperience(projectId, skillId, requirementExperience);
-    }
-
-    public void updateProjectRequirements(ProjectRequirementsRequest request, Projects project) {
-        ProjectRequirements projectRequirements = request.toEntity(project);
-        projectRequirementsRepository.save(projectRequirements);
+    public void updateFulfilledCount(Long projectRequirementId){
+        ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(()->new RuntimeException("Project requirements not found"));
+        if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()){
+            projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount()+1);
+        }
     }
 
     public void deleteByProjectId(Long projectId) {

@@ -14,13 +14,21 @@ import java.util.List;
 public class EmployeesProjectsService {
     private final EmployeesProjectsRepository employeesProjectsRepository;
     private final EmployeesRepository employeesRepository;
-    public EmployeesProjectsService(EmployeesProjectsRepository employeesProjectsRepository, EmployeesRepository employeesRepository) {
+    private final EmployeesService employeesService;
+
+    public EmployeesProjectsService(EmployeesProjectsRepository employeesProjectsRepository, EmployeesRepository employeesRepository, EmployeesService employeesService) {
         this.employeesProjectsRepository = employeesProjectsRepository;
         this.employeesRepository = employeesRepository;
+        this.employeesService = employeesService;
     }
 
     public List<EmployeesProjects> getAllEmployeesProjects() {
         return employeesProjectsRepository.findAll();
+    }
+
+    public void insertEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementId) {
+        EmployeesProjectsRequest employeesProjectsRequest = new EmployeesProjectsRequest();
+        employeesProjectsRequest.setEmployee(employeesService.findById(employeeId).get());
     }
 
     public List<EmployeesProjects> getEmployeesProjectByProjectId(Long id) {

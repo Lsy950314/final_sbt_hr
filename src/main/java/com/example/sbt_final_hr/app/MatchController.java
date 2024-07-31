@@ -4,10 +4,7 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.service.EmployeesService;
-import com.example.sbt_final_hr.domain.service.MatchService;
-import com.example.sbt_final_hr.domain.service.ProjectRequirementsService;
-import com.example.sbt_final_hr.domain.service.ProjectsService;
+import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +23,15 @@ public class MatchController {
     private final ProjectsService projectsService;
     private final EmployeesService employeesService;
     private final ProjectRequirementsService projectRequirementsService;
+    private final EmployeesProjectsService employeesProjectsService;
 
 
-    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService) {
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
         this.matchService = matchService;
         this.projectsService = projectsService;
         this.employeesService = employeesService;
         this.projectRequirementsService = projectRequirementsService;
+        this.employeesProjectsService = employeesProjectsService;
     }
 
     @GetMapping("/check")
@@ -94,6 +93,8 @@ public class MatchController {
         Long projectRequirementId = payload.get("projectRequirementId");
 
         employeesService.updateEndDates(employeeId, projectId);
+        projectRequirementsService.updateFulfilledCount(projectRequirementId);
+        employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementId);
 
     }
 }
