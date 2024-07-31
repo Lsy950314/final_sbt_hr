@@ -1,7 +1,6 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
@@ -37,10 +36,38 @@ public class EmployeesService {
         this.employeesSkillRepository = employeesSkillRepository;
         this.skillsRepository = skillsRepository;
     }
-
+//  엔티티 고쳐서 아마도 안써도 될듯
+//    public Employees save(Employees employee) {
+//        if (employee.getEmployeeId() != null) {
+//            Optional<Employees> existingEmployee = employeesRepository.findById(employee.getEmployeeId());
+//            if (existingEmployee.isPresent()) {
+//                // 기존 엔티티가 있는 경우 업데이트
+//                Employees updatedEmployee = existingEmployee.get();
+//                updatedEmployee.setName(employee.getName());
+//                updatedEmployee.setAddress(employee.getAddress());
+//                updatedEmployee.setLatitude(employee.getLatitude());
+//                updatedEmployee.setLongitude(employee.getLongitude());
+//                updatedEmployee.setLastProjectEndDate(employee.getLastProjectEndDate());
+//                updatedEmployee.setCurrentProjectEndDate(employee.getCurrentProjectEndDate());
+//                updatedEmployee.setPreferredLanguage(employee.getPreferredLanguage());
+//                updatedEmployee.setPreferredProjectType(employee.getPreferredProjectType());
+//                updatedEmployee.setContactNumber(employee.getContactNumber());
+//                updatedEmployee.setHireDate(employee.getHireDate());
+//                updatedEmployee.setImage(employee.getImage());
+//                return employeesRepository.save(updatedEmployee);
+//            }
+//        }
+//        // 새로운 엔티티인 경우 저장
+//        return employeesRepository.save(employee);
+//    }
+//
     public Employees save(Employees employee) {
         return employeesRepository.save(employee);
     }
+
+//    public Employees save(int id, Employees employee) {
+//        return employeesRepository.save(employee);
+//    }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {
         employeesSkillRepository.save(employeesSkill);
@@ -62,10 +89,6 @@ public class EmployeesService {
         employeesRepository.deleteById(id);
     }
 
-    //사진 넣기 시도중
-
-
-    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
 
     public void createOrUpdateEmployee(EmployeesRequest dto) {
         Employees employee = new Employees();
@@ -82,76 +105,33 @@ public class EmployeesService {
         employee = employeesRepository.save(employee);
 
 
+
     }
 
-    //오전 7월 30일 09:56
-    public void createOrUpdateEmployee(EmployeesRequest dto, MultipartFile image) throws IOException {
-        Employees employee = new Employees();
-        employee.setName(dto.getName());
-        employee.setAddress(dto.getAddress());
-        employee.setLatitude(dto.getLatitude());
-        employee.setLongitude(dto.getLongitude());
-        employee.setLastProjectEndDate(dto.getLastProjectEndDate());
-        employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
-        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
-        employee.setContactNumber(dto.getContactNumber());
-        employee.setHireDate(dto.getHireDate());
 
-        // Handle image upload
-        if (image != null && !image.isEmpty()) {
-            String imagePath = saveImage(image);
-            employee.setImage(imagePath);
-        }
 
-        employee = employeesRepository.save(employee);
+//13시 20분 시도중. chat gpt
+public String saveImage(MultipartFile image) throws IOException {
+    // Get the absolute path to the static folder
+    ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
+    File imgDir = imgDirResource.getFile();
 
-        if (dto.getEmployeesSkillRequests() != null) {
-            for (EmployeesSkillRequest skillRequest : dto.getEmployeesSkillRequests()) {
-                EmployeesSkill employeesSkill = new EmployeesSkill();
-                employeesSkill.setEmployee(employee);
-                employeesSkill.setSkill(skillsRepository.findById(skillRequest.getEmployeesSkillId()).orElse(null));
-                employeesSkill.setSkillCareer(skillRequest.getSkillCareer());
-                employeesSkillRepository.save(employeesSkill);
-            }
+    if (!imgDir.exists()) {
+        if (!imgDir.mkdirs()) {
+            throw new IOException("Failed to create directory: " + imgDir.getAbsolutePath());
         }
     }
 
-//    public String saveImage(MultipartFile image) throws IOException {
-//        String uploadsDir = "uploads/";
-//        String originalFilename = image.getOriginalFilename();
-//        String filePath = uploadsDir + UUID.randomUUID() + "_" + originalFilename;
-//
-//        File dir = new File(uploadsDir);
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//
-//        Path path = Paths.get(filePath);
-//        Files.write(path, image.getBytes());
-//
-//        return path.toString();
-//    }
+    String originalFilename = image.getOriginalFilename();
+    String newFilename = UUID.randomUUID() + "_" + originalFilename;
+    Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
 
-    public String saveImage(MultipartFile image) throws IOException {
-        // Get the absolute path to the static folder
-        ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
-        File imgDir = imgDirResource.getFile();
+    System.out.println(filePath + " " + newFilename);
 
-        if (!imgDir.exists()) {
-            imgDir.mkdirs();
-        }
+    Files.write(filePath, image.getBytes());
 
-        String originalFilename = image.getOriginalFilename();
-        String newFilename = UUID.randomUUID() + "_" + originalFilename;
-        Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
-
-        Files.write(filePath, image.getBytes());
-
-        // Return the relative path to be saved in the database
-        return "/img/employees/" + newFilename;
-    }
-
+    // Return the relative path to be saved in the database
+    return "/img/employees/" + newFilename;
 }
 
 
@@ -175,7 +155,4 @@ public class EmployeesService {
 
 
 
-
-
-
-
+}

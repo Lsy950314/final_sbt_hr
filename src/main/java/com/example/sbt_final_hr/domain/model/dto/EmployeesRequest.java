@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class EmployeesRequest {
-    private Long employeeId;
+    private Long employeeId;  // ID 필드 추가
     private String name;
     private String address;
     private Double latitude;
@@ -27,13 +27,15 @@ public class EmployeesRequest {
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
-    private MultipartFile imageFile;  // MultipartFile 타입의 필드 추가
-    private String image; // String 타입의 필드
-    //이 코드가 있어서 createemployee뷰에서 직원 프로그래밍 경력 관련 데이터들을 받아서 넘기는듯
+    private MultipartFile imageFile;
+    private String image;  // 이미지 경로 필드 추가
     private List<EmployeesSkillRequest> employeesSkillRequests;
+
+    private String existingImage; //사진 수정 때문에
 
     public Employees toEntity() throws IOException {
         Employees employee = new Employees();
+        employee.setEmployeeId(this.employeeId); // ID 설정
         employee.setName(this.name);
         employee.setAddress(this.address);
         employee.setLatitude(this.latitude);
@@ -44,9 +46,25 @@ public class EmployeesRequest {
         employee.setPreferredProjectType(Long.parseLong(this.preferredProjectType));
         employee.setContactNumber(this.contactNumber);
         employee.setHireDate(this.hireDate);
-//        if (this.photo != null && !this.photo.isEmpty()) {
-//            employee.setPhoto(this.photo.getBytes());
-//        }
+        employee.setImage(this.image);  // 이미지 설정
         return employee;
     }
+
+    public Employees toEntity(String imgPath) throws IOException {
+        this.setImage(imgPath); // 이미지를 설정합니다.
+        return this.toEntity();
+    }
+    //7월 31일 10:20 사진 관련 작업중
+    public String getExistingImage() {
+        return existingImage;
+    }
+
+    public void setExistingImage(String existingImage) {
+        this.existingImage = existingImage;
+    }
+    //7월 31일 10:20 사진 관련 작업중
+
+
+
+
 }
