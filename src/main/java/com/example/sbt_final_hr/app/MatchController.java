@@ -4,12 +4,15 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
+import com.example.sbt_final_hr.domain.service.EmployeesService;
 import com.example.sbt_final_hr.domain.service.MatchService;
+import com.example.sbt_final_hr.domain.service.ProjectRequirementsService;
 import com.example.sbt_final_hr.domain.service.ProjectsService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.time.LocalDate;
@@ -21,10 +24,15 @@ import java.util.Map;
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
+    private final ProjectRequirementsService projectRequirementsService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService) {
+
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService;
+        this.projectRequirementsService = projectRequirementsService;
     }
 
     @GetMapping("/check")
@@ -77,5 +85,15 @@ public class MatchController {
         model.addAttribute("employeeEntries", employeeEntries);
 
         return "match/matchManagement";
+    }
+
+    @GetMapping("/matchEmployeeProject")
+    public void matchEmployeeProject(@RequestParam Map<String, Long> payload){
+        Long projectId = payload.get("projectId");
+        Long employeeId = payload.get("employeeId");
+        Long projectRequirementId = payload.get("projectRequirementId");
+
+        employeesService.updateEndDates(employeeId, projectId);
+
     }
 }

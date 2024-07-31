@@ -3,6 +3,7 @@ package com.example.sbt_final_hr.domain.service;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
+import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
 import com.example.sbt_final_hr.domain.repository.EmployeesSkillRepository;
@@ -39,6 +40,10 @@ public class EmployeesService {
 
     public Employees save(Employees employee) {
         return employeesRepository.save(employee);
+    }
+
+    public void updateEndDates(Long employeeId, Long projectId) {
+
     }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {
