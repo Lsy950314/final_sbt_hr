@@ -107,8 +107,8 @@ public class EmployeesController {
         response.put("currentProjectEndDate", employee.getCurrentProjectEndDate() != null ? employee.getCurrentProjectEndDate().format(formatter) : null);
         response.put("contactNumber", employee.getContactNumber());
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
-        response.put("preferredLanguage", employee.getPreferredLanguage());
-        response.put("preferredProjectType", employee.getPreferredProjectType());
+        response.put("preferredLanguage", employee.getSkill().getSkillName());
+        response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
 
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {

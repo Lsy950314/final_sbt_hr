@@ -35,18 +35,19 @@ public class Employees {
     //13:05 SEMI 참고해서 만드는중
     private String image;
     //13:05 SEMI 참고해서 만드는중
-    @Column(name = "preferred_language")
-    private Long preferredLanguage;
-    @Column(name = "preferred_project_type")
-    private Long preferredProjectType;
+
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
 
+
+    @Column(name = "preferred_language")
+    private Long preferredLanguage;
+    @Column(name = "preferred_project_type")
+    private Long preferredProjectType;
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
-
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;

@@ -36,38 +36,10 @@ public class EmployeesService {
         this.employeesSkillRepository = employeesSkillRepository;
         this.skillsRepository = skillsRepository;
     }
-//  엔티티 고쳐서 아마도 안써도 될듯
-//    public Employees save(Employees employee) {
-//        if (employee.getEmployeeId() != null) {
-//            Optional<Employees> existingEmployee = employeesRepository.findById(employee.getEmployeeId());
-//            if (existingEmployee.isPresent()) {
-//                // 기존 엔티티가 있는 경우 업데이트
-//                Employees updatedEmployee = existingEmployee.get();
-//                updatedEmployee.setName(employee.getName());
-//                updatedEmployee.setAddress(employee.getAddress());
-//                updatedEmployee.setLatitude(employee.getLatitude());
-//                updatedEmployee.setLongitude(employee.getLongitude());
-//                updatedEmployee.setLastProjectEndDate(employee.getLastProjectEndDate());
-//                updatedEmployee.setCurrentProjectEndDate(employee.getCurrentProjectEndDate());
-//                updatedEmployee.setPreferredLanguage(employee.getPreferredLanguage());
-//                updatedEmployee.setPreferredProjectType(employee.getPreferredProjectType());
-//                updatedEmployee.setContactNumber(employee.getContactNumber());
-//                updatedEmployee.setHireDate(employee.getHireDate());
-//                updatedEmployee.setImage(employee.getImage());
-//                return employeesRepository.save(updatedEmployee);
-//            }
-//        }
-//        // 새로운 엔티티인 경우 저장
-//        return employeesRepository.save(employee);
-//    }
-//
+
     public Employees save(Employees employee) {
         return employeesRepository.save(employee);
     }
-
-//    public Employees save(int id, Employees employee) {
-//        return employeesRepository.save(employee);
-//    }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {
         employeesSkillRepository.save(employeesSkill);
@@ -88,27 +60,6 @@ public class EmployeesService {
     public void deleteById(Long id) {
         employeesRepository.deleteById(id);
     }
-
-
-    public void createOrUpdateEmployee(EmployeesRequest dto) {
-        Employees employee = new Employees();
-        employee.setName(dto.getName());
-        employee.setAddress(dto.getAddress());
-        employee.setLatitude(dto.getLatitude());
-        employee.setLongitude(dto.getLongitude());
-        employee.setLastProjectEndDate(dto.getLastProjectEndDate());
-        employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
-        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
-        employee.setContactNumber(dto.getContactNumber());
-        employee.setHireDate(dto.getHireDate());
-        employee = employeesRepository.save(employee);
-
-
-
-    }
-
-
 
 //13시 20분 시도중. chat gpt
 public String saveImage(MultipartFile image) throws IOException {
