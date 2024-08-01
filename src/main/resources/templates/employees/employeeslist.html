@@ -38,8 +38,8 @@
         <td th:text="${employee.address}">123 Main St</td>
         <td th:text="${employee.latitude}" style="display:none;">35.6895</td>
         <td th:text="${employee.longitude}" style="display:none;">139.6917</td>
-        <td th:text="${employee.lastProjectEndDate}">2024-07-01</td>
-        <td th:text="${employee.currentProjectEndDate}">2024-07-31</td>
+        <td th:text="${employee.lastProjectEndDate !=null ? employee.lastProjectEndDate: 'New recruit'}">2024-07-01</td>
+        <td th:text="${employee.currentProjectEndDate !=null ? employee.currentProjectEndDate : 'Not allocated' }">2024-07-31</td>
         <td>
             <img th:src="${employee.image != null ? employee.image : '/img/default-photo.jpeg'}" alt="Employee Photo" width="100" height="100"/>
         </td>

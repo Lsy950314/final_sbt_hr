@@ -44,12 +44,57 @@ public class ProjectController {
         return "project/readAllProjects"; // 가상의 주소
     }
     //projects 테이블에서 status가 1인 튜플들(-1:미배정, 1:배정)만 가져오는 리스트 페이지
+//    @GetMapping("/readAssignedProjects")
+//    public String readAssignedProjects(HttpSession httpSession) {
+//        httpSession.setAttribute("projects", projectsService.getAssignedProjects());
+//        return "project/readAssignedProjects"; // 가상의 주소
+//    }
+    //완료 버튼 누르면 그 프로젝트에 참여한 인원들 리스트 가져오기
+//    @GetMapping("/readAssignedProjects")
+//    public String readAssignedProjects(HttpSession httpSession, @RequestParam("id") Long id) {
+//        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
+//        httpSession.setAttribute("projects", projectsService.getAssignedProjects());
+//        httpSession.setAttribute("assignedemployees", employees);
+//        return "project/readAssignedProjects"; // 가상의 주소
+//    }
+
     @GetMapping("/readAssignedProjects")
     public String readAssignedProjects(HttpSession httpSession) {
-        //httpSession.setAttribute("projects", projectsService.getAllProjects());
         httpSession.setAttribute("projects", projectsService.getAssignedProjects());
         return "project/readAssignedProjects"; // 가상의 주소
     }
+    //8월 1일 13:12
+    @GetMapping("/getEmployeesByProjectId")
+    @ResponseBody
+    public ResponseEntity<List<Employees>> getEmployeesByProjectId(@RequestParam("id") Long projectId) {
+        System.out.println("Received request for project ID: " + projectId);
+
+        // Get employees
+        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(projectId);
+        System.out.println("Found employees:");
+        for (Employees employee : employees) {
+            System.out.println("Employee ID: " + employee.getEmployeeId());
+            System.out.println("Name: " + employee.getName());
+            System.out.println("Last Project End Date: " + employee.getLastProjectEndDate());
+            System.out.println("Current Project End Date: " + employee.getCurrentProjectEndDate());
+        }
+        // Get employees projects
+        List<EmployeesProjects> employeesprojects = employeesProjectsService.getEmployeesProjectByProjectId(projectId);
+        System.out.println("Found employeesprojects:");
+        for (EmployeesProjects ep : employeesprojects) {
+            System.out.println("ID: " + ep.getId());
+            System.out.println("Employee Name: " + (ep.getEmployee() != null ? ep.getEmployee().getName() : "None"));
+            System.out.println("Project Name: " + (ep.getProject() != null ? ep.getProject().getProjectName() : "None"));
+            System.out.println("Skill: " + (ep.getSkill() != null ? ep.getSkill().getSkillName() : "None"));
+            System.out.println("Registration Date: " + ep.getRegistrationDate());
+            System.out.println("Project Duration: " + ep.getProjectDuration());
+            System.out.println("Star Point: " + ep.getStarPoint());
+        }
+        return ResponseEntity.ok(employees);
+    }
+
+
+
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
     @GetMapping("/getInfoByProjectID")
@@ -149,5 +194,25 @@ public class ProjectController {
         System.out.println("삭제 성공");
         return "redirect:/createProject";
     }
+
+//8월 1일 16:47 프로젝트 완료 눌렀을 때 여러 테이블 crud 처리하는 컨트롤러 코드
+//@PostMapping("/completeProject")
+//public ResponseEntity<String> completeProject(@RequestBody EmployeesProjectsRequest completeProjectRequest) {
+//    System.out.println("Completing project ID: " + completeProjectRequest.getProject().getProjectId());
+//
+//    // 여기에서 프로젝트 완료 로직을 구현하세요.
+//    // 예: 프로젝트 상태 변경, 직원들 업데이트 등.
+//
+//    return ResponseEntity.ok("Project completed successfully");
+//}
+
+//8월 1일 17:44 시범적으로 시도중 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
+    @PostMapping("/completeProject")
+    public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
+        Long projectId = request.get("projectId");
+        projectsService.updateProjectStatus(projectId, 2);
+        return ResponseEntity.ok("Project status updated to completed");
+    }
+
 
 }

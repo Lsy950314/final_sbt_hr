@@ -30,7 +30,6 @@ public class ProjectsService {
        return projectsRepository.findAll();
     }
 
-    //Project테이블에서 status가 1(배정완료)인 튜플만 가져오기
     public List<Projects> getAssignedProjects() {return projectsRepository.findByStatus(1);}
 
     public void deleteProject(Long id) {
@@ -66,6 +65,31 @@ public class ProjectsService {
         return existingProject;
     }
 
+// 프로젝트 완료 버튼 클릭하면 ...
+//    public void completeProject(Long projectId) {
+//        // 프로젝트 완료 처리 로직
+//        // 예: 프로젝트 상태 업데이트, 관련 직원 업데이트, 등등
+//
+//        // 예시: 프로젝트 상태 업데이트
+//        Projects project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+//        project.setStatus(2); // 상태를 완료로 변경
+//        projectRepository.save(project);
+//
+//        // 관련 직원 업데이트
+//        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProject_ProjectId(projectId);
+//        for (EmployeesProjects ep : employeesProjects) {
+//            ep.setStarPoint(5.0); // 예시: 모든 직원에게 별점 부여
+//            employeesProjectsRepository.save(ep);
+//        }
+//
+//        // 기타 필요한 로직들...
+
+//8월 1일 17:44 시범적으로 시도중 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
+    public void updateProjectStatus(Long projectId, int status) {
+        Projects project = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+        project.setStatus(status);
+        projectsRepository.save(project);
+    }
 
 
 }
