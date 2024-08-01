@@ -41,7 +41,13 @@ public class ProjectController {
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession) {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
-        return "project/readAllProjects"; // 가상의 주소
+        return "project/readAllProjects";
+    }
+
+    @GetMapping("/read2Projects")
+    public String read2Projects(HttpSession httpSession) {
+        httpSession.setAttribute("projects", projectsService.getAllProjects()); // 메서드도 수정하고
+        return "111"; // 가상의 주소
     }
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드

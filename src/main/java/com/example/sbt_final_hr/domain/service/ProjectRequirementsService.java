@@ -24,6 +24,10 @@ public class ProjectRequirementsService {
         this.skillsRepository = skillsRepository;
     }
 
+    public ProjectRequirements getRequirementsById(Long id) {
+       return projectRequirementsRepository.findById(id).orElseThrow();
+    }
+
     public List<ProjectRequirements> getRequirementsByProjectId(Long projectId) {
         return projectRequirementsRepository.findByProject_ProjectId(projectId);
     }
@@ -36,7 +40,10 @@ public class ProjectRequirementsService {
         ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(()->new RuntimeException("Project requirements not found"));
         if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()){
             projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount()+1);
+        } else {
+            throw new RuntimeException("이미 충족된 요구사항입니다");
         }
+
     }
 
     public void deleteByProjectId(Long projectId) {

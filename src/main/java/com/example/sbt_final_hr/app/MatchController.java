@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,14 +88,19 @@ public class MatchController {
     }
 
     @GetMapping("/matchEmployeeProject")
-    public void matchEmployeeProject(@RequestParam Map<String, Long> payload){
-        Long projectId = payload.get("projectId");
-        Long employeeId = payload.get("employeeId");
-        Long projectRequirementId = payload.get("projectRequirementId");
+    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload){
+        Long projectId = Long.parseLong(payload.get("projectId"));
+        Long employeeId = Long.parseLong(payload.get("employeeId"));
+        Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
+
+        System.out.println(projectId);
+        System.out.println(employeeId);
+        System.out.println(projectRequirementsId);
 
         employeesService.updateEndDates(employeeId, projectId);
-        projectRequirementsService.updateFulfilledCount(projectRequirementId);
-        employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementId);
+        projectRequirementsService.updateFulfilledCount(projectRequirementsId);
+        employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId);
 
+        return ResponseEntity.ok().build();
     }
 }
