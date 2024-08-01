@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Project List</title>
+    <link rel="stylesheet" href="path/to/your/css/file.css"> <!-- CSS 파일 경로 -->
 </head>
 <style>
     /* 기존 스타일 */
@@ -265,6 +266,7 @@
         transform: translateY(0);
     }
 </style>
+
 <body>
 <div style="display: flex">
     <div class="menu">
@@ -322,10 +324,6 @@
                 <div id="complete-modal-body">
                     <!-- 여기에 동적으로 내용이 추가됩니다 -->
                 </div>
-                <!--                <div id="complete-button-container">-->
-                <!--                    <button id="yes-btn">はい</button>-->
-                <!--                    <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>-->
-                <!--                </div>-->
             </div>
         </div>
     </div>
@@ -333,16 +331,16 @@
 
 <script>
     function createProject() {
-        location.href="/createProject"
+        location.href = "/createProject";
     }
 
     function updateProject(projectId) {
-        location.href="/updateProject?id=" + projectId;
+        location.href = "/updateProject?id=" + projectId;
     }
 
     function deleteProject(projectId) {
-        if ( confirm("정말로 삭제하시겠습니까?") ){
-            location.href="/deleteProject?id=" + projectId;
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = "/deleteProject?id=" + projectId;
         }
     }
 
@@ -350,7 +348,7 @@
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
                     <div id="project-info">
@@ -433,17 +431,24 @@
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
                                 <div id="assigned-employees"></div>
+                                <div id="assigned-projects"></div>
                                 <div id="complete-button-container">
                                     <button id="yes-btn">はい</button>
                                     <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
                                 </div>`;
-        // Fetch employees assigned to this project
-        fetch(`/getEmployeesByProjectId?id=${projectId}`)
+        // Fetch project info
+        fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
-            .then(employees => {
-                console.log("Received employees:", employees);
+            .then(data => {
+                console.log("Received data:", data);
+                const employees = data.employees;
+                const employeesProjects = data.employeesProjects;
+
                 const employeesDiv = document.getElementById('assigned-employees');
                 employeesDiv.innerHTML = '<p>参加中の従業員:</p><ul>' + employees.map(emp => `<li>${emp.employeeId}: ${emp.name}</li>`).join('') + '</ul>';
+
+                const projectsDiv = document.getElementById('assigned-projects');
+                projectsDiv.innerHTML = '<p>従業員プロジェクト:</p><ul>' + employeesProjects.map(ep => `<li>ID: ${ep.id}, Employee Name: ${ep.employee.name}, Project Name: ${ep.project.projectName}, Skill: ${ep.skill.skillName}</li>`).join('') + '</ul>';
 
                 // "はい" 버튼 클릭 시 completeProject 함수 호출
                 document.getElementById('yes-btn').addEventListener('click', function() {
@@ -451,7 +456,7 @@
                 });
             })
             .catch(error => {
-                console.error('Error fetching employees:', error);
+                console.error('Error fetching project info:', error);
             });
 
         openCompleteModal();
@@ -465,9 +470,6 @@
         document.getElementById('complete-modal').style.display = 'none';
     }
 
-
-
-    //8월 1일 17:44 시범적으로 시도중 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
     function completeProject(projectId) {
         fetch(`/completeProject`, {
             method: 'POST',
@@ -486,41 +488,6 @@
                 console.error('Error completing project:', error);
             });
     }
-    //하면서 코드 바꿔야됨
-    // function completeProject(projectId) {
-    //
-    //     fetch(`/getEmployeesByProjectId?id=${projectId}`)
-    //         .then(response => response.json())
-    //         .then(employees => {
-    //             // employeeId 목록 추출
-    //             const employeeIds = employees.map(emp => emp.employeeId);
-    //
-    //             // 서버로 POST 요청 보내기
-    //             fetch(`/completeProject`, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 },
-    //                 body: JSON.stringify({ projectId: projectId, employeeIds: employeeIds })
-    //             })
-    //                 .then(response => response.json())
-    //                 .then(data => {
-    //                     console.log('Project completed:', data);
-    //                     closeCompleteModal();
-    //                 })
-    //                 .catch(error => {
-    //                     console.error('Error completing project:', error);
-    //                 });
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching employees:', error);
-    //         });
-    // }
-
-
 </script>
-
-
-
 </body>
 </html>

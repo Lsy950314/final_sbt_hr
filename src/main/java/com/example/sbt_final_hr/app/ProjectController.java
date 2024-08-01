@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,38 +64,6 @@ public class ProjectController {
         httpSession.setAttribute("projects", projectsService.getAssignedProjects());
         return "project/readAssignedProjects"; // 가상의 주소
     }
-    //8월 1일 13:12
-    @GetMapping("/getEmployeesByProjectId")
-    @ResponseBody
-    public ResponseEntity<List<Employees>> getEmployeesByProjectId(@RequestParam("id") Long projectId) {
-        System.out.println("Received request for project ID: " + projectId);
-
-        // Get employees
-        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(projectId);
-        System.out.println("Found employees:");
-        for (Employees employee : employees) {
-            System.out.println("Employee ID: " + employee.getEmployeeId());
-            System.out.println("Name: " + employee.getName());
-            System.out.println("Last Project End Date: " + employee.getLastProjectEndDate());
-            System.out.println("Current Project End Date: " + employee.getCurrentProjectEndDate());
-        }
-        // Get employees projects
-        List<EmployeesProjects> employeesprojects = employeesProjectsService.getEmployeesProjectByProjectId(projectId);
-        System.out.println("Found employeesprojects:");
-        for (EmployeesProjects ep : employeesprojects) {
-            System.out.println("ID: " + ep.getId());
-            System.out.println("Employee Name: " + (ep.getEmployee() != null ? ep.getEmployee().getName() : "None"));
-            System.out.println("Project Name: " + (ep.getProject() != null ? ep.getProject().getProjectName() : "None"));
-            System.out.println("Skill: " + (ep.getSkill() != null ? ep.getSkill().getSkillName() : "None"));
-            System.out.println("Registration Date: " + ep.getRegistrationDate());
-            System.out.println("Project Duration: " + ep.getProjectDuration());
-            System.out.println("Star Point: " + ep.getStarPoint());
-        }
-        return ResponseEntity.ok(employees);
-    }
-
-
-
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
     @GetMapping("/getInfoByProjectID")
@@ -103,16 +72,16 @@ public class ProjectController {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
         List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
-        
+
         // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션 써보는 중
         session.setAttribute("projectId", id);
-        
+
         // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
-        
+
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
         session.setAttribute("employeesProjects", employeesProjects);
-        
+
         // 해당 프로젝트에 참여중인 사원들
         session.setAttribute("employees", employees);
 
@@ -206,11 +175,18 @@ public class ProjectController {
 //    return ResponseEntity.ok("Project completed successfully");
 //}
 
-//8월 1일 17:44 시범적으로 시도중 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
+//8월 1일 17:44
     @PostMapping("/completeProject")
     public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
         Long projectId = request.get("projectId");
+        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
         projectsService.updateProjectStatus(projectId, 2);
+        // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
+        //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
+        // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
+        //employeesProjectsService.updateEmployeeStarpointForCompletedProject(projectId); ???
+        // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+
         return ResponseEntity.ok("Project status updated to completed");
     }
 
