@@ -21,6 +21,7 @@ public class EmployeesProjectsRequest {
     private LocalDateTime registrationDate;
 
     private Long projectDuration;
+    private Double starPoint;
 
     public EmployeesProjects toEntity() {
         EmployeesProjects employeesProjects = new EmployeesProjects();
@@ -29,6 +30,7 @@ public class EmployeesProjectsRequest {
         employeesProjects.setSkill(this.skill);
         employeesProjects.setRegistrationDate(LocalDateTime.now());
         employeesProjects.setProjectDuration(this.projectDuration);
+        employeesProjects.setStarPoint(this.starPoint);
         return employeesProjects;
     }
 }

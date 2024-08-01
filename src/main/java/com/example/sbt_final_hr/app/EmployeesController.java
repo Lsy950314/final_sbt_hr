@@ -40,8 +40,6 @@ public class EmployeesController {
         this.employeesSkillService = employeesSkillService;
     }
 
-
-    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
     @GetMapping("/newemployee")
     public String showCreateEmployeeFormWithPhoto(Model model) {
         EmployeesRequest employeesRequest = new EmployeesRequest();
@@ -51,7 +49,6 @@ public class EmployeesController {
         return "employees/createemployee";
     }
 
-    //7월 30일 14:49 사진 추가되는 사원 등록 페이지로 시도중
     @PostMapping("/createemployee")
     public String createEmployeeWithPhoto(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                           @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
@@ -66,8 +63,6 @@ public class EmployeesController {
         }
         return "redirect:/employees";
     }
-
-
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
@@ -121,46 +116,20 @@ public class EmployeesController {
         response.put("skills", skills);
 
         return ResponseEntity.ok(response);
-
     }
 
-
-
-    //7월 30일 15:43 수정 코드
     @GetMapping("/edit/{id}")
     public String showEditEmployeeForm(@PathVariable Long id, Model model) {
         Optional<Employees> employees = employeesService.findById(id);
-
         if (employees.isPresent()) {
             Employees employee = employees.get();
-            // 사원의 ID 출력
-            System.out.println("디버깅: 엔티티의 ID등의 정보들이 설정되었는지 확인");
-            System.out.println("Employee ID: " + employee.getEmployeeId());
-            System.out.println("Employee latitude: " + employee.getLatitude());
-            System.out.println("Employee longitude: " + employee.getLongitude());
-            System.out.println("Employee image: " + employee.getImage());
-
-
-
             // 사원의 프로그래밍 경력 출력
             List<EmployeesSkill> skills = employee.getSkills();
-            for (EmployeesSkill skill : skills) {
-                System.out.println("SkillID: " + skill.getSkill().getSkillId() + ", Skill: " + skill.getSkill().getSkillName() + ", Career: " + skill.getSkillCareer());
-            }
-
             EmployeesRequest employeesRequest = employee.toDto();
             List<EmployeesSkillRequest> skillRequests = skills.stream()
                     .map(EmployeesSkill::toDto)
                     .collect(Collectors.toList());
-
             employeesRequest.setEmployeesSkillRequests(skillRequests);
-            System.out.println("Employees Skill Requests:");
-            for (EmployeesSkillRequest skillRequest : employeesRequest.getEmployeesSkillRequests()) {
-                System.out.println("  Skill ID: " + skillRequest.getSkill().getSkillId());
-                System.out.println("  Skill Name: " + skillRequest.getSkill().getSkillName());
-                System.out.println("  Skill Career: " + skillRequest.getSkillCareer());
-            }
-
             model.addAttribute("employeesRequest", employeesRequest);
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
@@ -170,30 +139,21 @@ public class EmployeesController {
         }
     }
 
-
-    //  7월 30일 16:17 기존 코드
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                  @RequestParam("imageFile") MultipartFile imageFile,
                                  BindingResult result) throws IOException {
         if (!imageFile.isEmpty()) {
             String imagePath = employeesService.saveImage(imageFile);
-            System.out.println("update요청시 imagePath나오나? " + imagePath);
+//            System.out.println("update요청시 imagePath나오나? " + imagePath);
             employeesRequest.setImage(imagePath);
-            //Employees employee = employeesService.save(employeesRequest.toEntity(imagePath)); <-create에서는 이렇게
-        } else {
-            // 새로운 이미지가 업로드되지 않은 경우
+        } else {// 새로운 이미지가 업로드되지 않은 경우
             employeesRequest.setImage(employeesRequest.getExistingImage());
         }
-
         Employees employee = employeesRequest.toEntity();
-
         employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
-
-        // 기존 스킬 삭제 : 13:23 추가
-        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());
-        // 새로운 스킬 저장
-        if (employeesRequest.getEmployeesSkillRequests() != null) {
+        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
+        if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
