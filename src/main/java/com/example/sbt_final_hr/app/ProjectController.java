@@ -43,6 +43,13 @@ public class ProjectController {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
         return "project/readAllProjects"; // 가상의 주소
     }
+    //projects 테이블에서 status가 1인 튜플들(-1:미배정, 1:배정)만 가져오는 리스트 페이지
+    @GetMapping("/readAssignedProjects")
+    public String readAssignedProjects(HttpSession httpSession) {
+        //httpSession.setAttribute("projects", projectsService.getAllProjects());
+        httpSession.setAttribute("projects", projectsService.getAssignedProjects());
+        return "project/readAssignedProjects"; // 가상의 주소
+    }
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
     @GetMapping("/getInfoByProjectID")

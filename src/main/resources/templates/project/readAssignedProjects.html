@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Project List</title>
+    <style>
+        /* 기존 스타일 */
+        body {
+            width: 1920px;
+            height: 1080px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 350px;
+            height: 1080px;
+        }
+
+        .menus > li {
+            width: 300px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .contents {
+            background-color: #f5f5f5;
+            width: 1500px;
+            height: 1080px;
+        }
+
+        .members {
+            width: 1280px;
+            height: 800px;
+            background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
+            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
+            border-radius: 15px; /* 둥근 모서리 */
+            backdrop-filter: blur(10px); /* 글라스 효과 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+            /*display: flex;*/
+            color: #333; /* 어두운 글자색 */
+            font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
+            text-align: center;
+        }
+
+        .members > div {
+            display: flex;
+            margin-right: 40px;
+            overflow: hidden; /* Clearfix 효과를 위해 추가 */
+        }
+
+        .members > div > div {
+            margin-left: 10px;
+            margin-right: 10px;
+            float: left;
+            width: 200px; /* 각 div의 고정된 너비 */
+            margin-bottom: 10px; /* 간격을 주기 위해 추가 */
+            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+        }
+
+        .modal {
+            display: none; /* 숨김 처리 */
+            position: fixed; /* 모달을 화면 중앙에 고정 */
+            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 중앙 정렬 */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* 너비 조정 */
+        }
+
+
+        .modal-button {
+            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
+            font-size: 1rem; /* 글자 크기 */
+            color: #fff; /* 텍스트 색상 */
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+            ); /* 버튼 배경색 그라데이션 */
+            border: none; /* 기본 테두리 제거 */
+            border-radius: 20px; /* 둥근 테두리 */
+            padding: 10px 20px; /* 내부 여백 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
+            cursor: pointer; /* 커서 변경 */
+            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+        }
+
+        .header {
+            display: flex;
+        }
+
+        .header > div {
+            font-weight: bold;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row > div {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .row > div:nth-child(6) {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-projects > div {
+            display: flex;
+        }
+
+        /* 모달 본문 */
+
+        #modal-body {
+            display: flex;
+
+            gap: 20px;
+        }
+
+        /*#modal-body > div {*/
+        /*    padding: 20px;*/
+        /*    border: 1px solid #1e90ff;*/
+        /*    border-radius: 10px;*/
+        /*    background: #f0f8ff;*/
+        /*    color: #000;*/
+        /*}*/
+
+
+        /*.modal-projectRequirements li {*/
+        /*    border-bottom: 1px solid #1e90ff;*/
+        /*    padding: 5px 0;*/
+        /*    color: #333;*/
+        /*}*/
+
+        #project-info {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            margin: 20px 0;
+        }
+
+        #project-info .data-row {
+            display: table-row;
+        }
+
+        #project-info .label, #project-info .value {
+            display: table-cell;
+            padding: 10px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        #project-info .label {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            width: 20%;
+        }
+
+        #project-info .value {
+            width: 80%;
+        }
+
+        .modal-projectRequirements div {
+            margin-bottom: 10px;
+        }
+
+        #project-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #project-info li {
+            margin-bottom: 5px;
+        }
+
+        #add-projects {
+            margin-left: 870px;
+            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
+            font-size: 13px; /* 글자 크기 */
+            color: #fff; /* 텍스트 색상 */
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+            ); /* 버튼 배경색 그라데이션 */
+            border: none; /* 기본 테두리 제거 */
+            border-radius: 20px; /* 둥근 테두리 */
+            padding: 5px 10px; /* 내부 여백 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
+            cursor: pointer; /* 커서 변경 */
+            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        #button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* update-btn 스타일 */
+        #update-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6c757d; /* 회색 계열 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* update-btn 호버 효과 */
+        #update-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* update-btn 활성화 효과 */
+        #update-btn:active {
+            background-color: #545b62;
+            transform: translateY(0);
+        }
+
+        /* delete-btn 스타일 */
+        #delete-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6c757d; /* 회색 계열 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* delete-btn 호버 효과 */
+        #delete-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* delete-btn 활성화 효과 */
+        #delete-btn:active {
+            background-color: #545b62;
+            transform: translateY(0);
+        }
+
+
+    </style>
+</head>
+<body>
+<div style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li><a href="">Dashboard</a></li>
+            <li><a href="/employees/list2">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
+        </ul>
+    </div>
+
+
+    <div class="contents">
+        <p style="font-size: 26px">割り当て済みのプロジェクト<span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
+        </p>
+
+        <div class="members">
+            <div class="header">
+                <div>プロジェクトID</div>
+                <div>プロジェクト名</div>
+                <div>クライアント会社</div>
+                <div>プロジェクト開始日</div>
+                <div>プロジェクト終了日</div>
+                <div>詳細を見る</div>
+                <div>完了ボタン</div>
+            </div>
+            <div th:each="p : ${session.projects}">
+                <div th:text="${p.projectId}"></div>
+                <div th:text="${p.projectName}"></div>
+                <div th:text="${p.clientCompany}"></div>
+                <div th:text="${p.startDate}"></div>
+                <div th:text="${p.endDate}"></div>
+                <div>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
+                    </button>
+                </div>
+                <div>
+                    <button class="complete-button" th:onclick="'showCompleteModal('+${p.projectId}+')'">完了</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 모달 팝업 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <div id="modal-body">
+                    <!-- 여기에 동적으로 내용이 추가됩니다 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 완료 모달 팝업 -->
+        <div id="complete-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeCompleteModal()">&times;</span>
+                <div id="complete-modal-body">
+                    <!-- 여기에 동적으로 내용이 추가됩니다 -->
+                </div>
+                <div id="complete-button-container">
+                    <button id="yes-btn">はい</button>
+                    <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    function createProject(){
+        location.href="/createProject"
+    }
+
+    function updateProject(projectId) {
+        location.href="/updateProject?id=" + projectId;
+    }
+    function deleteProject(projectId) {
+       if ( confirm("정말로 삭제하시겠습니까?") ){
+           location.href="/deleteProject?id=" + projectId;
+       }
+    }
+
+    function showProjectDetails(projectId) {
+
+        fetch(`/getInfoByProjectID?id=${projectId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const modalBody = document.getElementById('modal-body');
+                modalBody.innerHTML = `
+                    <div id="project-info">
+    <div class="data-row">
+        <div class="label">プロジェクトID:</div>
+        <div class="value">${data.projectId}</div>
+    </div>
+    <div class="data-row">
+        <div class="label">プロジェクト要件:</div>
+        <div class="value modal-projectRequirements">
+            ${data.projectRequirements.map(req => `
+                <div>
+                    スキル: ${req.skill.skillName},
+                    必要経験: ${req.requiredExperience}ヶ月,
+                    必要人数: ${req.requiredCount}人 + test
+                </div>
+            `).join('')}
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="label">従業員プロジェクト:</div>
+        <div class="value">
+            <ul>
+                ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
+            </ul>
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="label">従業員:</div>
+        <div class="value">
+            <ul>
+                ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
+            </ul>
+        </div>
+    <div id="button-container">
+    <button id="update-btn">수정</button>
+    <button id="delete-btn">삭제</button>
+</div> </div>
+</div>
+
+                    <div>
+        <button onclick="navigateToMatchManagement()">매치버튼</button>
+    </div>
+                `;
+
+                document.getElementById('update-btn').addEventListener('click', function () {
+                    updateProject(projectId);
+                })
+
+                document.getElementById('delete-btn').addEventListener('click', function () {
+                    deleteProject(projectId);
+                })
+                openModal();
+            })
+            .catch(error => {
+                console.error('Error fetching project details:', error);
+            });
+    }
+
+    function navigateToMatchManagement() {
+        window.location.href = /*[[@{/matchManagement}]]*/ '/matchManagement';
+    }
+
+    function openModal() {
+        document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == document.getElementById('modal')) {
+            closeModal();
+        }
+    }
+    //8월 1일 12:01완료 버튼 관련 스크립트
+    function showCompleteModal(projectId) {
+        const completeModalBody = document.getElementById('complete-modal-body');
+        completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>`;
+        openCompleteModal();
+    }
+
+    function openCompleteModal() {
+        document.getElementById('complete-modal').style.display = 'block';
+    }
+
+    function closeCompleteModal() {
+        document.getElementById('complete-modal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        if (event.target == document.getElementById('complete-modal')) {
+            closeCompleteModal();
+        }
+    }
+    //8월 1일 12:01완료 버튼 관련 스크립트
+
+
+
+</script>
+</body>
+</html>

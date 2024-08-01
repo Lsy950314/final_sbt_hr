@@ -30,6 +30,9 @@ public class ProjectsService {
        return projectsRepository.findAll();
     }
 
+    //Project테이블에서 status가 1(배정완료)인 튜플만 가져오기
+    public List<Projects> getAssignedProjects() {return projectsRepository.findByStatus(1);}
+
     public void deleteProject(Long id) {
         projectsRepository.deleteById(id);
     }
