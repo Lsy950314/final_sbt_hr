@@ -42,4 +42,6 @@ public class EmployeesProjects {
 
     @Column(name ="project_duration", nullable = false)
     private Long projectDuration;
+    @Column(name ="star_point", nullable = true)
+    private Double starPoint; //별점요소 추가
 }

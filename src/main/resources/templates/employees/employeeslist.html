@@ -27,6 +27,7 @@
         <th>Preferred Project Type</th>
         <th>Contact Number</th>
         <th>Hire Date</th>
+        <th>Star Point</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -46,6 +47,9 @@
         <td th:text="${employee.projectType != null && employee.projectType.projectTypeName != null ? employee.projectType.projectTypeName : 'No Project Type'}">No Project Type</td>
         <td th:text="${employee.contactNumber != null ? employee.contactNumber : 'No Contact Number'}">123-456-7890</td>
         <td th:text="${employee.hireDate != null ? employee.hireDate : 'Unknown'}">2022-01-01</td>
+        <td th:text="${employee.hireDate != null ? employee.hireDate : 'Unknown'}">2022-01-01</td>
+        <td th:text="${employee.starPointAverage != null ? employee.starPointAverage : 'no point yet'}">2022-01-01</td>
+
         <td>
             <a th:href="@{/employees/edit/{id}(id=${employee.employeeId})}">Edit</a>
             <a th:href="@{/employees/delete/{id}(id=${employee.employeeId})}">Delete</a>

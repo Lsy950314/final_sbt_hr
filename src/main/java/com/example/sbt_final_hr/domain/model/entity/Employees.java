@@ -32,13 +32,13 @@ public class Employees {
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
-    //13:05 SEMI 참고해서 만드는중
     private String image;
-    //13:05 SEMI 참고해서 만드는중
-
     private String contactNumber;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
+    //별점 요소 추가(참여 안건 별 별점의 평균;employees_projects 튜플에 별점 생기면 db단계에서 자동계산됨)
+    @Column(name= "star_point_average")
+    private Double starPointAverage;
 
 
     @Column(name = "preferred_language")
