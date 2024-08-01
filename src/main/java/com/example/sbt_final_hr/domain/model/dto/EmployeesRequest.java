@@ -28,10 +28,12 @@ public class EmployeesRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
     private MultipartFile imageFile;
-    private String image;  // 이미지 경로 필드 추가
+    private String image;
+    private Double starPointAverage; //별점 요소 추가
+
     private List<EmployeesSkillRequest> employeesSkillRequests;
 
-    private String existingImage; //사진 수정 때문에
+    private String existingImage;
 
     public Employees toEntity() throws IOException {
         Employees employee = new Employees();
@@ -46,7 +48,8 @@ public class EmployeesRequest {
         employee.setPreferredProjectType(Long.parseLong(this.preferredProjectType));
         employee.setContactNumber(this.contactNumber);
         employee.setHireDate(this.hireDate);
-        employee.setImage(this.image);  // 이미지 설정
+        employee.setImage(this.image);
+        employee.setStarPointAverage(this.starPointAverage);
         return employee;
     }
 
@@ -58,10 +61,10 @@ public class EmployeesRequest {
     public String getExistingImage() {
         return existingImage;
     }
-
-    public void setExistingImage(String existingImage) {
-        this.existingImage = existingImage;
-    }
+//
+//    public void setExistingImage(String existingImage) {
+//        this.existingImage = existingImage;
+//    }
     //7월 31일 10:20 사진 관련 작업중
 
 

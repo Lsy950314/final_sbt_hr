@@ -7,6 +7,7 @@ import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.EmployeesSkillRepository;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
 import com.example.sbt_final_hr.domain.repository.SkillsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,24 @@ public class EmployeesSkillService {
     public void createOrUpdateEmployeesSkill(EmployeesSkill employeesSkill) {
         employeesSkillRepository.save(employeesSkill);
     }
+
+    //7월31일 12:50 추가된 메서드
+//    public List<EmployeesSkillRequest> getSkillsByEmployeeId(Long employeeId) {
+//        return employeesSkillRepository.findByEmployeeEmployeeId(employeeId).stream()
+//                .map(EmployeesSkill::toDto)
+//                .collect(Collectors.toList());
+//    }
+    //7월31일 13:39 추가
+    @Transactional
+    public void deleteByEmployeeId(Long employeeId) {
+        employeesSkillRepository.deleteByEmployeeEmployeeId(employeeId);
+    }
+
+
+
+
+
+
 
 
 

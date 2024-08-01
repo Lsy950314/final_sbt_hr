@@ -297,6 +297,7 @@
         }
 
 
+
     </style>
 </head>
 <body>
@@ -387,15 +388,13 @@
     <p class="label">Preferred Project Type:</p>
     <p class="value">${data.preferredProjectType}</p>
     <p class="label">Skills & Career : </p>
-
-<div class="value">
-
-</div>
+<p class="value" id="skillsAndCareer">
+</p>
 
 <div>  <div id="button-container">
     <button id="update-btn">수정</button>
     <button id="delete-btn">삭제</button>
-</div> <button onclick="navigateToMatchManagement()">매치버튼</button></div>
+</div> <button  onclick="navigateToMatchManagement()">매치버튼</button></div>
 
 
 </div>
@@ -403,6 +402,9 @@
 
 
                             // 스킬 정보 추가
+                            // 특정 id를 가진 <p> 요소를 찾습니다.
+                            const skillsAndCareerElement = document.getElementById('skillsAndCareer');
+
                             if (data.skills && data.skills.length > 0) {
                                 const skillsList = document.createElement('ul');
                                 data.skills.forEach(skill => {
@@ -410,8 +412,9 @@
                                     listItem.textContent = `Skill: ${skill.skillName}, Career: ${skill.skillCareer} years`;
                                     skillsList.appendChild(listItem);
                                 });
-                                employeeDetails.appendChild(skillsList);
+                                skillsAndCareerElement.appendChild(skillsList);
                             }
+
                         }
                         document.getElementById('update-btn').addEventListener('click', function () {
                             updateEmployee(employeeId);
