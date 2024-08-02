@@ -1,17 +1,25 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
+import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
+
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,22 +57,28 @@ public class ProjectController {
         return "project/readAssignedProjects"; // 가상의 주소
     }
 
-    // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
-    @GetMapping("/getInfoByProjectID")
+     //모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
+    @GetMapping("/getInfoByProjectID2")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getInfoByProjectID2(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjectsRequest> employeesProjectsRequests =
                 employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
 //                    System.out.println(ep.getEmployee().getName());
-//                    System.out.println(ep.getProjectDuration());
+//                    System.out.println(ep.getEmployee().getEmployeeId());
                     EmployeesProjectsRequest request = new EmployeesProjectsRequest();
                     request.fromEntity(ep);
                     return request;
                 }).toList();
+
+        List<Long> eprID = new ArrayList<Long>();
+
         for (EmployeesProjectsRequest req : employeesProjectsRequests) {
             if (req.getEmployeeName() != null) {
-                System.out.println("Employee: " + req.getEmployeeName());
+                System.out.print("Employee ID: " + req.getEmployee().getEmployeeId());
+                System.out.println(" Employee: " + req.getEmployeeName());
+
+                eprID.add(req.getEmployee().getEmployeeId());
             } else {
                 System.out.println("Employee is null or name is null");
             }
@@ -72,27 +86,30 @@ public class ProjectController {
 //            System.out.println("----");
         }
         // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
-
 //        System.out.println("pr: " + projectRequirements);
 //        System.out.println("ep: " + employeesProjectsRequests);
-
         // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
-
         // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
-
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
         session.setAttribute("employeesProjects", employeesProjectsRequests);
 
+        session.setAttribute("eprID", eprID);
 
         Map<String, Object> response = new HashMap<>();
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
+        response.put("eprID",eprID);
 
         return ResponseEntity.ok(response);
     }
+
+
+
+
+
 
 
     @GetMapping("/createProject")
@@ -164,7 +181,18 @@ public class ProjectController {
         return "redirect:/readAllProjects";
     }
 
-    //8월 1일 17:44
+//8월 1일 16:47 프로젝트 완료 눌렀을 때 여러 테이블 crud 처리하는 컨트롤러 코드
+//@PostMapping("/completeProject")
+//public ResponseEntity<String> completeProject(@RequestBody EmployeesProjectsRequest completeProjectRequest) {
+//    System.out.println("Completing project ID: " + completeProjectRequest.getProject().getProjectId());
+//
+//    // 여기에서 프로젝트 완료 로직을 구현하세요.
+//    // 예: 프로젝트 상태 변경, 직원들 업데이트 등.
+//
+//    return ResponseEntity.ok("Project completed successfully");
+//}
+
+//8월 1일 17:44
     @PostMapping("/completeProject")
     public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
         Long projectId = request.get("projectId");

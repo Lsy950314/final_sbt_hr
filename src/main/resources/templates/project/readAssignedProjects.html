@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Project List</title>
-    <link rel="stylesheet" href="path/to/your/css/file.css"> <!-- CSS 파일 경로 -->
+
 </head>
 <style>
     /* 기존 스타일 */
@@ -288,7 +288,6 @@
                 <div>クライアント会社</div>
                 <div>プロジェクト開始日</div>
                 <div>プロジェクト終了日</div>
-                <div>詳細を見る</div>
                 <div>完了ボタン</div>
             </div>
             <div th:each="p : ${session.projects}">
@@ -335,7 +334,7 @@
     }
 
     function showCompleteModal(projectId) {
-        console.log(projectId)
+        // console.log(projectId)
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
                                 <div id="assigned-employees"></div>
@@ -344,12 +343,45 @@
                                     <button id="yes-btn">はい</button>
                                     <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
                                 </div>`;
-        // "はい" 버튼 클릭 시 completeProject 함수 호출
-        document.getElementById('yes-btn').addEventListener('click', function() {
-                    completeProject(projectId);
-        });
+        fetch(`/getInfoByProjectID2?id=${projectId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received data:", data);
+                const employeesProjects = data.employeesProjects;
+                const eprID = data.eprID;
+
+                console.log(eprID);
+
+                const employeesDiv = document.getElementById('assigned-employees');
+                //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
+                employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
+                <li>
+                    ${eprID[index]} ${ep.employeeName} - ${ep.projectDuration}
+                    <select id="star-point-${index}">
+                        ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
+                    </select>
+                </li>`).join('') + '</ul>';
+
+
+                // "はい" 버튼 클릭 시 completeProject 함수 호출
+                document.getElementById('yes-btn').addEventListener('click', function() {
+                    const starPoints = employeesProjects.map((ep, index) => {
+                        const starPoint = document.getElementById(`star-point-${index}`).value;
+                        const result = { employeeId: ep.employeeId, starPoint: parseFloat(starPoint) };
+                        console.log(result); // 콘솔에 출력
+                        return result;
+                    });
+                    completeProject(projectId, starPoints);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching project info:', error);
+            });
+
         openCompleteModal();
+
     }
+
 
     function openCompleteModal() {
         document.getElementById('complete-modal').style.display = 'block';
