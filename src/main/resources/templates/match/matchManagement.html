@@ -193,6 +193,15 @@
             background-color: #0056b3;
         }
 
+        .compare-button{
+            background-color: #8B5E3C;
+            color: #FFFFFF; /* 대비를 위한 텍스트 색상 */
+            font-family: 'Arial', sans-serif;
+
+
+
+        }
+
 
     </style>
 </head>
@@ -227,17 +236,50 @@
                 </div>
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
+                <form action="/compareEmployee" method="POST">
+                    <input type="checkbox" id="checkbox1" name="employeeId" th:value="${e.key.getEmployeeId()}">
+                    <label for="checkbox1">チェックを入れてください</label>
+
+                    <button class="compare-button" type="submit">
+                        비교하기
+                    </button>
+                </form>
+
+
+
+
                 <div class="assign-button-container">
+
+
                     <button class="assign-button"
                             th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
                         배정하기
                     </button>
                 </div>
+
             </div>
         </div>
 
     </div>
 
+
+    <div>
+
+        <div th:if="${selectedEmployee != null}">
+            <p>이름: <span th:text="${selectedEmployee.name}"></span></p>
+            <p>보유 스킬:
+            <ul>
+                <li th:each="skill : ${selectedEmployee.skills}"
+                    th:text="${skill.skillName} + ' (' + ${skill.skillCareer} + '개월)'"></li>
+            </ul>
+            </p>
+            <p>예상 통근 소요시간: <span th:text="${selectedEmployee.commuteTime}"></span> 분</p>
+            <p>마지막 프로젝트 종료 날짜: <span th:text="${selectedEmployee.lastProjectEndDate}"></span></p>
+        </div>
+        <div th:if="${selectedEmployee == null}">
+            <p>선택된 사원이 없습니다.</p>
+        </div>
+    </div>
 
 </div>
 </body>

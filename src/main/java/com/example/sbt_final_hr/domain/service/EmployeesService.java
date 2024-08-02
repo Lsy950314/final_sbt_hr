@@ -97,26 +97,8 @@ public String saveImage(MultipartFile image) throws IOException {
     return "/img/employees/" + newFilename;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 사원 비교를 위해 만듬
+    public Employees findEmployeeById(Long employeeId) {
+        return null;
+    }
 }
