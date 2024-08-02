@@ -1,5 +1,6 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -65,6 +65,9 @@ public class MatchService {
 
                     try {
                         int transitTimeInMinutes = getTransitTimeInMinutes(employeeLatitude, employeeLongitude, projectLatitude, projectLongitude);
+//                        System.out.println(employeeLatitude);
+//                        System.out.println(projectLatitude);
+//                        System.out.println(transitTimeInMinutes);
                         transitTimeCache.put(cacheKey, transitTimeInMinutes); // 캐시에 저장
                         return new AbstractMap.SimpleEntry<>(employee, transitTimeInMinutes);
                     } catch (IOException e) {
@@ -77,6 +80,8 @@ public class MatchService {
                 .map(CompletableFuture::join)
                 .filter(entry -> entry.getValue() <= maxCommutingTimeInMinutes && entry.getValue() != -1)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+
     }
 
     // Google Directions API를 사용하여 두 좌표 간의 대중교통 경로 시간을 계산합니다.
@@ -88,9 +93,9 @@ public class MatchService {
         GenericUrl url = new GenericUrl("https://maps.googleapis.com/maps/api/directions/json");
         url.put("origin", employeeLatitude + "," + employeeLongitude);
         url.put("destination", projectLatitude + "," + projectLongitude);
-        url.put("modes", "transit");
+        url.put("mode", "transit");
         url.put("key", "AIzaSyD66g27MXhvDFVCYdrAsu60XM91URf2UFY"); // 여기에 실제 API 키를 입력하세요.
-
+//        System.out.println(url);
 
         // 3. HTTP GET 요청을 실행하고 응답을 받아옴
         HttpResponse response = requestFactory.buildGetRequest(url).execute();
@@ -98,12 +103,15 @@ public class MatchService {
 
         // 4. 응답에서 경로 정보를 추출
         List<Map<String, Object>> routes = (List<Map<String, Object>>) directionsResponse.get("routes");
+//        System.out.println(routes);
 
         if (routes != null && !routes.isEmpty()) {
             List<Map<String, Object>> legs = (List<Map<String, Object>>) routes.get(0).get("legs");
+//            System.out.println(legs);
 
             if (legs != null && !legs.isEmpty()) {
                 Map<String, Object> duration = (Map<String, Object>) legs.get(0).get("duration");
+//                System.out.println(duration);
 
                 if (duration != null) {
                     return ((Number) duration.get("value")).intValue() / 60; // 초 단위를 분 단위로 변환
@@ -121,17 +129,17 @@ public class MatchService {
         List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
         long step1EndTime = System.currentTimeMillis();
 
-        System.out.println("조건1 : " + filteredEmployeesByRequirements);
+        System.out.println("요구 스킬을 충족하는 사원들 : " + filteredEmployeesByRequirements);
 
         long step2StartTime = System.currentTimeMillis();
         List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
         long step2EndTime = System.currentTimeMillis();
-        System.out.println("조건2 : " + availableEmployees);
+        System.out.println("진행 중인 프로젝트 기간과 겹치지 않는 사원들 : " + availableEmployees);
 
         long step3StartTime = System.currentTimeMillis();
         Map<Employees, Integer> finalEmployees = filterByCommutingTime(availableEmployees, project);
         long step3EndTime = System.currentTimeMillis();
-        System.out.println("조건3 : " + finalEmployees);
+        System.out.println("통근 시간 조건을 만족하는 사원들 : " + finalEmployees);
 
 
         long endTime = System.currentTimeMillis();
@@ -142,15 +150,6 @@ public class MatchService {
         System.out.println("Step 3 (filterByCommutingTime) took: " + (step3EndTime - step3StartTime) + " milliseconds");
 
         return finalEmployees;
-    }
-
-    public void matchEmployeesProject (
-            // 받아낼 파라미터
-            // 어떤 projectReq 인지?
-            //
-
-    ) {
-
     }
 
 

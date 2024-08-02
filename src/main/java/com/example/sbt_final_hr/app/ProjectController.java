@@ -1,5 +1,8 @@
 package com.example.sbt_final_hr.app;
 
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
@@ -9,6 +12,7 @@ import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +46,7 @@ public class ProjectController {
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession) {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
-        return "project/readAllProjects"; // 가상의 주소
+        return "project/readAllProjects";
     }
     //projects 테이블에서 status가 1인 튜플들(-1:미배정, 1:배정)만 가져오는 리스트 페이지
 //    @GetMapping("/readAssignedProjects")
@@ -70,26 +74,42 @@ public class ProjectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
-        List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
-        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
+        List<EmployeesProjectsRequest> employeesProjectsRequests =
+                employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
+//                    System.out.println(ep.getEmployee().getName());
+//                    System.out.println(ep.getProjectDuration());
+                    EmployeesProjectsRequest request = new EmployeesProjectsRequest();
+                    request.fromEntity(ep);
+                    return request;
+                }).toList();
+        for (EmployeesProjectsRequest req : employeesProjectsRequests) {
+            if (req.getEmployeeName() != null) {
+                System.out.println("Employee: " + req.getEmployeeName());
+            } else {
+                System.out.println("Employee is null or name is null");
+            }
+//            System.out.println("Project Duration: " + req.getProjectDuration());
+//            System.out.println("----");
+        }
+        // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 
-        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션 써보는 중
+//        System.out.println("pr: " + projectRequirements);
+//        System.out.println("ep: " + employeesProjectsRequests);
+
+        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
 
         // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
 
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
-        session.setAttribute("employeesProjects", employeesProjects);
+        session.setAttribute("employeesProjects", employeesProjectsRequests);
 
-        // 해당 프로젝트에 참여중인 사원들
-        session.setAttribute("employees", employees);
 
         Map<String, Object> response = new HashMap<>();
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
-        response.put("employeesProjects", employeesProjects);
-        response.put("employees", employees);
+        response.put("employeesProjects", employeesProjectsRequests);
 
         return ResponseEntity.ok(response);
     }
@@ -152,7 +172,7 @@ public class ProjectController {
             }
         }
 
-        return "redirect:/updateProject?id=" + project.getProjectId();
+        return "redirect:/readAllProjects";
     }
 
     @GetMapping("/deleteProject")
@@ -161,7 +181,7 @@ public class ProjectController {
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
         System.out.println("삭제 성공");
-        return "redirect:/createProject";
+        return "redirect:/readAllProjects";
     }
 
 //8월 1일 16:47 프로젝트 완료 눌렀을 때 여러 테이블 crud 처리하는 컨트롤러 코드
@@ -178,9 +198,19 @@ public class ProjectController {
 //8월 1일 17:44
     @PostMapping("/completeProject")
     public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
-        Long projectId = request.get("projectId");
-        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
-        projectsService.updateProjectStatus(projectId, 2);
+        Long projectId = request.get("projectId") != null ? Long.parseLong(request.get("projectId").toString()) : null;
+
+        System.out.println(projectId);
+
+        if (projectId == null) {
+            System.out.println("Project ID is missing in the request.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Project ID is missing");
+        } else {
+            System.out.println("はい버튼 클릭시 Project ID");
+            System.out.println("Project ID: " + projectId);
+        }
+        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 => 2로 바꾸기
+        //projectsService.updateProjectStatus(projectId, 2);
         // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
         //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
         // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
@@ -189,6 +219,43 @@ public class ProjectController {
 
         return ResponseEntity.ok("Project status updated to completed");
     }
+//
+//    @PostMapping("/completeProject")
+//    public ResponseEntity<String> completeProject(@RequestBody Map<String, Object> request) {
+//        Long projectId = ((Number) request.get("projectId")).longValue();
+////        List<Map<String, Object>> employeesProjects = (List<Map<String, Object>>) request.get("employeesProjects");
+////        List<Map<String, Object>> employees = (List<Map<String, Object>>) request.get("employees");
+//
+//        // 프로젝트 ID 출력
+//        System.out.println("Project ID: " + projectId);
+//
+//        // 프로젝트에 참여한 사원들의 프로젝트 정보 출력
+////        System.out.println("Employees Projects:");
+////        for (Map<String, Object> ep : employeesProjects) {
+////            System.out.println("EmployeesProject: " + ep);
+////        }
+////
+////        // 사원 정보 출력
+////        System.out.println("Employees:");
+////        for (Map<String, Object> emp : employees) {
+////            System.out.println("Employee: " + emp);
+////        }
+//
+//        // 기존 프로젝트 상태 업데이트 코드
+//        projectsService.updateProjectStatus(projectId, 2);
+//
+//        // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
+//        //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
+//
+//        // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
+//        //employeesProjectsService.updateEmployeeStarpointForCompletedProject(projectId); ???
+//
+//        // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+//        //employeesProjectsService.updateEmployeeStarpointAverage(projectId); ???
+//
+//        return ResponseEntity.ok("Project status updated to completed");
+//    }
+
 
 
 }

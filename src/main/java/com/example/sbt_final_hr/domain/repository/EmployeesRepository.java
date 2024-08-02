@@ -22,4 +22,7 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
             "AND es.skillCareer >= pr.requiredExperience")
     List<Employees> findEmployeesByProjectRequirements(@Param("projectId") Long projectId);
 
+    // 현재 프로젝트 종료일과 최근 프로젝트 종료일을 업데이트
+
+
 }

@@ -330,88 +330,8 @@
 </div>
 
 <script>
-    function createProject() {
-        location.href = "/createProject";
-    }
 
-    function updateProject(projectId) {
-        location.href = "/updateProject?id=" + projectId;
-    }
 
-    function deleteProject(projectId) {
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            location.href = "/deleteProject?id=" + projectId;
-        }
-    }
-
-    function showProjectDetails(projectId) {
-        fetch(`/getInfoByProjectID?id=${projectId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                const modalBody = document.getElementById('modal-body');
-                modalBody.innerHTML = `
-                    <div id="project-info">
-                        <div class="data-row">
-                            <div class="label">プロジェクトID:</div>
-                            <div class="value">${data.projectId}</div>
-                        </div>
-                        <div class="data-row">
-                            <div class="label">プロジェクト要件:</div>
-                            <div class="value modal-projectRequirements">
-                                ${data.projectRequirements.map(req => `
-                                    <div>
-                                        スキル: ${req.skill.skillName},
-                                        必要経験: ${req.requiredExperience}ヶ月,
-                                        必要人数: ${req.requiredCount}人
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                        <div class="data-row">
-                            <div class="label">従業員プロジェクト:</div>
-                            <div class="value">
-                                <ul>
-                                    ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="data-row">
-                            <div class="label">従業員:</div>
-                            <div class="value">
-                                <ul>
-                                    ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                        <div id="button-container">
-                            <button id="update-btn">수정</button>
-                            <button id="delete-btn">삭제</button>
-                        </div>
-                    </div>
-                    <div>
-                        <button onclick="navigateToMatchManagement()">매치버튼</button>
-                    </div>
-                `;
-
-                document.getElementById('update-btn').addEventListener('click', function () {
-                    updateProject(projectId);
-                });
-
-                document.getElementById('delete-btn').addEventListener('click', function () {
-                    deleteProject(projectId);
-                });
-
-                openModal();
-            })
-            .catch(error => {
-                console.error('Error fetching project details:', error);
-            });
-    }
-
-    function navigateToMatchManagement() {
-        window.location.href = '/matchManagement';
-    }
 
     function openModal() {
         document.getElementById('modal').style.display = 'block';
@@ -427,7 +347,13 @@
         }
     }
 
+    // "はい" 버튼 클릭 시 completeProject 함수 호출
+    document.getElementById('yes-btn').addEventListener('click', function() {
+        completeProject(projectId);
+    });
+
     function showCompleteModal(projectId) {
+        console.log(projectId)
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
                                 <div id="assigned-employees"></div>
@@ -436,28 +362,9 @@
                                     <button id="yes-btn">はい</button>
                                     <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
                                 </div>`;
-        // Fetch project info
-        fetch(`/getInfoByProjectID?id=${projectId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log("Received data:", data);
-                const employees = data.employees;
-                const employeesProjects = data.employeesProjects;
 
-                const employeesDiv = document.getElementById('assigned-employees');
-                employeesDiv.innerHTML = '<p>参加中の従業員:</p><ul>' + employees.map(emp => `<li>${emp.employeeId}: ${emp.name}</li>`).join('') + '</ul>';
 
-                const projectsDiv = document.getElementById('assigned-projects');
-                projectsDiv.innerHTML = '<p>従業員プロジェクト:</p><ul>' + employeesProjects.map(ep => `<li>ID: ${ep.id}, Employee Name: ${ep.employee.name}, Project Name: ${ep.project.projectName}, Skill: ${ep.skill.skillName}</li>`).join('') + '</ul>';
 
-                // "はい" 버튼 클릭 시 completeProject 함수 호출
-                document.getElementById('yes-btn').addEventListener('click', function() {
-                    completeProject(projectId, employees);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching project info:', error);
-            });
 
         openCompleteModal();
     }
@@ -471,6 +378,8 @@
     }
 
     function completeProject(projectId) {
+        console.log('Project ID to complete:', projectId); // 프로젝트 ID를 로그로 출력
+
         fetch(`/completeProject`, {
             method: 'POST',
             headers: {
