@@ -7,8 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface ProjectsRepository extends JpaRepository<Projects, Long> {
+    List<Projects> findByStatus(int status);
+
+
 
         @Query("UPDATE Projects p SET p.status = 1 WHERE p.projectId = :id")
         @Modifying
