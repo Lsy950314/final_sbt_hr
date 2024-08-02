@@ -1,5 +1,6 @@
 package com.example.sbt_final_hr.app;
 
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
@@ -41,7 +42,7 @@ public class ProjectController {
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession) {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
-        return "project/readAllProjects"; // 가상의 주소
+        return "project/readAllProjects";
     }
 
     // 모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
@@ -49,26 +50,42 @@ public class ProjectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
-        List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
-        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
-        
-        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션 써보는 중
+        List<EmployeesProjectsRequest> employeesProjectsRequests =
+                employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
+                    EmployeesProjectsRequest request = new EmployeesProjectsRequest();
+                    request.fromEntity(ep);
+                    return request;
+                }).toList();
+        for (EmployeesProjectsRequest epr : employeesProjectsRequests) {
+            System.out.println(epr);
+            System.out.println("----");
+        }
+        // 순환 참조 문제를 해결하기 위해서
+        // 엔티티를 직접 json response 에 실어보내지 않고
+        // dto 로 변환한 다음 실어주는 방법
+
+//      List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
+        System.out.println("pr: " + projectRequirements);
+        System.out.println("ep: " + employeesProjectsRequests);
+//      System.out.println("emp: " + employees);
+
+        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
-        
+
         // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
-        
+
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
-        session.setAttribute("employeesProjects", employeesProjects);
-        
+      session.setAttribute("employeesProjects", employeesProjectsRequests);
+
         // 해당 프로젝트에 참여중인 사원들
-        session.setAttribute("employees", employees);
+//    session.setAttribute("employees", employees);
 
         Map<String, Object> response = new HashMap<>();
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
-        response.put("employeesProjects", employeesProjects);
-        response.put("employees", employees);
+        response.put("employeesProjects", employeesProjectsRequests);
+//        response.put("employees", employees);
 
         return ResponseEntity.ok(response);
     }
@@ -131,7 +148,7 @@ public class ProjectController {
             }
         }
 
-        return "redirect:/updateProject?id=" + project.getProjectId();
+        return "redirect:/readAllProjects";
     }
 
     @GetMapping("/deleteProject")
@@ -140,7 +157,7 @@ public class ProjectController {
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
         System.out.println("삭제 성공");
-        return "redirect:/createProject";
+        return "redirect:/readAllProjects";
     }
 
 }

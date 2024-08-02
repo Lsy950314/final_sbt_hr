@@ -30,13 +30,13 @@ public class EmployeesSkillController {
     }
 
 
-    @GetMapping("/skills2")
-    public String getAllEmployeesSkills(Model model) {
-        List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
-        model.addAttribute("employeesskills", employeesskills);
-
-        return "employees/employees-skills2";
-    }
+//    @GetMapping("/skills2")
+//    public String getAllEmployeesSkills(Model model) {
+//        List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
+//        model.addAttribute("employeesskills", employeesskills);
+//
+//        return "employees/employees-skills2";
+//    }
 
     @GetMapping
     public String getAllEmployeesSkills2(Model model) {

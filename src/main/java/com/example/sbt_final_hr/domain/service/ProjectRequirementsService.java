@@ -24,6 +24,10 @@ public class ProjectRequirementsService {
         this.skillsRepository = skillsRepository;
     }
 
+    public ProjectRequirements getRequirementsById(Long id) {
+       return projectRequirementsRepository.findById(id).orElseThrow();
+    }
+
     public List<ProjectRequirements> getRequirementsByProjectId(Long projectId) {
         return projectRequirementsRepository.findByProject_ProjectId(projectId);
     }
@@ -32,13 +36,18 @@ public class ProjectRequirementsService {
         projectRequirementsRepository.save(projectRequirements);
     }
 
-    public boolean existsProjectRequirements(Long projectId, Long skillId, int requirementExperience) {
-        return projectRequirementsRepository.existsByProject_ProjectIdAndSkill_SkillIdAndRequiredExperience(projectId, skillId, requirementExperience);
-    }
+    public boolean updateFulfilledCount(Long projectRequirementId){
+        ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(()->new RuntimeException("Project requirements not found"));
+        System.out.println(projectRequirements.getRequiredCount());
+        System.out.println(projectRequirements.getFulfilledCount());
+        if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()){
+            System.out.println(projectRequirements.getRequiredCount());
+            projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount()+1);
+            return true;
+        } else {
+            throw new RuntimeException("이미 충족된 요구사항입니다");
+        }
 
-    public void updateProjectRequirements(ProjectRequirementsRequest request, Projects project) {
-        ProjectRequirements projectRequirements = request.toEntity(project);
-        projectRequirementsRepository.save(projectRequirements);
     }
 
     public void deleteByProjectId(Long projectId) {

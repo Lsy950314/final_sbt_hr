@@ -4,12 +4,13 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.service.MatchService;
-import com.example.sbt_final_hr.domain.service.ProjectsService;
+import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.time.LocalDate;
@@ -21,10 +22,17 @@ import java.util.Map;
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
+    private final ProjectRequirementsService projectRequirementsService;
+    private final EmployeesProjectsService employeesProjectsService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService) {
+
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService;
+        this.projectRequirementsService = projectRequirementsService;
+        this.employeesProjectsService = employeesProjectsService;
     }
 
     @GetMapping("/check")
@@ -45,10 +53,10 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-//        session.removeAttribute("projectId");
-//        session.removeAttribute("projectRequirements");
-//        session.removeAttribute("employeesProjects");
-//        session.removeAttribute("employees");
+        session.removeAttribute("projectId");
+        session.removeAttribute("projectRequirements");
+        session.removeAttribute("employeesProjects");
+        session.removeAttribute("employees");
 
         Projects projects = projectsService.getProjectById(projectId);
 
@@ -77,5 +85,24 @@ public class MatchController {
         model.addAttribute("employeeEntries", employeeEntries);
 
         return "match/matchManagement";
+    }
+
+    @GetMapping("/matchEmployeeProject")
+    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload){
+        Long projectId = Long.parseLong(payload.get("projectId"));
+        Long employeeId = Long.parseLong(payload.get("employeeId"));
+        Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
+
+        System.out.println(projectId);
+        System.out.println(employeeId);
+        System.out.println(projectRequirementsId);
+
+        if(projectRequirementsService.updateFulfilledCount(projectRequirementsId)){
+            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)){
+                employeesService.updateEndDates(employeeId, projectId);
+            }
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

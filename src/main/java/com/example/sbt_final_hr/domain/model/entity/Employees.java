@@ -2,10 +2,7 @@ package com.example.sbt_final_hr.domain.model.entity;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -32,21 +29,22 @@ public class Employees {
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
-//    @Lob
-//    private byte[] photo;
     private String image;
+    private String contactNumber;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate hireDate;
+    //별점 요소 추가(참여 안건 별 별점의 평균;employees_projects 튜플에 별점 생기면 db단계에서 자동계산됨)
+    @Column(name= "star_point_average")
+    private Double starPointAverage;
+
+
     @Column(name = "preferred_language")
     private Long preferredLanguage;
     @Column(name = "preferred_project_type")
     private Long preferredProjectType;
-    private String contactNumber;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate hireDate;
-
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
-
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
@@ -56,17 +54,27 @@ public class Employees {
 
     public EmployeesRequest toDto() {
         EmployeesRequest employeesRequest = new EmployeesRequest();
+        employeesRequest.setEmployeeId(this.employeeId); // employeeId 추가
         employeesRequest.setName(this.name);
         employeesRequest.setAddress(this.address);
         employeesRequest.setLatitude(this.latitude);
         employeesRequest.setLongitude(this.longitude);
         employeesRequest.setLastProjectEndDate(this.lastProjectEndDate);
         employeesRequest.setCurrentProjectEndDate(this.currentProjectEndDate);
-
         employeesRequest.setPreferredLanguage(this.preferredLanguage.toString());
         employeesRequest.setPreferredProjectType(this.preferredProjectType.toString());
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
+        employeesRequest.setImage(this.image);
+
         return employeesRequest;
     }
+
+
+
+
+
+
+
+
 }

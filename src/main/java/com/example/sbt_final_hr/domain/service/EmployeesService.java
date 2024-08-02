@@ -1,12 +1,13 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
+import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
 import com.example.sbt_final_hr.domain.repository.EmployeesSkillRepository;
+import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
 import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -29,17 +30,27 @@ public class EmployeesService {
     private final EmployeesRepository employeesRepository;
     private final EmployeesSkillRepository employeesSkillRepository;
     private final SkillsRepository skillsRepository;
+    private final ProjectsRepository projectsRepository;
 
 
     @Autowired
-    public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository) {
+    public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository, ProjectsRepository projectsRepository) {
         this.employeesRepository = employeesRepository;
         this.employeesSkillRepository = employeesSkillRepository;
         this.skillsRepository = skillsRepository;
+        this.projectsRepository = projectsRepository;
     }
 
     public Employees save(Employees employee) {
         return employeesRepository.save(employee);
+    }
+
+    public void updateEndDates(Long employeeId, Long projectId) {
+        Projects projects = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+        Employees employees = employeesRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        employees.setCurrentProjectEndDate(projects.getEndDate());
+        employees.setLastProjectEndDate(null);
+        employeesRepository.save(employees);
     }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {
@@ -62,96 +73,28 @@ public class EmployeesService {
         employeesRepository.deleteById(id);
     }
 
-    //사진 넣기 시도중
+//13시 20분 시도중. chat gpt
+public String saveImage(MultipartFile image) throws IOException {
+    // Get the absolute path to the static folder
+    ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
+    File imgDir = imgDirResource.getFile();
 
-
-    //Employee테이블, Employee_Skill테이블 모두에 튜플 삽입 가능한 create 메서드 추가 시도중.
-
-    public void createOrUpdateEmployee(EmployeesRequest dto) {
-        Employees employee = new Employees();
-        employee.setName(dto.getName());
-        employee.setAddress(dto.getAddress());
-        employee.setLatitude(dto.getLatitude());
-        employee.setLongitude(dto.getLongitude());
-        employee.setLastProjectEndDate(dto.getLastProjectEndDate());
-        employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
-        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
-        employee.setContactNumber(dto.getContactNumber());
-        employee.setHireDate(dto.getHireDate());
-        employee = employeesRepository.save(employee);
-
-
-    }
-
-    //오전 7월 30일 09:56
-    public void createOrUpdateEmployee(EmployeesRequest dto, MultipartFile image) throws IOException {
-        Employees employee = new Employees();
-        employee.setName(dto.getName());
-        employee.setAddress(dto.getAddress());
-        employee.setLatitude(dto.getLatitude());
-        employee.setLongitude(dto.getLongitude());
-        employee.setLastProjectEndDate(dto.getLastProjectEndDate());
-        employee.setCurrentProjectEndDate(dto.getCurrentProjectEndDate());
-        employee.setPreferredLanguage(Long.valueOf(dto.getPreferredLanguage()));
-        employee.setPreferredProjectType(Long.valueOf(dto.getPreferredProjectType()));
-        employee.setContactNumber(dto.getContactNumber());
-        employee.setHireDate(dto.getHireDate());
-
-        // Handle image upload
-        if (image != null && !image.isEmpty()) {
-            String imagePath = saveImage(image);
-            employee.setImage(imagePath);
-        }
-
-        employee = employeesRepository.save(employee);
-
-        if (dto.getEmployeesSkillRequests() != null) {
-            for (EmployeesSkillRequest skillRequest : dto.getEmployeesSkillRequests()) {
-                EmployeesSkill employeesSkill = new EmployeesSkill();
-                employeesSkill.setEmployee(employee);
-                employeesSkill.setSkill(skillsRepository.findById(skillRequest.getEmployeesSkillId()).orElse(null));
-                employeesSkill.setSkillCareer(skillRequest.getSkillCareer());
-                employeesSkillRepository.save(employeesSkill);
-            }
+    if (!imgDir.exists()) {
+        if (!imgDir.mkdirs()) {
+            throw new IOException("Failed to create directory: " + imgDir.getAbsolutePath());
         }
     }
 
-//    public String saveImage(MultipartFile image) throws IOException {
-//        String uploadsDir = "uploads/";
-//        String originalFilename = image.getOriginalFilename();
-//        String filePath = uploadsDir + UUID.randomUUID() + "_" + originalFilename;
-//
-//        File dir = new File(uploadsDir);
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//
-//        Path path = Paths.get(filePath);
-//        Files.write(path, image.getBytes());
-//
-//        return path.toString();
-//    }
+    String originalFilename = image.getOriginalFilename();
+    String newFilename = UUID.randomUUID() + "_" + originalFilename;
+    Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
 
-    public String saveImage(MultipartFile image) throws IOException {
-        // Get the absolute path to the static folder
-        ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
-        File imgDir = imgDirResource.getFile();
+    System.out.println(filePath + " " + newFilename);
 
-        if (!imgDir.exists()) {
-            imgDir.mkdirs();
-        }
+    Files.write(filePath, image.getBytes());
 
-        String originalFilename = image.getOriginalFilename();
-        String newFilename = UUID.randomUUID() + "_" + originalFilename;
-        Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
-
-        Files.write(filePath, image.getBytes());
-
-        // Return the relative path to be saved in the database
-        return "/img/employees/" + newFilename;
-    }
-
+    // Return the relative path to be saved in the database
+    return "/img/employees/" + newFilename;
 }
 
 
@@ -176,6 +119,4 @@ public class EmployeesService {
 
 
 
-
-
-
+}

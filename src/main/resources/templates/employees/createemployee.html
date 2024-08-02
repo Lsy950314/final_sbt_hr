@@ -91,7 +91,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     }
 </style>
 <body onload="initMap()">
-<h1>Create Employee</h1>
+<h1>Create Employee(Photo)</h1>
 <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
@@ -113,11 +113,9 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
-    <div class="row mb-3">
-        <div style="text-align: start; margin: 6px 0;">직원 사진</div>
-        <div class="mb-3 mb-md-0">
-            <input class="form-control" th:field="*{image}" type="file" min="0">
-        </div>
+    <div class="form-group">
+        <label for="imageFile">Upload Image:</label>
+        <input type="file" id="imageFile" name="imageFile" required>
     </div>
 
     <div class="form-group">

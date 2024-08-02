@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
 </head>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
-<script>
+<script th:inline="javascript">
     let map;
     let marker;
     let autocomplete;
+    const skills = /*[[${skills}]]*/[];
 
     function initMap() {
         const initialLocation = { lat: 35.6895, lng: 139.6917 };
@@ -44,6 +45,37 @@
             document.getElementById('longitude').value = place.geometry.location.lng();
         });
     }
+
+    function addSkillCareer() {
+        const skillCareerContainer = document.getElementById('newSkillCareerContainer');
+        const index = skillCareerContainer.children.length;
+
+        const skillCareerItem = document.createElement('div');
+        skillCareerItem.classList.add('skillCareer-item');
+
+        let skillOptions = '';
+        skills.forEach(skill => {
+            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+        });
+
+        skillCareerItem.innerHTML = `
+            <div class="form-group">
+                <label for="employeesSkillRequests[${index}].skill.skillId">Skill:</label>
+                <select id="employeesSkillRequests[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
+                    ${skillOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
+                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+            </div>
+        `;
+        skillCareerContainer.appendChild(skillCareerItem);
+    }
+
+    window.onload = function() {
+        initMap();
+    };
 </script>
 <style>
     #map {
@@ -54,13 +86,13 @@
 <body onload="initMap()">
 <h1>Edit Employee</h1>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:field="*{employeeId}"/>
+    <input type="hidden" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
 
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
 
     <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}" placeholder="Enter address"/><br/>
+    <input type="text" id="address" th:field="*{address}"/><br/>
 
     <label for="latitude">Latitude:</label>
     <input type="text" id="latitude" th:field="*{latitude}" readonly/><br/>
@@ -76,8 +108,15 @@
     <label for="currentProjectEndDate">Current Project End Date:</label>
     <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
 
-    <label for="photo">Photo:</label>
-    <input type="file" id="photo" th:field="*{photo}"/><br/>
+    <!-- 기존 이미지 보여주기 -->
+    <div id="existingImageContainer" th:if="*{image}">
+        <label>Existing Image:</label><br/>
+        <img th:src="@{${employeesRequest.image}}" alt="Employee Image"/><br/>
+    </div>
+
+    <label for="imageFile">Upload New Image:</label>
+    <input type="file" id="imageFile" name="imageFile"/><br/>
+    <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/><br/>
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
@@ -98,6 +137,31 @@
 
     <label for="hireDate">Hire Date:</label>
     <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
+
+    <!-- 추가된 Skill Career 섹션 -->
+    <h3>기존 등록된 사원 프로그래밍 경력</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Skill</th>
+            <th>Career (Months)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employeesSkillRequest : ${employeesRequest.employeesSkillRequests}">
+            <td th:text="${employeesSkillRequest.skill.skillName}"></td>
+            <td th:text="${employeesSkillRequest.skillCareer}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 추가된 Skill Career 섹션 끝 -->
+
+    <!-- 새로운 Skill Career 추가 -->
+    <h3>New Programming Skills</h3>
+    <div id="newSkillCareerContainer"></div>
+    <div class="form-group">
+        <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
+    </div>
 
     <button type="submit">Update Employee</button>
 </form>
