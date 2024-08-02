@@ -386,9 +386,8 @@
             <ul>
                  ${data.employeesProjects.map(empProj => `
                 <li>
-                    직원 이름: ${empProj.employee.name}
-                    프로젝트 기간: ${empProj.projectDuration}개월
-                </li>
+        직원 이름: ${empProj.employeeName || 'N/A'}
+    </li>
             `).join('')}
             </ul>
         </div>

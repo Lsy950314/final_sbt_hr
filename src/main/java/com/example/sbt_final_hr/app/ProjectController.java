@@ -52,22 +52,25 @@ public class ProjectController {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjectsRequest> employeesProjectsRequests =
                 employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
+//                    System.out.println(ep.getEmployee().getName());
+//                    System.out.println(ep.getProjectDuration());
                     EmployeesProjectsRequest request = new EmployeesProjectsRequest();
                     request.fromEntity(ep);
                     return request;
                 }).toList();
-        for (EmployeesProjectsRequest epr : employeesProjectsRequests) {
-            System.out.println(epr);
-            System.out.println("----");
+        for (EmployeesProjectsRequest req : employeesProjectsRequests) {
+            if (req.getEmployeeName() != null) {
+                System.out.println("Employee: " + req.getEmployeeName());
+            } else {
+                System.out.println("Employee is null or name is null");
+            }
+//            System.out.println("Project Duration: " + req.getProjectDuration());
+//            System.out.println("----");
         }
-        // 순환 참조 문제를 해결하기 위해서
-        // 엔티티를 직접 json response 에 실어보내지 않고
-        // dto 로 변환한 다음 실어주는 방법
+        // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 
-//      List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
-        System.out.println("pr: " + projectRequirements);
-        System.out.println("ep: " + employeesProjectsRequests);
-//      System.out.println("emp: " + employees);
+//        System.out.println("pr: " + projectRequirements);
+//        System.out.println("ep: " + employeesProjectsRequests);
 
         // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
@@ -76,16 +79,13 @@ public class ProjectController {
         session.setAttribute("projectRequirements", projectRequirements);
 
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
-      session.setAttribute("employeesProjects", employeesProjectsRequests);
+        session.setAttribute("employeesProjects", employeesProjectsRequests);
 
-        // 해당 프로젝트에 참여중인 사원들
-//    session.setAttribute("employees", employees);
 
         Map<String, Object> response = new HashMap<>();
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
-//        response.put("employees", employees);
 
         return ResponseEntity.ok(response);
     }

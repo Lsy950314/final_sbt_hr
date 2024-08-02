@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
+import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
@@ -25,7 +26,7 @@ public class ProjectRequirementsService {
     }
 
     public ProjectRequirements getRequirementsById(Long id) {
-       return projectRequirementsRepository.findById(id).orElseThrow();
+        return projectRequirementsRepository.findById(id).orElseThrow();
     }
 
     public List<ProjectRequirements> getRequirementsByProjectId(Long projectId) {
@@ -36,13 +37,13 @@ public class ProjectRequirementsService {
         projectRequirementsRepository.save(projectRequirements);
     }
 
-    public boolean updateFulfilledCount(Long projectRequirementId){
-        ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(()->new RuntimeException("Project requirements not found"));
+    public boolean updateFulfilledCount(Long projectRequirementId) {
+        ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(() -> new RuntimeException("Project requirements not found"));
         System.out.println(projectRequirements.getRequiredCount());
         System.out.println(projectRequirements.getFulfilledCount());
-        if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()){
+        if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()) {
             System.out.println(projectRequirements.getRequiredCount());
-            projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount()+1);
+            projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount() + 1);
             return true;
         } else {
             throw new RuntimeException("이미 충족된 요구사항입니다");
@@ -50,8 +51,18 @@ public class ProjectRequirementsService {
 
     }
 
+    public boolean checkFulfilledCount(Long projectId) {
+        List<ProjectRequirements> prList = this.getRequirementsByProjectId(projectId);
+        for (ProjectRequirements pr : prList) {
+            if (pr.getFulfilledCount() != pr.getRequiredCount()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void deleteByProjectId(Long projectId) {
-       List<ProjectRequirements> requirements = projectRequirementsRepository.findByProject_ProjectId(projectId);
+        List<ProjectRequirements> requirements = projectRequirementsRepository.findByProject_ProjectId(projectId);
         projectRequirementsRepository.deleteAll(requirements);
     }
 }
