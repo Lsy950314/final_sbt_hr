@@ -22,5 +22,4 @@ public interface EmployeesSkillRepository extends JpaRepository<EmployeesSkill, 
     void deleteByEmployeeEmployeeId(@Param("employeeId") Long employeeId);
 
     Optional<EmployeesSkill> findByEmployeeIdAndSkillId(Long employeeId, Long skillId);
-
 }
