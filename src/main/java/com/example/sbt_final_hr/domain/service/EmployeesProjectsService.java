@@ -33,6 +33,16 @@ public class EmployeesProjectsService {
         return employeesProjectsRepository.findAll();
     }
 
+    public boolean deleteEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementsId) {
+        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectIdAndId(
+                employeeId, projectId, projectRequirementsId);
+        if (employeesProjects != null) {
+            employeesProjectsRepository.delete(employeesProjects);
+            return true;
+        }
+        return false;
+    }
+
     public boolean insertEmployeesProjects(Long employeeId, Long projectsId, Long projectRequirementId) {
         try {
             Projects projects = projectsService.getProjectById(projectsId);

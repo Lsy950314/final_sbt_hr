@@ -13,10 +13,9 @@ import java.util.List;
 public interface ProjectsRepository extends JpaRepository<Projects, Long> {
     List<Projects> findByStatus(int status);
 
-
-
-        @Query("UPDATE Projects p SET p.status = 1 WHERE p.projectId = :id")
-        @Modifying
-        @Transactional
-        void updateStatusTo1(Long id);
+    @Query("UPDATE Projects p SET p.status = :num WHERE p.projectId = :id")
+    @Modifying
+    @Transactional
+    void updateStatusTo(Long id, int num);
+    
 }

@@ -66,9 +66,7 @@ public class ProjectsService {
     }
 
 
-    public void updateStatus(Long projectId) {
-        projectsRepository.updateStatusTo1(projectId);
-
-
+    public void updateStatusTo(Long projectId, int num) {
+        projectsRepository.updateStatusTo(projectId, num);
     }
 }
