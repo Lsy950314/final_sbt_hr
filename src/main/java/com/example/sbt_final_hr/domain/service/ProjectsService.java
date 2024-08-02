@@ -27,10 +27,12 @@ public class ProjectsService {
     }
 
     public List<Projects> getAllProjects() {
-       return projectsRepository.findAll();
+        return projectsRepository.findAll();
     }
 
-    public List<Projects> getAssignedProjects() {return projectsRepository.findByStatus(1);}
+    public List<Projects> getAssignedProjects() {
+        return projectsRepository.findByStatus(1);
+    }
 
     public void deleteProject(Long id) {
         projectsRepository.deleteById(id);
@@ -88,11 +90,12 @@ public class ProjectsService {
 //        // 기타 필요한 로직들...
 
 //8월 1일 17:44 시범적으로 시도중 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
-    public void updateProjectStatus(Long projectId, int status) {
-        Projects project = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
-        project.setStatus(status);
-        projectsRepository.save(project);
+//    public void updateProjectStatus(Long projectId, int status) {
+//        Projects project = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+//        project.setStatus(status);
+//        projectsRepository.save(project);
+//    }
+
+
     }
-
-
 }

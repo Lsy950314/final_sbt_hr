@@ -1,6 +1,8 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
@@ -10,6 +12,7 @@ import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -195,9 +198,19 @@ public class ProjectController {
 //8월 1일 17:44
     @PostMapping("/completeProject")
     public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
-        Long projectId = request.get("projectId");
-        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
-        projectsService.updateProjectStatus(projectId, 2);
+        Long projectId = request.get("projectId") != null ? Long.parseLong(request.get("projectId").toString()) : null;
+
+        System.out.println(projectId);
+
+        if (projectId == null) {
+            System.out.println("Project ID is missing in the request.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Project ID is missing");
+        } else {
+            System.out.println("はい버튼 클릭시 Project ID");
+            System.out.println("Project ID: " + projectId);
+        }
+        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 => 2로 바꾸기
+        //projectsService.updateProjectStatus(projectId, 2);
         // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
         //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
         // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
@@ -206,6 +219,43 @@ public class ProjectController {
 
         return ResponseEntity.ok("Project status updated to completed");
     }
+//
+//    @PostMapping("/completeProject")
+//    public ResponseEntity<String> completeProject(@RequestBody Map<String, Object> request) {
+//        Long projectId = ((Number) request.get("projectId")).longValue();
+////        List<Map<String, Object>> employeesProjects = (List<Map<String, Object>>) request.get("employeesProjects");
+////        List<Map<String, Object>> employees = (List<Map<String, Object>>) request.get("employees");
+//
+//        // 프로젝트 ID 출력
+//        System.out.println("Project ID: " + projectId);
+//
+//        // 프로젝트에 참여한 사원들의 프로젝트 정보 출력
+////        System.out.println("Employees Projects:");
+////        for (Map<String, Object> ep : employeesProjects) {
+////            System.out.println("EmployeesProject: " + ep);
+////        }
+////
+////        // 사원 정보 출력
+////        System.out.println("Employees:");
+////        for (Map<String, Object> emp : employees) {
+////            System.out.println("Employee: " + emp);
+////        }
+//
+//        // 기존 프로젝트 상태 업데이트 코드
+//        projectsService.updateProjectStatus(projectId, 2);
+//
+//        // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
+//        //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
+//
+//        // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
+//        //employeesProjectsService.updateEmployeeStarpointForCompletedProject(projectId); ???
+//
+//        // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+//        //employeesProjectsService.updateEmployeeStarpointAverage(projectId); ???
+//
+//        return ResponseEntity.ok("Project status updated to completed");
+//    }
+
 
 
 }
