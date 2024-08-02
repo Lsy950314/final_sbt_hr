@@ -35,6 +35,19 @@ public class EmployeesProjectsService {
         }
         return employees;
     }
-
+// 8월 1일 적용 대기중
+//    public void updateEmployeeSkillsForCompletedProject(Long projectId) {
+//        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProjectId(projectId);
+//
+//        for (EmployeesProjects ep : employeesProjects) {
+//            EmployeesSkills employeeSkill = employeesSkillsRepository.findByEmployeeIdAndSkillId(ep.getEmployee().getEmployeeId(), ep.getSkill().getSkillId())
+//                    .orElseThrow(() -> new RuntimeException("Employee skill not found"));
+//
+//            double updatedSkillCareer = employeeSkill.getSkillCareer() + ep.getProjectDuration();
+//            employeeSkill.setSkillCareer(updatedSkillCareer);
+//
+//            employeesSkillsRepository.save(employeeSkill);
+//        }
+//    }
 
 }
