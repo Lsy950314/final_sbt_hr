@@ -65,6 +65,9 @@ public class ProjectsService {
         return existingProject;
     }
 
+
+    public void updateStatus(Long projectId) {
+        projectsRepository.updateStatusTo1(projectId);
 // 프로젝트 완료 버튼 클릭하면 ...
 //    public void completeProject(Long projectId) {
 //        // 프로젝트 완료 처리 로직

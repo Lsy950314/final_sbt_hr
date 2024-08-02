@@ -24,7 +24,7 @@ public class ProjectsRequest {
     private LocalDate startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
-    private int status = -1;
+    private int status = -1; // -> 배치 로직 거치고 나면 1로 바뀌어 있음
     private Double latitude;
     private Double longitude;
     private String contactPhone;

@@ -1,5 +1,6 @@
 package com.example.sbt_final_hr.app;
 
+import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
@@ -42,7 +43,7 @@ public class ProjectController {
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession) {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
-        return "project/readAllProjects"; // 가상의 주소
+        return "project/readAllProjects";
     }
     //projects 테이블에서 status가 1인 튜플들(-1:미배정, 1:배정)만 가져오는 리스트 페이지
 //    @GetMapping("/readAssignedProjects")
@@ -70,26 +71,42 @@ public class ProjectController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
-        List<EmployeesProjects> employeesProjects = employeesProjectsService.getEmployeesProjectByProjectId(id);
-        List<Employees> employees = employeesProjectsService.getEmployeesByProjectId(id);
+        List<EmployeesProjectsRequest> employeesProjectsRequests =
+                employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
+//                    System.out.println(ep.getEmployee().getName());
+//                    System.out.println(ep.getProjectDuration());
+                    EmployeesProjectsRequest request = new EmployeesProjectsRequest();
+                    request.fromEntity(ep);
+                    return request;
+                }).toList();
+        for (EmployeesProjectsRequest req : employeesProjectsRequests) {
+            if (req.getEmployeeName() != null) {
+                System.out.println("Employee: " + req.getEmployeeName());
+            } else {
+                System.out.println("Employee is null or name is null");
+            }
+//            System.out.println("Project Duration: " + req.getProjectDuration());
+//            System.out.println("----");
+        }
+        // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 
-        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션 써보는 중
+//        System.out.println("pr: " + projectRequirements);
+//        System.out.println("ep: " + employeesProjectsRequests);
+
+        // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
 
         // 해당 프로젝트의 요구사항
         session.setAttribute("projectRequirements", projectRequirements);
 
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
-        session.setAttribute("employeesProjects", employeesProjects);
+        session.setAttribute("employeesProjects", employeesProjectsRequests);
 
-        // 해당 프로젝트에 참여중인 사원들
-        session.setAttribute("employees", employees);
 
         Map<String, Object> response = new HashMap<>();
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
-        response.put("employeesProjects", employeesProjects);
-        response.put("employees", employees);
+        response.put("employeesProjects", employeesProjectsRequests);
 
         return ResponseEntity.ok(response);
     }
@@ -152,7 +169,7 @@ public class ProjectController {
             }
         }
 
-        return "redirect:/updateProject?id=" + project.getProjectId();
+        return "redirect:/readAllProjects";
     }
 
     @GetMapping("/deleteProject")
@@ -161,7 +178,7 @@ public class ProjectController {
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
         System.out.println("삭제 성공");
-        return "redirect:/createProject";
+        return "redirect:/readAllProjects";
     }
 
 //8월 1일 16:47 프로젝트 완료 눌렀을 때 여러 테이블 crud 처리하는 컨트롤러 코드

@@ -4,6 +4,7 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,14 +15,19 @@ import java.time.LocalDateTime;
 @Setter
 public class EmployeesProjectsRequest {
     private Long id;
+
+    @JsonIgnore
     private Employees employee;
+
     private Projects project;
     private Skills skill;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
 
-    private Long projectDuration;
+    private Double projectDuration;
     private Double starPoint;
+
+    private String employeeName;
 
     public EmployeesProjects toEntity() {
         EmployeesProjects employeesProjects = new EmployeesProjects();
@@ -32,5 +38,18 @@ public class EmployeesProjectsRequest {
         employeesProjects.setProjectDuration(this.projectDuration);
         employeesProjects.setStarPoint(this.starPoint);
         return employeesProjects;
+    }
+
+    public EmployeesProjectsRequest fromEntity(EmployeesProjects entity) {
+        this.employee = entity.getEmployee();
+        this.project = entity.getProject();
+        this.skill = entity.getSkill();
+        this.registrationDate = entity.getRegistrationDate();
+        this.projectDuration = entity.getProjectDuration();
+        this.starPoint = entity.getStarPoint();
+        if (entity.getEmployee() != null) {
+            this.employeeName = entity.getEmployee().getName();
+        }
+        return this;
     }
 }

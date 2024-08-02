@@ -25,31 +25,51 @@
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.assign-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    selectProjectRequest()
+                button.addEventListener('click', (event) => {
+                    const employeeId = event.target.getAttribute('data-employee-id');
+                    const projectId = event.target.getAttribute('data-project-id');
+                    selectProjectRequest(employeeId, projectId);
                 })
             })
         })
 
-        function selectProjectRequest() {
+        function selectProjectRequest(employeeId, projectId) {
+            alert(employeeId + projectId)
             // 어떤 projectRequest 에 해당 사원을 배정할 지 골라야 함
-            matchEmployeeProject()
-        }
 
-        function matchEmployeeProject(){
-            // 실제로 배정을 수행하는 컨트롤러로 보내는 메서드
+            // projectRequest 중에 선택하는 모달 띄워주기
+            // 모달 만들어내는 로직 +
+            // 선택한 pr의 id를 얻어내기
+            const projectRequirementsId = 5; // 선택한 pr의 id 담아주기
+
+
+            fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
+                .then(response => {
+                        if (response.ok) {
+                            alert('배정 완료');
+                            window.location.href='/readAllProjects';
+                        } else {
+                            alert('배정에 실패했습니다');
+                        }
+                    })
+                .catch(error => {
+                    console.error('Error: ', error);
+                    alert('서버 통신 오류');
+                });
+
+
         }
 
         <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
         <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
         <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
-        <!--    어떤 projectRequirements 에 배정할지 골라서 yes/no 컨펌 받은다음   -->
+        <!--    어떤 projectRequirements 에 배정할지 고른 다음   -->
         <!--    업데이트 할 항목들: -->
         <!--    1. EMPLOYEES 테이블의 CURRENT_PROJECT_END_DATE 를 배정 관리중인 PROJECTS 테이블의 END_DATE 값으로 -->
         <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
         <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 FULFILLED_COUNT 값 1 증가 -->
         <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
-        <!--    <br>-->
+        // 프로젝트 테이블 상태 바꿔주기 -1 -> 1로?
     </script>
 
     <style>
@@ -180,7 +200,6 @@
 
 <div class="contents" style="display: flex">
 
-
     <!--<div> -&#45;&#45; 프로젝트 인력 요구사항 -&#45;&#45;</div>-->
     <div>
         <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
@@ -209,26 +228,15 @@
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
                 <div class="assign-button-container">
-                    <button class="assign-button">배정하기</button>
+                    <button class="assign-button"
+                            th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
+                        배정하기
+                    </button>
                 </div>
             </div>
         </div>
 
     </div>
-
-    <!--    배정하기 버튼 누르면 모달로 어느 요구사항에 배정할 지 고르게 만들어야 됨   -->
-    <!--    예를 들어 필요스킬 JAVA 인 요구사항이 필요경력에 따라 여러 개가 있을 수 있음 -->
-    <!--    예를 들면 경력 70개월인 사람을 24개월에 넣을지 60개월에 넣을지 선택 필요 -->
-    <!--    어떤 projectRequirements 에 배정할지 골라서 yes/no 컨펌 받은다음   -->
-    <!--    업데이트 할 항목들: -->
-    <!--    1. EMPLOYEES 테이블의 CURRENT_PROJECT_END_DATE 를 배정 관리중인 PROJECTS 테이블의 END_DATE 값으로 -->
-    <!--    2. EMPLOYEES 테이블의 LAST_PROJECT_END_DATE 를 NULL 로 -->
-    <!--    3. PROJECT_REQUIREMENTS 테이블의 배정한 프로젝트-언어-요구경력을 찾아서 REQUIRED_COUNT 값 1 증가 -->
-    <!--    4. EMPLOYEES_PROJECTS 테이블에 새로운 ROW 생성. 사원-프로젝트-언어 구분-기간까지? -->
-
-
-
-
 
 
 </div>
