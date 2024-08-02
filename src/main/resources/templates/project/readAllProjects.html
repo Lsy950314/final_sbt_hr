@@ -384,7 +384,12 @@
         <div class="label">従業員プロジェクト:</div>
         <div class="value">
             <ul>
-                ${data.employeesProjects.map(empProj => `<li>${empProj.name}</li>`).join('')}
+                 ${data.employeesProjects.map(empProj => `
+                <li>
+                    직원 이름: ${empProj.employee.name}
+                    프로젝트 기간: ${empProj.projectDuration}개월
+                </li>
+            `).join('')}
             </ul>
         </div>
     </div>
@@ -392,7 +397,7 @@
         <div class="label">従業員:</div>
         <div class="value">
             <ul>
-                ${data.employees.map(emp => `<li>${emp.name}</li>`).join('')}
+
             </ul>
         </div>
     <div id="button-container">

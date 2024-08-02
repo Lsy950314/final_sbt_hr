@@ -40,13 +40,14 @@
             // projectRequest 중에 선택하는 모달 띄워주기
             // 모달 만들어내는 로직 +
             // 선택한 pr의 id를 얻어내기
-            const projectRequirementsId = 17; // 선택한 pr의 id 담아주기
+            const projectRequirementsId = 5; // 선택한 pr의 id 담아주기
 
 
             fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
                 .then(response => {
                         if (response.ok) {
                             alert('배정 완료');
+                            window.location.href='/readAllProjects';
                         } else {
                             alert('배정에 실패했습니다');
                         }

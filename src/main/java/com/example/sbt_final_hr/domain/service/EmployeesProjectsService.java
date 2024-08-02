@@ -33,21 +33,30 @@ public class EmployeesProjectsService {
         return employeesProjectsRepository.findAll();
     }
 
-    public void insertEmployeesProjects(Long employeeId, Long projectsId, Long projectRequirementId) {
-        Projects projects = projectsService.getProjectById(projectsId);
-        long projectDuration = ChronoUnit.DAYS.between(projects.getStartDate(), projects.getEndDate());
+    public boolean insertEmployeesProjects(Long employeeId, Long projectsId, Long projectRequirementId) {
+        try {
+            Projects projects = projectsService.getProjectById(projectsId);
+            Double projectDuration = projects.getTotalProjectDurationInMonths();
+            System.out.println(projectDuration);
 
-        EmployeesProjectsRequest employeesProjectsRequest = new EmployeesProjectsRequest();
+            EmployeesProjectsRequest employeesProjectsRequest = new EmployeesProjectsRequest();
 
-        employeesProjectsRequest.setEmployee(employeesService.findById(employeeId).get());
-        employeesProjectsRequest.setProject(projects);
-        employeesProjectsRequest.setRegistrationDate(LocalDateTime.now());
-        employeesProjectsRequest.setStarPoint(null);
-        employeesProjectsRequest.setProjectDuration(projectDuration);
-        employeesProjectsRequest.setSkill(projectRequirementsService.getRequirementsById(projectRequirementId).getSkill());
+            employeesProjectsRequest.setEmployee(employeesService.findById(employeeId).get());
+            employeesProjectsRequest.setProject(projects);
+            employeesProjectsRequest.setRegistrationDate(LocalDateTime.now());
+            employeesProjectsRequest.setStarPoint(null);
+            employeesProjectsRequest.setProjectDuration(projectDuration);
+            employeesProjectsRequest.setSkill(projectRequirementsService.getRequirementsById(projectRequirementId).getSkill());
 
-        employeesProjectsRepository.save(employeesProjectsRequest.toEntity());
+            EmployeesProjects savedEntity = employeesProjectsRepository.save(employeesProjectsRequest.toEntity());
 
+            // save가 null을 반환하지 않으면 성공으로 간주하고 true 반환
+            return savedEntity != null;
+        } catch (Exception e) {
+            // 예외가 발생하면 false 반환
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<EmployeesProjects> getEmployeesProjectByProjectId(Long id) {

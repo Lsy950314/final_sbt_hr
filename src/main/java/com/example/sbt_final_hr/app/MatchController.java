@@ -53,10 +53,10 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-//        session.removeAttribute("projectId");
-//        session.removeAttribute("projectRequirements");
-//        session.removeAttribute("employeesProjects");
-//        session.removeAttribute("employees");
+        session.removeAttribute("projectId");
+        session.removeAttribute("projectRequirements");
+        session.removeAttribute("employeesProjects");
+        session.removeAttribute("employees");
 
         Projects projects = projectsService.getProjectById(projectId);
 
@@ -97,9 +97,11 @@ public class MatchController {
         System.out.println(employeeId);
         System.out.println(projectRequirementsId);
 
-        employeesService.updateEndDates(employeeId, projectId);
-        projectRequirementsService.updateFulfilledCount(projectRequirementsId);
-        employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId);
+        if(projectRequirementsService.updateFulfilledCount(projectRequirementsId)){
+            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)){
+                employeesService.updateEndDates(employeeId, projectId);
+            }
+        }
 
         return ResponseEntity.ok().build();
     }

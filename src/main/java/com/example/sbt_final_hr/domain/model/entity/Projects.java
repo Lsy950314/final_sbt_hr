@@ -1,5 +1,6 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,12 +63,18 @@ public class Projects {
     @JoinColumn(name = "project_type_id", nullable = false)
     private ProjectTypes projectType;
 
-    public double getTotalProjectDurationInMonths() {
+    public Double getTotalProjectDurationInMonths() {
+
         if (startDate == null || endDate == null) {
-            return 0;
+            return 0.0;
         }
 
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-        return daysBetween / 30.4375; // 평균 일수를 사용하여 개월 수로 변환
+        long monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate);
+        LocalDate adjustedEndDate = startDate.plusMonths(monthsBetween);
+        long daysRemaining = ChronoUnit.DAYS.between(adjustedEndDate, endDate);
+
+
+        // 남은 일수를 개월 단위로 변환하여 합산
+        return monthsBetween + (Double) (daysRemaining / 30.4375);
     }
 }

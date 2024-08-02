@@ -20,7 +20,7 @@ public class EmployeesProjectsRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime registrationDate;
 
-    private Long projectDuration;
+    private Double projectDuration;
     private Double starPoint;
 
     public EmployeesProjects toEntity() {
@@ -32,5 +32,16 @@ public class EmployeesProjectsRequest {
         employeesProjects.setProjectDuration(this.projectDuration);
         employeesProjects.setStarPoint(this.starPoint);
         return employeesProjects;
+    }
+
+    public EmployeesProjectsRequest fromEntity(EmployeesProjects employeesProjects) {
+        EmployeesProjectsRequest employeesProjectsRequest = new EmployeesProjectsRequest();
+        employeesProjectsRequest.setEmployee(employeesProjects.getEmployee());
+        employeesProjectsRequest.setProject(employeesProjects.getProject());
+        employeesProjectsRequest.setSkill(employeesProjects.getSkill());
+        employeesProjectsRequest.setRegistrationDate(employeesProjects.getRegistrationDate());
+        employeesProjectsRequest.setProjectDuration(employeesProjects.getProjectDuration());
+        employeesProjectsRequest.setStarPoint(employeesProjects.getStarPoint());
+        return employeesProjectsRequest;
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProjects, Long> {
-    public List<EmployeesProjects> findByProject_ProjectId(Long id);
+    List<EmployeesProjects> findByProject_ProjectId(Long id);
 }

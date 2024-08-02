@@ -2,10 +2,7 @@ package com.example.sbt_final_hr.domain.model.entity;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
