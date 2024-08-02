@@ -36,7 +36,7 @@ public class MatchController {
     }
 
     @GetMapping("/check")
-    public String check(){
+    public String check() {
         return "employees/check";
     }
 
@@ -88,7 +88,7 @@ public class MatchController {
     }
 
     @GetMapping("/matchEmployeeProject")
-    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload){
+    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload) {
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
@@ -97,10 +97,15 @@ public class MatchController {
         System.out.println(employeeId);
         System.out.println(projectRequirementsId);
 
-        if(projectRequirementsService.updateFulfilledCount(projectRequirementsId)){
-            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)){
+        if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
+            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
                 employeesService.updateEndDates(employeeId, projectId);
             }
+        }
+        
+        // 모든 요구인원이 충족됐다면 projects 의 status 를 1로 바꿔주는 로직
+        if (projectRequirementsService.checkFulfilledCount(projectId)) {
+            projectsService.updateStatus(projectId);
         }
 
         return ResponseEntity.ok().build();
