@@ -29,16 +29,18 @@ public class ProjectController {
     private final ProjectRequirementsService projectRequirementsService;
     private final SkillsService skillsService;
     private final EmployeesProjectsService employeesProjectsService;
+    private final EmployeesSkillService employeesSkillService;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
 
-    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService) {
+    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService, EmployeesSkillService employeesSkillService) {
         this.projectsService = projectsService;
         this.projectTypesService = projectTypesService;
         this.projectRequirementsService = projectRequirementsService;
         this.skillsService = skillsService;
         this.employeesProjectsService = employeesProjectsService;
+        this.employeesSkillService = employeesSkillService;
     }
 
     @GetMapping("/readAllProjects")
@@ -213,27 +215,51 @@ public class ProjectController {
     @PostMapping("/completeProject")
     public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload) {
         Long projectId = ((Number) payload.get("projectId")).longValue();
-        List<Map<String, Object>> starPoints = (List<Map<String, Object>>) payload.get("starPoints");
-        //담아야 할거 : 안건 참여 사원id(충족), 안건-사원 별점(충족), 그 안건에서 그 사원이 사용한 프로그래밍 언어, projectDuration.
-
-        // 프로젝트 ID 출력
+        List<Map<String, Object>> projectParticipantsInfos = (List<Map<String, Object>>) payload.get("projectParticipantsInfos");
+        //담아야 할거 : 프로젝트 id 안건 참여 사원id(충족), 안건-사원 별점(충족), 그 안건에서 그 사원이 사용한 프로그래밍 언어(충족), projectDuration.(충족)
         System.out.println("Project ID: " + projectId);
-        //status 1=>2 작동은 되는데 숫자 바꾸기 귀찮아서 밑에 메서드 일단 주석 써서 일단 막아둠
-        //projectsService.updateStatusTo(projectId, 2);
-        // starPoints 리스트를 처리하는 로직 추가
-        for (Map<String, Object> starPoint : starPoints) {
-            Long employeeId = ((Number) starPoint.get("employeeId")).longValue();
-            Double point = ((Number) starPoint.get("starPoint")).doubleValue();
-            Long skillId = ((Number) starPoint.get("skillId")).longValue();
+        for (Map<String, Object> participantInfo : projectParticipantsInfos) {
+            long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
+            double point = ((Number) participantInfo.get("starPoint")).doubleValue();
+            long skillId = ((Number) participantInfo.get("skillId")).longValue();
+            double projectDuration = ((Number) participantInfo.get("projectDuration")).doubleValue();
 
             // employeeId와 point를 이용하여 필요한 로직 처리
 
             // employeeId와 point 출력
-            System.out.println("Employee ID: " + employeeId + ", Star Point: " + point  + ", Skill ID: " + skillId);
+            System.out.println("Employee ID: " + employeeId + ", Star Point: " + point + ", Skill ID: " + skillId + ", projectDuration: " + projectDuration);
+
+            // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
+           // employeesSkillService.updateSkillCareerOfProjectParticipants(employeeId, skillId, projectDuration);
+            // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
+
+            // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+
+            // 프로젝트 참여한 사원의 // 프로젝트 참여한 사원의 LAST_PROJECT_END_DATE를 CURRENT_PROJECT_END_DATE의 값을 넣고,
+            //CURRENT_PROJECT_END_DATE의의 값을 null로 만들어 주기 (employees table)
+
+            employeesProjectsService.updateStarPointOfProjectParticipants(projectId, projectParticipantsInfos);
+            employeesSkillService.updateSkillCareerOfProjectParticipants(projectParticipantsInfos);
+
+
+
         }
-        //starPoint 객체에 project_Duration도 넣자..... 8월 2일 20:32 주말ㅇ ㅔ ㄱㄱ
+        //나중에 projectParticipantsInfos 리스트 객체명 projectParticipantsInfo 로 바꿀 것. 혼동 방지용.
+
+        // 프로젝트 ID 출력
+
+        //status 1=>2 작동은 되는데 숫자 바꾸기 귀찮아서 밑에 메서드 일단 주석 써서 일단 막아둠
+        //status 1=>2 작동은 되는데 숫자 바꾸기 귀찮아서 밑에 메서드 일단 주석 써서 일단 막아둠
+        // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
+
+        //8월 3일 11:59 현재 updateStarPointOfProjectParticipants, updateSkillCareerOfProjectParticipants, updateStatusTo 작동
+
+        //8월 4일 만들어야 하는 기능
+        //프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
 
         // 프로젝트 완료 처리 로직
+        projectsService.updateStatusTo(projectId, 2);
         return ResponseEntity.ok().body("Project completed successfully");
     }
+
 }

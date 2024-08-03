@@ -337,12 +337,12 @@
         // console.log(projectId)
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
-                                <div id="assigned-employees"></div>
-                                <div id="assigned-projects"></div>
-                                <div id="complete-button-container">
-                                    <button id="yes-btn">はい</button>
-                                    <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
-                                </div>`;
+                            <div id="assigned-employees"></div>
+                            <div id="assigned-projects"></div>
+                            <div id="complete-button-container">
+                                <button id="yes-btn">はい</button>
+                                <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
+                            </div>`;
         fetch(`/getInfoByProjectID2?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
@@ -355,26 +355,28 @@
                 const employeesDiv = document.getElementById('assigned-employees');
                 //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
                 employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
-                <li>
-                    ${eprID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
-                    <select id="star-point-${index}">
-                        ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
-                    </select>
-                </li>`).join('') + '</ul>';
+            <li>
+                ${eprID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
+                <select id="star-point-${index}">
+                    ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
+                </select>
+            </li>`).join('') + '</ul>';
 
 
                 // "はい" 버튼 클릭 시 completeProject 함수 호출
                 document.getElementById('yes-btn').addEventListener('click', function() {
-                    const starPoints = employeesProjects.map((ep, index) => {
+                    const projectParticipantsInfos = employeesProjects.map((ep, index) => {
                         const starPoint = document.getElementById(`star-point-${index}`).value;
-                        const result = { employeeId: eprID[index],
+                        const result = {
+                            employeeId: eprID[index],
                             starPoint: parseFloat(starPoint),
-                            skillId: ep.skill.skillId
+                            skillId: ep.skill.skillId,
+                            projectDuration: parseFloat(ep.projectDuration)
                         };
                         console.log(result); // 콘솔에 출력
                         return result;
                     });
-                    completeProject(projectId, starPoints);
+                    completeProject(projectId, projectParticipantsInfos);
                 });
             })
             .catch(error => {
@@ -382,9 +384,7 @@
             });
 
         openCompleteModal();
-
     }
-
 
     function openCompleteModal() {
         document.getElementById('complete-modal').style.display = 'block';
@@ -394,14 +394,14 @@
         document.getElementById('complete-modal').style.display = 'none';
     }
 
-    function completeProject(projectId,starPoints) {
-        console.log(projectId ,starPoints)
+    function completeProject(projectId, projectParticipantsInfos) {
+        console.log(projectId, projectParticipantsInfos)
         fetch(`/completeProject`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ projectId: projectId, starPoints: starPoints })
+            body: JSON.stringify({ projectId: projectId, projectParticipantsInfos: projectParticipantsInfos })
         })
             .then(response => response.json())
             .then(data => {
