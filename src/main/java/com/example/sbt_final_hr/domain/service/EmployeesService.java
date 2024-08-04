@@ -5,10 +5,8 @@ import com.example.sbt_final_hr.domain.model.entity.Employees;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
-import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
-import com.example.sbt_final_hr.domain.repository.EmployeesSkillRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
-import com.example.sbt_final_hr.domain.repository.SkillsRepository;
+import com.example.sbt_final_hr.domain.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -31,14 +29,16 @@ public class EmployeesService {
     private final EmployeesSkillRepository employeesSkillRepository;
     private final SkillsRepository skillsRepository;
     private final ProjectsRepository projectsRepository;
+    private final EmployeesProjectsRepository employeesProjectsRepository;
 
 
     @Autowired
-    public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository, ProjectsRepository projectsRepository) {
+    public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository, ProjectsRepository projectsRepository, EmployeesProjectsRepository employeesProjectsRepository) {
         this.employeesRepository = employeesRepository;
         this.employeesSkillRepository = employeesSkillRepository;
         this.skillsRepository = skillsRepository;
         this.projectsRepository = projectsRepository;
+        this.employeesProjectsRepository = employeesProjectsRepository;
     }
 
     public Employees save(Employees employee) {
@@ -57,9 +57,9 @@ public class EmployeesService {
         employeesRepository.save(employees);
     }
 
-    public boolean restoreEndDates(Long employeeId){
+    public boolean restoreEndDates(Long employeeId) {
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(RuntimeException::new);
-        if (employees.getPreviousProjectEndDate()!=null){
+        if (employees.getPreviousProjectEndDate() != null) {
             employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
             employees.setPreviousProjectEndDate(null);
             employeesRepository.save(employees);
@@ -88,48 +88,40 @@ public class EmployeesService {
         employeesRepository.deleteById(id);
     }
 
-//13시 20분 시도중. chat gpt
-public String saveImage(MultipartFile image) throws IOException {
-    // Get the absolute path to the static folder
-    ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
-    File imgDir = imgDirResource.getFile();
+    //13시 20분 시도중. chat gpt
+    public String saveImage(MultipartFile image) throws IOException {
+        // Get the absolute path to the static folder
+        ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
+        File imgDir = imgDirResource.getFile();
 
-    if (!imgDir.exists()) {
-        if (!imgDir.mkdirs()) {
-            throw new IOException("Failed to create directory: " + imgDir.getAbsolutePath());
+        if (!imgDir.exists()) {
+            if (!imgDir.mkdirs()) {
+                throw new IOException("Failed to create directory: " + imgDir.getAbsolutePath());
+            }
         }
+
+        String originalFilename = image.getOriginalFilename();
+        String newFilename = UUID.randomUUID() + "_" + originalFilename;
+        Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
+
+        System.out.println(filePath + " " + newFilename);
+
+        Files.write(filePath, image.getBytes());
+
+        // Return the relative path to be saved in the database
+        return "/img/employees/" + newFilename;
     }
 
-    String originalFilename = image.getOriginalFilename();
-    String newFilename = UUID.randomUUID() + "_" + originalFilename;
-    Path filePath = Paths.get(imgDir.getAbsolutePath(), newFilename);
+    @Transactional
+    public void updateStarPointAverageOfProjectParticipants(long employeeId) {
+        Double averageStarPoint = employeesProjectsRepository.calculateAverageStarPointByEmployeeId(employeeId);
+        employeesRepository.updateStarPointAverage(employeeId, averageStarPoint);
+    }
 
-    System.out.println(filePath + " " + newFilename);
-
-    Files.write(filePath, image.getBytes());
-
-    // Return the relative path to be saved in the database
-    return "/img/employees/" + newFilename;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Transactional
+    public void updateProjectEndDateOfProjectParticipants(long employeeId) {
+        employeesRepository.updateProjectEndDates(employeeId);
+    }
 
 
 
