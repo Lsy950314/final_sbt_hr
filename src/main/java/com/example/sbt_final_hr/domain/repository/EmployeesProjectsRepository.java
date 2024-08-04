@@ -18,4 +18,11 @@ public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProj
     @Modifying
     @Query("UPDATE EmployeesProjects ep SET ep.starPoint = :starPoint WHERE ep.employee.employeeId = :employeeId AND ep.project.projectId = :projectId")
     void updateStarPointOfProjectParticipants(@Param("employeeId") Long employeeId, @Param("projectId") Long projectId, @Param("starPoint") Double starPoint);
+
+    @Query("SELECT AVG(ep.starPoint) FROM EmployeesProjects ep WHERE ep.employee.employeeId = :employeeId")
+    Double calculateAverageStarPointByEmployeeId(@Param("employeeId") long employeeId);
+
+
+
+
 }
