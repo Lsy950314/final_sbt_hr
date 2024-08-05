@@ -50,7 +50,13 @@ public class ProjectController {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
         return "project/readAllProjects";
     }
-
+    
+    // 특정 사원이 속한 프로젝트들만 리스트업하기
+    @GetMapping("/readProjectsByEmployee")
+    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
+        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+        return "project/readAllProjects";
+    }
 
     @GetMapping("/readAssignedProjects")
     public String readAssignedProjects(HttpSession httpSession) {
