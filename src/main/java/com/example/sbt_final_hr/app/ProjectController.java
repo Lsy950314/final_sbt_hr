@@ -5,10 +5,7 @@ import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
-import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
-import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
-import com.example.sbt_final_hr.domain.model.entity.Projects;
+import com.example.sbt_final_hr.domain.model.entity.*;
 
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -32,16 +29,20 @@ public class ProjectController {
     private final ProjectRequirementsService projectRequirementsService;
     private final SkillsService skillsService;
     private final EmployeesProjectsService employeesProjectsService;
+    private final EmployeesSkillService employeesSkillService;
+    private final EmployeesService employeesService;
 
     @Value("${google.maps.api.key}")
     private String apiKey;
 
-    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService) {
+    public ProjectController(ProjectsService projectsService, ProjectTypesService projectTypesService, ProjectRequirementsService projectRequirementsService, SkillsService skillsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService, EmployeesSkillService employeesSkillService, EmployeesService employeesService1) {
         this.projectsService = projectsService;
         this.projectTypesService = projectTypesService;
         this.projectRequirementsService = projectRequirementsService;
         this.skillsService = skillsService;
         this.employeesProjectsService = employeesProjectsService;
+        this.employeesSkillService = employeesSkillService;
+        this.employeesService = employeesService1;
     }
 
     @GetMapping("/readAllProjects")
@@ -57,10 +58,10 @@ public class ProjectController {
         return "project/readAssignedProjects"; // 가상의 주소
     }
 
-     //모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
-    @GetMapping("/getInfoByProjectID")
+    //모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
+    @GetMapping("/getInfoByProjectID2")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getInfoByProjectID2(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjectsRequest> employeesProjectsRequests =
                 employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
@@ -88,7 +89,6 @@ public class ProjectController {
         // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 //        System.out.println("pr: " + projectRequirements);
 //        System.out.println("ep: " + employeesProjectsRequests);
-
         // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
         // 해당 프로젝트의 요구사항
@@ -102,15 +102,10 @@ public class ProjectController {
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
-        response.put("eprID",eprID);
+        response.put("eprID", eprID);
 
         return ResponseEntity.ok(response);
     }
-
-
-
-
-
 
 
     @GetMapping("/createProject")
@@ -182,32 +177,30 @@ public class ProjectController {
         return "redirect:/readAllProjects";
     }
 
-//8월 1일 16:47 프로젝트 완료 눌렀을 때 여러 테이블 crud 처리하는 컨트롤러 코드
-//@PostMapping("/completeProject")
-//public ResponseEntity<String> completeProject(@RequestBody EmployeesProjectsRequest completeProjectRequest) {
-//    System.out.println("Completing project ID: " + completeProjectRequest.getProject().getProjectId());
-//
-//    // 여기에서 프로젝트 완료 로직을 구현하세요.
-//    // 예: 프로젝트 상태 변경, 직원들 업데이트 등.
-//
-//    return ResponseEntity.ok("Project completed successfully");
-//}
-
-//8월 1일 17:44
     @PostMapping("/completeProject")
-    public ResponseEntity<String> completeProject(@RequestBody Map<String, Long> request) {
-        Long projectId = request.get("projectId");
-        System.out.println(projectId);
-        // 프로젝트 상태 업데이트 : 프로젝트 완료 누르면 project 테이블에서 status 를 1 + 2로 바꾸기
-//        projectsService.updateProjectStatus(projectId, 2);
-        // 프로젝트에 참여한 사원들의 스킬 경력 업데이트
-        //employeesProjectsService.updateEmployeeSkillsForCompletedProject(projectId); ???
-        // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
-        //employeesProjectsService.updateEmployeeStarpointForCompletedProject(projectId); ???
-        // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+    public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload) {
+        Long projectId = ((Number) payload.get("projectId")).longValue();
+        List<Map<String, Object>> projectParticipantsInfos = (List<Map<String, Object>>) payload.get("projectParticipantsInfos");
+        System.out.println("Project ID: " + projectId);
+        for (Map<String, Object> participantInfo : projectParticipantsInfos) {
+            long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
+            double point = ((Number) participantInfo.get("starPoint")).doubleValue();
+            long skillId = ((Number) participantInfo.get("skillId")).longValue();
+            double projectDuration = ((Number) participantInfo.get("projectDuration")).doubleValue();
+            System.out.println("Employee ID: " + employeeId + ", Star Point: " + point + ", Skill ID: " + skillId + ", projectDuration: " + projectDuration);
 
-        return ResponseEntity.ok("Project status updated to completed");
+            // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
+            employeesProjectsService.updateStarPointOfProjectParticipants(projectId, projectParticipantsInfos);
+            // 프로젝트에 참여한 사원들의 스킬 경력 업데이트(employees_skill table)
+            employeesSkillService.updateSkillCareerOfProjectParticipants(projectParticipantsInfos);
+            // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
+            employeesService.updateStarPointAverageOfProjectParticipants(employeeId);
+            //LAST_PROJECT_END_DATE를 CURRENT_PROJECT_END_DATE의 값을 넣고, CURRENT_PROJECT_END_DATE의의 값을 null로
+            employeesService.updateProjectEndDateOfProjectParticipants(employeeId);
+        }
+        // 프로젝트의 status를 1 => 2로 변경
+        projectsService.updateStatusTo(projectId, 2);
+        return ResponseEntity.ok().body("Project completed successfully");
     }
-
 
 }

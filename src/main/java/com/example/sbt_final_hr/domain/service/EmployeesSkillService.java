@@ -7,11 +7,19 @@ import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.EmployeesSkillRepository;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
 import com.example.sbt_final_hr.domain.repository.SkillsRepository;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,14 +28,18 @@ public class EmployeesSkillService {
     private final EmployeesSkillRepository employeesSkillRepository;
     private final EmployeesRepository employeeRepository;
     private final SkillsRepository skillRepository;
+    private final PlatformTransactionManager transactionManager;
 
     @Autowired
     public EmployeesSkillService(EmployeesSkillRepository employeesSkillRepository,
                                  EmployeesRepository employeeRepository,
-                                 SkillsRepository skillRepository) {
+                                 SkillsRepository skillRepository,
+                                 PlatformTransactionManager transactionManager
+                                 ) {
         this.employeesSkillRepository = employeesSkillRepository;
         this.employeeRepository = employeeRepository;
         this.skillRepository = skillRepository;
+        this.transactionManager = transactionManager;
     }
 
     public List<EmployeesSkillRequest> getAllEmployeesSkills() {
@@ -67,6 +79,27 @@ public class EmployeesSkillService {
     @Transactional
     public void deleteByEmployeeId(Long employeeId) {
         employeesSkillRepository.deleteByEmployeeEmployeeId(employeeId);
+    }
+
+    //Transactional import 바꿈(jakarta->springframework)
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateSkillCareerOfProjectParticipants(List<Map<String, Object>> projectParticipantsInfos) {
+        for (Map<String, Object> participantInfo : projectParticipantsInfos) {
+            Long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
+            Long skillId = ((Number) participantInfo.get("skillId")).longValue();
+            Double projectDuration = ((Number) participantInfo.get("projectDuration")).doubleValue();
+            //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+            TransactionStatus status = transactionManager.getTransaction(def);
+            try {
+                employeesSkillRepository.updateSkillCareerOfProjectParticipants(employeeId, skillId, projectDuration);
+                transactionManager.commit(status);
+            } catch (Exception e) {
+                transactionManager.rollback(status);
+                throw e;
+            }
+        }
     }
 
 
