@@ -2,13 +2,11 @@ package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
-import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
+import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,14 +28,16 @@ public class EmployeesController {
     private final ProjectTypesService projectTypesService;
     private final SkillsService skillsService;
     private final EmployeesSkillService employeesSkillService;
+    private final ProjectsService projectsService;
 
     @Autowired
-    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1) {
+    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1, ProjectsService projectsService) {
         this.employeesService = employeesService;
         this.projectTypesService = projectTypesService;
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
         this.employeesProjectsService = employeesProjectsService1;
+        this.projectsService = projectsService;
     }
 
     @GetMapping("/newemployee")
@@ -64,15 +64,15 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
-    @GetMapping
-    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
-        if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
-        } else {
-            model.addAttribute("employees", employeesService.findAll());
-        }
-        return "employees/employeeslist";
-    }
+//    @GetMapping
+//    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
+//        if (name != null && !name.isEmpty()) {
+//            model.addAttribute("employees", employeesService.findByName(name));
+//        } else {
+//            model.addAttribute("employees", employeesService.findAll());
+//        }
+//        return "employees/employeeslist";
+//    }
 
     @GetMapping("/list2")
     public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
@@ -83,22 +83,56 @@ public class EmployeesController {
         }
         return "Employees_practice/employees";
     }
+
+//    @GetMapping("/readProjectsByEmployee") => 예시 http://localhost:8080/readProjectsByEmployee?employeeId=27
+//    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
+//        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+//        return "project/readAllProjects";
+//    }
+
+    //특정 프로젝트에 참가하고 있는or참가했던 사원 리스트 뽑아오기
+//    @GetMapping //예시 : http://localhost:8080/employees?projectId=21
+//    public String readEmployeesByProject()
+
+
+    @GetMapping
+    public String listEmployees(@RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "projectId", required = false) Long projectId,
+                                Model model) {
+        if (projectId != null) {
+            model.addAttribute("employees", employeesService.findByProjectId(projectId));
+        } else if (name != null && !name.isEmpty()) {
+            model.addAttribute("employees", employeesService.findByName(name));
+        } else {
+            model.addAttribute("employees", employeesService.findAll());
+        }
+        return "employees/employeeslist";
+    }
+
+
+
+
+
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
+        //8월 5일 17:02 추가중
+        //List<Long> projectIds = new ArrayList<>();
+        //8월 5일 17:02 추가중
+        List<Long> projectIds = employeesProjects.stream()
+                .map(ep -> ep.getProject().getProjectId())
+                .collect(Collectors.toList());
 
-        // Printing the retrieved projects for debugging
         System.out.println("Employee Projects:");
         for (EmployeesProjects project : employeesProjects) {
-            System.out.println("Project ID: " + project.getProject().getProjectId());
-            System.out.println("Skill ID: " + project.getSkill().getSkillId());
-            System.out.println("Star Point: " + project.getStarPoint());
-            System.out.println("Project Duration: " + project.getProjectDuration());
+            Long projectId = project.getProject().getProjectId();
+            projectIds.add(projectId);
         }
-        //13:18 콘솔에 찍히니까 모달에 적절하게 보이게 할 것.
+        //8월 5일 17:02 추가중
+        //List<Projects> projects = projectsService.findByProjectIds(projectIds);
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -127,6 +161,31 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
+        //8월 5일 17:02 추가중
+        List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
+
+
+        //추후에 여기서 필요한 정보만 가져다 쓸 것
+        List<Map<String, Object>> projectInfos = new ArrayList<>();
+        for (Projects project : recentProjects) {
+            Map<String, Object> projectInfo = new HashMap<>();
+            projectInfo.put("projectId", project.getProjectId());
+            projectInfo.put("projectName", project.getProjectName());
+            projectInfo.put("workLocation", project.getWorkLocation());
+            projectInfo.put("clientCompany", project.getClientCompany());
+            projectInfo.put("startDate", project.getStartDate());
+            projectInfo.put("endDate", project.getEndDate());
+            projectInfo.put("status", project.getStatus());
+            projectInfo.put("latitude", project.getLatitude());
+            projectInfo.put("longitude", project.getLongitude());
+            projectInfo.put("contactPhone", project.getContactPhone());
+            projectInfo.put("contactName", project.getContactName());
+            projectInfo.put("registrationDate", project.getRegistrationDate() != null ? project.getRegistrationDate().format(DateTimeFormatter.ISO_DATE_TIME) : null);
+            projectInfo.put("projectType", project.getProjectType().getProjectTypeName());
+            projectInfo.put("totalProjectDurationInMonths", project.getTotalProjectDurationInMonths());
+            projectInfos.add(projectInfo);
+        }
+        response.put("projects", projectInfos);
         return ResponseEntity.ok(response);
     }
 

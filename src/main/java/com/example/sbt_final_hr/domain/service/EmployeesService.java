@@ -1,10 +1,7 @@
 package com.example.sbt_final_hr.domain.service;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
-import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
+import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeesService {
@@ -121,6 +119,11 @@ public class EmployeesService {
     @Transactional
     public void updateProjectEndDateOfProjectParticipants(long employeeId) {
         employeesRepository.updateProjectEndDates(employeeId);
+    }
+
+    public List<Employees> findByProjectId(Long projectId) {
+        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProject_ProjectId(projectId);
+        return employeesProjects.stream().map(EmployeesProjects::getEmployee).collect(Collectors.toList());
     }
 
 
