@@ -31,6 +31,9 @@ public class EmployeesRequest {
     private String image;
     private Double starPointAverage; //별점 요소 추가
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate previousProjectEndDate;
+
     private List<EmployeesSkillRequest> employeesSkillRequests;
 
     private String existingImage;

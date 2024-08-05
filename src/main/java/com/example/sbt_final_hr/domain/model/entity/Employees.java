@@ -49,6 +49,10 @@ public class Employees {
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
 
+    @Column(name = "previous_project_end_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate previousProjectEndDate;
+
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<EmployeesSkill> skills;
 
