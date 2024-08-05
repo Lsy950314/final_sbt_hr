@@ -12,7 +12,8 @@ public class EmployeesSkillRequest {
     private Long employeesSkillId;
     private Employees employee;
     private Skills skill;
-    private Integer skillCareer;
+    //8월 3일 21:23 소수점 값을 더해주기 위해서 Integer -> Double 변경하였습니다.
+    private Double skillCareer;
 
     public EmployeesSkill toEntity(Employees employee) {
         EmployeesSkill employeesSkill = new EmployeesSkill();
