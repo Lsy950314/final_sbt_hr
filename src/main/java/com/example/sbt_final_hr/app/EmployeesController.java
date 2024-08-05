@@ -2,10 +2,7 @@ package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
-import com.example.sbt_final_hr.domain.model.entity.Employees;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
-import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
+import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,14 +27,16 @@ public class EmployeesController {
     private final ProjectTypesService projectTypesService;
     private final SkillsService skillsService;
     private final EmployeesSkillService employeesSkillService;
+    private final ProjectsService projectsService;
 
     @Autowired
-    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1) {
+    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1, ProjectsService projectsService) {
         this.employeesService = employeesService;
         this.projectTypesService = projectTypesService;
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
         this.employeesProjectsService = employeesProjectsService1;
+        this.projectsService = projectsService;
     }
 
     @GetMapping("/newemployee")
@@ -89,16 +88,41 @@ public class EmployeesController {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
+        List<Long> projectIds = new ArrayList<>();
 
         // Printing the retrieved projects for debugging
         System.out.println("Employee Projects:");
         for (EmployeesProjects project : employeesProjects) {
+            Long projectId = project.getProject().getProjectId();
             System.out.println("Project ID: " + project.getProject().getProjectId());
-            System.out.println("Skill ID: " + project.getSkill().getSkillId());
-            System.out.println("Star Point: " + project.getStarPoint());
-            System.out.println("Project Duration: " + project.getProjectDuration());
+            //System.out.println("Skill ID: " + project.getSkill().getSkillId());
+            //System.out.println("Star Point: " + project.getStarPoint());
+            //System.out.println("Project Duration: " + project.getProjectDuration());
+            projectIds.add(projectId);
         }
         //13:18 콘솔에 찍히니까 모달에 적절하게 보이게 할 것.
+
+        // 프로젝트 정보를 가져옴
+        List<Projects> projects = projectsService.findByProjectIds(projectIds);
+        System.out.println("Projects Details:");
+        for (Projects project : projects) {
+            System.out.println("Project ID: " + project.getProjectId());
+            System.out.println("Project Name: " + project.getProjectName());
+            System.out.println("Work Location: " + project.getWorkLocation());
+            System.out.println("Client Company: " + project.getClientCompany());
+            System.out.println("Start Date: " + project.getStartDate());
+            System.out.println("End Date: " + project.getEndDate());
+            System.out.println("Status: " + project.getStatus());
+            System.out.println("Latitude: " + project.getLatitude());
+            System.out.println("Longitude: " + project.getLongitude());
+            System.out.println("Contact Phone: " + project.getContactPhone());
+            System.out.println("Contact Name: " + project.getContactName());
+            System.out.println("Registration Date: " + project.getRegistrationDate());
+            System.out.println("Project Type: " + project.getProjectType().getProjectTypeName());
+            System.out.println("Total Project Duration in Months: " + project.getTotalProjectDurationInMonths());
+        }
+
+
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
