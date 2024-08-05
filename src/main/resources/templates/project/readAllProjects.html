@@ -307,7 +307,7 @@
 
         <!--        필터링 및 정렬        -->
         <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" onkeyup="filterByProjectName()">
-        <select id="sortProjects" onchange="sortProjects()">
+        <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
             <option value="startDate">프로젝트 시작일 순</option>
             <option value="endDate">프로젝트 종료일 순</option>
         </select>
@@ -363,8 +363,8 @@
         });
     }
 
-    function sortProjects() {
-        const sortBy = document.getElementById('sortProjects').value;
+    function sortProjectsByDate() {
+        const sortBy = document.getElementById('sortProjectsByDate').value;
         const projects = Array.from(document.querySelectorAll('.projects > .project'));
         const projectsContainer = document.querySelector('.projects');
 
