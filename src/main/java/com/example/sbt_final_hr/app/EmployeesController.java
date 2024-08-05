@@ -74,15 +74,6 @@ public class EmployeesController {
         return "employees/employeeslist";
     }
 
-    @GetMapping("/list2")
-    public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
-        if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
-        } else {
-            model.addAttribute("employees", employeesService.findAll());
-        }
-        return "Employees_practice/employees";
-    }
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {

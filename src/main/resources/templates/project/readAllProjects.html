@@ -7,6 +7,21 @@
     <title>Project List</title>
     <style>
         /* 기존 스타일 */
+
+        /* 상태에 따른 배경색 설정 */
+
+        .project-unassigned {
+            background-color: #f5c6cb; /* 미배정: 연한 빨간색 */
+        }
+
+        .project-assigned {
+            background-color: #c3e6cb; /* 배정완료: 연한 녹색 */
+        }
+
+        .project-completed {
+            background-color: #bee5eb; /* 완료: 연한 파란색 */
+        }
+
         body {
             width: 1920px;
             height: 1080px;
@@ -295,7 +310,7 @@
     <div class="menu">
         <ul class="menus">
             <li><a href="">Dashboard</a></li>
-            <li><a href="/employees/list2">社員リスト</a></li>
+            <li><a href="/employees">社員リスト</a></li>
             <li><a href="/readAllProjects">Projects</a></li>
         </ul>
     </div>
@@ -313,6 +328,13 @@
         </select>
         <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
         <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
+        <!--        프로젝트 상태에 따라 필터링         -->
+        <select id="filterByStatus" onchange="filterByStatus()">
+            <option value="">모든 상태</option>
+            <option value="-1">미배정</option>
+            <option value="1">배정완료</option>
+            <option value="2">완료</option>
+        </select>
 
         <div class="projects">
             <div class="header">
@@ -323,15 +345,16 @@
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
             </div>
-            <div class="project" th:each="p : ${session.projects}">
+            <div th:class="'project ' + (${p.status == -1} ? 'project-unassigned' : (${p.status == 1} ? 'project-assigned' : (${p.status} == 2 ? 'project-completed' : '')))"
+                 th:each="p : ${session.projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
                 <div th:text="${p.clientCompany}"></div>
                 <div th:text="${p.startDate}"></div>
                 <div th:text="${p.endDate}"></div>
+                <div th:text="${p.status}" style="display: none;"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
-                    </button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
                 </div>
             </div>
         </div>
@@ -351,6 +374,22 @@
 
 
 <script>
+    function filterByStatus() {
+        const selectedStatus = document.getElementById('filterByStatus').value;
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const projectStatus = project.querySelector('div:nth-child(6)').textContent.trim();
+
+            // 선택된 상태와 프로젝트 상태가 일치하거나, 모든 상태가 선택된 경우
+            if (selectedStatus === "" || projectStatus === selectedStatus) {
+                project.style.display = '';
+            } else {
+                project.style.display = 'none';
+            }
+        });
+    }
+
     function filterByProjectId() {
         const inputId = document.getElementById('filterByProjectId').value.trim();
         const projects = document.querySelectorAll('.projects > .project');
@@ -385,7 +424,7 @@
         const projects = Array.from(document.querySelectorAll('.projects > .project'));
         const projectsContainer = document.querySelector('.projects');
 
-        const currentDate= new Date();
+        const currentDate = new Date();
 
         const futureProjects = projects.filter(project => {
             const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
@@ -437,9 +476,8 @@
         }
     }
 
-    function  readEmployeesByProjectId(projectId) {
+    function readEmployeesByProjectId(projectId) {
         alert(projectId);
-        // 임의의 매핑으로 projectId 가져가서 속한 List<employees> 구하기
     }
 
     function showProjectDetails(projectId) {
