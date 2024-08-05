@@ -50,7 +50,13 @@ public class ProjectController {
         httpSession.setAttribute("projects", projectsService.getAllProjects());
         return "project/readAllProjects";
     }
-
+    
+    // 특정 사원이 속한 프로젝트들만 리스트업하기
+    @GetMapping("/readProjectsByEmployee")
+    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
+        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+        return "project/readAllProjects";
+    }
 
     @GetMapping("/readAssignedProjects")
     public String readAssignedProjects(HttpSession httpSession) {
@@ -59,9 +65,9 @@ public class ProjectController {
     }
 
     //모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
-    @GetMapping("/getInfoByProjectID2")
+    @GetMapping("/getInfoByProjectID")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getInfoByProjectID2(@RequestParam("id") Long id, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjectsRequest> employeesProjectsRequests =
                 employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
