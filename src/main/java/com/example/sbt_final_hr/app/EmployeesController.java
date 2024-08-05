@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,15 +64,15 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
-    @GetMapping
-    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
-        if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
-        } else {
-            model.addAttribute("employees", employeesService.findAll());
-        }
-        return "employees/employeeslist";
-    }
+//    @GetMapping
+//    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
+//        if (name != null && !name.isEmpty()) {
+//            model.addAttribute("employees", employeesService.findByName(name));
+//        } else {
+//            model.addAttribute("employees", employeesService.findAll());
+//        }
+//        return "employees/employeeslist";
+//    }
 
     @GetMapping("/list2")
     public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
@@ -82,6 +83,36 @@ public class EmployeesController {
         }
         return "Employees_practice/employees";
     }
+
+//    @GetMapping("/readProjectsByEmployee") => 예시 http://localhost:8080/readProjectsByEmployee?employeeId=27
+//    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
+//        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+//        return "project/readAllProjects";
+//    }
+
+    //특정 프로젝트에 참가하고 있는or참가했던 사원 리스트 뽑아오기
+//    @GetMapping //예시 : http://localhost:8080/employees?projectId=21
+//    public String readEmployeesByProject()
+
+
+    @GetMapping
+    public String listEmployees(@RequestParam(name = "name", required = false) String name,
+                                @RequestParam(name = "projectId", required = false) Long projectId,
+                                Model model) {
+        if (projectId != null) {
+            model.addAttribute("employees", employeesService.findByProjectId(projectId));
+        } else if (name != null && !name.isEmpty()) {
+            model.addAttribute("employees", employeesService.findByName(name));
+        } else {
+            model.addAttribute("employees", employeesService.findAll());
+        }
+        return "employees/employeeslist";
+    }
+
+
+
+
+
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
@@ -90,49 +121,13 @@ public class EmployeesController {
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
         List<Long> projectIds = new ArrayList<>();
 
-        // Printing the retrieved projects for debugging
         System.out.println("Employee Projects:");
         for (EmployeesProjects project : employeesProjects) {
             Long projectId = project.getProject().getProjectId();
-            System.out.println("Project ID: " + project.getProject().getProjectId());
             projectIds.add(projectId);
         }
-        //13:18 콘솔에 찍히니까 모달에 적절하게 보이게 할 것.
-//        List<Map<String, Object>> skills = new ArrayList<>();
-//        for (EmployeesSkill skill : employeeSkills) {
-//            Map<String, Object> skillInfo = new HashMap<>();
-//            skillInfo.put("skillName", skill.getSkill().getSkillName());
-//            skillInfo.put("skillCareer", skill.getSkillCareer());
-//            skills.add(skillInfo);
-//        }
-//        response.put("skills", skills);
 
-        // 프로젝트 정보를 가져옴
         List<Projects> projects = projectsService.findByProjectIds(projectIds);
-        System.out.println("Projects Details:");
-        for (Projects project : projects) {
-            System.out.println("Project ID: " + project.getProjectId());
-            System.out.println("Project Name: " + project.getProjectName());
-            System.out.println("Work Location: " + project.getWorkLocation());
-            System.out.println("Client Company: " + project.getClientCompany());
-            System.out.println("Start Date: " + project.getStartDate());
-            System.out.println("End Date: " + project.getEndDate());
-            System.out.println("Status: " + project.getStatus());
-            System.out.println("Latitude: " + project.getLatitude());
-            System.out.println("Longitude: " + project.getLongitude());
-            System.out.println("Contact Phone: " + project.getContactPhone());
-            System.out.println("Contact Name: " + project.getContactName());
-            System.out.println("Registration Date: " + project.getRegistrationDate());
-            System.out.println("Project Type: " + project.getProjectType().getProjectTypeName());
-            System.out.println("Total Project Duration in Months: " + project.getTotalProjectDurationInMonths());
-        }
-
-        // 프로젝트 정보를 응답에 추가
-
-
-
-
-
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -161,7 +156,7 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
-        //8월 5일 15:31 추가는 했는데 테스트는 안해봄.
+        //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
         for (Projects project : projects) {
             Map<String, Object> projectInfo = new HashMap<>();
@@ -182,22 +177,6 @@ public class EmployeesController {
             projectInfos.add(projectInfo);
         }
         response.put("projects", projectInfos);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         return ResponseEntity.ok(response);
     }
 
