@@ -119,15 +119,20 @@ public class EmployeesController {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
-        List<Long> projectIds = new ArrayList<>();
+        //8월 5일 17:02 추가중
+        //List<Long> projectIds = new ArrayList<>();
+        //8월 5일 17:02 추가중
+        List<Long> projectIds = employeesProjects.stream()
+                .map(ep -> ep.getProject().getProjectId())
+                .collect(Collectors.toList());
 
         System.out.println("Employee Projects:");
         for (EmployeesProjects project : employeesProjects) {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
-
-        List<Projects> projects = projectsService.findByProjectIds(projectIds);
+        //8월 5일 17:02 추가중
+        //List<Projects> projects = projectsService.findByProjectIds(projectIds);
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -156,9 +161,13 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
+        //8월 5일 17:02 추가중
+        List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
+
+
         //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
-        for (Projects project : projects) {
+        for (Projects project : recentProjects) {
             Map<String, Object> projectInfo = new HashMap<>();
             projectInfo.put("projectId", project.getProjectId());
             projectInfo.put("projectName", project.getProjectName());

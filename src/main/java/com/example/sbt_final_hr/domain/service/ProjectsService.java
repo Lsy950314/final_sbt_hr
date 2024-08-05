@@ -7,7 +7,9 @@ import com.example.sbt_final_hr.domain.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectsService {
@@ -76,6 +78,16 @@ public class ProjectsService {
 
     public List<Projects> findByProjectIds(List<Long> projectIds) {
         return projectsRepository.findByProjectIdIn(projectIds);
+    }
+
+    //8월 5일 17:02 추가중
+    public List<Projects> findRecentProjectsByIds(List<Long> projectIds) {
+        List<Projects> projects = projectsRepository.findByProjectIdIn(projectIds);
+
+        return projects.stream()
+                .sorted(Comparator.comparing(Projects::getEndDate).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
     }
 
 
