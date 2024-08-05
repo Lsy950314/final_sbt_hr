@@ -3,10 +3,7 @@ package com.example.sbt_final_hr.domain.service;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectTypesRepository;
-import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
-import com.example.sbt_final_hr.domain.repository.SkillsRepository;
+import com.example.sbt_final_hr.domain.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,16 +15,22 @@ public class ProjectsService {
     private final ProjectTypesRepository projectTypesRepository;
     private final SkillsRepository skillsRepository;
     private final ProjectRequirementsRepository projectRequirementsRepository;
+    private final EmployeesProjectsRepository employeesProjectsRepository;
 
-    public ProjectsService(ProjectsRepository projectsRepository, ProjectTypesRepository projectTypesRepository, SkillsRepository skillsRepository, ProjectRequirementsRepository projectRequirementsRepository) {
+    public ProjectsService(ProjectsRepository projectsRepository, ProjectTypesRepository projectTypesRepository, SkillsRepository skillsRepository, ProjectRequirementsRepository projectRequirementsRepository, EmployeesProjectsRepository employeesProjectsRepository) {
         this.projectsRepository = projectsRepository;
         this.projectTypesRepository = projectTypesRepository;
         this.skillsRepository = skillsRepository;
         this.projectRequirementsRepository = projectRequirementsRepository;
+        this.employeesProjectsRepository = employeesProjectsRepository;
     }
 
     public List<Projects> getAllProjects() {
         return projectsRepository.findAll();
+    }
+
+    public List<Projects> getProjectByEmployee(Long employeeId){
+        return employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
     }
 
     public List<Projects> getAssignedProjects() {

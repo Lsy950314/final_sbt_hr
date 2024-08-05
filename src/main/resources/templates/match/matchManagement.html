@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>매치 관리</title>
-    <script>
+    <script th:inline="javascript">
         function calculateMonthsDifference(endDate) {
             const currentDate = new Date();
             const end = new Date(endDate);
@@ -17,9 +17,68 @@
             const elements = document.querySelectorAll('.waiting-period');
             elements.forEach(element => {
                 const endDate = element.getAttribute('data-end-date');
-                const monthsDifference = calculateMonthsDifference(endDate);
-                element.textContent = `${monthsDifference} 개월`;
+                if (endDate == null){
+                    element.textContent ='대기기간 없음';
+                } else  {
+                    const monthsDifference = calculateMonthsDifference(endDate);
+                    element.textContent = `${monthsDifference} 개월`;
+                }
+
             });
+        }
+
+        function selectProjectRequest(employeeId, projectId) {
+            // 모달을 엽니다.
+            const modal = document.getElementById('project-requirement-modal');
+            modal.style.display = 'block';
+
+            // 요구사항 목록을 렌더링
+            const modalRequirementsList = document.getElementById('modal-requirements-list');
+            modalRequirementsList.innerHTML = '';
+
+            const projectRequirements = /*[[${projectRequirements}]]*/ [];
+            console.log(projectRequirements);
+            projectRequirements.forEach(pr => {
+                const requirementDiv = document.createElement('div');
+                requirementDiv.textContent = `스킬: ${pr.skill.skillName}, 경력: ${pr.requiredExperience}개월`;
+                requirementDiv.setAttribute('data-requirement-id', pr.projectRequirementsId);
+                requirementDiv.classList.add('requirement-option');
+
+                requirementDiv.addEventListener('click', function () {
+                    const projectRequirementsId = this.getAttribute('data-requirement-id');
+                    assignEmployeeToProject(employeeId, projectId, projectRequirementsId);
+                    closeModal();
+                });
+
+                modalRequirementsList.appendChild(requirementDiv);
+            });
+        }
+
+        function assignEmployeeToProject(employeeId, projectId, projectRequirementsId) {
+            if (confirm('배정하시겠습니까?')){
+                fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
+                    .then(response => {
+                        if (response.ok) {
+                            alert('배정 완료');
+                            window.location.href = '/readAllProjects';
+                        } else {
+                            alert('배정에 실패했습니다');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error: ', error);
+                        alert('서버 통신 오류');
+                    });
+            } else {
+                alert('배정이 취소되었습니다.')
+            }
+
+
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-requirement-modal');
+            modal.style.display = 'none';
         }
 
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
@@ -32,32 +91,6 @@
                 })
             })
         })
-
-        function selectProjectRequest(employeeId, projectId) {
-            alert(employeeId + projectId)
-            // 어떤 projectRequest 에 해당 사원을 배정할 지 골라야 함
-
-            // projectRequest 중에 선택하는 모달 띄워주기
-            // 모달 만들어내는 로직 +
-            // 선택한 pr의 id를 얻어내기
-            const projectRequirementsId = 5; // 선택한 pr의 id 담아주기
-
-
-            fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
-                .then(response => {
-                    if (response.ok) {
-                        alert('배정 완료');
-                        window.location.href = '/readAllProjects';
-                    } else {
-                        alert('배정에 실패했습니다');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error: ', error);
-                    alert('서버 통신 오류');
-                });
-
-        }
 
     </script>
 
@@ -182,6 +215,28 @@
             background-color: #0056b3;
         }
 
+        #project-requirement-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .requirement-option {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .requirement-option:hover {
+            background-color: #f0f0f0;
+        }
+
 
     </style>
 </head>
@@ -227,7 +282,16 @@
 
     </div>
 
-    <!-- projectRequirementsId 선택을 위한 드롭다운 추가 -->
+    <!-- 모달 창 -->
+    <div id="project-requirement-modal" style="display: none;">
+        <div style="background-color: white; padding: 20px; border-radius: 8px;">
+            <h3>프로젝트 요구사항 선택</h3>
+            <div id="modal-requirements-list">
+                <!-- 여기서 요구사항 목록을 렌더링 -->
+            </div>
+            <button onclick="closeModal()">닫기</button>
+        </div>
+    </div>
 
 
 
