@@ -306,11 +306,12 @@
         </p>
 
         <!--        필터링 및 정렬        -->
-        <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" onkeyup="filterByProjectName()">
+        <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
         <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
             <option value="startDate">프로젝트 시작일 순</option>
             <option value="endDate">프로젝트 종료일 순</option>
         </select>
+        <input type="text" id="filterByProjectId" oninput="filterByProjectId()">
 
         <div class="projects">
             <div class="header">
@@ -349,6 +350,21 @@
 
 
 <script>
+    function filterByProjectId() {
+        const inputId = document.getElementById('filterByProjectId').value.trim();
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const projectId = project.querySelector('div:nth-child(1)').textContent.trim();
+
+            if (projectId === inputId || inputId === "") {
+                project.style.display = '';
+            } else {
+                project.style.display = 'none';
+            }
+        });
+    }
+
     function filterByProjectName() {
         const filter = document.getElementById('filterByProjectName').value.toLowerCase();
         const projects = document.querySelectorAll('.projects > .project');
