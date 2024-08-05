@@ -95,12 +95,17 @@ public class EmployeesController {
         for (EmployeesProjects project : employeesProjects) {
             Long projectId = project.getProject().getProjectId();
             System.out.println("Project ID: " + project.getProject().getProjectId());
-            //System.out.println("Skill ID: " + project.getSkill().getSkillId());
-            //System.out.println("Star Point: " + project.getStarPoint());
-            //System.out.println("Project Duration: " + project.getProjectDuration());
             projectIds.add(projectId);
         }
         //13:18 콘솔에 찍히니까 모달에 적절하게 보이게 할 것.
+//        List<Map<String, Object>> skills = new ArrayList<>();
+//        for (EmployeesSkill skill : employeeSkills) {
+//            Map<String, Object> skillInfo = new HashMap<>();
+//            skillInfo.put("skillName", skill.getSkill().getSkillName());
+//            skillInfo.put("skillCareer", skill.getSkillCareer());
+//            skills.add(skillInfo);
+//        }
+//        response.put("skills", skills);
 
         // 프로젝트 정보를 가져옴
         List<Projects> projects = projectsService.findByProjectIds(projectIds);
@@ -121,6 +126,11 @@ public class EmployeesController {
             System.out.println("Project Type: " + project.getProjectType().getProjectTypeName());
             System.out.println("Total Project Duration in Months: " + project.getTotalProjectDurationInMonths());
         }
+
+        // 프로젝트 정보를 응답에 추가
+
+
+
 
 
 
@@ -150,6 +160,43 @@ public class EmployeesController {
             skills.add(skillInfo);
         }
         response.put("skills", skills);
+
+        //8월 5일 15:31 추가는 했는데 테스트는 안해봄.
+        List<Map<String, Object>> projectInfos = new ArrayList<>();
+        for (Projects project : projects) {
+            Map<String, Object> projectInfo = new HashMap<>();
+            projectInfo.put("projectId", project.getProjectId());
+            projectInfo.put("projectName", project.getProjectName());
+            projectInfo.put("workLocation", project.getWorkLocation());
+            projectInfo.put("clientCompany", project.getClientCompany());
+            projectInfo.put("startDate", project.getStartDate());
+            projectInfo.put("endDate", project.getEndDate());
+            projectInfo.put("status", project.getStatus());
+            projectInfo.put("latitude", project.getLatitude());
+            projectInfo.put("longitude", project.getLongitude());
+            projectInfo.put("contactPhone", project.getContactPhone());
+            projectInfo.put("contactName", project.getContactName());
+            projectInfo.put("registrationDate", project.getRegistrationDate() != null ? project.getRegistrationDate().format(DateTimeFormatter.ISO_DATE_TIME) : null);
+            projectInfo.put("projectType", project.getProjectType().getProjectTypeName());
+            projectInfo.put("totalProjectDurationInMonths", project.getTotalProjectDurationInMonths());
+            projectInfos.add(projectInfo);
+        }
+        response.put("projects", projectInfos);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         return ResponseEntity.ok(response);
     }
