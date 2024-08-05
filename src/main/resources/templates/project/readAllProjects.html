@@ -311,7 +311,8 @@
             <option value="startDate">프로젝트 시작일 순</option>
             <option value="endDate">프로젝트 종료일 순</option>
         </select>
-        <input type="text" id="filterByProjectId" oninput="filterByProjectId()">
+        <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
+        <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
 
         <div class="projects">
             <div class="header">
@@ -436,6 +437,11 @@
         }
     }
 
+    function  readEmployeesByProjectId(projectId) {
+        alert(projectId);
+        // 임의의 매핑으로 projectId 가져가서 속한 List<employees> 구하기
+    }
+
     function showProjectDetails(projectId) {
 
         fetch(`/getInfoByProjectID?id=${projectId}`)
@@ -471,6 +477,7 @@
     </li>
             `).join('')}
             </ul>
+            <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
         </div>
     </div>
     <div class="data-row">

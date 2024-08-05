@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.domain.repository;
 
 import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
+import com.example.sbt_final_hr.domain.model.entity.Projects;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import java.util.List;
 @Repository
 public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProjects, Long> {
     List<EmployeesProjects> findByProject_ProjectId(Long id);
-
+    List<EmployeesProjects> findByEmployee_EmployeeId(Long employeeId);
     EmployeesProjects findByEmployee_EmployeeIdAndProject_ProjectIdAndId (Long employeeId, Long projectId, Long projectRequirementsId);
 
     @Modifying
@@ -21,5 +22,8 @@ public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProj
 
     @Query("SELECT AVG(ep.starPoint) FROM EmployeesProjects ep WHERE ep.employee.employeeId = :employeeId")
     Double calculateAverageStarPointByEmployeeId(@Param("employeeId") long employeeId);
+
+    @Query("SELECT ep.project FROM EmployeesProjects ep WHERE ep.employee.employeeId = :employeeId")
+    List<Projects> findProjectsByEmployeeId(Long employeeId);
 
 }

@@ -3,12 +3,10 @@ package com.example.sbt_final_hr.app;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesSkillRequest;
 import com.example.sbt_final_hr.domain.model.entity.Employees;
+import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.EmployeesSkill;
 import com.example.sbt_final_hr.domain.model.entity.Skills;
-import com.example.sbt_final_hr.domain.service.EmployeesService;
-import com.example.sbt_final_hr.domain.service.EmployeesSkillService;
-import com.example.sbt_final_hr.domain.service.ProjectTypesService;
-import com.example.sbt_final_hr.domain.service.SkillsService;
+import com.example.sbt_final_hr.domain.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +25,19 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/employees")
 public class EmployeesController {
-    private EmployeesService employeesService;
-    private ProjectTypesService projectTypesService;
-    private SkillsService skillsService;
-    private EmployeesSkillService employeesSkillService;
+    private final EmployeesProjectsService employeesProjectsService;
+    private final EmployeesService employeesService;
+    private final ProjectTypesService projectTypesService;
+    private final SkillsService skillsService;
+    private final EmployeesSkillService employeesSkillService;
 
     @Autowired
-    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService) {
+    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1) {
         this.employeesService = employeesService;
         this.projectTypesService = projectTypesService;
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
+        this.employeesProjectsService = employeesProjectsService1;
     }
 
     @GetMapping("/newemployee")
@@ -83,11 +83,23 @@ public class EmployeesController {
         }
         return "Employees_practice/employees";
     }
-
+    //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
+        List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
+
+        // Printing the retrieved projects for debugging
+        System.out.println("Employee Projects:");
+        for (EmployeesProjects project : employeesProjects) {
+            System.out.println("Project ID: " + project.getProject().getProjectId());
+            System.out.println("Skill ID: " + project.getSkill().getSkillId());
+            System.out.println("Star Point: " + project.getStarPoint());
+            System.out.println("Project Duration: " + project.getProjectDuration());
+        }
+        //13:18 콘솔에 찍히니까 모달에 적절하게 보이게 할 것.
+
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
