@@ -17,5 +17,5 @@ public interface ProjectsRepository extends JpaRepository<Projects, Long> {
     @Modifying
     @Transactional
     void updateStatusTo(Long id, int num);
-    
+
 }
