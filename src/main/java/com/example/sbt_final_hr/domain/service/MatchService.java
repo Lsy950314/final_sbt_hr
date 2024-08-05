@@ -60,7 +60,6 @@ public class MatchService {
         }
     }
 
-
     public boolean matchCancel(Long projectId, Long employeeId, Long projectRequirementsId) {
         // 배정 로직을 반대로
         // 충족인원 -1

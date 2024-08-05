@@ -58,9 +58,9 @@ public class ProjectController {
     }
 
      //모달 띄우기 전에 여기에 요청해서 어트리뷰트 가져가는 메서드
-    @GetMapping("/getInfoByProjectID2")
+    @GetMapping("/getInfoByProjectID")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getInfoByProjectID2(@RequestParam("id") Long id, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> getInfoByProjectID(@RequestParam("id") Long id, HttpSession session) {
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(id);
         List<EmployeesProjectsRequest> employeesProjectsRequests =
                 employeesProjectsService.getEmployeesProjectByProjectId(id).stream().map(ep -> {
@@ -88,6 +88,7 @@ public class ProjectController {
         // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 //        System.out.println("pr: " + projectRequirements);
 //        System.out.println("ep: " + employeesProjectsRequests);
+
         // 배정 관리 페이지에서도 db에 요청 없이도 쓰기 위해서 세션
         session.setAttribute("projectId", id);
         // 해당 프로젝트의 요구사항
