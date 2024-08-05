@@ -409,6 +409,7 @@
                 console.log('Project completed:', data);
                 closeCompleteModal();
                 // 성공 메시지 표시 등 추가 작업 수행 가능
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error completing project:', error);
