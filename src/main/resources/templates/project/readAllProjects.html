@@ -7,6 +7,21 @@
     <title>Project List</title>
     <style>
         /* 기존 스타일 */
+
+        /* 상태에 따른 배경색 설정 */
+
+        .project-unassigned {
+            background-color: #f5c6cb; /* 미배정: 연한 빨간색 */
+        }
+
+        .project-assigned {
+            background-color: #c3e6cb; /* 배정완료: 연한 녹색 */
+        }
+
+        .project-completed {
+            background-color: #bee5eb; /* 완료: 연한 파란색 */
+        }
+
         body {
             width: 1920px;
             height: 1080px;
@@ -295,7 +310,7 @@
     <div class="menu">
         <ul class="menus">
             <li><a href="">Dashboard</a></li>
-            <li><a href="/employees/list2">社員リスト</a></li>
+            <li><a href="/employees">社員リスト</a></li>
             <li><a href="/readAllProjects">Projects</a></li>
         </ul>
     </div>
@@ -330,7 +345,8 @@
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
             </div>
-            <div class="project" th:each="p : ${session.projects}">
+            <div th:class="'project ' + (${p.status == -1} ? 'project-unassigned' : (${p.status == 1} ? 'project-assigned' : (${p.status} == 2 ? 'project-completed' : '')))"
+                 th:each="p : ${session.projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
                 <div th:text="${p.clientCompany}"></div>
@@ -338,8 +354,7 @@
                 <div th:text="${p.endDate}"></div>
                 <div th:text="${p.status}" style="display: none;"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
-                    </button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
                 </div>
             </div>
         </div>
@@ -463,7 +478,6 @@
 
     function readEmployeesByProjectId(projectId) {
         alert(projectId);
-        // 임의의 매핑으로 projectId 가져가서 속한 List<employees> 구하기
     }
 
     function showProjectDetails(projectId) {
