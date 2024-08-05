@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProjects, Long> {
     List<EmployeesProjects> findByProject_ProjectId(Long id);
-
+    List<EmployeesProjects> findByEmployee_EmployeeId(Long employeeId);
     EmployeesProjects findByEmployee_EmployeeIdAndProject_ProjectIdAndId (Long employeeId, Long projectId, Long projectRequirementsId);
 
     @Modifying
