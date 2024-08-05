@@ -19,15 +19,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService1) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService1;
     }
 
     @GetMapping("/check")
@@ -75,11 +78,11 @@ public class MatchController {
         return "match/matchManagement";
     }
 
- // 사원 비교를 위해 만든 컨트롤러
+
  @PostMapping("/compareEmployee")
  public String compareEmployee(@RequestParam("employeeId") Long employeeId, Model model, HttpSession session) {
      // 선택된 사원의 ID로 사원 정보를 조회합니다.
-     Employees selectedEmployee = employeesService.findEmployeeById(employeeId);
+     Optional<Employees> selectedEmployee = employeesService.findById(employeeId);
 
      if (selectedEmployee != null) {
          model.addAttribute("selectedEmployee", selectedEmployee);
