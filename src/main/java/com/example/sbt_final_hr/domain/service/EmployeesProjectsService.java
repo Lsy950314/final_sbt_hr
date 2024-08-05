@@ -92,20 +92,7 @@ public class EmployeesProjectsService {
         }
         return employees;
     }
-// 8월 1일 적용 대기중
-//    public void updateEmployeeSkillsForCompletedProject(Long projectId) {
-//        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProjectId(projectId);
-//
-//        for (EmployeesProjects ep : employeesProjects) {
-//            EmployeesSkills employeeSkill = employeesSkillsRepository.findByEmployeeIdAndSkillId(ep.getEmployee().getEmployeeId(), ep.getSkill().getSkillId())
-//                    .orElseThrow(() -> new RuntimeException("Employee skill not found"));
-//
-//            double updatedSkillCareer = employeeSkill.getSkillCareer() + ep.getProjectDuration();
-//            employeeSkill.setSkillCareer(updatedSkillCareer);
-//
-//            employeesSkillsRepository.save(employeeSkill);
-//        }
-//    }
+
     //Transactional import 바꿈(jakarta->springframework)
     //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
     //@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -128,6 +115,10 @@ public class EmployeesProjectsService {
 
 
         }
+    }
+
+    public List<EmployeesProjects> findByEmployeeId(long employeeId) {
+        return employeesProjectsRepository.findByEmployee_EmployeeId(employeeId);
     }
 
 
