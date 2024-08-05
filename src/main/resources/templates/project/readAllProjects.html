@@ -385,7 +385,7 @@
         const projects = Array.from(document.querySelectorAll('.projects > .project'));
         const projectsContainer = document.querySelector('.projects');
 
-        const currentDate= new Date();
+        const currentDate = new Date();
 
         const futureProjects = projects.filter(project => {
             const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
@@ -437,7 +437,7 @@
         }
     }
 
-    function  readEmployeesByProjectId(projectId) {
+    function readEmployeesByProjectId(projectId) {
         alert(projectId);
         // 임의의 매핑으로 projectId 가져가서 속한 List<employees> 구하기
     }
