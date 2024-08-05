@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,17 +23,10 @@ import java.util.Map;
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
-    private final EmployeesService employeesService;
-    private final ProjectRequirementsService projectRequirementsService;
-    private final EmployeesProjectsService employeesProjectsService;
-
 
     public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
         this.matchService = matchService;
         this.projectsService = projectsService;
-        this.employeesService = employeesService;
-        this.projectRequirementsService = projectRequirementsService;
-        this.employeesProjectsService = employeesProjectsService;
     }
 
     @GetMapping("/check")
@@ -57,9 +51,9 @@ public class MatchController {
         session.removeAttribute("employeesProjects");
 
         Projects projects = projectsService.getProjectById(projectId);
-//        System.out.println(projects);
-//        System.out.println(projectRequirements);
-//        System.out.println(employeesProjects);
+//      System.out.println(projects);
+//      System.out.println(projectRequirements);
+//      System.out.println(employeesProjects);
 
         model.addAttribute("Projects", projects);
 
@@ -86,28 +80,27 @@ public class MatchController {
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
 
-//        System.out.println(projectId);
-//        System.out.println(employeeId);
-//        System.out.println(projectRequirementsId);
+//      System.out.println(projectId);
+//      System.out.println(employeeId);
+//      System.out.println(projectRequirementsId);
 
-        if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
-            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
-                employeesService.updateEndDates(employeeId, projectId);
-            }
-        }
-        
-        // 모든 요구인원이 충족됐다면 projects 의 status 를 1로 바꿔주는 로직
-        if (projectRequirementsService.checkFulfilledCount(projectId)) {
-            projectsService.updateStatus(projectId);
-        }
+        matchService.matchEmployeeToProject(projectId, employeeId, projectRequirementsId);
 
         return ResponseEntity.ok().build();
     }
 
-    // 배정된 사람을 취소하는 로직?
-    // 배정 로직을 반대로
-    // 충족인원 -1
-    // 생성했던 사원-프로젝트 테이블 행 삭제
-    // 최근(직전) 프로젝트 종료일을 null 로 바꾸면서, 복구 정보 기록용 속성을 하나 만들기
-    // 배정 취소시에 해당 복구 정보가 기록된 속성을 이용해서 값을 얻어내기
+    @GetMapping("/matchCancel")
+    public ResponseEntity<String> matchCancelEmployeeProject(@RequestParam Map<String, String> payload) {
+        Long projectId = Long.parseLong(payload.get("projectId"));
+        Long employeeId = Long.parseLong(payload.get("employeeId"));
+        Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
+
+        if (matchService.matchCancel(projectId, employeeId, projectRequirementsId)) {
+            return ResponseEntity.ok("취소 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("취소 실패");
+        }
+
+    }
+
 }

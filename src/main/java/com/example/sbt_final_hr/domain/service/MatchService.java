@@ -24,9 +24,17 @@ public class MatchService {
     private final EmployeesRepository employeesRepository;
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private final ProjectRequirementsService projectRequirementsService;
+    private final EmployeesProjectsService employeesProjectsService;
+    private final EmployeesService employeesService;
+    private final ProjectsService projectsService;
 
-    public MatchService(EmployeesRepository employeesRepository) {
+    public MatchService(EmployeesRepository employeesRepository, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService, ProjectsService projectsService) {
         this.employeesRepository = employeesRepository;
+        this.projectRequirementsService = projectRequirementsService;
+        this.employeesProjectsService = employeesProjectsService;
+        this.employeesService = employeesService;
+        this.projectsService = projectsService;
     }
 
     public List<Employees> findEmployeesByProjectRequirements(Projects project) {
@@ -38,6 +46,34 @@ public class MatchService {
                 .filter(employee -> employee.getCurrentProjectEndDate() == null || employee.getCurrentProjectEndDate().isBefore(project.getStartDate()))
                 .collect(Collectors.toList());
     }
+
+    public void matchEmployeeToProject(Long projectId, Long employeeId, Long projectRequirementsId) {
+        if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
+            if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
+                employeesService.updateEndDates(employeeId, projectId);
+            }
+        }
+
+        // 모든 요구인원이 충족됐다면 projects 의 status 를 1로 바꿔주는 로직
+        if (projectRequirementsService.checkFulfilledCount(projectId)) {
+            projectsService.updateStatusTo(projectId, 1);
+        }
+    }
+
+    public boolean matchCancel(Long projectId, Long employeeId, Long projectRequirementsId) {
+        // 배정 로직을 반대로
+        // 충족인원 -1
+        if (projectRequirementsService.decreaseFulfilledCount(projectRequirementsId) &&
+                employeesProjectsService.deleteEmployeesProjects(employeeId, projectId, projectRequirementsId) &&
+                        employeesService.restoreEndDates(employeeId)
+        ){// 모든 로직이 성공하면 프로젝트의 status 값 -1로 바꿔주기
+            projectsService.updateStatusTo(projectId, -1);
+            return true;
+        }
+        return false;
+
+    }
+
 
     // 세 조건을 모두 만족시키는 사원 필터링
     //3번째 조건 : 통근시간 기준으로 자르기 일단 90분

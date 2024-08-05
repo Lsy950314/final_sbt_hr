@@ -33,6 +33,16 @@ public class EmployeesProjectsService {
         return employeesProjectsRepository.findAll();
     }
 
+    public boolean deleteEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementsId) {
+        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectIdAndId(
+                employeeId, projectId, projectRequirementsId);
+        if (employeesProjects != null) {
+            employeesProjectsRepository.delete(employeesProjects);
+            return true;
+        }
+        return false;
+    }
+
     public boolean insertEmployeesProjects(Long employeeId, Long projectsId, Long projectRequirementId) {
         try {
             Projects projects = projectsService.getProjectById(projectsId);
@@ -71,6 +81,19 @@ public class EmployeesProjectsService {
         }
         return employees;
     }
-
+// 8월 1일 적용 대기중
+//    public void updateEmployeeSkillsForCompletedProject(Long projectId) {
+//        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProjectId(projectId);
+//
+//        for (EmployeesProjects ep : employeesProjects) {
+//            EmployeesSkills employeeSkill = employeesSkillsRepository.findByEmployeeIdAndSkillId(ep.getEmployee().getEmployeeId(), ep.getSkill().getSkillId())
+//                    .orElseThrow(() -> new RuntimeException("Employee skill not found"));
+//
+//            double updatedSkillCareer = employeeSkill.getSkillCareer() + ep.getProjectDuration();
+//            employeeSkill.setSkillCareer(updatedSkillCareer);
+//
+//            employeesSkillsRepository.save(employeeSkill);
+//        }
+//    }
 
 }

@@ -48,9 +48,24 @@ public class EmployeesService {
     public void updateEndDates(Long employeeId, Long projectId) {
         Projects projects = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        // 취소 로직을 대비해서 값을 기록해 둠
+        employees.setPreviousProjectEndDate(employees.getLastProjectEndDate());
+        // 최신화
         employees.setCurrentProjectEndDate(projects.getEndDate());
+        // 프로젝트에 참여 중인 상태가 될 것이므로 대기기간 계산 로직을 위한 최근 프로젝트 종료일은 null 로 만들어 줌
         employees.setLastProjectEndDate(null);
         employeesRepository.save(employees);
+    }
+
+    public boolean restoreEndDates(Long employeeId){
+        Employees employees = employeesRepository.findById(employeeId).orElseThrow(RuntimeException::new);
+        if (employees.getPreviousProjectEndDate()!=null){
+            employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
+            employees.setPreviousProjectEndDate(null);
+            employeesRepository.save(employees);
+            return true;
+        }
+        return false;
     }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {

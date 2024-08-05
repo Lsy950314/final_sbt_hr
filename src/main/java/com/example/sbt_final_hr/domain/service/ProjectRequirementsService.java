@@ -39,16 +39,26 @@ public class ProjectRequirementsService {
 
     public boolean updateFulfilledCount(Long projectRequirementId) {
         ProjectRequirements projectRequirements = projectRequirementsRepository.findById(projectRequirementId).orElseThrow(() -> new RuntimeException("Project requirements not found"));
-        System.out.println(projectRequirements.getRequiredCount());
-        System.out.println(projectRequirements.getFulfilledCount());
+//        System.out.println(projectRequirements.getRequiredCount());
+//        System.out.println(projectRequirements.getFulfilledCount());
         if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()) {
-            System.out.println(projectRequirements.getRequiredCount());
+//            System.out.println(projectRequirements.getRequiredCount());
             projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount() + 1);
             return true;
         } else {
-            throw new RuntimeException("이미 충족된 요구사항입니다");
+            throw new RuntimeException("이미 충족된 요구사항입니다. 배정된 사원을 취소한 뒤 새로운 사원을 배정하세요");
         }
+    }
 
+    public boolean decreaseFulfilledCount(Long projectRequirementsId) {
+        ProjectRequirements pr = projectRequirementsRepository.findById(projectRequirementsId)
+                .orElseThrow(() -> new RuntimeException("Requirement not found"));
+        int fc = pr.getFulfilledCount();
+        if (fc > 0) {
+            pr.setFulfilledCount(fc - 1);
+            return true;
+        }
+        return false;
     }
 
     public boolean checkFulfilledCount(Long projectId) {
