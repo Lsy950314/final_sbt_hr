@@ -6,12 +6,20 @@ import com.example.sbt_final_hr.domain.model.entity.EmployeesProjects;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.EmployeesProjectsRepository;
 import com.example.sbt_final_hr.domain.repository.EmployeesRepository;
+//import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeesProjectsService {
@@ -20,17 +28,30 @@ public class EmployeesProjectsService {
     private final EmployeesService employeesService;
     private final ProjectsService projectsService;
     private final ProjectRequirementsService projectRequirementsService;
+    private final PlatformTransactionManager transactionManager;
 
-    public EmployeesProjectsService(EmployeesProjectsRepository employeesProjectsRepository, EmployeesRepository employeesRepository, EmployeesService employeesService, ProjectsService projectsService, ProjectRequirementsService projectRequirementsService) {
+
+    public EmployeesProjectsService(EmployeesProjectsRepository employeesProjectsRepository, EmployeesRepository employeesRepository, EmployeesService employeesService, ProjectsService projectsService, ProjectRequirementsService projectRequirementsService, PlatformTransactionManager transactionManager) {
         this.employeesProjectsRepository = employeesProjectsRepository;
         this.employeesRepository = employeesRepository;
         this.employeesService = employeesService;
         this.projectsService = projectsService;
         this.projectRequirementsService = projectRequirementsService;
+        this.transactionManager = transactionManager;
     }
 
     public List<EmployeesProjects> getAllEmployeesProjects() {
         return employeesProjectsRepository.findAll();
+    }
+
+    public boolean deleteEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementsId) {
+        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectIdAndId(
+                employeeId, projectId, projectRequirementsId);
+        if (employeesProjects != null) {
+            employeesProjectsRepository.delete(employeesProjects);
+            return true;
+        }
+        return false;
     }
 
     public boolean insertEmployeesProjects(Long employeeId, Long projectsId, Long projectRequirementId) {
@@ -71,19 +92,37 @@ public class EmployeesProjectsService {
         }
         return employees;
     }
-// 8월 1일 적용 대기중
-//    public void updateEmployeeSkillsForCompletedProject(Long projectId) {
-//        List<EmployeesProjects> employeesProjects = employeesProjectsRepository.findByProjectId(projectId);
-//
-//        for (EmployeesProjects ep : employeesProjects) {
-//            EmployeesSkills employeeSkill = employeesSkillsRepository.findByEmployeeIdAndSkillId(ep.getEmployee().getEmployeeId(), ep.getSkill().getSkillId())
-//                    .orElseThrow(() -> new RuntimeException("Employee skill not found"));
-//
-//            double updatedSkillCareer = employeeSkill.getSkillCareer() + ep.getProjectDuration();
-//            employeeSkill.setSkillCareer(updatedSkillCareer);
-//
-//            employeesSkillsRepository.save(employeeSkill);
-//        }
-//    }
+
+    //Transactional import 바꿈(jakarta->springframework)
+    //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateStarPointOfProjectParticipants(Long projectId, List<Map<String, Object>> projectParticipantsInfos) {
+        for (Map<String, Object> participantInfo : projectParticipantsInfos) {
+            Long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
+            Double starPoint = ((Number) participantInfo.get("starPoint")).doubleValue();
+            //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+            TransactionStatus status = transactionManager.getTransaction(def);
+
+            try {
+                employeesProjectsRepository.updateStarPointOfProjectParticipants(employeeId, projectId, starPoint);
+                transactionManager.commit(status);
+            } catch (Exception e) {
+                transactionManager.rollback(status);
+                throw e;
+            }
+
+
+        }
+    }
+
+    public List<EmployeesProjects> findByEmployeeId(long employeeId) {
+        return employeesProjectsRepository.findByEmployee_EmployeeId(employeeId);
+    }
+
+
+
+
 
 }
