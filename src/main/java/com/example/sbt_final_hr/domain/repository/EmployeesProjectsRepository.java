@@ -22,7 +22,4 @@ public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProj
     @Query("SELECT AVG(ep.starPoint) FROM EmployeesProjects ep WHERE ep.employee.employeeId = :employeeId")
     Double calculateAverageStarPointByEmployeeId(@Param("employeeId") long employeeId);
 
-
-
-
 }

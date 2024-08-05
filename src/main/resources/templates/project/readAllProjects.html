@@ -53,7 +53,7 @@
             height: 1080px;
         }
 
-        .members {
+        .projects {
             width: 1280px;
             height: 800px;
             background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
@@ -67,13 +67,13 @@
             text-align: center;
         }
 
-        .members > div {
+        .projects > div {
             display: flex;
             margin-right: 40px;
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
         }
 
-        .members > div > div {
+        .projects > div > div {
             margin-left: 10px;
             margin-right: 10px;
             float: left;
@@ -305,7 +305,14 @@
         <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
         </p>
 
-        <div class="members">
+        <!--        필터링 및 정렬        -->
+        <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" onkeyup="filterByProjectName()">
+        <select id="sortProjects" onchange="sortProjects()">
+            <option value="startDate">프로젝트 시작일 순</option>
+            <option value="endDate">프로젝트 종료일 순</option>
+        </select>
+
+        <div class="projects">
             <div class="header">
                 <div>プロジェクトID</div>
                 <div>プロジェクト名</div>
@@ -314,7 +321,7 @@
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
             </div>
-            <div th:each="p : ${session.projects}">
+            <div class="project" th:each="p : ${session.projects}">
                 <div th:text="${p.projectId}"></div>
                 <div th:text="${p.projectName}"></div>
                 <div th:text="${p.clientCompany}"></div>
@@ -342,17 +349,75 @@
 
 
 <script>
-    function createProject(){
-        location.href="/createProject"
+    function filterByProjectName() {
+        const filter = document.getElementById('filterByProjectName').value.toLowerCase();
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const projectName = project.querySelector('div:nth-child(2)').textContent.toLowerCase();
+            if (projectName.includes(filter)) {
+                project.style.display = "";
+            } else {
+                project.style.display = "none";
+            }
+        });
+    }
+
+    function sortProjects() {
+        const sortBy = document.getElementById('sortProjects').value;
+        const projects = Array.from(document.querySelectorAll('.projects > .project'));
+        const projectsContainer = document.querySelector('.projects');
+
+        const currentDate= new Date();
+
+        const futureProjects = projects.filter(project => {
+            const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            return projectDate >= currentDate;
+        });
+
+        // 현재 날짜보다 이전의 항목들 (과거)
+        const pastProjects = projects.filter(project => {
+            const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            return projectDate < currentDate;
+        });
+
+        futureProjects.sort((a, b) => {
+            const aValue = new Date(a.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const bValue = new Date(b.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            return aValue - bValue;
+        });
+
+        // 과거 항목들을 정렬
+        pastProjects.sort((a, b) => {
+            const aValue = new Date(a.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const bValue = new Date(b.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            return aValue - bValue;
+        });
+
+        // 정렬된 순서대로 다시 배치
+        futureProjects.concat(pastProjects).forEach(project => {
+            projectsContainer.appendChild(project);
+        });
+
+        // 그 아래에 과거 프로젝트를 배치
+        pastProjects.forEach(project => {
+            projectsContainer.appendChild(project);
+        });
+    }
+
+
+    function createProject() {
+        location.href = "/createProject"
     }
 
     function updateProject(projectId) {
-        location.href="/updateProject?id=" + projectId;
+        location.href = "/updateProject?id=" + projectId;
     }
+
     function deleteProject(projectId) {
-       if ( confirm("정말로 삭제하시겠습니까?") ){
-           location.href="/deleteProject?id=" + projectId;
-       }
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = "/deleteProject?id=" + projectId;
+        }
     }
 
     function showProjectDetails(projectId) {
