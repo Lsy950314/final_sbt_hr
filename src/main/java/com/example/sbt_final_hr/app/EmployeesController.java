@@ -64,26 +64,6 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
-//    @GetMapping
-//    public String listEmployees(@RequestParam(name = "name", required = false) String name, Model model) {
-//        if (name != null && !name.isEmpty()) {
-//            model.addAttribute("employees", employeesService.findByName(name));
-//        } else {
-//            model.addAttribute("employees", employeesService.findAll());
-//        }
-//        return "employees/employeeslist";
-//    }
-
-    @GetMapping("/list2")
-    public String listEmployees2(@RequestParam(name = "name", required = false) String name, Model model) {
-        if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
-        } else {
-            model.addAttribute("employees", employeesService.findAll());
-        }
-        return "Employees_practice/employees";
-    }
-
 //    @GetMapping("/readProjectsByEmployee") => 예시 http://localhost:8080/readProjectsByEmployee?employeeId=27
 //    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
 //        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
@@ -108,10 +88,6 @@ public class EmployeesController {
         }
         return "employees/employeeslist";
     }
-
-
-
-
 
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
