@@ -46,7 +46,7 @@
 
                 requirementDiv.addEventListener('click', function () {
                     const projectRequirementsId = this.getAttribute('data-requirement-id');
-                    // console.log(projectRequirementsId)
+                    console.log(projectRequirementsId)
                     assignEmployeeToProject(employeeId, projectId, projectRequirementsId);
                     closeModal();
                 });
@@ -73,7 +73,6 @@
             } else {
                 alert('배정이 취소되었습니다.')
             }
-
 
         }
 
@@ -371,19 +370,14 @@
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <div class="employee-skill"
                          th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
-                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}" name="employee-skill-name"
+                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
+                           name="employee-skill-name"
                            th:value="${s.getSkill().skillName}"
                            th:attr="data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}">比較</label>
                 </div>
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
-
-
-
-
-
-
 
 
                 <div class="assign-button-container">
