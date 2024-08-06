@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -18,15 +19,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService1) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService1;
     }
 
     @GetMapping("/check")
@@ -73,6 +77,41 @@ public class MatchController {
 
         return "match/matchManagement";
     }
+
+
+ @PostMapping("/compareEmployee")
+ public String compareEmployee(@RequestParam("employeeId") Long employeeId, Model model, HttpSession session) {
+     // 선택된 사원의 ID로 사원 정보를 조회합니다.
+     Optional<Employees> selectedEmployee = employeesService.findById(employeeId);
+
+     if (selectedEmployee != null) {
+         model.addAttribute("selectedEmployee", selectedEmployee);
+     }
+
+     // matchManagement에서 사용되는 기존 데이터도 함께 전달해야 합니다.
+     Long projectId = (Long) session.getAttribute("projectId");
+     List<ProjectRequirements> projectRequirements = (List<ProjectRequirements>) session.getAttribute("projectRequirements");
+     List<EmployeesProjects> employeesProjects = (List<EmployeesProjects>) session.getAttribute("employeesProjects");
+
+     if (projectId != null && projectRequirements != null && employeesProjects != null) {
+         Projects projects = projectsService.getProjectById(projectId);
+         model.addAttribute("Projects", projects);
+         model.addAttribute("projectRequirements", projectRequirements);
+         model.addAttribute("employeesProjects", employeesProjects);
+         model.addAttribute("currentDate", LocalDate.now());
+
+         Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
+         List<Map.Entry<Employees, Integer>> employeeEntries = new ArrayList<>(filteredEmployeesTransitTimes.entrySet());
+
+         model.addAttribute("employeeEntries", employeeEntries);
+     }
+
+     return "match/matchManagement"; // 동일한 뷰로 돌아감
+ }
+
+
+
+
 
     @GetMapping("/matchEmployeeProject")
     public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload) {
