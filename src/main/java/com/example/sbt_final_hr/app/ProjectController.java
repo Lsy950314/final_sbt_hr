@@ -1,8 +1,6 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
@@ -10,7 +8,6 @@ import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
