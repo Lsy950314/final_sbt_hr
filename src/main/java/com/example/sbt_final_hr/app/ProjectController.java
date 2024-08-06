@@ -74,7 +74,6 @@ public class ProjectController {
                 }).toList();
 
         List<Long> eprID = new ArrayList<Long>();
-
         for (EmployeesProjectsRequest req : employeesProjectsRequests) {
             if (req.getEmployeeName() != null) {
                 System.out.print("Employee ID: " + req.getEmployee().getEmployeeId());
@@ -87,6 +86,8 @@ public class ProjectController {
 //            System.out.println("Project Duration: " + req.getProjectDuration());
 //            System.out.println("----");
         }
+
+
         // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 //        System.out.println("pr: " + projectRequirements);
 //        System.out.println("ep: " + employeesProjectsRequests);
@@ -100,6 +101,7 @@ public class ProjectController {
         session.setAttribute("eprID", eprID);
 
         Map<String, Object> response = new HashMap<>();
+        response.put("project", projectsService.getProjectById(id));
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
