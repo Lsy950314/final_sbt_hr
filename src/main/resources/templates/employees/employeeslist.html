@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
     <style>
+        /* 기존 CSS 코드 유지 */
         body {
             width: 1920px;
             height: 1280px;
@@ -60,12 +61,10 @@
             border-radius: 15px; /* 둥근 모서리 */
             backdrop-filter: blur(10px); /* 글라스 효과 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-            /*display: flex;*/
             color: #333; /* 어두운 글자색 */
             font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
             text-align: center;
             overflow: hidden;
-
         }
 
         .members > div {
@@ -79,11 +78,9 @@
             margin-right: 10px;
             float: left;
             width: 200px; /* 각 div의 고정된 너비 */
-
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
         }
-
 
         .modal {
             display: none; /* 숨김 처리 */
@@ -295,9 +292,6 @@
             background-color: #545b62;
             transform: translateY(0);
         }
-
-
-
     </style>
 </head>
 <body>
@@ -309,17 +303,24 @@
             <li><a href="/readAllProjects">Projects</a></li>
         </ul>
     </div>
-
-    <form th:action="@{/employees}" method="get">
-        <label for="name">Search by Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter name"/>
-        <button type="submit">Search</button>
-    </form>
-
-
     <div class="contents">
         <p style="font-size: 26px">社員リスト <span><button th:onclick="createEmployee()"
                                                             id="add-employees">社員追加</button></span></p>
+
+        <!--        필터링 및 정렬        -->
+        <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
+        <select id="sortEmployeesByDate" onchange="sortEmployeesByDate()">
+            <!--        Current_Project_End_Date가 있으면(프로젝트 진행중이면) 그거 값으로 받고, Last_Project_End_Date만 있으면(배정된 프로젝트 없으면) 그것을 값으로 받아서 내림차순(프로젝트 종료일 순) or 오름차순  -->
+            <option value="startDate">프로젝트 시작일 순</option>
+            <option value="endDate">프로젝트 종료일 순</option>
+        </select>
+
+        <select id="filterByAllocation" onchange="filterByAllocation()">
+            <option value="">모든 상태</option>
+            <option value="-1">미배정</option>
+            <option value="1">예비배정</option>
+            <option value="2">배정</option>
+        </select>
 
         <div class="members">
             <div class="header">
@@ -330,7 +331,7 @@
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
             </div>
-            <div th:each="e : ${employees}">
+            <div th:each="e : ${employees}" class="employee">
                 <div th:text="${e.name}"></div>
                 <div th:text="${e.starPointAverage != null ? e.starPointAverage : 'no point yet'}">dd</div>
                 <div>dd</div>
@@ -348,10 +349,8 @@
                 <div id="employeeDetails"></div>
             </div>
         </div>
-
     </div>
 </div>
-</body>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const modal = document.getElementById("myModal");
@@ -376,44 +375,36 @@
                         if (employeeDetails) {
                             employeeDetails.innerHTML = `
                        <div id="employee-info">
-
-    <p class="label">Name:</p>
-    <p class="value">${data.name}</p>
-    <p class="label">Address:</p>
-    <p class="value">${data.address}</p>
-    <p class="label">Last Project End Date:</p>
-    <p class="value">${data.lastProjectEndDate}</p>
-    <p class="label">Current Project End Date:</p>
-    <p class="value">${data.currentProjectEndDate}</p>
-    <p class="label">Contact Number:</p>
-    <p class="value">${data.contactNumber}</p>
-    <p class="label">Hire Date:</p>
-    <p class="value">${data.hireDate}</p>
-    <p class="label">Preferred Language:</p>
-    <p class="value">${data.preferredLanguage}</p>
-    <p class="label">Preferred Project Type:</p>
-    <p class="value">${data.preferredProjectType}</p>
-    <p class="label">Skills & Career : </p>
-    <p class="value" id="skillsAndCareer">
-    <p class="label">Projects : </p>
-    <p class="value" id="projectsList"></p>
-</p>
-
-<div>  <div id="button-container">
-    <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
-    <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
-</div> <button  onclick="navigateToMatchManagement()">매치버튼</button></div>
-
-
-
-</div>
+                           <p class="label">Name:</p>
+                           <p class="value">${data.name}</p>
+                           <p class="label">Address:</p>
+                           <p class="value">${data.address}</p>
+                           <p class="label">Last Project End Date:</p>
+                           <p class="value">${data.lastProjectEndDate}</p>
+                           <p class="label">Current Project End Date:</p>
+                           <p class="value">${data.currentProjectEndDate}</p>
+                           <p class="label">Contact Number:</p>
+                           <p class="value">${data.contactNumber}</p>
+                           <p class="label">Hire Date:</p>
+                           <p class="value">${data.hireDate}</p>
+                           <p class="label">Preferred Language:</p>
+                           <p class="value">${data.preferredLanguage}</p>
+                           <p class="label">Preferred Project Type:</p>
+                           <p class="value">${data.preferredProjectType}</p>
+                           <p class="label">Skills & Career:</p>
+                           <p class="value" id="skillsAndCareer"></p>
+                           <p class="label">Projects:</p>
+                           <p class="value" id="projectsList"></p>
+                           <div id="button-container">
+                               <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
+                               <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
+                           </div>
+                           <button onclick="navigateToMatchManagement()">매치버튼</button>
+                       </div>
                     `;
 
-
                             // 스킬 정보 추가
-                            // 특정 id를 가진 <p> 요소를 찾습니다.
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
-
                             if (data.skills && data.skills.length > 0) {
                                 const skillsList = document.createElement('ul');
                                 data.skills.forEach(skill => {
@@ -434,14 +425,15 @@
                                 });
                                 projectsListElement.appendChild(projectsList);
                             }
-
                         }
+
                         document.getElementById('update-btn').addEventListener('click', function () {
                             updateEmployee(employeeId);
-                        })
+                        });
+
                         document.getElementById('delete-btn').addEventListener('click', function () {
                             deleteEmployee(employeeId);
-                        })
+                        });
 
                         modal.style.display = "block";
                     })
@@ -451,25 +443,41 @@
 
         span.onclick = function () {
             modal.style.display = "none";
-        }
+        };
 
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        }
+        };
     });
+
     function updateEmployee(employeeId) {
         location.href = `/employees/edit/${employeeId}`;
     }
 
     function deleteEmployee(employeeId) {
-        location.href = `/employees/delete/${employeeId}`;
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = `/employees/delete/${employeeId}`;
+        }
     }
 
     function createEmployee() {
-        location.href = "/employees/newemployee"
+        location.href = "/employees/newemployee";
     }
 
+    function filterByEmployeeName() {
+        const filter = document.getElementById('filterByEmployeeName').value.toLowerCase();
+        const employees = document.querySelectorAll('.members .employee');
+
+        employees.forEach(employee => {
+            const employeeName = employee.querySelector('div:nth-child(1)').textContent.toLowerCase();
+            if (employeeName.includes(filter)) {
+                employee.style.display = "";
+            } else {
+                employee.style.display = "none";
+            }
+        });
+    }
 </script>
 </html>

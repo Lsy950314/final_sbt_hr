@@ -19,32 +19,47 @@ public class Employees {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
     @SequenceGenerator(name = "employee_seq", sequenceName = "EMPLOYEE_SEQ", allocationSize = 1)
     private Long employeeId;
+
     private String name;
+
     private String address;
+
     private double latitude;
+
     private double longitude;
+
     @Column(name= "last_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lastProjectEndDate;
+
     @Column(name= "current_project_end_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate currentProjectEndDate;
+
     private String image;
+
     private String contactNumber;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hireDate;
-    //별점 요소 추가(참여 안건 별 별점의 평균;employees_projects 튜플에 별점 생기면 db단계에서 자동계산됨)
+
     @Column(name= "star_point_average")
     private Double starPointAverage;
 
-
     @Column(name = "preferred_language")
     private Long preferredLanguage;
+
     @Column(name = "preferred_project_type")
     private Long preferredProjectType;
+
+    @Column(name = "allocation", nullable = false)
+    private int allocation = -1;
+
+
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;
+
     @ManyToOne
     @JoinColumn(name = "preferred_project_type", insertable = false, updatable = false)
     private ProjectTypes projectType;
@@ -70,6 +85,7 @@ public class Employees {
         employeesRequest.setContactNumber(this.contactNumber);
         employeesRequest.setHireDate(this.hireDate);
         employeesRequest.setImage(this.image);
+        employeesRequest.setAllocation(this.allocation);
 
         return employeesRequest;
     }
