@@ -70,7 +70,7 @@ public class EmployeesController {
                                 @RequestParam(name = "projectId", required = false) Long projectId,
                                 Model model) {
         if (projectId != null) {
-            model.addAttribute("employees", employeesService.findByProjectId(projectId));
+            model.addAttribute("employees", employeesService.findById(projectId));
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
@@ -78,6 +78,9 @@ public class EmployeesController {
         }
         return "employees/employeeslist";
     }
+
+
+
 
 
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
@@ -98,6 +101,8 @@ public class EmployeesController {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
+        //8월 5일 17:02 추가중
+        //List<Projects> projects = projectsService.findByProjectIds(projectIds);
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -126,7 +131,9 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
+        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
+
 
         //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
