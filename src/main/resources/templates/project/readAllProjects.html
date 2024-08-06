@@ -488,10 +488,22 @@
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
                     <div id="project-info">
-    <div class="data-row">
-        <div class="label">プロジェクトID:</div>
-        <div class="value">${data.projectId}</div>
-    </div>
+     <div class="data-row">
+         <div class="label">勤務先住所:</div>
+         <div class="value">${data.workLocation}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">顧客先会社:</div>
+         <div class="value">${data.clientCompany}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">ステータス:</div>
+         <div class="value">${data.status}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">連絡先電話:</div>
+         <div class="value">${data.contactPhone}</div>
+     </div>
     <div class="data-row">
         <div class="label">プロジェクト要件:</div>
         <div class="value modal-projectRequirements">
