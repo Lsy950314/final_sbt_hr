@@ -89,6 +89,102 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         height: 350px;
         width: 350px;
     }
+
+    button{
+        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
+        font-size: 0.8rem; /* 글자 크기 */
+        color: #fff; /* 텍스트 색상 */
+        background: linear-gradient(
+                45deg,
+                #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+        ); /* 버튼 배경색 그라데이션 */
+        border: none; /* 기본 테두리 제거 */
+        border-radius: 20px; /* 둥근 테두리 */
+        padding: 7px 14px; /* 내부 여백 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
+        cursor: pointer; /* 커서 변경 */
+        transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 24px;
+        color: #4CAF50;
+        margin-bottom: 20px;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    input[type="text"], input[type="date"], select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus, select:focus, input[type="file"]:focus {
+        border-color: #4CAF50;
+        outline: none;
+    }
+
+    button[type="submit"], button[type="button"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button[type="submit"]:hover, button[type="button"]:hover {
+        background-color: #45a049;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    a {
+        display: block;
+        text-align: center;
+        color: #4CAF50;
+        margin-top: 20px;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+
 </style>
 <body onload="initMap()">
 <h1>Create Employee(Photo)</h1>
@@ -99,13 +195,13 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <label for="address">Address:</label>
     <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
 
-    <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" th:field="*{latitude}" readonly/><br/>
+<!--    <label for="latitude" style="display: none;">Latitude:</label>-->
+    <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
 
-    <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" th:field="*{longitude}" readonly/><br/>
+<!--    <label for="longitude" style="display: none;">Longitude:</label>-->
+    <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
 
-    <div id="map"></div>
+    <div id="map" style="display: none;"></div>
 
     <label for="lastProjectEndDate">Last Project End Date:</label>
     <input type="date" id="lastProjectEndDate" th:field="*{lastProjectEndDate}"/><br/>
