@@ -30,7 +30,7 @@ public class MatchController {
     public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService1) {
         this.matchService = matchService;
         this.projectsService = projectsService;
-        this.employeesService = employeesService1;
+        this.employeesService = employeesService;
     }
 
     @GetMapping("/check")
