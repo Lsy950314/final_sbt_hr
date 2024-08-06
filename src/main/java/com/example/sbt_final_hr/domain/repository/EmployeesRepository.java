@@ -37,7 +37,14 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     @Query("UPDATE Employees e SET e.lastProjectEndDate = e.currentProjectEndDate, e.currentProjectEndDate = null WHERE e.employeeId = :employeeId")
     void updateProjectEndDates(@Param("employeeId") long employeeId);
 
+    //8월 6일 12:45 추가 사원 이름 기준 오름차순 select
+    @Query("SELECT e FROM Employees e ORDER BY e.name ASC")
+    List<Employees> findAllOrderByEmployeeNameAsc();
 
-
+    //사원 allocation 바꾸는 코드
+    @Query("UPDATE Employees e SET e.allocation = :num WHERE e.employeeId = :id")
+    @Modifying
+    @Transactional
+    void updateAllocationTo(Long id, int num);
 
 }

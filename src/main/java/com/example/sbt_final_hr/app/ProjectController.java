@@ -201,6 +201,8 @@ public class ProjectController {
             employeesService.updateStarPointAverageOfProjectParticipants(employeeId);
             //LAST_PROJECT_END_DATE를 CURRENT_PROJECT_END_DATE의 값을 넣고, CURRENT_PROJECT_END_DATE의의 값을 null로
             employeesService.updateProjectEndDateOfProjectParticipants(employeeId);
+            //프로젝트에 참여한 사원의 allocation을 1 => -1 로 업데이트(employees table)
+            employeesService.updateAllocationTo(employeeId, -1);
         }
         // 프로젝트의 status를 1 => 2로 변경
         projectsService.updateStatusTo(projectId, 2);

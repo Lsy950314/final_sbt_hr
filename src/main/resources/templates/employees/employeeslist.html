@@ -292,6 +292,24 @@
             background-color: #545b62;
             transform: translateY(0);
         }
+
+        /* 상태에 따른 css 설정 */
+        .allocation-unassigned {
+            background-color: #f5c6cb; /* 미배정: 연한 빨간색 */
+        }
+
+        .allocation-preassigned {
+            background-color: #c3e6cb; /* 예비배정: 연한 노란색 */
+        }
+
+        .allocation-assigned {
+            background-color: #bee5eb; /* 배정완료: 연한 녹색 */
+        }
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -311,35 +329,44 @@
         <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
         <select id="sortEmployeesByDate" onchange="sortEmployeesByDate()">
             <!--        Current_Project_End_Date가 있으면(프로젝트 진행중이면) 그거 값으로 받고, Last_Project_End_Date만 있으면(배정된 프로젝트 없으면) 그것을 값으로 받아서 내림차순(프로젝트 종료일 순) or 오름차순  -->
-            <option value="startDate">프로젝트 시작일 순</option>
-            <option value="endDate">프로젝트 종료일 순</option>
+            <option value="ascDate">시간 오름차순 </option>
+            <option value="descDate">시간 내림차순</option>
         </select>
 
         <select id="filterByAllocation" onchange="filterByAllocation()">
             <option value="">모든 상태</option>
             <option value="-1">미배정</option>
-            <option value="1">예비배정</option>
-            <option value="2">배정</option>
+            <option value="0">예비배정</option>
+            <option value="1">배정</option>
         </select>
 
         <div class="members">
             <div class="header">
                 <div>名前</div>
                 <div>評価</div>
-                <div>Column2</div>
                 <div>住所</div>
                 <div>プロジェクト終了日</div>
                 <div>詳細を見る</div>
+                <div class="allocation-header">(임시컬럼)배정상태</div> <!-- 숨김 처리 -->
+                <div class="last-project-end-date-header">(임시컬럼)마지막 완료플젝 종료일</div>
+                <div class="hire-date-header">(임시컬럼)입사일</div>
+
             </div>
-            <div th:each="e : ${employees}" class="employee">
-                <div th:text="${e.name}"></div>
-                <div th:text="${e.starPointAverage != null ? e.starPointAverage : 'no point yet'}">dd</div>
-                <div>dd</div>
-                <div th:text="${e.address}"></div>
-                <div th:text="${e.currentProjectEndDate  !=null ? e.currentProjectEndDate : 'Not allocated'}"></div>
+            <div th:each="e : ${employees}" th:class="'employee ' +
+                (${e.allocation} == -1 ? 'allocation-unassigned' :
+                (${e.allocation} == 0 ? 'allocation-preassigned' :
+                (${e.allocation} == 1 ? 'allocation-assigned' : '')))">
+                <div th:text="${e.name}" class="employee-name"></div>
+                <div th:text="${e.starPointAverage != null ? e.starPointAverage : 'no point yet'}" class="employee-rating">dd</div>
+                <div th:text="${e.address}" class="employee-address"></div>
+                <div th:text="${e.currentProjectEndDate  !=null ? e.currentProjectEndDate : 'Not allocated'}" class="current-project-end-date"></div>
                 <div>
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
                 </div>
+                <div th:text="${e.allocation}" class="allocation"></div> <!-- 숨김 처리 -->
+                <div th:text="${e.lastProjectEndDate}" class="last-project-end-date"></div>
+                <div th:text="${e.hireDate}"  class="hire-date"></div>
+
             </div>
         </div>
         <!-- 모달 구조 -->
@@ -471,7 +498,7 @@
         const employees = document.querySelectorAll('.members .employee');
 
         employees.forEach(employee => {
-            const employeeName = employee.querySelector('div:nth-child(1)').textContent.toLowerCase();
+            const employeeName = employee.querySelector('.employee-name').textContent.toLowerCase();
             if (employeeName.includes(filter)) {
                 employee.style.display = "";
             } else {
@@ -479,5 +506,102 @@
             }
         });
     }
+
+    function filterByAllocation() {
+        const selectedAllocation = document.getElementById('filterByAllocation').value;
+        const employees = document.querySelectorAll('.members > .employee');
+
+        employees.forEach(employee => {
+            const employeeAllocation = employee.querySelector('.allocation').textContent.trim();
+
+            // 선택된 상태와 사원의 배정 상태가 일치하거나, 모든 상태가 선택된 경우
+            if (selectedAllocation === "" || employeeAllocation === selectedAllocation) {
+                employee.style.display = '';
+            } else {
+                employee.style.display = 'none';
+            }
+        });
+    }
+
+    //8월 6일 13:26 시도중 => 안된다.
+
+    function sortEmployeesByDate() {
+        const sortBy = document.getElementById('sortEmployeesByDate').value;
+        const employees = Array.from(document.querySelectorAll('.members > .employee'));
+        const employeesContainer = document.querySelector('.members');
+
+        employees.sort((a, b) => {
+            const aValue = getDateValue(a);
+            const bValue = getDateValue(b);
+
+            if (sortBy === 'ascDate') {
+                return aValue - bValue;
+            } else {
+                return bValue - aValue;
+            }
+        });
+
+        employees.forEach(employee => {
+            employeesContainer.appendChild(employee);
+        });
+    }
+
+    function getDateValue(employee) {
+        const currentProjectEndDate = employee.querySelector('.current-project-end-date').textContent.trim();
+        const lastProjectEndDate = employee.querySelector('.last-project-end-date').textContent.trim();
+        const hireDate = employee.querySelector('.hire-date').textContent.trim();
+
+        if (currentProjectEndDate !== 'Not allocated') {
+            return new Date(currentProjectEndDate);
+        } else if (lastProjectEndDate) {
+            return new Date(lastProjectEndDate);
+        } else {
+            return new Date(hireDate);
+        }
+    }
+
+
+    //8월 6일 13:26 시도중 => 안된다.
+
+
+
+
+
+
+    //임시 컬럼 숨김처리
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const allocationHeaders = document.querySelectorAll('.allocation-header');
+        const allocationElements = document.querySelectorAll('.allocation');
+        const lastProjectEndDateHeaders = document.querySelectorAll('.last-project-end-date-header');
+        const lastProjectEndDateElements = document.querySelectorAll('.last-project-end-date');
+        const hireDateHeaders = document.querySelectorAll('.hire-date-header');
+        const hireDateElements = document.querySelectorAll('.hire-date');
+
+
+        allocationHeaders.forEach(element => {
+            element.style.display = 'none';
+        });
+        allocationElements.forEach(element => {
+            element.style.display = 'none';
+        });
+        lastProjectEndDateHeaders.forEach(element => {
+            element.style.display = 'none';
+        });
+        lastProjectEndDateElements.forEach(element => {
+            element.style.display = 'none';
+        });
+        hireDateHeaders.forEach(element => {
+            element.style.display = 'none';
+        });
+        hireDateElements.forEach(element => {
+            element.style.display = 'none';
+        });
+
+    });
+
+
+
+
 </script>
+</body>
 </html>

@@ -74,7 +74,7 @@ public class EmployeesController {
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
-            model.addAttribute("employees", employeesService.findAll());
+            model.addAttribute("employees", employeesService.findAllOrderByEmployeeNameAsc());
         }
         return "employees/employeeslist";
     }
