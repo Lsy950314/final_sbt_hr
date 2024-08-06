@@ -335,7 +335,7 @@
     }
 
     function showCompleteModal(projectId) {
-        // console.log(projectId)
+        console.log(projectId)
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
                             <div id="assigned-employees"></div>
@@ -344,7 +344,7 @@
                                 <button id="yes-btn">はい</button>
                                 <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
                             </div>`;
-        fetch(`/getInfoByProjectID2?id=${projectId}`)
+        fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
                 console.log("Received data:", data);
@@ -409,7 +409,7 @@
                 console.log('Project completed:', data);
                 closeCompleteModal();
                 // 성공 메시지 표시 등 추가 작업 수행 가능
-                window.location.reload();
+
             })
             .catch(error => {
                 console.error('Error completing project:', error);

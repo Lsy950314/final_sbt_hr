@@ -46,15 +46,13 @@ public class ProjectController {
     }
 
     @GetMapping("/readAllProjects")
-    public String readAllProjects(HttpSession httpSession) {
-        httpSession.setAttribute("projects", projectsService.getAllProjects());
-        return "project/readAllProjects";
-    }
-    
-    // 특정 사원이 속한 프로젝트들만 리스트업하기
-    @GetMapping("/readProjectsByEmployee")
-    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
-        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId) {
+        if (employeeId != null) {
+            // 특정 사원이 속한 프로젝트들만 리스트업하기
+            httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+        } else {
+            httpSession.setAttribute("projects", projectsService.getAllProjects());
+        }
         return "project/readAllProjects";
     }
 

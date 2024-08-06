@@ -78,7 +78,7 @@ public class MatchController {
         return "match/matchManagement";
     }
 
- // 사원 비교를 위해 만든 컨트롤러
+
  @PostMapping("/compareEmployee")
  public String compareEmployee(@RequestParam("employeeId") Long employeeId, Model model, HttpSession session) {
      // 선택된 사원의 ID로 사원 정보를 조회합니다.
