@@ -302,6 +302,65 @@
         }
 
 
+        input[type="text"], select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            width: 200px;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+        }
+
+        select {
+            width: auto;
+            padding-right: 20px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        input[type="text"]:hover, select:hover {
+            border-color: #2980b9;
+        }
+
+        input[type="text"].hidden {
+            display: none;
+        }
+
+        /* 레이아웃 조정 */
+        #filterByProjectName, #filterByProjectId {
+            width: 220px;
+        }
+
+        #sortProjectsByDate, #filterByStatus {
+            width: 180px;
+        }
+
+        /* 라벨 스타일링 */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+
+        /* 전체 필터 및 정렬 섹션 스타일 */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
     </style>
 </head>
 <body>
@@ -320,6 +379,7 @@
         </p>
 
         <!--        필터링 및 정렬        -->
+
         <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
         <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
             <option value="startDate">프로젝트 시작일 순</option>
@@ -334,6 +394,7 @@
             <option value="1">배정완료</option>
             <option value="2">완료</option>
         </select>
+
 
         <div class="projects">
             <div class="header">
