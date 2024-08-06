@@ -18,4 +18,6 @@ public interface ProjectsRepository extends JpaRepository<Projects, Long> {
     @Transactional
     void updateStatusTo(Long id, int num);
 
+    List<Projects> findByProjectIdIn(List<Long> projectIds);
+
 }

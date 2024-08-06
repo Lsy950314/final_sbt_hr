@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -18,15 +19,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
+    private final EmployeesService employeesService;
 
-    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService) {
+    public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService1) {
         this.matchService = matchService;
         this.projectsService = projectsService;
+        this.employeesService = employeesService1;
     }
 
     @GetMapping("/check")
@@ -46,9 +50,9 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-        session.removeAttribute("projectId");
-        session.removeAttribute("projectRequirements");
-        session.removeAttribute("employeesProjects");
+//        session.removeAttribute("projectId");
+//        session.removeAttribute("projectRequirements");
+//        session.removeAttribute("employeesProjects");
 
         Projects projects = projectsService.getProjectById(projectId);
 //      System.out.println(projects);
