@@ -394,13 +394,16 @@
     <p class="label">Preferred Project Type:</p>
     <p class="value">${data.preferredProjectType}</p>
     <p class="label">Skills & Career : </p>
-<p class="value" id="skillsAndCareer">
+    <p class="value" id="skillsAndCareer">
+    <p class="label">Projects : </p>
+    <p class="value" id="projectsList"></p>
 </p>
 
 <div>  <div id="button-container">
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
     <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
 </div> <button  onclick="navigateToMatchManagement()">매치버튼</button></div>
+
 
 
 </div>
@@ -419,6 +422,17 @@
                                     skillsList.appendChild(listItem);
                                 });
                                 skillsAndCareerElement.appendChild(skillsList);
+                            }
+
+                            const projectsListElement = document.getElementById('projectsList');
+                            if (data.projects && data.projects.length > 0) {
+                                const projectsList = document.createElement('ul');
+                                data.projects.forEach(project => {
+                                    const listItem = document.createElement('li');
+                                    listItem.textContent = `Project Name: ${project.projectName}, Start: ${project.startDate}, End: ${project.endDate}`;
+                                    projectsList.appendChild(listItem);
+                                });
+                                projectsListElement.appendChild(projectsList);
                             }
 
                         }
