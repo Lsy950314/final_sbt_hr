@@ -197,17 +197,14 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
 <!--    <label for="latitude" style="display: none;">Latitude:</label>-->
     <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
-
 <!--    <label for="longitude" style="display: none;">Longitude:</label>-->
     <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
-
     <div id="map" style="display: none;"></div>
+<!--    <label for="lastProjectEndDate">Last Project End Date:</label>-->
+    <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
 
-    <label for="lastProjectEndDate">Last Project End Date:</label>
-    <input type="date" id="lastProjectEndDate" th:field="*{lastProjectEndDate}"/><br/>
-
-    <label for="currentProjectEndDate">Current Project End Date:</label>
-    <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
+<!--    <label for="currentProjectEndDate">Current Project End Date:</label>-->
+    <input type="date" id="currentProjectEndDate" style="display: none;" th:field="*{currentProjectEndDate}"/><br/>
 
     <div class="form-group">
         <label for="imageFile">Upload Image:</label>
@@ -232,7 +229,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
 
     <label for="hireDate">Hire Date:</label>
-    <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
+    <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
 
     <!-- Skill Career 섹션 -->
     <div id="skillCareerContainer"></div>

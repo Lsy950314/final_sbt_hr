@@ -316,9 +316,6 @@
         }
 
 
-
-
-
     </style>
 </head>
 <body>
@@ -336,9 +333,9 @@
 
         <!--        필터링 및 정렬        -->
         <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
+        <!--Current_Project_End_Date가 있으면(프로젝트 진행중이면) 그거 값으로 받고, Last_Project_End_Date만 있으면(배정된 프로젝트 없으면) 그것을 값으로, 그것도 없으면 hireDate 받아서 내림차순(프로젝트 종료일 순) or 오름차순  -->
         <select id="sortEmployeesByDate" onchange="sortEmployeesByDate()">
-            <!--        Current_Project_End_Date가 있으면(프로젝트 진행중이면) 그거 값으로 받고, Last_Project_End_Date만 있으면(배정된 프로젝트 없으면) 그것을 값으로 받아서 내림차순(프로젝트 종료일 순) or 오름차순  -->
-            <option value="ascDate">시간 오름차순 </option>
+            <option value="ascDate">시간 오름차순</option>
             <option value="descDate">시간 내림차순</option>
         </select>
 
@@ -366,15 +363,17 @@
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))">
                 <div th:text="${e.name}" class="employee-name"></div>
-                <div th:text="${e.starPointAverage != null ? e.starPointAverage : 'no point yet'}" class="employee-rating">dd</div>
+                <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 100) / 100.0 : 'no point yet'}"
+                     class="employee-rating"></div>
                 <div th:text="${e.address}" class="employee-address"></div>
-                <div th:text="${e.currentProjectEndDate  !=null ? e.currentProjectEndDate : 'Not allocated'}" class="current-project-end-date"></div>
+                <div th:text="${e.currentProjectEndDate  !=null ? e.currentProjectEndDate : 'Not allocated'}"
+                     class="current-project-end-date"></div>
                 <div>
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
                 </div>
                 <div th:text="${e.allocation}" class="allocation"></div> <!-- 숨김 처리 -->
                 <div th:text="${e.lastProjectEndDate}" class="last-project-end-date"></div>
-                <div th:text="${e.hireDate}"  class="hire-date"></div>
+                <div th:text="${e.hireDate}" class="hire-date"></div>
 
             </div>
         </div>
@@ -409,6 +408,8 @@
                         // 데이터가 null이 아닌지 확인
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
+                            //const lastProjectEndDate = data.lastProjectEndDate ? data.lastProjectEndDate : 'プロジェクト経験なし'; 안됨
+                            //const currentProjectEndDate = data.currentProjectEndDate ? data.currentProjectEndDate : '現在配属先なし'; 안됨
                             employeeDetails.innerHTML = `
                        <div id="employee-info">
                            <p class="label">Name:</p>
@@ -431,26 +432,29 @@
                            <p class="value" id="skillsAndCareer"></p>
                            <p class="label">Projects:</p>
                            <p class="value" id="projectsList"></p>
+
                            <div id="button-container">
                                <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
                                <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
                            </div>
-                           <button onclick="navigateToMatchManagement()">매치버튼</button>
+                           <button onclick="readProjectsByEmployeeId(${data.employeeId})"> 참여 프로젝트 상세보기 </button>
                        </div>
                     `;
 
-                            // 스킬 정보 추가
+                            // 스킬 정보 추가 => 표 형태 필요
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
+                                data.skills.sort((a, b) => b.skillCareer - a.skillCareer);
                                 const skillsList = document.createElement('ul');
                                 data.skills.forEach(skill => {
+                                    const years = Math.round((skill.skillCareer / 12) * 100) / 100;
                                     const listItem = document.createElement('li');
-                                    listItem.textContent = `Skill: ${skill.skillName}, Career: ${skill.skillCareer} months`;
+                                    listItem.textContent = `Skill: ${skill.skillName}, Career: ${years} years`;
                                     skillsList.appendChild(listItem);
                                 });
                                 skillsAndCareerElement.appendChild(skillsList);
                             }
-
+                            //  표 형태 필요
                             const projectsListElement = document.getElementById('projectsList');
                             if (data.projects && data.projects.length > 0) {
                                 const projectsList = document.createElement('ul');
@@ -497,6 +501,13 @@
             location.href = `/employees/delete/${employeeId}`;
         }
     }
+
+    function readProjectsByEmployeeId(employeeId) {
+        alert(employeeId);
+        location.href = "/readAllProjects?employeeId=" + employeeId;
+    }
+
+
 
     function createEmployee() {
         location.href = "/employees/newemployee";
@@ -568,16 +579,6 @@
             return new Date(hireDate);
         }
     }
-
-
-    //8월 6일 13:26 시도중 => 안된다.
-
-
-
-
-
-
-    //임시 컬럼 숨김처리
     document.addEventListener('DOMContentLoaded', (event) => {
         const allocationHeaders = document.querySelectorAll('.allocation-header');
         const allocationElements = document.querySelectorAll('.allocation');
@@ -607,8 +608,6 @@
         });
 
     });
-
-
 
 
 </script>
