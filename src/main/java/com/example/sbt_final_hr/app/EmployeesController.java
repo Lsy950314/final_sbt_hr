@@ -64,16 +64,6 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
-//    @GetMapping("/readProjectsByEmployee") => 예시 http://localhost:8080/readProjectsByEmployee?employeeId=27
-//    public String readProjectsByEmployee(HttpSession httpSession, @RequestParam("employeeId") Long employeeId) {
-//        httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
-//        return "project/readAllProjects";
-//    }
-
-    //특정 프로젝트에 참가하고 있는or참가했던 사원 리스트 뽑아오기
-//    @GetMapping //예시 : http://localhost:8080/employees?projectId=21
-//    public String readEmployeesByProject()
-
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name,
@@ -88,6 +78,7 @@ public class EmployeesController {
         }
         return "employees/employeeslist";
     }
+
 
     //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
@@ -107,8 +98,6 @@ public class EmployeesController {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
-        //8월 5일 17:02 추가중
-        //List<Projects> projects = projectsService.findByProjectIds(projectIds);
 
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -137,9 +126,7 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
-        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
-
 
         //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();

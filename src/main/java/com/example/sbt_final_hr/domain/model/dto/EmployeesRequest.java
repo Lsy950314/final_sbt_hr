@@ -29,7 +29,8 @@ public class EmployeesRequest {
     private LocalDate hireDate;
     private MultipartFile imageFile;
     private String image;
-    private Double starPointAverage; //별점 요소 추가
+    private Double starPointAverage;
+    private int allocation = -1;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate previousProjectEndDate;
@@ -53,6 +54,7 @@ public class EmployeesRequest {
         employee.setHireDate(this.hireDate);
         employee.setImage(this.image);
         employee.setStarPointAverage(this.starPointAverage);
+        employee.setAllocation(this.allocation);
         return employee;
     }
 
