@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.domain.repository;
 
 import com.example.sbt_final_hr.domain.model.entity.Projects;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
