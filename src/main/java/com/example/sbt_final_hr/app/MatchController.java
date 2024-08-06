@@ -50,9 +50,9 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-        session.removeAttribute("projectId");
-        session.removeAttribute("projectRequirements");
-        session.removeAttribute("employeesProjects");
+//        session.removeAttribute("projectId");
+//        session.removeAttribute("projectRequirements");
+//        session.removeAttribute("employeesProjects");
 
         Projects projects = projectsService.getProjectById(projectId);
 //      System.out.println(projects);
@@ -77,41 +77,6 @@ public class MatchController {
 
         return "match/matchManagement";
     }
-
-
- @PostMapping("/compareEmployee")
- public String compareEmployee(@RequestParam("employeeId") Long employeeId, Model model, HttpSession session) {
-     // 선택된 사원의 ID로 사원 정보를 조회합니다.
-     Optional<Employees> selectedEmployee = employeesService.findById(employeeId);
-
-     if (selectedEmployee != null) {
-         model.addAttribute("selectedEmployee", selectedEmployee);
-     }
-
-     // matchManagement에서 사용되는 기존 데이터도 함께 전달해야 합니다.
-     Long projectId = (Long) session.getAttribute("projectId");
-     List<ProjectRequirements> projectRequirements = (List<ProjectRequirements>) session.getAttribute("projectRequirements");
-     List<EmployeesProjects> employeesProjects = (List<EmployeesProjects>) session.getAttribute("employeesProjects");
-
-     if (projectId != null && projectRequirements != null && employeesProjects != null) {
-         Projects projects = projectsService.getProjectById(projectId);
-         model.addAttribute("Projects", projects);
-         model.addAttribute("projectRequirements", projectRequirements);
-         model.addAttribute("employeesProjects", employeesProjects);
-         model.addAttribute("currentDate", LocalDate.now());
-
-         Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
-         List<Map.Entry<Employees, Integer>> employeeEntries = new ArrayList<>(filteredEmployeesTransitTimes.entrySet());
-
-         model.addAttribute("employeeEntries", employeeEntries);
-     }
-
-     return "match/matchManagement"; // 동일한 뷰로 돌아감
- }
-
-
-
-
 
     @GetMapping("/matchEmployeeProject")
     public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload) {
