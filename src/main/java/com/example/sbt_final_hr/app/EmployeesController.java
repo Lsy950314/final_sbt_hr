@@ -70,7 +70,7 @@ public class EmployeesController {
                                 @RequestParam(name = "projectId", required = false) Long projectId,
                                 Model model) {
         if (projectId != null) {
-            model.addAttribute("employees", employeesService.findById(projectId));
+            model.addAttribute("employees", employeesService.findByProjectId(projectId));
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
