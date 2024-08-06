@@ -4,6 +4,7 @@ import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.ProjectTypes;
 import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.*;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class ProjectsService {
     }
 
     public List<Projects> getAllProjects() {
-        return projectsRepository.findAll();
+        return projectsRepository.findAll(Sort.by(Sort.Direction.ASC, "projectName"));
     }
 
     public List<Projects> getProjectByEmployee(Long employeeId){

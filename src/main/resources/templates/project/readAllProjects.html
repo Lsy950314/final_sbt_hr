@@ -48,6 +48,16 @@
             font-size: 18px;
         }
 
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            box-sizing: border-box;
+        }
+
+
         .menus {
             list-style: none;
             padding: 0;
@@ -477,7 +487,7 @@
 
     function readEmployeesByProjectId(projectId) {
         alert(projectId);
-        // 임의의 매핑으로 projectId 가져가서 속한 List<employees> 구하기
+        location.href = "/employees?projectId=" + projectId;
     }
 
     function showProjectDetails(projectId) {
