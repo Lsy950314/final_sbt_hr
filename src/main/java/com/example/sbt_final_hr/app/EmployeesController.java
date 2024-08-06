@@ -80,18 +80,11 @@ public class EmployeesController {
     }
 
 
-
-
-
-    //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
-        //8월 5일 17:02 추가중
-        //List<Long> projectIds = new ArrayList<>();
-        //8월 5일 17:02 추가중
         List<Long> projectIds = employeesProjects.stream()
                 .map(ep -> ep.getProject().getProjectId())
                 .collect(Collectors.toList());
@@ -101,9 +94,6 @@ public class EmployeesController {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
-        //8월 5일 17:02 추가중
-        //List<Projects> projects = projectsService.findByProjectIds(projectIds);
-
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
