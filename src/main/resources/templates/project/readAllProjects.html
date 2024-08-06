@@ -48,6 +48,16 @@
             font-size: 18px;
         }
 
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            box-sizing: border-box;
+        }
+
+
         .menus {
             list-style: none;
             padding: 0;
@@ -552,19 +562,19 @@
                     <div id="project-info">
      <div class="data-row">
          <div class="label">勤務先住所:</div>
-         <div class="value">${data.workLocation}</div>
+         <div class="value">${data.project.workLocation}</div>
      </div>
      <div class="data-row">
          <div class="label">顧客先会社:</div>
-         <div class="value">${data.clientCompany}</div>
+         <div class="value">${data.project.clientCompany}</div>
      </div>
      <div class="data-row">
          <div class="label">ステータス:</div>
-         <div class="value">${data.status}</div>
+         <div class="value">${data.project.status}</div>
      </div>
      <div class="data-row">
          <div class="label">連絡先電話:</div>
-         <div class="value">${data.contactPhone}</div>
+         <div class="value">${data.project.contactPhone}</div>
      </div>
     <div class="data-row">
         <div class="label">プロジェクト要件:</div>
@@ -591,17 +601,10 @@
             <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
         </div>
     </div>
-    <div class="data-row">
-        <div class="label">従業員:</div>
-        <div class="value">
-            <ul>
-
-            </ul>
-        </div>
     <div id="button-container">
     <button id="update-btn">수정</button>
     <button id="delete-btn">삭제</button>
-</div> </div>
+    </div>
 </div>
 
                     <div>

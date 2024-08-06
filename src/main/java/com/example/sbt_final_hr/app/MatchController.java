@@ -25,12 +25,10 @@ import java.util.Optional;
 public class MatchController {
     private final MatchService matchService;
     private final ProjectsService projectsService;
-    private final EmployeesService employeesService;
 
     public MatchController(MatchService matchService, ProjectsService projectsService, EmployeesService employeesService, ProjectRequirementsService projectRequirementsService, EmployeesProjectsService employeesProjectsService, EmployeesService employeesService1) {
         this.matchService = matchService;
         this.projectsService = projectsService;
-        this.employeesService = employeesService;
     }
 
     @GetMapping("/check")
@@ -50,9 +48,9 @@ public class MatchController {
             return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
         }
 
-//        session.removeAttribute("projectId");
-//        session.removeAttribute("projectRequirements");
-//        session.removeAttribute("employeesProjects");
+//      session.removeAttribute("projectId");
+//      session.removeAttribute("projectRequirements");
+//      session.removeAttribute("employeesProjects");
 
         Projects projects = projectsService.getProjectById(projectId);
 //      System.out.println(projects);
