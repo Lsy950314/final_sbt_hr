@@ -46,7 +46,7 @@
 
                 requirementDiv.addEventListener('click', function () {
                     const projectRequirementsId = this.getAttribute('data-requirement-id');
-                    // console.log(projectRequirementsId)
+                    console.log(projectRequirementsId)
                     assignEmployeeToProject(employeeId, projectId, projectRequirementsId);
                     closeModal();
                 });
@@ -73,7 +73,6 @@
             } else {
                 alert('배정이 취소되었습니다.')
             }
-
 
         }
 
@@ -116,10 +115,11 @@
                     }
 
                     if (this.checked) {
-                        // 선택된 정보가 포함된 새로운 div 행을 생성
+                        const employeeId = this.getAttribute('data-employee-id');
                         const employeeInfoRow = document.createElement('div');
                         employeeInfoRow.classList.add('table-row');
                         employeeInfoRow.setAttribute('data-employee-name', name);
+                        employeeInfoRow.setAttribute('data-employee-id', employeeId);
                         employeeInfoRow.innerHTML = `
                     <div class="table-cell">${name}</div>
                     <div class="table-cell">${skill}</div>
@@ -127,6 +127,15 @@
                     <div class="table-cell">${commuteTime} 분</div>
                     <div class="table-cell">${waitingPeriod}</div>
                 `;
+
+                        // row 를 누르면 해당 사원 위치로 스크롤 시키기
+                        employeeInfoRow.addEventListener('click', function() {
+                            const employeeId = this.getAttribute('data-employee-id');
+                            const employeeEntry = document.querySelector(`.employee-entry[data-employee-id="${employeeId}"]`);
+                            if (employeeEntry) {
+                                employeeEntry.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        });
                         selectedInfoBody.appendChild(employeeInfoRow);
                     } else {
                         // 체크 해제 시 해당 행 제거
@@ -364,26 +373,21 @@
     <div>
 
         <div class="employee-list" th:each="e : ${employeeEntries}">
-            <div class="employee-entry">
+            <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
                 <div class="employee-name" th:text="'이름 = ' + ${e.key.getName()}"></div>
                 <div class="employee-preferred-skill"
                      th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <div class="employee-skill"
                          th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
-                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}" name="employee-skill-name"
+                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
+                           name="employee-skill-name"
                            th:value="${s.getSkill().skillName}"
-                           th:attr="data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
+                           th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}">比較</label>
                 </div>
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
-
-
-
-
-
-
 
 
                 <div class="assign-button-container">

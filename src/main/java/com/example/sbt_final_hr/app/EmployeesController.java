@@ -31,7 +31,7 @@ public class EmployeesController {
     private final ProjectsService projectsService;
 
     @Autowired
-    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1, ProjectsService projectsService, ProjectsService projectsService1) {
+    public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1, ProjectsService projectsService) {
         this.employeesService = employeesService;
         this.projectTypesService = projectTypesService;
         this.skillsService = skillsService;
@@ -63,6 +63,7 @@ public class EmployeesController {
         }
         return "redirect:/employees";
     }
+
 
     @GetMapping
     public String listEmployees(@RequestParam(name = "name", required = false) String name,
