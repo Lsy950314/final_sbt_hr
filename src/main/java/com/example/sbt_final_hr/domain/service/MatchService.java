@@ -50,6 +50,7 @@ public class MatchService {
     public void matchEmployeeToProject(Long projectId, Long employeeId, Long projectRequirementsId) {
         if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
             if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
+                employeesService.updateAllocationTo(employeeId, 1);
                 employeesService.updateEndDates(employeeId, projectId);
             }
         }
