@@ -315,6 +315,81 @@
             background-color: #bee5eb; /* 배정완료: 연한 녹색 */
         }
 
+        /* flexbox를 이용한 스킬 목록 스타일 */
+        .skills-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .skill-item span {
+            flex: 1;
+        }
+
+        .project-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+
+        input[type="text"], select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            width: 200px;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+        }
+
+        select {
+            width: auto;
+            padding-right: 20px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        input[type="text"]:hover, select:hover {
+            border-color: #2980b9;
+        }
+
+        /* 레이아웃 조정 */
+        #filterByEmployeeName {
+            width: 220px;
+        }
+
+        #sortEmployeesByDate, #filterByAllocation {
+            width: 180px;
+        }
+
+        /* 전체 필터 및 정렬 섹션 스타일 */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+
 
     </style>
 </head>
@@ -408,10 +483,14 @@
                         // 데이터가 null이 아닌지 확인
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
+                            const defaultImage = '/img/default-photo.jpeg';
+                            const employeeImage = data.image ? data.image : defaultImage;
                             //const lastProjectEndDate = data.lastProjectEndDate ? data.lastProjectEndDate : 'プロジェクト経験なし'; 안됨
                             //const currentProjectEndDate = data.currentProjectEndDate ? data.currentProjectEndDate : '現在配属先なし'; 안됨
                             employeeDetails.innerHTML = `
                        <div id="employee-info">
+                           <p class="label">Image:</p>
+                           <img src="${employeeImage}" alt="Employee Image" style="width: 100px; height: 100px; border-radius: 50%;"/>
                            <p class="label">Name:</p>
                            <p class="value">${data.name}</p>
                            <p class="label">Address:</p>
@@ -444,26 +523,26 @@
                             // 스킬 정보 추가 => 표 형태 필요
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
+                                // skills 데이터를 skillCareer를 기준으로 내림차순 정렬
                                 data.skills.sort((a, b) => b.skillCareer - a.skillCareer);
-                                const skillsList = document.createElement('ul');
+
                                 data.skills.forEach(skill => {
-                                    const years = Math.round((skill.skillCareer / 12) * 100) / 100;
-                                    const listItem = document.createElement('li');
-                                    listItem.textContent = `Skill: ${skill.skillName}, Career: ${years} years`;
-                                    skillsList.appendChild(listItem);
+                                    const years = Math.round((skill.skillCareer / 12) * 100) / 100; // months를 years로 환산하고 소수점 둘째 자리에서 반올림
+                                    const skillItem = document.createElement('div');
+                                    skillItem.className = 'skill-item';
+                                    skillItem.innerHTML = `<span>${skill.skillName}</span><span>${years} years</span>`;
+                                    skillsAndCareerElement.appendChild(skillItem);
                                 });
-                                skillsAndCareerElement.appendChild(skillsList);
                             }
                             //  표 형태 필요
                             const projectsListElement = document.getElementById('projectsList');
                             if (data.projects && data.projects.length > 0) {
-                                const projectsList = document.createElement('ul');
                                 data.projects.forEach(project => {
-                                    const listItem = document.createElement('li');
-                                    listItem.textContent = `Project Name: ${project.projectName}, Start: ${project.startDate}, End: ${project.endDate}`;
-                                    projectsList.appendChild(listItem);
+                                    const projectItem = document.createElement('div');
+                                    projectItem.className = 'project-item';
+                                    projectItem.innerHTML = `<span>${project.projectName}</span><span>${project.startDate} ~ ${project.endDate}</span>`;
+                                    projectsListElement.appendChild(projectItem);
                                 });
-                                projectsListElement.appendChild(projectsList);
                             }
                         }
 

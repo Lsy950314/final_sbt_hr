@@ -111,6 +111,8 @@ public class EmployeesController {
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
         response.put("preferredLanguage", employee.getSkill().getSkillName());
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
+        //8월 7일 10:48 시도중
+        response.put("image", employee.getImage());
 
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {
