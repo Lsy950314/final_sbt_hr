@@ -342,6 +342,55 @@
         }
 
 
+        input[type="text"], select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            width: 200px;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+        }
+
+        select {
+            width: auto;
+            padding-right: 20px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        input[type="text"]:hover, select:hover {
+            border-color: #2980b9;
+        }
+
+        /* 레이아웃 조정 */
+        #filterByEmployeeName {
+            width: 220px;
+        }
+
+        #sortEmployeesByDate, #filterByAllocation {
+            width: 180px;
+        }
+
+        /* 전체 필터 및 정렬 섹션 스타일 */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -491,7 +540,7 @@
                                 data.projects.forEach(project => {
                                     const projectItem = document.createElement('div');
                                     projectItem.className = 'project-item';
-                                    projectItem.innerHTML = `<span>${project.projectName}</span><span>${project.startDate}</span><span>${project.endDate}</span>`;
+                                    projectItem.innerHTML = `<span>${project.projectName}</span><span>${project.startDate} ~ ${project.endDate}</span>`;
                                     projectsListElement.appendChild(projectItem);
                                 });
                             }
