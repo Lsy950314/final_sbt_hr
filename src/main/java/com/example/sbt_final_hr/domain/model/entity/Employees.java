@@ -55,7 +55,6 @@ public class Employees {
     @Column(name = "allocation", nullable = false)
     private int allocation = -1;
 
-
     @ManyToOne
     @JoinColumn(name = "preferred_language", insertable = false, updatable = false)
     private Skills skill;

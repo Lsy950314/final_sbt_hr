@@ -391,6 +391,9 @@
         <!--        필터링 및 정렬        -->
 
         <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
+
+        <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
+
         <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
             <option value="startDate">프로젝트 시작일 순</option>
             <option value="endDate">프로젝트 종료일 순</option>
@@ -481,6 +484,20 @@
 
         projects.forEach(project => {
             const projectName = project.querySelector('div:nth-child(2)').textContent.toLowerCase();
+            if (projectName.includes(filter)) {
+                project.style.display = "";
+            } else {
+                project.style.display = "none";
+            }
+        });
+    }
+
+    function filterByClientName(){
+        const filter = document.getElementById('filterByClientName').value.toLowerCase();
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const projectName = project.querySelector('div:nth-child(3)').textContent.toLowerCase();
             if (projectName.includes(filter)) {
                 project.style.display = "";
             } else {
