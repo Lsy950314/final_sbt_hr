@@ -74,19 +74,17 @@ public class EmployeesController {
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
-            model.addAttribute("employees", employeesService.findAll());
+            model.addAttribute("employees", employeesService.findAllOrderByEmployeeNameAsc());
         }
         return "employees/employeeslist";
     }
 
 
-    //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
-        List<EmployeesProjects> employeesProjects = employeesProjectsService.findByEmployeeId(id);
-
+        List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
         List<Long> projectIds = employeesProjects.stream()
                 .map(ep -> ep.getProject().getProjectId())
                 .collect(Collectors.toList());
@@ -96,7 +94,6 @@ public class EmployeesController {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
-
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -114,6 +111,8 @@ public class EmployeesController {
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
         response.put("preferredLanguage", employee.getSkill().getSkillName());
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
+        //8월 7일 10:48 시도중
+        response.put("image", employee.getImage());
 
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {
@@ -202,6 +201,7 @@ public class EmployeesController {
         employeesService.deleteById(id);
         return "redirect:/employees";
     }
+
 
 
 }
