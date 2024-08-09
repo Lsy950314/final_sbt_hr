@@ -37,15 +37,16 @@
             modalRequirementsList.innerHTML = '';
 
             const projectRequirements = /*[[${projectRequirements}]]*/ [];
-            console.log(projectRequirements);
             projectRequirements.forEach(pr => {
+                // console.log(pr)
                 const requirementDiv = document.createElement('div');
                 requirementDiv.textContent = `스킬: ${pr.skill.skillName}, 경력: ${pr.requiredExperience}개월`;
-                requirementDiv.setAttribute('data-requirement-id', pr.projectRequirementsId);
+                requirementDiv.setAttribute('data-requirement-id', pr.id);
                 requirementDiv.classList.add('requirement-option');
 
                 requirementDiv.addEventListener('click', function () {
                     const projectRequirementsId = this.getAttribute('data-requirement-id');
+                    console.log(projectRequirementsId)
                     assignEmployeeToProject(employeeId, projectId, projectRequirementsId);
                     closeModal();
                 });
@@ -73,7 +74,6 @@
                 alert('배정이 취소되었습니다.')
             }
 
-
         }
 
         function closeModal() {
@@ -92,6 +92,72 @@
             })
         })
 
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const selectedInfoBody = document.getElementById('selected-info-body');
+
+                    const name = this.getAttribute('data-employee-name');
+                    const skill = this.value;
+                    let career = this.getAttribute('data-skill-career');
+                    const commuteTime = this.getAttribute('data-commute-time');
+                    const lastEndDate = this.getAttribute('data-end-date');
+
+                    // 반올림 처리
+                    if (career) {
+                        career = Math.round(parseFloat(career) * 10) / 10;
+                    }
+
+
+                    let waitingPeriod = '대기기간 없음';
+                    if (lastEndDate) {
+                        waitingPeriod = `${calculateMonthsDifference(lastEndDate)} 개월`;
+                    }
+
+                    if (this.checked) {
+                        const employeeId = this.getAttribute('data-employee-id');
+                        const employeeInfoRow = document.createElement('div');
+                        employeeInfoRow.classList.add('table-row');
+                        employeeInfoRow.setAttribute('data-employee-name', name);
+                        employeeInfoRow.setAttribute('data-employee-id', employeeId);
+                        employeeInfoRow.innerHTML = `
+                    <div class="table-cell">${name}</div>
+                    <div class="table-cell">${skill}</div>
+                    <div class="table-cell">${career} 개월</div>
+                    <div class="table-cell">${commuteTime} 분</div>
+                    <div class="table-cell">${waitingPeriod}</div>
+                `;
+
+                        // row 를 누르면 해당 사원 위치로 스크롤 시키기
+                        employeeInfoRow.addEventListener('click', function() {
+                            const employeeId = this.getAttribute('data-employee-id');
+                            const employeeEntry = document.querySelector(`.employee-entry[data-employee-id="${employeeId}"]`);
+                            if (employeeEntry) {
+                                employeeEntry.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        });
+                        selectedInfoBody.appendChild(employeeInfoRow);
+                    } else {
+                        // 체크 해제 시 해당 행 제거
+                        const existingRow = selectedInfoBody.querySelector(`.table-row[data-employee-name="${name}"]`);
+                        if (existingRow) {
+                            selectedInfoBody.removeChild(existingRow);
+                        }
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.employee-skill').forEach(function (element) {
+                let text = element.textContent;
+                let matches = text.match(/(\d+\.\d+)/);
+                if (matches) {
+                    let rounded = parseFloat(matches[0]).toFixed(1);
+                    element.textContent = text.replace(matches[0], rounded);
+                }
+            });
+        });
     </script>
 
     <style>
@@ -118,6 +184,43 @@
             margin: 10px 0;
             width: 100%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #selected-info {
+            margin-top: 20px;
+        }
+
+        #selected-info-table {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            display: table-header-group;
+            background-color: #f5f5f5; /* 헤더의 배경색 */
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .table-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-cell {
+            flex: 1; /* 모든 셀이 동일한 너비를 갖도록 설정 */
+            padding: 8px;
+            box-sizing: border-box;
+            text-align: center; /* 가운데 정렬 */
+        }
+
+        .table-row:nth-child(even) {
+            background-color: #f9f9f9; /* 짝수 행의 배경색 */
+        }
+
+        .table-row:nth-child(odd) {
+            background-color: #ffffff; /* 홀수 행의 배경색 */
         }
 
         .requirement-skill,
@@ -270,26 +373,21 @@
     <div>
 
         <div class="employee-list" th:each="e : ${employeeEntries}">
-            <div class="employee-entry">
+            <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
                 <div class="employee-name" th:text="'이름 = ' + ${e.key.getName()}"></div>
                 <div class="employee-preferred-skill"
                      th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <div class="employee-skill"
                          th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
+                           name="employee-skill-name"
+                           th:value="${s.getSkill().skillName}"
+                           th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
+                    <label th:for="'checkbox-' + ${stat.index}">比較</label>
                 </div>
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
-                <form action="/compareEmployee" method="POST">
-                    <input type="checkbox" id="checkbox1" name="employeeId" th:value="${e.key.getEmployeeId()}">
-                    <label for="checkbox1">チェックを入れてください</label>
-
-                    <button class="compare-button" type="submit">
-                        비교하기
-                    </button>
-                </form>
-
-
 
 
                 <div class="assign-button-container">
@@ -317,23 +415,20 @@
         </div>
     </div>
 
-
-
-    <div>
-
-        <div th:if="${selectedEmployee != null}">
-            <p>이름: <span th:text="${selectedEmployee.name}"></span></p>
-            <p>보유 스킬:
-            <ul>
-                <li th:each="skill : ${selectedEmployee.skills}"
-                    th:text="${skill.skillName} + ' (' + ${skill.skillCareer} + '개월)'"></li>
-            </ul>
-            </p>
-            <p>예상 통근 소요시간: <span th:text="${selectedEmployee.commuteTime}"></span> 분</p>
-            <p>마지막 프로젝트 종료 날짜: <span th:text="${selectedEmployee.lastProjectEndDate}"></span></p>
-        </div>
-        <div th:if="${selectedEmployee == null}">
-            <p>선택된 사원이 없습니다.</p>
+    <div id="selected-info">
+        <div id="selected-info-table">
+            <div class="table-header">
+                <div class="table-row">
+                    <div class="table-cell">이름</div>
+                    <div class="table-cell">보유 스킬</div>
+                    <div class="table-cell">경력</div>
+                    <div class="table-cell">예상 통근 소요시간</div>
+                    <div class="table-cell">대기기간</div>
+                </div>
+            </div>
+            <div id="selected-info-body">
+                <!-- 여기서 체크박스 클릭 시 행이 추가됨 -->
+            </div>
         </div>
     </div>
 

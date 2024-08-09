@@ -126,6 +126,16 @@ public class EmployeesService {
         return employeesProjects.stream().map(EmployeesProjects::getEmployee).collect(Collectors.toList());
     }
 
+    public List<Employees> findAllOrderByEmployeeNameAsc() {
+        return employeesRepository.findAllOrderByEmployeeNameAsc();
+    }
+
+    public void updateAllocationTo(long employeeId, int num) {
+        employeesRepository.updateAllocationTo(employeeId, num);
+    }
+
+
+
 
 
 

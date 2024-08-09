@@ -1,8 +1,6 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
@@ -10,7 +8,6 @@ import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,7 +74,6 @@ public class ProjectController {
                 }).toList();
 
         List<Long> eprID = new ArrayList<Long>();
-
         for (EmployeesProjectsRequest req : employeesProjectsRequests) {
             if (req.getEmployeeName() != null) {
                 System.out.print("Employee ID: " + req.getEmployee().getEmployeeId());
@@ -90,6 +86,8 @@ public class ProjectController {
 //            System.out.println("Project Duration: " + req.getProjectDuration());
 //            System.out.println("----");
         }
+
+
         // 순환 참조 문제 해결을 위해, dto 에 추가 컬럼 만들고, employee 속성에는 @JsonIgnore 처리
 //        System.out.println("pr: " + projectRequirements);
 //        System.out.println("ep: " + employeesProjectsRequests);
@@ -103,6 +101,7 @@ public class ProjectController {
         session.setAttribute("eprID", eprID);
 
         Map<String, Object> response = new HashMap<>();
+        response.put("project", projectsService.getProjectById(id));
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
@@ -201,6 +200,8 @@ public class ProjectController {
             employeesService.updateStarPointAverageOfProjectParticipants(employeeId);
             //LAST_PROJECT_END_DATE를 CURRENT_PROJECT_END_DATE의 값을 넣고, CURRENT_PROJECT_END_DATE의의 값을 null로
             employeesService.updateProjectEndDateOfProjectParticipants(employeeId);
+            //프로젝트에 참여한 사원의 allocation을 1 => -1 로 업데이트(employees table)
+            employeesService.updateAllocationTo(employeeId, -1);
         }
         // 프로젝트의 status를 1 => 2로 변경
         projectsService.updateStatusTo(projectId, 2);

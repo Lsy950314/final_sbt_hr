@@ -79,6 +79,16 @@
             font-size: 18px;
         }
 
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            box-sizing: border-box;
+        }
+
+
         .menus {
             list-style: none;
             padding: 0;
@@ -379,6 +389,11 @@
             margin-bottom: 16px;
         }
 
+        .hidden {
+            display: none;
+        }
+
+
     </style>
 </head>
 <body>
@@ -399,6 +414,9 @@
         <!--        필터링 및 정렬        -->
 
         <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
+
+        <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
+
         <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
             <option value="startDate">프로젝트 시작일 순</option>
             <option value="endDate">프로젝트 종료일 순</option>
@@ -432,22 +450,39 @@
                 <div th:text="${p.endDate}"></div>
                 <div th:text="${p.status}" style="display: none;"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
+                    </button>
                 </div>
-            </div>
-        </div>
-
-
-        <!-- 모달 팝업 -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close-button" onclick="closeModal()">&times;</span>
-                <div id="modal-body">
-                    <!-- 여기에 동적으로 내용이 추가됩니다 -->
+                <div>
+                    <button th:class="'complete-button' + (${p.status != 1} ? ' hidden' : '')"
+                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- 모달 팝업 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- 여기에 동적으로 내용이 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 완료 모달 팝업 -->
+    <div id="complete-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCompleteModal()">&times;</span>
+            <div id="complete-modal-body">
+                <!-- 여기에 동적으로 내용이 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 
@@ -489,6 +524,20 @@
 
         projects.forEach(project => {
             const projectName = project.querySelector('div:nth-child(2)').textContent.toLowerCase();
+            if (projectName.includes(filter)) {
+                project.style.display = "";
+            } else {
+                project.style.display = "none";
+            }
+        });
+    }
+
+    function filterByClientName() {
+        const filter = document.getElementById('filterByClientName').value.toLowerCase();
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const projectName = project.querySelector('div:nth-child(3)').textContent.toLowerCase();
             if (projectName.includes(filter)) {
                 project.style.display = "";
             } else {
@@ -539,7 +588,6 @@
         });
     }
 
-
     function createProject() {
         location.href = "/createProject"
     }
@@ -556,6 +604,7 @@
 
     function readEmployeesByProjectId(projectId) {
         alert(projectId);
+        location.href = "/employees?projectId=" + projectId;
     }
 
     function showProjectDetails(projectId) {
@@ -569,19 +618,19 @@
                     <div id="project-info">
      <div class="data-row">
          <div class="label">勤務先住所:</div>
-         <div class="value">${data.workLocation}</div>
+         <div class="value">${data.project.workLocation}</div>
      </div>
      <div class="data-row">
          <div class="label">顧客先会社:</div>
-         <div class="value">${data.clientCompany}</div>
+         <div class="value">${data.project.clientCompany}</div>
      </div>
      <div class="data-row">
          <div class="label">ステータス:</div>
-         <div class="value">${data.status}</div>
+         <div class="value">${data.project.status}</div>
      </div>
      <div class="data-row">
          <div class="label">連絡先電話:</div>
-         <div class="value">${data.contactPhone}</div>
+         <div class="value">${data.project.contactPhone}</div>
      </div>
     <div class="data-row">
         <div class="label">プロジェクト要件:</div>
@@ -608,17 +657,10 @@
             <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
         </div>
     </div>
-    <div class="data-row">
-        <div class="label">従業員:</div>
-        <div class="value">
-            <ul>
-
-            </ul>
-        </div>
     <div id="button-container">
     <button id="update-btn">수정</button>
     <button id="delete-btn">삭제</button>
-</div> </div>
+    </div>
 </div>
 
                     <div>
@@ -640,6 +682,82 @@
             });
     }
 
+    function showCompleteModal(projectId) {
+        console.log(projectId)
+        const completeModalBody = document.getElementById('complete-modal-body');
+        completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
+                            <div id="assigned-employees"></div>
+                            <div id="assigned-projects"></div>
+                            <div id="complete-button-container">
+                                <button id="yes-btn">はい</button>
+                                <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
+                            </div>`;
+        fetch(`/getInfoByProjectID?id=${projectId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received data:", data);
+                const employeesProjects = data.employeesProjects;
+                const eprID = data.eprID;
+
+                console.log(eprID);
+
+                const employeesDiv = document.getElementById('assigned-employees');
+                //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
+                employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
+            <li>
+                ${eprID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
+                <select id="star-point-${index}">
+                    ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
+                </select>
+            </li>`).join('') + '</ul>';
+
+
+                // "はい" 버튼 클릭 시 completeProject 함수 호출
+                document.getElementById('yes-btn').addEventListener('click', function () {
+                    const projectParticipantsInfos = employeesProjects.map((ep, index) => {
+                        const starPoint = document.getElementById(`star-point-${index}`).value;
+                        const result = {
+                            employeeId: eprID[index],
+                            starPoint: parseFloat(starPoint),
+                            skillId: ep.skill.skillId,
+                            projectDuration: parseFloat(ep.projectDuration)
+                        };
+                        console.log(result); // 콘솔에 출력
+                        return result;
+                    });
+                    completeProject(projectId, projectParticipantsInfos);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching project info:', error);
+            });
+
+        openCompleteModal();
+    }
+
+    function completeProject(projectId, projectParticipantsInfos) {
+        console.log(projectId, projectParticipantsInfos)
+        fetch(`/completeProject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({projectId: projectId, projectParticipantsInfos: projectParticipantsInfos})
+        })
+            .then(response => response.text())
+            .then(text => {
+                console.log('Response from server:', text);
+                if (text === "Project completed successfully") {
+                    closeCompleteModal();  // 함수 호출
+                } else {
+                    console.error('Unexpected response:', text);
+                }
+            })
+            .catch(error => {
+                console.error('Error completing project:', error);
+            });
+    }
+
     function navigateToMatchManagement() {
         window.location.href = /*[[@{/matchManagement}]]*/ '/matchManagement';
     }
@@ -652,10 +770,39 @@
         document.getElementById('modal').style.display = 'none';
     }
 
+    function openCompleteModal() {
+        document.getElementById('complete-modal').style.display = 'block';
+    }
+
+    function closeCompleteModal() {
+        document.getElementById('complete-modal').style.display = 'none';
+    }
+
+    function updateProjectDatesStyles() {
+        const projects = document.querySelectorAll('.projects > .project');
+
+        projects.forEach(project => {
+            const startDateElement = project.querySelector('div:nth-child(4)'); // 프로젝트 시작일
+
+            const startDate = new Date(startDateElement.textContent.trim());
+            const currentDate = new Date();
+
+            // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
+            const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24); // 일 단위 차이 계산
+            if (imminentStart <= 7 && imminentStart >= 0) { // 7일 이내에 시작하는 프로젝트
+                startDateElement.style.color = 'orange';
+                startDateElement.style.fontWeight = 'bold';
+            }
+        });
+    }
+
     window.onclick = function (event) {
         if (event.target == document.getElementById('modal')) {
             closeModal();
         }
+    }
+    window.onload = function() {
+        updateProjectDatesStyles();
     }
 </script>
 </body>

@@ -50,6 +50,7 @@ public class MatchService {
     public void matchEmployeeToProject(Long projectId, Long employeeId, Long projectRequirementsId) {
         if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
             if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
+                employeesService.updateAllocationTo(employeeId, 1);
                 employeesService.updateEndDates(employeeId, projectId);
             }
         }
@@ -65,8 +66,8 @@ public class MatchService {
         // 충족인원 -1
         if (projectRequirementsService.decreaseFulfilledCount(projectRequirementsId) &&
                 employeesProjectsService.deleteEmployeesProjects(employeeId, projectId, projectRequirementsId) &&
-                        employeesService.restoreEndDates(employeeId)
-        ){// 모든 로직이 성공하면 프로젝트의 status 값 -1로 바꿔주기
+                employeesService.restoreEndDates(employeeId)
+        ) {// 모든 로직이 성공하면 프로젝트의 status 값 -1로 바꿔주기
             projectsService.updateStatusTo(projectId, -1);
             return true;
         }

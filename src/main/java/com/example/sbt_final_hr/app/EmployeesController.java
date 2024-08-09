@@ -74,21 +74,17 @@ public class EmployeesController {
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
-            model.addAttribute("employees", employeesService.findAll());
+            model.addAttribute("employees", employeesService.findAllOrderByEmployeeNameAsc());
         }
         return "employees/employeeslist";
     }
 
 
-    //8월 5일 13:00 부터 getEmployeeModalData 메서드 수정 시작
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
         Optional<Employees> employees = employeesService.findById(id);
         List<EmployeesProjects> employeesProjects =  employeesProjectsService.findByEmployeeId(id);
-        //8월 5일 17:02 추가중
-        //List<Long> projectIds = new ArrayList<>();
-        //8월 5일 17:02 추가중
         List<Long> projectIds = employeesProjects.stream()
                 .map(ep -> ep.getProject().getProjectId())
                 .collect(Collectors.toList());
@@ -98,7 +94,6 @@ public class EmployeesController {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);
         }
-
         if (employees.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -116,6 +111,8 @@ public class EmployeesController {
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
         response.put("preferredLanguage", employee.getSkill().getSkillName());
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
+        //8월 7일 10:48 시도중
+        response.put("image", employee.getImage());
 
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {
@@ -126,7 +123,9 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
+        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
+
 
         //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();

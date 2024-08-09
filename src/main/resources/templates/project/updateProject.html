@@ -6,40 +6,99 @@
     <title>Update Project</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 30px;
         }
 
         .form-container {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            justify-content: space-between;
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            margin: 10px;
-            width: 45%;
+            margin-bottom: 20px;
         }
 
-        .form-group label {
-            margin-bottom: 5px;
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #34495e;
         }
 
-        .form-group input, .form-group select {
-            padding: 8px;
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
             font-size: 16px;
         }
 
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
+        input[type="text"]:focus, input[type="date"]:focus, select:focus {
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+        }
+
+        button[type="submit"], button[type="button"] {
+            padding: 12px 20px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 4px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #1f5a85;
+        }
+
+        .requirement-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            background-color: #f0f7fa;
+        }
+
+        .requirement-item label {
+            color: #2980b9;
+        }
+
+        .requirements-container {
+            margin-bottom: 20px;
+        }
+
+        button[type="button"] {
+            background-color: #e74c3c;
+            margin-top: 10px;
+        }
+
+        button[type="button"]:hover {
+            background-color: #c0392b;
+        }
+
+        #workLocation {
+            position: relative;
+            z-index: 1;
         }
     </style>
     <script th:inline="javascript">
@@ -71,7 +130,6 @@
 
         window.onload = function () {
             initAutocomplete();
-            // 기존 프로젝트 요구사항을 추가
             [[${projectsRequest.projectRequirements}]].forEach((requirement, index) => {
                 addRequirement(requirement.skill.skillId, requirement.requiredExperience, requirement.requiredCount, index);
             });

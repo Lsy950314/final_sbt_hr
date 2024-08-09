@@ -17,26 +17,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/employees-skills")
 public class EmployeesSkillController {
-    private EmployeesSkillService employeesSkillService;
-    private SkillsService skillsService;
-    private EmployeesService employeesService;
+    private final EmployeesSkillService employeesSkillService;
+    private final SkillsService skillsService;
 
     @Autowired
     private EmployeesSkillController(EmployeesService employeesService, SkillsService skillsService, EmployeesSkillService employeesSkillService){
-        this.employeesService = employeesService;
         this.skillsService = skillsService;
         this.employeesSkillService = employeesSkillService;
 
     }
-
-
-//    @GetMapping("/skills2")
-//    public String getAllEmployeesSkills(Model model) {
-//        List<EmployeesSkillRequest> employeesskills = employeesSkillService.getAllEmployeesSkills();
-//        model.addAttribute("employeesskills", employeesskills);
-//
-//        return "employees/employees-skills2";
-//    }
 
     @GetMapping
     public String getAllEmployeesSkills2(Model model) {
