@@ -47,8 +47,15 @@ public class ProjectController {
     private int imminentStartDays;
 
     @GetMapping("/readAllProjects")
-    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
+    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId,
+                                  @RequestParam(value = "filterStatus", required = false) Integer filterStatus,
+                                  @RequestParam(value = "sortBy", required = false) String sortBy,
+                                  Model model) {
 //      long startTime = System.currentTimeMillis();
+        System.out.println(filterStatus);
+        System.out.println(sortBy);
+
+
         List<ProjectsRequest> projects;
         String projectsType = (String) httpSession.getAttribute("projectsType");
 
@@ -63,7 +70,12 @@ public class ProjectController {
                 httpSession.setAttribute("projectsType", "all");
             }
         }
+
         model.addAttribute("imminentStartDays", imminentStartDays);
+
+        // 셀렉트 옵션을 위해
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("sortBy", sortBy);
 
 //        long endTime = System.currentTimeMillis();
 //        System.out.println("took: " + (endTime - startTime) + " milliseconds");
