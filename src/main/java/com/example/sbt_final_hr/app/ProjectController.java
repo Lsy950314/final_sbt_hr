@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
@@ -47,13 +48,19 @@ public class ProjectController {
 
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
+//        long startTime = System.currentTimeMillis();
+
         if (employeeId != null) {
             // 특정 사원이 속한 프로젝트들만 리스트업하기
             httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
         } else {
-            httpSession.setAttribute("projects", projectsService.getAllProjects());
+            httpSession.setAttribute("projects", projectsService.getAllProjectsSummary());
         }
         model.addAttribute("imminentStartDays", imminentStartDays);
+
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("took: " + (endTime - startTime) + " milliseconds");
+
         return "project/readAllProjects";
     }
 

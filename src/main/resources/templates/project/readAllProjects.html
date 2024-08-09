@@ -388,7 +388,6 @@
         </ul>
     </div>
 
-
     <div class="contents">
         <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
         </p>
@@ -416,21 +415,23 @@
 
         <div class="projects">
             <div class="header">
-                <div>プロジェクトID</div>
+                <div></div>
                 <div>プロジェクト名</div>
                 <div>クライアント会社</div>
                 <div>プロジェクト開始日</div>
                 <div>プロジェクト終了日</div>
-                <div>詳細を見る</div>
+                <div></div>
+                <div></div>
             </div>
             <div th:class="'project ' + (${p.status == -1} ? 'project-unassigned' : (${p.status == 1} ? 'project-assigned' : (${p.status} == 2 ? 'project-completed' : '')))"
                  th:each="p : ${session.projects}">
-                <div class="project-id" th:text="${p.projectId}"></div>
+                <div class="project-id" th:text="${p.projectId}" style="display: none"></div>
+
+                <div class="status" th:text="${p.status}"></div>
                 <div class="project-name" th:text="${p.projectName}"></div>
                 <div class="client-company" th:text="${p.clientCompany}"></div>
                 <div class="start-date" th:text="${p.startDate}"></div>
                 <div class="end-date" th:text="${p.endDate}"></div>
-                <div class="status" th:text="${p.status}" style="display: none;"></div>
                 <div>
                     <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
                 </div>
