@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,7 +138,9 @@
             <!-- 사원 통계 -->
             <div class="employee-stats">
                 <h3>사원 통계</h3>
-                <!-- 사원 통계 내용 -->
+                <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
+                <div>진행 중인 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
+                <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
             </div>
 
             <!-- 프로젝트 통계 -->
@@ -150,12 +152,12 @@
 
         <!-- 바로가기 버튼들 -->
         <div class="shortcuts">
-            <button class="shortcut-button">바로가기1</button>
+            <a href="/readAllProjects?filterStatus=-1"><button class="shortcut-button">미배정 프로젝트 확인</button></a>
             <button class="shortcut-button">바로가기2</button>
         </div>
 
         <div class="shortcuts">
-            <button class="shortcut-button">바로가기3</button>
+            <a href="/readAllProjects?sortBy=endDate"><button class="shortcut-button">종료 임박 프로젝트 확인</button></a>
             <button class="shortcut-button">바로가기4</button>
         </div>
     </div>

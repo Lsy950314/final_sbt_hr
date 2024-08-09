@@ -27,4 +27,13 @@ public interface ProjectsRepository extends JpaRepository<Projects, Long> {
             "FROM Projects p ORDER BY p.projectName ASC")
     List<ProjectsRequest> findAllProjectsSummary();
 
+//    @Query("SELECT COUNT(p) FROM Projects p")
+//    int countAllProjects(); // 총 프로젝트 개수
+//
+//    @Query("SELECT COUNT(p) FROM Projects p WHERE p.status = 1")
+//    int countAssignedProjects(); // 현재 진행 중인 프로젝트 (배정된 프로젝트)
+//
+//    @Query("SELECT COUNT(p) FROM Projects p WHERE p.status = -1")
+//    int countUnassignedProjects(); // 미배정 프로젝트 개수
+
 }
