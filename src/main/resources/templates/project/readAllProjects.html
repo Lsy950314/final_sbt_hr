@@ -425,20 +425,18 @@
             </div>
             <div th:class="'project ' + (${p.status == -1} ? 'project-unassigned' : (${p.status == 1} ? 'project-assigned' : (${p.status} == 2 ? 'project-completed' : '')))"
                  th:each="p : ${session.projects}">
-                <div th:text="${p.projectId}"></div>
-                <div th:text="${p.projectName}"></div>
-                <div th:text="${p.clientCompany}"></div>
-                <div th:text="${p.startDate}"></div>
-                <div th:text="${p.endDate}"></div>
-                <div th:text="${p.status}" style="display: none;"></div>
+                <div class="project-id" th:text="${p.projectId}"></div>
+                <div class="project-name" th:text="${p.projectName}"></div>
+                <div class="client-company" th:text="${p.clientCompany}"></div>
+                <div class="start-date" th:text="${p.startDate}"></div>
+                <div class="end-date" th:text="${p.endDate}"></div>
+                <div class="status" th:text="${p.status}" style="display: none;"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
-                    </button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
                 </div>
                 <div>
                     <button th:class="'complete-button' + (${p.status != 1} ? ' hidden' : '')"
-                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了
-                    </button>
+                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了</button>
                 </div>
             </div>
         </div>
@@ -468,13 +466,13 @@
 </div>
 
 
-<script>
+<script th:inline="javascript">
     function filterByStatus() {
         const selectedStatus = document.getElementById('filterByStatus').value;
         const projects = document.querySelectorAll('.projects > .project');
 
         projects.forEach(project => {
-            const projectStatus = project.querySelector('div:nth-child(6)').textContent.trim();
+            const projectStatus = project.querySelector('.status').textContent.trim();
 
             // 선택된 상태와 프로젝트 상태가 일치하거나, 모든 상태가 선택된 경우
             if (selectedStatus === "" || projectStatus === selectedStatus) {
@@ -490,7 +488,7 @@
         const projects = document.querySelectorAll('.projects > .project');
 
         projects.forEach(project => {
-            const projectId = project.querySelector('div:nth-child(1)').textContent.trim();
+            const projectId = project.querySelector('.project-id').textContent.trim();
 
             if (projectId === inputId || inputId === "") {
                 project.style.display = '';
@@ -505,7 +503,7 @@
         const projects = document.querySelectorAll('.projects > .project');
 
         projects.forEach(project => {
-            const projectName = project.querySelector('div:nth-child(2)').textContent.toLowerCase();
+            const projectName = project.querySelector('.project-name').textContent.toLowerCase();
             if (projectName.includes(filter)) {
                 project.style.display = "";
             } else {
@@ -519,8 +517,8 @@
         const projects = document.querySelectorAll('.projects > .project');
 
         projects.forEach(project => {
-            const projectName = project.querySelector('div:nth-child(3)').textContent.toLowerCase();
-            if (projectName.includes(filter)) {
+            const clientName = project.querySelector('.client-company').textContent.toLowerCase();
+            if (clientName.includes(filter)) {
                 project.style.display = "";
             } else {
                 project.style.display = "none";
@@ -534,28 +532,29 @@
         const projectsContainer = document.querySelector('.projects');
 
         const currentDate = new Date();
+        const sortClass = sortBy === 'startDate' ? 'start-date' : 'end-date';
 
         const futureProjects = projects.filter(project => {
-            const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const projectDate = new Date(project.querySelector(`.${sortClass}`).textContent);
             return projectDate >= currentDate;
         });
 
         // 현재 날짜보다 이전의 항목들 (과거)
         const pastProjects = projects.filter(project => {
-            const projectDate = new Date(project.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const projectDate = new Date(project.querySelector(`.${sortClass}`).textContent);
             return projectDate < currentDate;
         });
 
         futureProjects.sort((a, b) => {
-            const aValue = new Date(a.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
-            const bValue = new Date(b.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const aValue = new Date(a.querySelector(`.${sortClass}`).textContent);
+            const bValue = new Date(b.querySelector(`.${sortClass}`).textContent);
             return aValue - bValue;
         });
 
         // 과거 항목들을 정렬
         pastProjects.sort((a, b) => {
-            const aValue = new Date(a.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
-            const bValue = new Date(b.querySelector(`div:nth-child(${sortBy === 'startDate' ? 4 : 5})`).textContent);
+            const aValue = new Date(a.querySelector(`.${sortClass}`).textContent);
+            const bValue = new Date(b.querySelector(`.${sortClass}`).textContent);
             return aValue - bValue;
         });
 
@@ -760,22 +759,24 @@
         document.getElementById('complete-modal').style.display = 'none';
     }
 
+    const imminentStartDays = /*[[${imminentStartDays}]]*/ 0;
     function updateProjectDatesStyles() {
-        const projects = document.querySelectorAll('.projects > .project');
+                console.log(imminentStartDays)
+                const projects = document.querySelectorAll('.projects > .project');
+                const currentDate = new Date();
 
-        projects.forEach(project => {
-            const startDateElement = project.querySelector('div:nth-child(4)'); // 프로젝트 시작일
+                projects.forEach(project => {
+                    const startDateElement = project.querySelector('.start-date');
+                    const startDate = new Date(startDateElement.textContent.trim());
 
-            const startDate = new Date(startDateElement.textContent.trim());
-            const currentDate = new Date();
+                    // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
+                    const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
+                    if (imminentStart <= imminentStartDays && imminentStart >= 0) {
+                        startDateElement.style.color = 'orange';
+                        startDateElement.style.fontWeight = 'bold';
+                    }
+                });
 
-            // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
-            const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24); // 일 단위 차이 계산
-            if (imminentStart <= 7 && imminentStart >= 0) { // 7일 이내에 시작하는 프로젝트
-                startDateElement.style.color = 'orange';
-                startDateElement.style.fontWeight = 'bold';
-            }
-        });
     }
 
     window.onclick = function (event) {

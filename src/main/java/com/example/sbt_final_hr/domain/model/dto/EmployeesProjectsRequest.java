@@ -28,9 +28,7 @@ public class EmployeesProjectsRequest {
     private Double starPoint;
 
     private String employeeName;
-    //8월 2일 17:02
-//    private Long employeeId;
-    //8월 2일 17:02
+
     public EmployeesProjects toEntity() {
         EmployeesProjects employeesProjects = new EmployeesProjects();
         employeesProjects.setEmployee(this.employee);
@@ -51,7 +49,6 @@ public class EmployeesProjectsRequest {
         this.starPoint = entity.getStarPoint();
         if (entity.getEmployee() != null) {
             this.employeeName = entity.getEmployee().getName();
-//            this.employeeId = entity.getEmployee().getEmployeeId();
         }
         return this;
     }

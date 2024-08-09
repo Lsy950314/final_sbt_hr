@@ -42,14 +42,18 @@ public class ProjectController {
         this.employeesService = employeesService1;
     }
 
+    @Value("${project.imminent-start-days}")
+    private int imminentStartDays;
+
     @GetMapping("/readAllProjects")
-    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId) {
+    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
         if (employeeId != null) {
             // 특정 사원이 속한 프로젝트들만 리스트업하기
             httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
         } else {
             httpSession.setAttribute("projects", projectsService.getAllProjects());
         }
+        model.addAttribute("imminentStartDays", imminentStartDays);
         return "project/readAllProjects";
     }
 
