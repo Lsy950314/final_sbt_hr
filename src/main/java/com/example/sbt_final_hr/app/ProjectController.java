@@ -49,12 +49,14 @@ public class ProjectController {
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
 //        long startTime = System.currentTimeMillis();
-
-        if (employeeId != null) {
-            // 특정 사원이 속한 프로젝트들만 리스트업하기
-            httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
-        } else {
-            httpSession.setAttribute("projects", projectsService.getAllProjectsSummary());
+        List<ProjectsRequest> projects = (List<ProjectsRequest>) httpSession.getAttribute("projects");
+        if (projects == null) {
+            if (employeeId != null) {
+                // 특정 사원이 속한 프로젝트들만 리스트업하기
+                httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+            } else {
+                httpSession.setAttribute("projects", projectsService.getAllProjectsSummary());
+            }
         }
         model.addAttribute("imminentStartDays", imminentStartDays);
 
@@ -168,7 +170,7 @@ public class ProjectController {
     }
 
     @PostMapping("/updateProject")
-    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest) {
+    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest, HttpSession httpSession) {
         Projects project = projectsService.updateProject(projectsRequest);
         projectRequirementsService.deleteByProjectId(project.getProjectId());
 
@@ -179,15 +181,18 @@ public class ProjectController {
             }
         }
 
+        httpSession.removeAttribute("projects");
         return "redirect:/readAllProjects";
     }
 
     @GetMapping("/deleteProject")
-    public String deleteProject(@RequestParam Map<String, String> payload, Model model) {
+    public String deleteProject(@RequestParam Map<String, String> payload, Model model, HttpSession httpSession) {
         long id = Long.parseLong(payload.get("id"));
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
         System.out.println("삭제 성공");
+
+        httpSession.removeAttribute("projects");
         return "redirect:/readAllProjects";
     }
 
