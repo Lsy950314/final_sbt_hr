@@ -65,16 +65,18 @@ public class EmployeesController {
     }
 
 
+    //8월 9일 10:44 read 기능 최적화 관련 시도중
     @GetMapping
-    public String listEmployees(@RequestParam(name = "name", required = false) String name,
+    public String listEmployeesSummary(@RequestParam(name = "name", required = false) String name,
                                 @RequestParam(name = "projectId", required = false) Long projectId,
                                 Model model) {
+        List<EmployeesRequest> employees;
         if (projectId != null) {
             model.addAttribute("employees", employeesService.findByProjectId(projectId));
         } else if (name != null && !name.isEmpty()) {
             model.addAttribute("employees", employeesService.findByName(name));
         } else {
-            model.addAttribute("employees", employeesService.findAllOrderByEmployeeNameAsc());
+            model.addAttribute("employees", employeesService.findAllEmployeesSummary());
         }
         return "employees/employeeslist";
     }
