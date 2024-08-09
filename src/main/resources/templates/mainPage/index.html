@@ -1,17 +1,164 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 350px;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #fff;
+        }
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menus > li {
+            width: 300px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .contents {
+            background-color: #f5f5f5;
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .statistics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .employee-stats, .project-stats {
+            width: 48%;
+            background-color: #ffffff;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .shortcuts {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .shortcut-button {
+            width: 48%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .shortcut-button:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
 </head>
 <body>
-<form action="/insertSkill" method="get">
-    <button type="submit"> skill insert </button>
-</form>
+<div style="display: flex">
+    <!-- 대시보드 영역 -->
+    <div class="menu">
+        <ul class="menus">
+            <li><a href="/index">MainPage</a></li>
+            <li><a href="/employees">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
+        </ul>
+    </div>
 
-<form action="/skillList" method="get">
-    <button type="submit"> skill list </button>
-</form>
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="contents">
+        <!-- 상단 제목과 로그인 기능 -->
+        <div class="header">
+            <div class="title">타이틀</div>
+            <div class="login-function">로그인 기능</div>
+        </div>
 
+        <!-- 좌우로 나뉜 통계 영역 -->
+        <div class="statistics">
+            <!-- 사원 통계 -->
+            <div class="employee-stats">
+                <h3>사원 통계</h3>
+                <!-- 사원 통계 내용 -->
+            </div>
+
+            <!-- 프로젝트 통계 -->
+            <div class="project-stats">
+                <h3>프로젝트 통계</h3>
+                <!-- 프로젝트 통계 내용 -->
+            </div>
+        </div>
+
+        <!-- 바로가기 버튼들 -->
+        <div class="shortcuts">
+            <button class="shortcut-button">바로가기1</button>
+            <button class="shortcut-button">바로가기2</button>
+        </div>
+
+        <div class="shortcuts">
+            <button class="shortcut-button">바로가기3</button>
+            <button class="shortcut-button">바로가기4</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -48,14 +48,19 @@ public class ProjectController {
 
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
-//        long startTime = System.currentTimeMillis();
-        List<ProjectsRequest> projects = (List<ProjectsRequest>) httpSession.getAttribute("projects");
-        if (projects == null) {
-            if (employeeId != null) {
-                // 특정 사원이 속한 프로젝트들만 리스트업하기
-                httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
-            } else {
-                httpSession.setAttribute("projects", projectsService.getAllProjectsSummary());
+//      long startTime = System.currentTimeMillis();
+        List<ProjectsRequest> projects;
+        String projectsType = (String) httpSession.getAttribute("projectsType");
+
+        if(employeeId != null) {
+            projects = projectsService.getProjectByEmployee(employeeId);
+            httpSession.setAttribute("projects", projects);
+            httpSession.setAttribute("projectsType", "employee");
+        } else {
+            if(projectsType == null || !projectsType.equals("all")){
+                projects = projectsService.getAllProjectsSummary();
+                httpSession.setAttribute("projects", projects);
+                httpSession.setAttribute("projectsType", "all");
             }
         }
         model.addAttribute("imminentStartDays", imminentStartDays);
