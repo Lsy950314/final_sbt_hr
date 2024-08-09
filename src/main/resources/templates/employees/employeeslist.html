@@ -408,13 +408,18 @@
 
         <!--        필터링 및 정렬        -->
         <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
-        <!--Current_Project_End_Date가 있으면(프로젝트 진행중이면) 그거 값으로 받고, Last_Project_End_Date만 있으면(배정된 프로젝트 없으면) 그것을 값으로, 그것도 없으면 hireDate 받아서 내림차순(프로젝트 종료일 순) or 오름차순  -->
-        <select id="sortEmployeesByDate" onchange="sortEmployeesByDate()">
-            <option value="ascDate">시간 오름차순</option>
-            <option value="descDate">시간 내림차순</option>
+        <div>
+            <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
+            <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
+            <input type="radio" id="currentProjectEndDateDesc" name="sortCriteria" value="currentProjectEndDateDesc" onclick="updateHireDateSortOptions()">
+            <label for="currentProjectEndDateDesc">현재 프로젝트 종료일 내림차순</label>
+        </div>
+
+        <select id="sortHireDateBy">
+            <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
         </select>
 
-        <select id="filterByAllocation" onchange="filterByAllocation()">
+        <select id="filterByAllocation">
             <option value="">모든 상태</option>
             <option value="-1">미배정</option>
             <option value="0">예비배정</option>
@@ -423,32 +428,39 @@
 
         <div class="members">
             <div class="header">
+                <div class="allocation-header">(배정상태)</div>
                 <div>名前</div>
                 <div>評価</div>
-                <div>住所</div>
-                <div>プロジェクト終了日</div>
-                <div>詳細を見る</div>
-                <div class="allocation-header">(임시컬럼)배정상태</div> <!-- 숨김 처리 -->
-                <div class="last-project-end-date-header">(임시컬럼)마지막 완료플젝 종료일</div>
-                <div class="hire-date-header">(임시컬럼)입사일</div>
+                <div class="employee-address-header">住所</div>
+                <div>現在プロジェクト終了日</div>
+                <div class="last-project-end-date-header">最近プロジェクト完了日</div>
+                <div class="hire-date-header">入社日</div>
+                <div class="view-details-header">詳細を見る</div>
 
             </div>
             <div th:each="e : ${employees}" th:class="'employee ' +
                 (${e.allocation} == -1 ? 'allocation-unassigned' :
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))">
+                <div class="allocation">
+                    <img th:if="${e.allocation == -1}" src="/img/employees/unassigned.png" alt="Unassigned" style="width: 15px; height: 15px;">
+                    <img th:if="${e.allocation == 0}" src="/img/employees/preassigned.png" alt="Preassigned" style="width: 15px; height: 15px;">
+                    <img th:if="${e.allocation == 1}" src="/img/employees/assigned.png" alt="Assigned" style="width: 15px; height: 15px;">
+                </div>
                 <div th:text="${e.name}" class="employee-name"></div>
-                <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 100) / 100.0 : 'no point yet'}"
+                <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"
                      class="employee-rating"></div>
                 <div th:text="${e.address}" class="employee-address"></div>
-                <div th:text="${e.currentProjectEndDate  !=null ? e.currentProjectEndDate : 'Not allocated'}"
+                <div th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"
+                     th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
                      class="current-project-end-date"></div>
+                <div th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : 'No experience'}"
+                     th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
+                     class="last-project-end-date"></div>
+                <div th:text="${e.hireDate}" class="hire-date"></div>
                 <div>
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
                 </div>
-                <div th:text="${e.allocation}" class="allocation"></div> <!-- 숨김 처리 -->
-                <div th:text="${e.lastProjectEndDate}" class="last-project-end-date"></div>
-                <div th:text="${e.hireDate}" class="hire-date"></div>
 
             </div>
         </div>
@@ -466,11 +478,14 @@
         const modal = document.getElementById("myModal");
         const btns = document.querySelectorAll(".modal-button");
         const span = document.getElementsByClassName("close")[0];
+        const today = new Date();
+        const projectEndDates = document.querySelectorAll('.current-project-end-date');
+        const lastProjectEndDates = document.querySelectorAll('.last-project-end-date');
 
+        //사원 정보 모달
         btns.forEach(button => {
             button.addEventListener('click', function () {
                 const employeeId = this.getAttribute("data-employee-id");
-                // AJAX 요청
                 fetch('/employees/getModalData', {
                     method: 'POST',
                     headers: {
@@ -480,13 +495,10 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        // 데이터가 null이 아닌지 확인
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
                             const defaultImage = '/img/default-photo.jpeg';
                             const employeeImage = data.image ? data.image : defaultImage;
-                            //const lastProjectEndDate = data.lastProjectEndDate ? data.lastProjectEndDate : 'プロジェクト経験なし'; 안됨
-                            //const currentProjectEndDate = data.currentProjectEndDate ? data.currentProjectEndDate : '現在配属先なし'; 안됨
                             employeeDetails.innerHTML = `
                        <div id="employee-info">
                            <p class="label">Image:</p>
@@ -496,9 +508,9 @@
                            <p class="label">Address:</p>
                            <p class="value">${data.address}</p>
                            <p class="label">Last Project End Date:</p>
-                           <p class="value">${data.lastProjectEndDate}</p>
+                           <p class="value">${data.lastProjectEndDate || 'No experience'}</p>
                            <p class="label">Current Project End Date:</p>
-                           <p class="value">${data.currentProjectEndDate}</p>
+                           <p class="value">${data.currentProjectEndDate || 'Not allocated'}</p>
                            <p class="label">Contact Number:</p>
                            <p class="value">${data.contactNumber}</p>
                            <p class="label">Hire Date:</p>
@@ -516,25 +528,22 @@
                                <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
                                <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
                            </div>
-                           <button onclick="readProjectsByEmployeeId(${data.employeeId})"> 참여 프로젝트 상세보기 </button>
+                           <button onclick="readProjectsByEmployeeId(${data.employeeId})">(상세보기)</button>
                        </div>
                     `;
 
-                            // 스킬 정보 추가 => 표 형태 필요
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
-                                // skills 데이터를 skillCareer를 기준으로 내림차순 정렬
                                 data.skills.sort((a, b) => b.skillCareer - a.skillCareer);
-
                                 data.skills.forEach(skill => {
-                                    const years = Math.round((skill.skillCareer / 12) * 100) / 100; // months를 years로 환산하고 소수점 둘째 자리에서 반올림
+                                    const years = Math.round((skill.skillCareer / 12) * 10) / 10;
                                     const skillItem = document.createElement('div');
                                     skillItem.className = 'skill-item';
                                     skillItem.innerHTML = `<span>${skill.skillName}</span><span>${years} years</span>`;
                                     skillsAndCareerElement.appendChild(skillItem);
                                 });
                             }
-                            //  표 형태 필요
+
                             const projectsListElement = document.getElementById('projectsList');
                             if (data.projects && data.projects.length > 0) {
                                 data.projects.forEach(project => {
@@ -559,6 +568,40 @@
                     .catch(error => console.error('Error:', error));
             });
         });
+        //사원 정보 모달 끝
+
+        //현재 배속된 프로젝트 종료일까지 1주일 이하로 남는 경우에 글씨 빨간색
+        projectEndDates.forEach(endDateElement => {
+            const endDateText = endDateElement.getAttribute('data-current-project-end-date');
+            if (endDateText && endDateText !== 'Not allocated') {
+                const endDate = new Date(endDateText);
+                const timeDiff = endDate.getTime() - today.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                if (dayDiff <= 7 && dayDiff >= 0) {
+                    endDateElement.style.color = 'red';
+                }
+            }
+        });
+
+        //현재 배속 프로젝트 없으며, 최근 프로젝트 종료일로부터 2주 이상 지난 경우에 글씨 파란색
+        lastProjectEndDates.forEach(lastEndDateElement => {
+            const currentEndDateElement = lastEndDateElement.closest('.employee').querySelector('.current-project-end-date');
+            const currentEndDateText = currentEndDateElement.getAttribute('data-current-project-end-date');
+            const lastEndDateText = lastEndDateElement.getAttribute('data-last-project-end-date');
+
+            console.log('Current End Date:', currentEndDateText);
+            console.log('Last End Date:', lastEndDateText);
+
+
+            if (currentEndDateText === null && lastEndDateText) {
+                const lastEndDate = new Date(lastEndDateText);
+                const timeDiff = today.getTime() - lastEndDate.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                if (dayDiff >= 14) {
+                    lastEndDateElement.style.color = 'blue';
+                }
+            }
+        });
 
         span.onclick = function () {
             modal.style.display = "none";
@@ -569,7 +612,31 @@
                 modal.style.display = "none";
             }
         };
+
+        updateHireDateSortOptions();
+        applyFiltersAndSort();
+
+        document.getElementById('filterByEmployeeName').addEventListener('input', applyFiltersAndSort);
+        document.getElementById('filterByAllocation').addEventListener('change', applyFiltersAndSort);
+        document.getElementById('sortHireDateBy').addEventListener('change', applyFiltersAndSort);
+        document.querySelectorAll('input[name="sortCriteria"]').forEach(radio => {
+            radio.addEventListener('change', applyFiltersAndSort);
+        });
+
+        const employeeAddressHeaders = document.querySelectorAll('.employee-address-header');
+        const employeeAddressElements = document.querySelectorAll('.employee-address');
+
+        employeeAddressHeaders.forEach(element => {
+            element.style.display = 'none';
+        });
+        employeeAddressElements.forEach(element => {
+            element.style.display = 'none';
+        });
     });
+
+    function createEmployee() {
+        window.location.href = '/employees/newemployee';
+    }
 
     function updateEmployee(employeeId) {
         location.href = `/employees/edit/${employeeId}`;
@@ -582,113 +649,89 @@
     }
 
     function readProjectsByEmployeeId(employeeId) {
-        alert(employeeId);
         location.href = "/readAllProjects?employeeId=" + employeeId;
     }
 
-
-
-    function createEmployee() {
-        location.href = "/employees/newemployee";
+    function updateHireDateSortOptions() {
+        const hireDateSelect = document.getElementById('sortHireDateBy');
+        hireDateSelect.innerHTML = `
+        <option value="ascHireDate">입사일 오름차순</option>
+        <option value="descHireDate">입사일 내림차순</option>
+    `;
     }
 
-    function filterByEmployeeName() {
-        const filter = document.getElementById('filterByEmployeeName').value.toLowerCase();
-        const employees = document.querySelectorAll('.members .employee');
+    function applyFiltersAndSort() {
+        const filterByName = document.getElementById('filterByEmployeeName').value.toLowerCase();
+        const selectedAllocation = document.getElementById('filterByAllocation').value;
+        const sortBy = document.getElementById('sortHireDateBy').value;
+        const primarySortCriteria = document.querySelector('input[name="sortCriteria"]:checked') ? document.querySelector('input[name="sortCriteria"]:checked').value : null;
+        const employees = Array.from(document.querySelectorAll('.members > .employee'));
+        const employeesContainer = document.querySelector('.members');
 
         employees.forEach(employee => {
             const employeeName = employee.querySelector('.employee-name').textContent.toLowerCase();
-            if (employeeName.includes(filter)) {
-                employee.style.display = "";
-            } else {
-                employee.style.display = "none";
+            const allocationImage = employee.querySelector('.allocation img');
+            let allocationValue = null;
+
+            if (allocationImage) {
+                if (allocationImage.alt === 'Unassigned') {
+                    allocationValue = '-1';
+                } else if (allocationImage.alt === 'Preassigned') {
+                    allocationValue = '0';
+                } else if (allocationImage.alt === 'Assigned') {
+                    allocationValue = '1';
+                }
             }
-        });
-    }
 
-    function filterByAllocation() {
-        const selectedAllocation = document.getElementById('filterByAllocation').value;
-        const employees = document.querySelectorAll('.members > .employee');
+            const matchesName = employeeName.includes(filterByName);
+            const matchesAllocation = selectedAllocation === "" || allocationValue === selectedAllocation;
 
-        employees.forEach(employee => {
-            const employeeAllocation = employee.querySelector('.allocation').textContent.trim();
-
-            // 선택된 상태와 사원의 배정 상태가 일치하거나, 모든 상태가 선택된 경우
-            if (selectedAllocation === "" || employeeAllocation === selectedAllocation) {
+            if (matchesName && matchesAllocation) {
                 employee.style.display = '';
             } else {
                 employee.style.display = 'none';
             }
         });
-    }
 
-    //8월 6일 13:26 시도중 => 안된다.
+        const filteredEmployees = employees.filter(employee => employee.style.display === '');
 
-    function sortEmployeesByDate() {
-        const sortBy = document.getElementById('sortEmployeesByDate').value;
-        const employees = Array.from(document.querySelectorAll('.members > .employee'));
-        const employeesContainer = document.querySelector('.members');
+        if (primarySortCriteria) {
+            filteredEmployees.sort((a, b) => {
+                let primaryValueA, primaryValueB, secondaryValueA, secondaryValueB;
 
-        employees.sort((a, b) => {
-            const aValue = getDateValue(a);
-            const bValue = getDateValue(b);
+                if (primarySortCriteria === 'lastProjectEndDateAsc') {
+                    primaryValueA = getDateValue(a, 'last-project-end-date');
+                    primaryValueB = getDateValue(b, 'last-project-end-date');
+                } else if (primarySortCriteria === 'currentProjectEndDateDesc') {
+                    primaryValueA = getDateValue(a, 'current-project-end-date');
+                    primaryValueB = getDateValue(b, 'current-project-end-date');
+                }
 
-            if (sortBy === 'ascDate') {
-                return aValue - bValue;
-            } else {
-                return bValue - aValue;
-            }
-        });
+                let primarySortResult = primarySortCriteria === 'lastProjectEndDateAsc' ? primaryValueA - primaryValueB : primaryValueB - primaryValueA;
 
-        employees.forEach(employee => {
+                if (primarySortResult === 0) {
+                    secondaryValueA = getDateValue(a, 'hire-date');
+                    secondaryValueB = getDateValue(b, 'hire-date');
+                    return sortBy === 'ascHireDate' ? secondaryValueA - secondaryValueB : secondaryValueB - secondaryValueA;
+                } else {
+                    return primarySortResult;
+                }
+            });
+        }
+
+        filteredEmployees.forEach(employee => {
             employeesContainer.appendChild(employee);
         });
     }
 
-    function getDateValue(employee) {
-        const currentProjectEndDate = employee.querySelector('.current-project-end-date').textContent.trim();
-        const lastProjectEndDate = employee.querySelector('.last-project-end-date').textContent.trim();
-        const hireDate = employee.querySelector('.hire-date').textContent.trim();
+    function getDateValue(employee, dateType) {
+        const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
 
-        if (currentProjectEndDate !== 'Not allocated') {
-            return new Date(currentProjectEndDate);
-        } else if (lastProjectEndDate) {
-            return new Date(lastProjectEndDate);
-        } else {
-            return new Date(hireDate);
+        if (dateText !== 'Not allocated' && dateText !== 'No experience' && dateText !== '') {
+            return new Date(dateText);
         }
+        return new Date(0);
     }
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const allocationHeaders = document.querySelectorAll('.allocation-header');
-        const allocationElements = document.querySelectorAll('.allocation');
-        const lastProjectEndDateHeaders = document.querySelectorAll('.last-project-end-date-header');
-        const lastProjectEndDateElements = document.querySelectorAll('.last-project-end-date');
-        const hireDateHeaders = document.querySelectorAll('.hire-date-header');
-        const hireDateElements = document.querySelectorAll('.hire-date');
-
-
-        allocationHeaders.forEach(element => {
-            element.style.display = 'none';
-        });
-        allocationElements.forEach(element => {
-            element.style.display = 'none';
-        });
-        lastProjectEndDateHeaders.forEach(element => {
-            element.style.display = 'none';
-        });
-        lastProjectEndDateElements.forEach(element => {
-            element.style.display = 'none';
-        });
-        hireDateHeaders.forEach(element => {
-            element.style.display = 'none';
-        });
-        hireDateElements.forEach(element => {
-            element.style.display = 'none';
-        });
-
-    });
-
-
 </script>
 </body>
 </html>
