@@ -91,7 +91,6 @@ public class EmployeesController {
                 .map(ep -> ep.getProject().getProjectId())
                 .collect(Collectors.toList());
 
-        System.out.println("Employee Projects:");
         for (EmployeesProjects project : employeesProjects) {
             Long projectId = project.getProject().getProjectId();
             projectIds.add(projectId);

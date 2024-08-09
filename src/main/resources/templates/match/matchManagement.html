@@ -96,6 +96,7 @@
             document.querySelectorAll('.skill-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function () {
                     const selectedInfoBody = document.getElementById('selected-info-body');
+                    const tableHeader = document.querySelector('.table-header');
 
                     const name = this.getAttribute('data-employee-name');
                     const skill = this.value;
@@ -143,6 +144,11 @@
                         if (existingRow) {
                             selectedInfoBody.removeChild(existingRow);
                         }
+                    }
+                    if (selectedInfoBody.children.length === 0) {
+                        tableHeader.style.display = 'none';
+                    } else {
+                        tableHeader.style.display = 'block';
                     }
                 });
             });
@@ -197,7 +203,7 @@
         }
 
         .table-header {
-            display: table-header-group;
+            display: none;
             background-color: #f5f5f5; /* 헤더의 배경색 */
             font-weight: bold;
             text-align: left;
@@ -319,10 +325,11 @@
         }
 
 
-        .compare-button{
+        .compare-button {
             background-color: #8B5E3C;
             color: #FFFFFF; /* 대비를 위한 텍스트 색상 */
             font-family: 'Arial', sans-serif;
+        }
 
 
 
@@ -349,6 +356,11 @@
             background-color: #f0f0f0;
         }
 
+        .employee-skills {
+            display: flex;
+            text-align: center;
+            /*justify-content: center;*/
+        }
 
     </style>
 </head>
@@ -379,7 +391,7 @@
                      th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <div class="employee-skill"
-                         th:text="'보유스킬 ' + (${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+                         th:text="(${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
                     <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
                            name="employee-skill-name"
                            th:value="${s.getSkill().skillName}"

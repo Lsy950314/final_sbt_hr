@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +37,14 @@ public class ProjectsService {
         return projectsRepository.findAllProjectsSummary();
     }
 
-    public List<Projects> getProjectByEmployee(Long employeeId){
-        return employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
+    public List<ProjectsRequest> getProjectByEmployee(Long employeeId){
+     List<Projects> projects = employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
+     List<ProjectsRequest> projectsRequests = projects.stream().map(p -> {
+           ProjectsRequest pr = new ProjectsRequest();
+           pr.fromEntity(p);
+           return pr;
+       }).collect(Collectors.toList());
+     return projectsRequests;
     }
 
     public List<Projects> getAssignedProjects() {

@@ -5,8 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
+<!--    <link rel="stylesheet" th:href="@{/css/employees.css}">-->
+
+
     <style>
-        /* 기존 CSS 코드 유지 */
+
         body {
             width: 1920px;
             height: 1280px;
@@ -82,6 +85,10 @@
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
         }
 
+        .allocation-header{
+            width: 50px;!important;
+        }
+
         .members > div > div {
             margin-left: 10px;
             margin-right: 10px;
@@ -128,7 +135,7 @@
 
         .modal-button {
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 1rem; /* 글자 크기 */
+            font-size: 14px; /* 글자 크기 */
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
@@ -136,7 +143,7 @@
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
-            padding: 10px 20px; /* 내부 여백 */
+            padding: 7px 14px; /* 내부 여백 */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
             cursor: pointer; /* 커서 변경 */
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
@@ -407,6 +414,7 @@
                                                             id="add-employees">社員追加</button></span></p>
 
         <!--        필터링 및 정렬        -->
+        <div style="display: flex">
         <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
         <div>
             <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
@@ -425,17 +433,18 @@
             <option value="0">예비배정</option>
             <option value="1">배정</option>
         </select>
+        </div>
 
         <div class="members">
             <div class="header">
-                <div class="allocation-header">(배정상태)</div>
+                <div class="allocation-header"></div>
                 <div>名前</div>
                 <div>評価</div>
                 <div class="employee-address-header">住所</div>
                 <div>現在プロジェクト終了日</div>
                 <div class="last-project-end-date-header">最近プロジェクト完了日</div>
                 <div class="hire-date-header">入社日</div>
-                <div class="view-details-header">詳細を見る</div>
+                <div class="view-details-header"></div>
 
             </div>
             <div th:each="e : ${employees}" th:class="'employee ' +
