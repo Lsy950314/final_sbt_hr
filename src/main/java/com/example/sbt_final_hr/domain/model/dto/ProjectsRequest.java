@@ -68,4 +68,18 @@ public class ProjectsRequest {
         this.registrationDate = project.getRegistrationDate();
         this.projectTypeId = project.getProjectType().getProjectTypeId();
     }
+
+    public ProjectsRequest() {
+    }
+
+    // 필요한 필드만 포함하는 생성자
+    public ProjectsRequest(Long projectId, String projectName, String clientCompany, LocalDate startDate, LocalDate endDate, int status) {
+        this.projectId = projectId;
+        this.projectName = projectName;
+        this.clientCompany = clientCompany;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+    }
+
 }

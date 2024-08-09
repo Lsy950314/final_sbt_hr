@@ -9,6 +9,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -78,13 +79,13 @@ public class MatchService {
 
     // 세 조건을 모두 만족시키는 사원 필터링
     //3번째 조건 : 통근시간 기준으로 자르기 일단 90분
+    @Value("${commuting.max-time-in-minutes}")
+    private int maxCommutingTimeInMinutes;
+
     public Map<Employees, Integer> filterByCommutingTime(List<Employees> employees, Projects projects) {
         // 1. 프로젝트 위치 정보 추출
         double projectLatitude = projects.getLatitude();
         double projectLongitude = projects.getLongitude();
-
-        // 최대 통근시간 기준 (예: 90분)
-        int maxCommutingTimeInMinutes = 90;
 
         // 통근 시간 캐시
         Map<String, Integer> transitTimeCache = new HashMap<>();
@@ -117,7 +118,6 @@ public class MatchService {
                 .map(CompletableFuture::join)
                 .filter(entry -> entry.getValue() <= maxCommutingTimeInMinutes && entry.getValue() != -1)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
 
     }
 

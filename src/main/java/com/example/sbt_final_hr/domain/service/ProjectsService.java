@@ -32,6 +32,10 @@ public class ProjectsService {
         return projectsRepository.findAll(Sort.by(Sort.Direction.ASC, "projectName"));
     }
 
+    public List<ProjectsRequest> getAllProjectsSummary() {
+        return projectsRepository.findAllProjectsSummary();
+    }
+
     public List<Projects> getProjectByEmployee(Long employeeId){
         return employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
     }

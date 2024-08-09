@@ -66,11 +66,25 @@ public class EmployeesRequest {
     public String getExistingImage() {
         return existingImage;
     }
-//
-//    public void setExistingImage(String existingImage) {
-//        this.existingImage = existingImage;
-//    }
-    //7월 31일 10:20 사진 관련 작업중
+
+    //8월 9일 10:44 read 기능 최적화 관련 시도중
+    public EmployeesRequest() {
+    }
+
+    //8월 9일 10:44 read 기능 최적화 관련 시도중
+    public EmployeesRequest(Long employeeId, String name, Double starPointAverage, LocalDate currentProjectEndDate, LocalDate lastProjectEndDate, LocalDate hireDate, int allocation) {
+        this.employeeId = employeeId;
+        this.name = name;
+        this.starPointAverage = starPointAverage;
+        this.currentProjectEndDate = currentProjectEndDate;
+        this.lastProjectEndDate = lastProjectEndDate;
+        this.hireDate = hireDate;
+        this.allocation = allocation;
+    }
+
+
+
+
 
 
 
