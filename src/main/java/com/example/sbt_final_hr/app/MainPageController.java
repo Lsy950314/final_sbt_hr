@@ -13,9 +13,9 @@ public class MainPageController {
         this.projectsService = projectsService;
     }
 
-//    @GetMapping("/index")
-//    public String getMainPage(Model model) {
-//        model.addAttribute("countProjects", projectsService.getCountProjects());
-//        return "mainPage/index";
-//    }
+    @GetMapping("/index")
+    public String getMainPage(Model model) {
+        model.addAttribute("countProjects", projectsService.getCountProjects());
+        return "mainPage/index";
+    }
 }

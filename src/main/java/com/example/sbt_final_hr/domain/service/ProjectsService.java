@@ -23,19 +23,19 @@ public class ProjectsService {
         this.employeesProjectsRepository = employeesProjectsRepository;
     }
 
-//    public Map<String, Integer> getCountProjects(){
-//        Map<String, Integer> countProjects = new HashMap<>();
-//
-//        int totalProjects = projectsRepository.countAllProjects();
-//        int assignedProjects = projectsRepository.countAssignedProjects();
-//        int unassignedProjects = projectsRepository.countUnassignedProjects();
-//
-//        countProjects.put("totalProjects", totalProjects);
-//        countProjects.put("assignedProjects", assignedProjects);
-//        countProjects.put("unassignedProjects", unassignedProjects);
-//
-//        return countProjects;
-//    }
+    public Map<String, Integer> getCountProjects(){
+        Map<String, Integer> countProjects = new HashMap<>();
+
+        int totalProjects = projectsRepository.countAllProjects();
+        int assignedProjects = projectsRepository.countAssignedProjects();
+        int unassignedProjects = projectsRepository.countUnassignedProjects();
+
+        countProjects.put("totalProjects", totalProjects);
+        countProjects.put("assignedProjects", assignedProjects);
+        countProjects.put("unassignedProjects", unassignedProjects);
+
+        return countProjects;
+    }
 
     public List<Projects> getAllProjects() {
         return projectsRepository.findAll(Sort.by(Sort.Direction.ASC, "projectName"));
