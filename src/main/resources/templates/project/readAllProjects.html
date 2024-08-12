@@ -7,7 +7,7 @@
     <title>Project List</title>
     <style>
         .status-icon img {
-            width: 24px;  /* 이미지의 너비를 24px로 설정 */
+            width: 24px; /* 이미지의 너비를 24px로 설정 */
             height: 24px; /* 이미지의 높이를 24px로 설정 */
             object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */
             margin: 0 5px; /* 이미지 주위에 약간의 여백을 추가 */
@@ -55,7 +55,6 @@
         /*}*/
 
 
-
         /*.menu a {*/
         /*    color: #fff; !* 링크 텍스트를 하얀색으로 유지 *!*/
         /*    text-decoration: none; !* 링크 밑줄 제거 *!*/
@@ -66,8 +65,6 @@
         /*.menu a:hover {*/
         /*    color: #1e90ff; !* 링크에 마우스 오버 시 색상을 파란색으로 변경 *!*/
         /*}*/
-
-
 
 
         .menus > li {
@@ -419,20 +416,19 @@
 
         <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
 
-        <select id="sortProjectsByDate" onchange="sortProjectsByDate()">
-            <option value="startDate">프로젝트 시작일 순</option>
-            <option value="endDate">프로젝트 종료일 순</option>
+        <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
+            <option value="startDate" th:selected="${sortBy == 'startDate'}">프로젝트 시작일 순</option>
+            <option value="endDate" th:selected="${sortBy == 'endDate'}">프로젝트 종료일 순</option>
         </select>
         <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
         <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
         <!--        프로젝트 상태에 따라 필터링         -->
-        <select id="filterByStatus" onchange="filterByStatus()">
-            <option value="">모든 상태</option>
-            <option value="-1">미배정</option>
-            <option value="1">배정완료</option>
-            <option value="2">완료</option>
+        <select id="filterByStatus" th:onchange="filterByStatus()">
+            <option value="" th:selected="${filterStatus == null}">모든 상태</option>
+            <option value="-1" th:selected="${filterStatus == -1}">미배정</option>
+            <option value="1" th:selected="${filterStatus == 1}">배정완료</option>
+            <option value="2" th:selected="${filterStatus == 2}">완료</option>
         </select>
-
 
         <div class="projects">
             <div class="header">
@@ -450,25 +446,26 @@
                 <div class="status" th:text="${p.status}" style="display: none"></div>
 
                 <div class="status-icon" th:switch="${p.status}">
-                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="배정필요" />
-                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="배정완료" />
-                    <img th:case="2" th:src="@{/img/project/done.png}" alt="프로젝트 완료" />
+                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="배정필요"/>
+                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="배정완료"/>
+                    <img th:case="2" th:src="@{/img/project/done.png}" alt="프로젝트 완료"/>
                 </div>
                 <div class="project-name" th:text="${p.projectName}"></div>
                 <div class="client-company" th:text="${p.clientCompany}"></div>
                 <div class="start-date" th:text="${p.startDate}"></div>
                 <div class="end-date" th:text="${p.endDate}"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る</button>
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
+                    </button>
                 </div>
                 <div>
                     <button th:class="'complete-button' + (${p.status != 1} ? ' hidden' : '')"
-                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了</button>
+                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- 모달 팝업 -->
     <div id="modal" class="modal">
@@ -490,8 +487,6 @@
         </div>
     </div>
 </div>
-</div>
-
 
 <script th:inline="javascript">
     function filterByStatus() {
@@ -787,22 +782,23 @@
     }
 
     const imminentStartDays = /*[[${imminentStartDays}]]*/ 0;
+
     function updateProjectDatesStyles() {
-                console.log(imminentStartDays)
-                const projects = document.querySelectorAll('.projects > .project');
-                const currentDate = new Date();
+        console.log(imminentStartDays)
+        const projects = document.querySelectorAll('.projects > .project');
+        const currentDate = new Date();
 
-                projects.forEach(project => {
-                    const startDateElement = project.querySelector('.start-date');
-                    const startDate = new Date(startDateElement.textContent.trim());
+        projects.forEach(project => {
+            const startDateElement = project.querySelector('.start-date');
+            const startDate = new Date(startDateElement.textContent.trim());
 
-                    // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
-                    const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
-                    if (imminentStart <= imminentStartDays && imminentStart >= 0) {
-                        startDateElement.style.color = 'orange';
-                        startDateElement.style.fontWeight = 'bold';
-                    }
-                });
+            // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
+            const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
+            if (imminentStart <= imminentStartDays && imminentStart >= 0) {
+                startDateElement.style.color = 'orange';
+                startDateElement.style.fontWeight = 'bold';
+            }
+        });
 
     }
 
@@ -811,7 +807,7 @@
             closeModal();
         }
     }
-    window.onload = function() {
+    window.onload = function () {
         updateProjectDatesStyles();
     }
 </script>
