@@ -6,6 +6,7 @@ import com.example.sbt_final_hr.domain.model.entity.Projects;
 import com.example.sbt_final_hr.domain.repository.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,11 +27,11 @@ public class ProjectsService {
     public Map<String, Integer> getCountProjects(){
         Map<String, Integer> countProjects = new HashMap<>();
 
-        int totalProjects = projectsRepository.countAllProjects();
+//        int totalProjects = projectsRepository.countAllProjects();
         int assignedProjects = projectsRepository.countAssignedProjects();
         int unassignedProjects = projectsRepository.countUnassignedProjects();
 
-        countProjects.put("totalProjects", totalProjects);
+//        countProjects.put("totalProjects", totalProjects);
         countProjects.put("assignedProjects", assignedProjects);
         countProjects.put("unassignedProjects", unassignedProjects);
 
@@ -93,6 +94,7 @@ public class ProjectsService {
         return existingProject;
     }
 
+    @Transactional
     public void updateStatusTo(Long projectId, int num) {
         projectsRepository.updateStatusTo(projectId, num);
     }

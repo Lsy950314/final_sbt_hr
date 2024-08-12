@@ -3,6 +3,8 @@ package com.example.sbt_final_hr.domain.service;
 import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.repository.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -29,6 +31,8 @@ public class EmployeesService {
     private final ProjectsRepository projectsRepository;
     private final EmployeesProjectsRepository employeesProjectsRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public EmployeesService(EmployeesRepository employeesRepository, EmployeesSkillRepository employeesSkillRepository, SkillsRepository skillsRepository, ProjectsRepository projectsRepository, EmployeesProjectsRepository employeesProjectsRepository) {
@@ -53,6 +57,7 @@ public class EmployeesService {
         // 프로젝트에 참여 중인 상태가 될 것이므로 대기기간 계산 로직을 위한 최근 프로젝트 종료일은 null 로 만들어 줌
         employees.setLastProjectEndDate(null);
         employeesRepository.save(employees);
+        System.out.println("날짜 수정 성공");
     }
 
     public boolean restoreEndDates(Long employeeId) {
@@ -130,8 +135,23 @@ public class EmployeesService {
 //        return employeesRepository.findAllOrderByEmployeeNameAsc();
 //    }
 
-    public void updateAllocationTo(long employeeId, int num) {
-        employeesRepository.updateAllocationTo(employeeId, num);
+    @Transactional
+    public boolean updateAllocationTo(long id, int num) {
+        System.out.println(id);
+        System.out.println(num);
+        if (employeesRepository.updateAllocationTo(id, num)==1){
+            employeesRepository.flush();
+            entityManager.clear();
+            System.out.println("사원 상태 변경 성공");
+            // 엔티티를 다시 로드하여 상태가 업데이트되었는지 확인
+            Employees employee = employeesRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+            System.out.println("Updated allocation: " + employee.getAllocation());
+            return true;
+        } else {
+            System.out.println("사원 상태 변경 실패");
+            return false;
+        }
+       
     }
 
     //8월 9일 10:44 read 기능 최적화 관련 시도중
