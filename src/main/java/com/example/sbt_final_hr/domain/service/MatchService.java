@@ -48,18 +48,22 @@ public class MatchService {
                 .collect(Collectors.toList());
     }
 
-    public void matchEmployeeToProject(Long projectId, Long employeeId, Long projectRequirementsId) {
+    public boolean matchEmployeeToProject(Long projectId, Long employeeId, Long projectRequirementsId) {
         if (projectRequirementsService.updateFulfilledCount(projectRequirementsId)) {
             if (employeesProjectsService.insertEmployeesProjects(employeeId, projectId, projectRequirementsId)) {
-                employeesService.updateAllocationTo(employeeId, 1);
-                employeesService.updateEndDates(employeeId, projectId);
+                if (employeesService.updateAllocationTo(employeeId, 1)) {
+                    employeesService.updateEndDates(employeeId, projectId);
+                }
             }
+            // 모든 요구인원이 충족됐다면 projects 의 status 를 1로 바꿔주는 로직
+            if (projectRequirementsService.checkFulfilledCount(projectId)) {
+                projectsService.updateStatusTo(projectId, 1);
+            }
+            return true;
+        } else {
+            return false;
         }
 
-        // 모든 요구인원이 충족됐다면 projects 의 status 를 1로 바꿔주는 로직
-        if (projectRequirementsService.checkFulfilledCount(projectId)) {
-            projectsService.updateStatusTo(projectId, 1);
-        }
     }
 
     public boolean matchCancel(Long projectId, Long employeeId, Long projectRequirementsId) {

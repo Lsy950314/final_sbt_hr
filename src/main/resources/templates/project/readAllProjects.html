@@ -655,6 +655,7 @@
                 <li>
         직원 이름: ${empProj.employeeName || 'N/A'}
     </li>
+<button> 배정 취소 </button>
             `).join('')}
             </ul>
             <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
@@ -782,21 +783,29 @@
     }
 
     const imminentStartDays = /*[[${imminentStartDays}]]*/ 0;
+    const imminentEndDays = /*[[${imminentEndDays}]]*/ 0;
 
     function updateProjectDatesStyles() {
-        console.log(imminentStartDays)
         const projects = document.querySelectorAll('.projects > .project');
         const currentDate = new Date();
 
         projects.forEach(project => {
             const startDateElement = project.querySelector('.start-date');
+            const endDateElement = project.querySelector('.end-date');
             const startDate = new Date(startDateElement.textContent.trim());
+            const endDate = new Date(endDateElement.textContent.trim());
 
-            // 예: 시작 날짜가 현재 날짜에 임박했을 경우 스타일 추가
+            // 시작일이나 종료일이 현재 날짜에 임박했을 경우 스타일 추가
             const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
+            const imminentEnd = (endDate - currentDate) / (1000 * 60 * 60 * 24);
+
             if (imminentStart <= imminentStartDays && imminentStart >= 0) {
                 startDateElement.style.color = 'orange';
                 startDateElement.style.fontWeight = 'bold';
+            }
+            if( imminentEnd <= imminentEndDays && imminentEnd >= 0) {
+                endDateElement.style.color = 'red';
+                endDateElement.style.fontWeight = 'bold';
             }
         });
 
@@ -809,6 +818,8 @@
     }
     window.onload = function () {
         updateProjectDatesStyles();
+        filterByStatus();
+        sortProjectsByDate();
     }
 </script>
 </body>

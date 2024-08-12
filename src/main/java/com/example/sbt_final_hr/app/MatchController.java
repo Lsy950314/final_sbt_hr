@@ -85,10 +85,10 @@ public class MatchController {
 //      System.out.println(projectId);
 //      System.out.println(employeeId);
 //      System.out.println(projectRequirementsId);
-
-        matchService.matchEmployeeToProject(projectId, employeeId, projectRequirementsId);
-
-        return ResponseEntity.ok().build();
+        if (matchService.matchEmployeeToProject(projectId, employeeId, projectRequirementsId)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/matchCancel")

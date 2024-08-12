@@ -45,8 +45,7 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     //사원 allocation 바꾸는 코드
     @Query("UPDATE Employees e SET e.allocation = :num WHERE e.employeeId = :id")
     @Modifying
-    @Transactional
-    void updateAllocationTo(Long id, int num);
+    int updateAllocationTo(Long id, int num);
 
     //8월 9일 10:13 read기능 최적화 관련 시도중
     @Query("SELECT new com.example.sbt_final_hr.domain.model.dto.EmployeesRequest(" +
