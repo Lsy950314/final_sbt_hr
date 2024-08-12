@@ -126,9 +126,9 @@ public class EmployeesService {
         return employeesProjects.stream().map(EmployeesProjects::getEmployee).collect(Collectors.toList());
     }
 
-    public List<Employees> findAllOrderByEmployeeNameAsc() {
-        return employeesRepository.findAllOrderByEmployeeNameAsc();
-    }
+//    public List<Employees> findAllOrderByEmployeeNameAsc() {
+//        return employeesRepository.findAllOrderByEmployeeNameAsc();
+//    }
 
     public void updateAllocationTo(long employeeId, int num) {
         employeesRepository.updateAllocationTo(employeeId, num);
@@ -139,6 +139,7 @@ public class EmployeesService {
         //시간 측정
         long startTime = System.currentTimeMillis();
 
+        //List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
         List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
 
         long endTime = System.currentTimeMillis();
@@ -147,6 +148,5 @@ public class EmployeesService {
         return employeesSummary;
 
     }
-
 
 }

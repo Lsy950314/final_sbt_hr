@@ -138,7 +138,7 @@
             <!-- 사원 통계 -->
             <div class="employee-stats">
                 <h3>사원 통계</h3>
-                <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
+                <div>총 사원 수: </div>
                 <div>진행 중인 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
                 <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
             </div>
@@ -147,6 +147,9 @@
             <div class="project-stats">
                 <h3>프로젝트 통계</h3>
                 <!-- 프로젝트 통계 내용 -->
+                <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
+                <div>진행 중인 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
+                <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
             </div>
         </div>
 

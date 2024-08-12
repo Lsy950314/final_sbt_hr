@@ -65,22 +65,30 @@ public class EmployeesController {
     }
 
 
-    //8월 9일 10:44 read 기능 최적화 관련 시도중
+
     @GetMapping
-    public String listEmployeesSummary(@RequestParam(name = "name", required = false) String name,
-                                @RequestParam(name = "projectId", required = false) Long projectId,
-                                Model model) {
-        List<EmployeesRequest> employees;
+    public String listEmployeesSummary(HttpSession httpSession, @RequestParam(name = "name", required = false) String name,
+                                       @RequestParam(name = "projectId", required = false) Long projectId,
+                                       Model model) {
+
+
         if (projectId != null) {
-            model.addAttribute("employees", employeesService.findByProjectId(projectId));
+            List<Employees> employees;
+            employees = employeesService.findByProjectId(projectId);
+            httpSession.setAttribute("employees", employees);
         } else if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
+            List<Employees> employees;
+            employees = employeesService.findByName(name);
+            httpSession.setAttribute("employees", employees);
         } else {
-            model.addAttribute("employees", employeesService.findAllEmployeesSummary());
+            List<EmployeesRequest> employees;
+            employees = employeesService.findAllEmployeesSummary();
+            //model.addAttribute("employees", employees);
+            httpSession.setAttribute("employees", employees);
         }
+
         return "employees/employeeslist";
     }
-
 
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
