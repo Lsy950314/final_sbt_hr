@@ -46,6 +46,9 @@ public class ProjectController {
     @Value("${project.imminent-start-days}")
     private int imminentStartDays;
 
+    @Value("${project.imminent-end-days}")
+    private int imminentEndDays;
+
     @GetMapping("/readAllProjects")
     public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId,
                                   @RequestParam(value = "filterStatus", required = false) Integer filterStatus,
@@ -72,6 +75,7 @@ public class ProjectController {
         }
 
         model.addAttribute("imminentStartDays", imminentStartDays);
+        model.addAttribute("imminentEndDays", imminentEndDays);
 
         // 셀렉트 옵션을 위해
         model.addAttribute("filterStatus", filterStatus);
