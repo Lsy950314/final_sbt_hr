@@ -1,6 +1,7 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
+import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
@@ -46,14 +47,39 @@ public class ProjectController {
     private int imminentStartDays;
 
     @GetMapping("/readAllProjects")
-    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId, Model model) {
-        if (employeeId != null) {
-            // 특정 사원이 속한 프로젝트들만 리스트업하기
-            httpSession.setAttribute("projects", projectsService.getProjectByEmployee(employeeId));
+    public String readAllProjects(HttpSession httpSession, @RequestParam(value = "employeeId", required = false) Long employeeId,
+                                  @RequestParam(value = "filterStatus", required = false) Integer filterStatus,
+                                  @RequestParam(value = "sortBy", required = false) String sortBy,
+                                  Model model) {
+//      long startTime = System.currentTimeMillis();
+        System.out.println(filterStatus);
+        System.out.println(sortBy);
+
+
+        List<ProjectsRequest> projects;
+        String projectsType = (String) httpSession.getAttribute("projectsType");
+
+        if(employeeId != null) {
+            projects = projectsService.getProjectByEmployee(employeeId);
+            httpSession.setAttribute("projects", projects);
+            httpSession.setAttribute("projectsType", "employee");
         } else {
-            httpSession.setAttribute("projects", projectsService.getAllProjects());
+            if(projectsType == null || !projectsType.equals("all")){
+                projects = projectsService.getAllProjectsSummary();
+                httpSession.setAttribute("projects", projects);
+                httpSession.setAttribute("projectsType", "all");
+            }
         }
+
         model.addAttribute("imminentStartDays", imminentStartDays);
+
+        // 셀렉트 옵션을 위해
+        model.addAttribute("filterStatus", filterStatus);
+        model.addAttribute("sortBy", sortBy);
+
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("took: " + (endTime - startTime) + " milliseconds");
+
         return "project/readAllProjects";
     }
 
@@ -161,7 +187,7 @@ public class ProjectController {
     }
 
     @PostMapping("/updateProject")
-    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest) {
+    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest, HttpSession httpSession) {
         Projects project = projectsService.updateProject(projectsRequest);
         projectRequirementsService.deleteByProjectId(project.getProjectId());
 
@@ -172,15 +198,18 @@ public class ProjectController {
             }
         }
 
+        httpSession.removeAttribute("projects");
         return "redirect:/readAllProjects";
     }
 
     @GetMapping("/deleteProject")
-    public String deleteProject(@RequestParam Map<String, String> payload, Model model) {
+    public String deleteProject(@RequestParam Map<String, String> payload, Model model, HttpSession httpSession) {
         long id = Long.parseLong(payload.get("id"));
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
         System.out.println("삭제 성공");
+
+        httpSession.removeAttribute("projects");
         return "redirect:/readAllProjects";
     }
 

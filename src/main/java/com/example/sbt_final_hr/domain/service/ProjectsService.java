@@ -8,32 +8,52 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjectsService {
     private final ProjectsRepository projectsRepository;
     private final ProjectTypesRepository projectTypesRepository;
-    private final SkillsRepository skillsRepository;
-    private final ProjectRequirementsRepository projectRequirementsRepository;
     private final EmployeesProjectsRepository employeesProjectsRepository;
 
     public ProjectsService(ProjectsRepository projectsRepository, ProjectTypesRepository projectTypesRepository, SkillsRepository skillsRepository, ProjectRequirementsRepository projectRequirementsRepository, EmployeesProjectsRepository employeesProjectsRepository) {
         this.projectsRepository = projectsRepository;
         this.projectTypesRepository = projectTypesRepository;
-        this.skillsRepository = skillsRepository;
-        this.projectRequirementsRepository = projectRequirementsRepository;
         this.employeesProjectsRepository = employeesProjectsRepository;
+    }
+
+    public Map<String, Integer> getCountProjects(){
+        Map<String, Integer> countProjects = new HashMap<>();
+
+        int totalProjects = projectsRepository.countAllProjects();
+        int assignedProjects = projectsRepository.countAssignedProjects();
+        int unassignedProjects = projectsRepository.countUnassignedProjects();
+
+        countProjects.put("totalProjects", totalProjects);
+        countProjects.put("assignedProjects", assignedProjects);
+        countProjects.put("unassignedProjects", unassignedProjects);
+
+        return countProjects;
     }
 
     public List<Projects> getAllProjects() {
         return projectsRepository.findAll(Sort.by(Sort.Direction.ASC, "projectName"));
     }
 
-    public List<Projects> getProjectByEmployee(Long employeeId){
-        return employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
+    public List<ProjectsRequest> getAllProjectsSummary() {
+        return projectsRepository.findAllProjectsSummary();
+    }
+
+    public List<ProjectsRequest> getProjectByEmployee(Long employeeId){
+     List<Projects> projects = employeesProjectsRepository.findProjectsByEmployeeId(employeeId);
+     List<ProjectsRequest> projectsRequests;
+        projectsRequests = projects.stream().map(p -> {
+              ProjectsRequest pr = new ProjectsRequest();
+              pr.fromEntity(p);
+              return pr;
+          }).collect(Collectors.toList());
+        return projectsRequests;
     }
 
     public List<Projects> getAssignedProjects() {
