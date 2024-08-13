@@ -89,8 +89,8 @@
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
         }
 
-        .allocation-header{
-            width: 50px;!important;
+        .allocation-header, .allocation{
+            width: 35px;!important;
         }
 
         .members > div > div {
@@ -101,6 +101,9 @@
             margin-top: 10px; /* 간격을 주기 위해 추가 */
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+            align-items: center; /* 텍스트 상하 중앙 정렬 */
+            padding-top: 5px;
+            flex-direction: column;
         }
 
         .modal {
@@ -399,6 +402,23 @@
             border-bottom: gray 1px solid ;
         }
 
+        .filterByProjectEndDate {
+            display: flex; /* Flexbox 레이아웃 사용 */
+            justify-content: center; /* 좌우로 가운데 정렬 */
+            margin-top: 5px;
+            height: 100%; /* 부모 요소의 전체 높이를 사용 */
+        }
+
+        /*.header > div, .row > div {*/
+        /*    display: flex; !* Use Flexbox layout *!*/
+        /*    justify-content: center; !* Horizontally center the content *!*/
+        /*    align-items: center; !* Vertically center the content *!*/
+        /*    height: 100%; !* Ensure the height of the div is fully used *!*/
+        /*    padding: 0 10px;*/
+        /*    box-sizing: border-box; !* Include padding and border in the element's total width and height *!*/
+        /*}*/
+
+
     </style>
 </head>
 <body>
@@ -417,7 +437,7 @@
         <!--        필터링 및 정렬        -->
         <div style="display: flex">
             <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
-            <div>
+            <div class="filterByProjectEndDate">
                 <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
                 <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
                 <input type="radio" id="currentProjectEndDateDesc" name="sortCriteria" value="currentProjectEndDateDesc" onclick="updateHireDateSortOptions()">
@@ -431,7 +451,6 @@
             <select id="filterByAllocation">
                 <option value="">모든 상태</option>
                 <option value="-1">미배정</option>
-                <option value="0">예비배정</option>
                 <option value="1">배정</option>
             </select>
         </div>
@@ -460,7 +479,6 @@
                 <div th:text="${e.name}" class="employee-name"></div>
                 <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"
                      class="employee-rating"></div>
-                <div th:text="${e.address}" class="employee-address"></div>
                 <div th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"
                      th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
                      class="current-project-end-date"></div>
