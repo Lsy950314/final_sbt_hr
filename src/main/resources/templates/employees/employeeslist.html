@@ -5,9 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
-    <!--    <link rel="stylesheet" th:href="@{/css/employees.css}">-->
-
-
     <style>
 
         body {
@@ -16,71 +13,71 @@
         }
 
         ul {
-            list-style: none;
+            list-style: none; /* 리스트의 기본 불릿(점) 스타일을 제거합니다. */
         }
 
         .menu {
-            background-color: #1e90ff;
-            width: 250px;
-            height: 1080px;
+            background-color: #1e90ff; /* 메뉴의 배경색을 파란색으로 설정합니다. */
+            width: 250px; /* 메뉴의 너비를 250px로 설정합니다. */
+            height: 1080px; /* 메뉴의 높이를 1080px로 설정합니다. */
         }
 
         .menus > li {
-            width: 200px;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            text-align: center;
-            font-size: 18px;
+            width: 200px; /* 메뉴 항목의 너비를 200px로 설정합니다. */
+            height: 40px; /* 메뉴 항목의 높이를 40px로 설정합니다. */
+            justify-content: center; /* 항목의 내부 콘텐츠를 수평 중앙 정렬합니다. */
+            align-items: center; /* 항목의 내부 콘텐츠를 수직 중앙 정렬합니다. */
+            padding: 15px 20px; /* 메뉴 항목 내부에 15px 상하 패딩과 20px 좌우 패딩을 추가합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+            transition: background 0.3s ease; /* 배경색 변화에 0.3초의 부드러운 전환 효과를 적용합니다. */
+            text-align: center; /* 텍스트를 가운데 정렬합니다. */
+            font-size: 18px; /* 글자 크기를 18px로 설정합니다. */
         }
 
         .menus li a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            text-align: center; /* 텍스트 가운데 정렬 */
-            padding: 15px 20px; /* a 요소에 패딩을 적용 */
-            box-sizing: border-box;
+            display: block; /* a 태그를 블록 요소로 설정하여 클릭 가능 영역을 확장합니다. */
+            width: 100%; /* a 태그의 너비를 부모 요소에 맞춥니다. */
+            height: 100%; /* a 태그의 높이를 부모 요소에 맞춥니다. */
+            text-align: center; /* 텍스트를 가운데 정렬합니다. */
+            padding: 15px 20px; /* a 태그에 동일한 패딩을 적용하여 클릭 가능 영역을 확장합니다. */
+            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산을 합니다. */
         }
 
         .menus {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+            list-style: none; /* 메뉴 리스트의 기본 불릿(점) 스타일을 제거합니다. */
+            padding: 0; /* 패딩을 제거하여 메뉴 리스트를 꽉 채웁니다. */
+            margin: 0; /* 기본 마진을 제거합니다. */
         }
 
         .menus li:hover {
-            background: linear-gradient(45deg, #1e90ff, #00bfff);
-            color: #fff;
-            border-top-right-radius: 40px;
-            border-bottom-right-radius: 40px;
+            background: linear-gradient(45deg, #1e90ff, #00bfff); /* 메뉴 항목에 그라데이션 배경을 추가합니다. */
+            color: #fff; /* 글자색을 흰색으로 변경합니다. */
+            border-top-right-radius: 40px; /* 상단 오른쪽 모서리에 둥근 테두리 효과를 줍니다. */
+            border-bottom-right-radius: 40px; /* 하단 오른쪽 모서리에 둥근 테두리 효과를 줍니다. */
         }
 
         .contents {
-            background-color: #f5f5f5;
-            width: 1500px;
-            height: 1080px;
+            background-color: #f5f5f5; /* 콘텐츠 영역의 배경색을 밝은 회색으로 설정합니다. */
+            width: 1500px; /* 콘텐츠 영역의 너비를 1500px로 설정합니다. */
+            height: 1080px; /* 콘텐츠 영역의 높이를 1080px로 설정합니다. */
         }
 
         .contents p {
-            margin-left: 30px;
+            margin-left: 30px; /* 콘텐츠 내부의 p 요소에 왼쪽 여백을 30px 줍니다. */
         }
 
         .members {
-            width: 1280px;
-            height: 940px;
-            background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
-            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
-            border-radius: 15px 15px 0 0;
-            backdrop-filter: blur(10px); /* 글라스 효과 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-            color: #333; /* 어두운 글자색 */
-            font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
-            text-align: center;
-            overflow-y: auto; /* 수직 스크롤바 추가 */
+            width: 1280px; /* 구성원 리스트의 너비를 1280px로 설정합니다. */
+            height: 940px; /* 구성원 리스트의 높이를 940px로 설정합니다. */
+            background: rgba(173, 216, 230, 0.2); /* 하늘색 반투명 배경을 설정합니다. */
+            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계선을 설정합니다. */
+            border-radius: 15px 15px 0 0; /* 상단 두 모서리에 둥근 테두리를 적용합니다. */
+            backdrop-filter: blur(10px); /* 글라스 효과를 주어 배경을 흐리게 만듭니다. */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과를 추가합니다. */
+            color: #333; /* 텍스트 색상을 어두운 회색으로 설정합니다. */
+            font-family: "Arial", sans-serif; /* 깔끔한 폰트를 사용합니다. */
+            text-align: center; /* 텍스트를 가운데 정렬합니다. */
+            overflow-y: auto; /* 수직 스크롤바를 추가하여 콘텐츠가 넘칠 때 스크롤 가능하게 만듭니다. */
         }
 
         .members > div {
@@ -98,29 +95,29 @@
         }
 
         .members > div > div {
-            margin-left: 10px;
-            margin-right: 10px;
-            float: left;
-            width: 200px; /* 각 div의 고정된 너비 */
-            margin-top: 10px; /* 간격을 주기 위해 추가 */
-            margin-bottom: 10px; /* 간격을 주기 위해 추가 */
-            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-            align-items: center; /* 텍스트 상하 중앙 정렬 */
-            padding-top: 5px;
-            flex-direction: column;
+            margin-left: 10px; /* 왼쪽 여백을 10px 줍니다. */
+            margin-right: 10px; /* 오른쪽 여백을 10px 줍니다. */
+            float: left; /* 각 div를 왼쪽으로 정렬합니다. */
+            width: 200px; /* 각 div의 고정된 너비를 200px로 설정합니다. */
+            margin-top: 10px; /* 상단 여백을 10px 줍니다. */
+            margin-bottom : 10px; /* 하단 여백을 10px 줍니다. */
+            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산을 합니다. */
+            align-items: center; /* 텍스트를 상하 중앙 정렬합니다. */
+            padding-top: 7px; /* 상단 패딩을 5px 줍니다. */
+            flex-direction: column; /* 자식 요소들을 세로로 정렬합니다. */
         }
 
         .modal {
-            display: none; /* 숨김 처리 */
-            position: fixed; /* 모달을 화면 중앙에 고정 */
-            z-index: 1; /* 다른 콘텐츠 위에 표시 */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+            display: none; /* 모달을 기본적으로 숨김 처리합니다. */
+            position: fixed; /* 모달을 화면 중앙에 고정합니다. */
+            z-index: 1; /* 다른 콘텐츠 위에 모달이 표시되도록 설정합니다. */
+            left: 0; /* 모달의 왼쪽 위치를 0으로 설정하여 전체 너비를 차지하게 합니다. */
+            top: 0; /* 모달의 상단 위치를 0으로 설정하여 전체 높이를 차지하게 합니다. */
+            width: 100%; /* 모달의 너비를 화면 전체로 설정합니다. */
+            height: 100%; /* 모달의 높이를 화면 전체로 설정합니다. */
+            overflow: auto; /* 모달 내부가 넘칠 경우 스크롤을 가능하게 만듭니다. */
+            background-color: rgb(0, 0, 0); /* 모달의 배경색을 검정색으로 설정합니다. */
+            background-color: rgba(0, 0, 0, 0.4); /* 모달 배경을 약간 투명하게 만듭니다. */
         }
 
         .modal-content {
@@ -131,299 +128,292 @@
             width: 80%; /* 너비 조정 */
         }
 
+        .modal-division {
+            display: flex; !important;/* Flexbox 레이아웃을 사용하여 내부 콘텐츠를 가로로 배치합니다. */
+        }
+
         .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+            color: #aaa; /* 닫기 버튼의 색상을 회색으로 설정합니다. */
+            float: right; /* 닫기 버튼을 오른쪽으로 정렬합니다. */
+            font-size: 28px; /* 글자 크기를 28px로 설정합니다. */
+            font-weight: bold; /* 글자 굵기를 굵게 설정합니다. */
         }
 
         .close:hover,
         .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+            color: black; /* 마우스 오버 또는 포커스 시 닫기 버튼의 색상을 검정색으로 변경합니다. */
+            text-decoration: none; /* 텍스트 밑줄을 제거합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
         }
 
         .modal-button {
-            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 14px; /* 글자 크기 */
-            color: #fff; /* 텍스트 색상 */
+            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
+            font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
+            color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
             background: linear-gradient(
                     45deg,
                     #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
-            ); /* 버튼 배경색 그라데이션 */
-            border: none; /* 기본 테두리 제거 */
-            border-radius: 20px; /* 둥근 테두리 */
-            padding: 7px 14px; /* 내부 여백 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-            cursor: pointer; /* 커서 변경 */
-            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+            ); /* 버튼 배경색을 그라데이션으로 설정합니다. */
+            border: none; /* 기본 테두리를 제거합니다. */
+            border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
+            padding: 7px 14px; /* 내부 여백을 설정합니다. */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+            transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
 
         .header, .row {
-            display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+            display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치합니다. */
         }
 
         .header > div {
-            font-weight: bold;
-            background-color: #f0f0f0;
+            font-weight: bold; /* 글자 굵기를 굵게 설정합니다. */
+            background-color: #f0f0f0; /* 배경색을 연한 회색으로 설정합니다. */
             /*padding: 10px;*/
-            border-bottom: 1px solid #ddd;
-            text-align: center; /* 텍스트 좌우 중앙 정렬 */
-            line-height: 40px; /* 상하 중앙 정렬: div 높이와 같게 설정 */
-            height: 40px; /* 각 div의 높이 설정 */
-
+            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
+            text-align: center; /* 텍스트를 가운데 정렬합니다. */
+            line-height: 40px; /* 줄 간격을 설정하여 텍스트를 상하 중앙 정렬합니다. */
+            height: 40px; /* 각 div의 높이를 40px로 설정합니다. */
         }
 
         .row > div {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
+            justify-content: center; /* 좌우 중앙 정렬합니다. */
+            align-items: center; /* 상하 중앙 정렬합니다. */
+        }
+
+        .seeDetails {
+            padding-top: 0 !important; /* 상단 패딩을 0으로 설정하여 다른 컬럼들과 다르게 만듭니다. */
         }
 
         .row > div:nth-child(6) {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로 정렬합니다. */
+            justify-content: center; /* 좌우 중앙 정렬합니다. */
+            align-items: center; /* 상하 중앙 정렬합니다. */
         }
 
         #employee-info {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            flex: 1; /* 왼쪽 정보 영역이 전체 너비의 절반을 차지하도록 설정합니다. */
+            padding-right: 20px; /* 오른쪽 패딩을 추가하여 요소 간의 간격을 유지합니다. */
+            display: grid; /* 그리드 레이아웃을 사용합니다. */
+            grid-template-columns: 1fr 2fr; /* 2개의 열로 구성된 그리드를 만듭니다. 첫 번째 열은 1fr, 두 번째 열은 2fr 크기입니다. */
+            gap: 10px; /* 그리드 항목 간의 간격을 10px로 설정합니다. */
         }
 
         #employee-info .label {
-            font-weight: bold;
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-right: 1px solid #ddd;
-        }
-
-        #employee-info .value {
-            padding: 10px;
-            border-left: 1px solid #ddd;
-        }
-
-        #employee-info, #employee-skills {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
-
-        #employee-info .label, #employee-skills .label {
-            font-weight: bold;
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-right: 1px solid #ddd;
-        }
-
-        #employee-info .value, #employee-skills .value {
-            padding: 10px;
-            border-left: 1px solid #ddd;
-        }
-
-        #skills-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        #skills-list li {
-            margin-bottom: 5px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-        }
-
-        #add-employees {
-            margin-left: 960px;
-            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 16px; /* 글자 크기 */
-            color: #fff; /* 텍스트 색상 */
+            font-weight: bold; /* 레이블을 굵게 설정합니다. */
+            color: #fff;
             background: linear-gradient(
                     45deg,
                     #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
-            ); /* 버튼 배경색 그라데이션 */
-            border: none; /* 기본 테두리 제거 */
-            border-radius: 20px; /* 둥근 테두리 */
-            padding: 7px 14px; /* 내부 여백 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-            cursor: pointer; /* 커서 변경 */
-            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+            );
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-right: 1px solid #ddd; /* 오른쪽 경계선을 추가합니다. */
+        }
+
+        #employee-info .value {
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-left: 1px solid #ddd; /* 왼쪽 경계선을 추가합니다. */
+        }
+
+        #employee-skills .label {
+            font-weight: bold; /* 레이블을 굵게 설정합니다. */
+            color: #fff;
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+            );
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-right: 1px solid #ddd; /* 오른쪽 경계선을 추가합니다. */
+        }
+
+        #employee-skills {
+            flex: 1; /* 오른쪽 스킬과 프로젝트 영역도 전체 너비의 절반을 차지하도록 설정합니다. */
+            padding-left: 20px; /* 왼쪽 패딩을 추가하여 요소 간의 간격을 유지합니다. */
+            display: grid; /* 그리드 레이아웃을 사용합니다. */
+            grid-template-columns: 1fr 2fr; /* 두 요소 모두 1:2 비율의 그리드 레이아웃을 설정합니다. */
+            gap: 10px; /* 그리드 항목 간의 간격을 10px로 설정합니다. */
+        }
+
+        #skills-list{
+            list-style: none; /* 기본 불릿 스타일을 제거합니다. */
+            padding: 0; /* 패딩을 제거하여 리스트를 꽉 채웁니다. */
+            margin: 0; /* 기본 마진을 제거합니다. */
+            overflow-y: auto; /* 스크롤이 가능하도록 설정합니다. */
+            max-height: 200px; /* 최대 높이를 200px로 제한하여 스크롤이 필요한 경우 스크롤바가 나타나도록 합니다. */
+        }
+
+        #projectsList {
+            list-style: none; /* 기본 불릿 스타일을 제거합니다. */
+            padding: 0; /* 패딩을 제거하여 리스트를 꽉 채웁니다. */
+            margin-top: 15px;
+            max-height: 200px; /* 최대 높이를 200px로 제한하여 스크롤이 필요한 경우 스크롤바가 나타나도록 합니다. */
+        }
+
+        #skills-list li, .project-item {
+            margin-bottom: 5px; /* 하단 여백을 5px 줍니다. */
+            padding: 5px; /* 내부 여백을 5px 줍니다. */
+            border: 1px solid #ddd; /* 경계선을 회색으로 설정합니다. */
+            background-color: #fff; /* 배경색을 흰색으로 설정합니다. */
+        }
+
+        #add-employees {
+            margin-left: 960px; /* 왼쪽 여백을 960px 줍니다. */
+            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
+            font-size: 16px; /* 글자 크기를 16px로 설정합니다. */
+            color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
+            ); /* 버튼 배경색을 그라데이션으로 설정합니다. */
+            border: none; /* 기본 테두리를 제거합니다. */
+            border-radius: 20px; /* 둥근 테두리를 적용합니다. */
+            padding: 7px 14px; /* 내부 여백을 설정합니다. */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+            transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
 
         a {
-            color: inherit;
-            text-decoration: none;
+            color: inherit; /* 부모 요소의 텍스트 색상을 상속받습니다. */
+            text-decoration: none; /* 기본 텍스트 밑줄을 제거합니다. */
         }
 
         #button-container {
-            display: flex;
-            gap: 10px;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            gap: 10px; /* 버튼 간의 간격을 10px로 설정합니다. */
+            margin-top: 20px; /* 버튼들이 섹션과 일정 간격을 두도록 설정합니다. */
         }
 
         /* update-btn 스타일 */
-        #update-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #6c757d; /* 회색 계열 */
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
+        #update-btn, #delete-btn, #detail-btn {
+            padding: 10px 20px; /* 내부 여백을 설정합니다. */
+            border: none; /* 기본 테두리를 제거합니다. */
+            border-radius: 5px; /* 버튼에 둥근 테두리를 적용합니다. */
+            background-color: #6c757d; /* 회색 계열 배경색을 설정합니다. */
+            color: white; /* 텍스트 색상을 흰색으로 설정합니다. */
+            font-size: 16px; /* 글자 크기를 16px로 설정합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+            transition: background-color 0.3s, transform 0.3s; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
 
-        /* update-btn 호버 효과 */
-        #update-btn:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
+        #update-btn:hover, #delete-btn:hover {
+            background-color: #5a6268; /* 호버 시 배경색을 어두운 회색으로 변경합니다. */
+            transform: translateY(-2px); /* 약간 위로 이동하여 부드러운 효과를 줍니다. */
         }
 
-        /* update-btn 활성화 효과 */
-        #update-btn:active {
-            background-color: #545b62;
-            transform: translateY(0);
-        }
-
-        /* delete-btn 스타일 */
-        #delete-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #6c757d; /* 회색 계열 */
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        /* delete-btn 호버 효과 */
-        #delete-btn:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        /* delete-btn 활성화 효과 */
-        #delete-btn:active {
-            background-color: #545b62;
-            transform: translateY(0);
+        #update-btn:active, #delete-btn:active {
+            background-color: #545b62; /* 클릭 시 배경색을 더 어두운 회색으로 변경합니다. */
+            transform: translateY(0); /* 클릭 시 원래 위치로 돌아오게 합니다. */
         }
 
 
 
         /* flexbox를 이용한 스킬 목록 스타일 */
         .skills-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            flex-direction: column; /* Flexbox 레이아웃을 세로 방향으로 설정합니다. */
+            align-items: flex-start; /* 아이템을 왼쪽 정렬합니다. */
         }
 
         .skill-item {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding: 5px 0;
-            border-bottom: 1px solid #ddd;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            justify-content: space-between; /* 아이템 간의 공간을 균등하게 배분합니다. */
+            width: 100%; /* 너비를 100%로 설정합니다. */
+            padding: 5px 0; /* 상하 패딩을 5px로 설정합니다. */
+            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
         }
 
         .skill-item span {
-            flex: 1;
+            flex: 1; /* Flexbox 내에서 균등한 공간을 차지하게 합니다. */
         }
 
         .project-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            justify-content: space-between; /* 아이템 간의 공간을 균등하게 배분합니다. */
+            padding: 5px; /* 내부 여백을 5px 줍니다. */
+            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
         }
 
+        .project-item .project-name,
+        .project-item .project-dates {
+            display: block;
+        }
 
         input[type="text"], select {
-            margin-left: 30px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            margin-right: 8px;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-            width: 200px;
+            margin-left: 30px; /* 왼쪽 여백을 30px 줍니다. */
+            padding: 8px; /* 내부 여백을 8px 줍니다. */
+            border-radius: 4px; /* 입력 필드에 둥근 테두리를 적용합니다. */
+            border: 1px solid #ccc; /* 경계선을 회색으로 설정합니다. */
+            font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
+            margin-right: 8px; /* 오른쪽 여백을 8px 줍니다. */
+            margin-bottom: 12px; /* 하단 여백을 12px 줍니다. */
+            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산을 합니다. */
+            width: 200px; /* 입력 필드의 너비를 200px로 설정합니다. */
         }
 
         input[type="text"]:focus, select:focus {
-            border-color: #2980b9;
-            outline: none;
-            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
+            border-color: #2980b9; /* 포커스 시 경계선 색상을 파란색으로 변경합니다. */
+            outline: none; /* 기본 포커스 테두리를 제거합니다. */
+            box-shadow: 0 0 4px rgba(41, 128, 185, 0.5); /* 파란색 그림자를 추가하여 포커스 효과를 줍니다. */
         }
 
         select {
-            width: auto;
-            padding-right: 20px;
+            width: auto; /* 선택 박스의 너비를 콘텐츠에 맞게 설정합니다. */
+            padding-right: 20px; /* 오른쪽 패딩을 20px로 설정합니다. */
         }
 
         input[type="text"]::placeholder {
-            color: #aaa;
+            color: #aaa; /* placeholder 텍스트 색상을 회색으로 설정합니다. */
         }
 
         input[type="text"]:hover, select:hover {
-            border-color: #2980b9;
+            border-color: #2980b9; /* 마우스 오버 시 경계선 색상을 파란색으로 변경합니다. */
         }
 
         /* 레이아웃 조정 */
         #filterByEmployeeName {
-            width: 220px;
+            width: 220px; /* 사원 이름 필터 입력 필드의 너비를 220px로 설정합니다. */
         }
 
         #sortEmployeesByDate, #filterByAllocation {
-            width: 180px;
+            width: 180px; /* 정렬 및 할당 필터 선택 박스의 너비를 180px로 설정합니다. */
         }
 
         /* 전체 필터 및 정렬 섹션 스타일 */
         .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            flex-wrap: wrap; /* Flexbox 레이아웃을 여러 줄로 나열합니다. */
+            gap: 8px; /* 필터와 정렬 요소 간의 간격을 8px로 설정합니다. */
+            margin-bottom: 16px; /* 하단 여백을 16px 줍니다. */
         }
 
         .employee{
-            border-bottom: gray 1px solid ;
+            border-bottom: gray 1px solid ; /* 구성원 리스트 항목의 하단에 회색 경계선을 추가합니다. */
         }
 
         .filterByProjectEndDate {
-            display: flex; /* Flexbox 레이아웃 사용 */
-            justify-content: center; /* 좌우로 가운데 정렬 */
-            margin-top: 5px;
-            height: 100%; /* 부모 요소의 전체 높이를 사용 */
+            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
+            justify-content: center; /* 좌우 중앙 정렬합니다. */
+            margin-top: 5px; /* 상단 여백을 5px 줍니다. */
+            height: 100%; /* 부모 요소의 전체 높이를 사용합니다. */
         }
 
-        /*.header > div, .row > div {*/
-        /*    display: flex; !* Use Flexbox layout *!*/
-        /*    justify-content: center; !* Horizontally center the content *!*/
-        /*    align-items: center; !* Vertically center the content *!*/
-        /*    height: 100%; !* Ensure the height of the div is fully used *!*/
-        /*    padding: 0 10px;*/
-        /*    box-sizing: border-box; !* Include padding and border in the element's total width and height *!*/
-        /*}*/
+        .employeeIdAndNameAndButton {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .employeeIdAndNameAndButton > div:last-child {
+            margin-left: auto;
+        }
 
 
     </style>
+
+
 </head>
 <body>
 <div style="display: flex">
@@ -490,7 +480,7 @@
                      th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
                      class="last-project-end-date"></div>
                 <div th:text="${e.hireDate}" class="hire-date"></div>
-                <div>
+                <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
                 </div>
 
@@ -532,36 +522,48 @@
                             const defaultImage = '/img/default-photo.jpeg';
                             const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
-                       <div id="employee-info">
-                           <p class="label">Image:</p>
-                           <img src="${employeeImage}" alt="Employee Image" style="width: 100px; height: 100px; border-radius: 50%;"/>
-                           <p class="label">Name:</p>
-                           <p class="value">${data.name}</p>
-                           <p class="label">Address:</p>
-                           <p class="value">${data.address}</p>
-                           <p class="label">Last Project End Date:</p>
-                           <p class="value">${data.lastProjectEndDate || 'No experience'}</p>
-                           <p class="label">Current Project End Date:</p>
-                           <p class="value">${data.currentProjectEndDate || 'Not allocated'}</p>
-                           <p class="label">Contact Number:</p>
-                           <p class="value">${data.contactNumber}</p>
-                           <p class="label">Hire Date:</p>
-                           <p class="value">${data.hireDate}</p>
-                           <p class="label">Preferred Language:</p>
-                           <p class="value">${data.preferredLanguage}</p>
-                           <p class="label">Preferred Project Type:</p>
-                           <p class="value">${data.preferredProjectType}</p>
-                           <p class="label">Skills & Career:</p>
-                           <p class="value" id="skillsAndCareer"></p>
-                           <p class="label">Projects:</p>
-                           <p class="value" id="projectsList"></p>
+<div class="employeeIdAndNameAndButton">
+<div>${data.employeeId}.${data.name}</div>
+<div>
+    <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
+    <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">削除</button>
+    <button id="detail-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">詳細</button>
+</div>
 
-                           <div id="button-container">
-                               <button id="update-btn" onclick="updateEmployee(${data.employeeId})">수정</button>
-                               <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">삭제</button>
-                           </div>
-                           <button onclick="readProjectsByEmployeeId(${data.employeeId})">(상세보기)</button>
-                       </div>
+</div>
+<div class="modal-division">
+                       <div id="employee-info" style="flex: 1; padding-right: 20px;">
+    <!-- 왼쪽 섹션: 사원 정보 -->
+    <p class="label" style="background-color: white"></p>
+    <img src="${employeeImage}" alt="Employee Image" style="width: 150px; height: 150px; border-radius: 20%;"/>
+    <p class="label">Address:</p>
+    <p class="value">${data.address}</p>
+    <p class="label">最近プロジェクト完了日:</p>
+    <p class="value">${data.lastProjectEndDate || 'No experience'}</p>
+    <p class="label">現在プロジェクト終了日:</p>
+    <p class="value">${data.currentProjectEndDate || 'Not allocated'}</p>
+    <p class="label">電話番号:</p>
+    <p class="value">${data.contactNumber}</p>
+    <p class="label">入社日:</p>
+    <p class="value">${data.hireDate}</p>
+    <p class="label">興味ある言語:</p>
+    <p class="value">${data.preferredLanguage}</p>
+    <p class="label">興味ある案件種類:</p>
+    <p class="value">${data.preferredProjectType}</p>
+</div>
+
+<div id="employee-skills" style="flex: 1; padding-left: 20px;">
+
+    <!-- 오른쪽 섹션: Skills & Career, Projects -->
+    <p class="label">Skills & Career:</p>
+    <p class="value" id="skillsAndCareer"></p>
+    <p class="label">Projects:</p>
+    <p class="value" id="projectsList"></p>
+
+
+</div>
+
+</div>
                     `;
 
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
@@ -625,7 +627,10 @@
                                 data.projects.forEach(project => {
                                     const projectItem = document.createElement('div');
                                     projectItem.className = 'project-item';
-                                    projectItem.innerHTML = `<span>${project.projectName}</span><span>${project.startDate} ~ ${project.endDate}</span>`;
+                                    projectItem.innerHTML = `
+            <div class="project-name">${project.projectName}</div>
+            <div class="project-dates">${project.startDate} ~ ${project.endDate}</div>
+        `;
                                     projectsListElement.appendChild(projectItem);
                                 });
                             }
