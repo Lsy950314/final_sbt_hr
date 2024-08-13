@@ -90,6 +90,9 @@ public class EmployeesController {
         return "employees/employeeslist";
     }
 
+
+
+
     @PostMapping("/getModalData")
     public ResponseEntity<Map<String, Object>> getEmployeeModalData(@RequestBody Map<String, Long> request) {
         Long id = request.get("id");
