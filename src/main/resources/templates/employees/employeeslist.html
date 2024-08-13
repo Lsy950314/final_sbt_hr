@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
-<!--    <link rel="stylesheet" th:href="@{/css/employees.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/css/employees.css}">-->
 
 
     <style>
@@ -21,12 +21,12 @@
 
         .menu {
             background-color: #1e90ff;
-            width: 350px;
+            width: 250px;
             height: 1080px;
         }
 
         .menus > li {
-            width: 300px;
+            width: 200px;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -65,18 +65,22 @@
             height: 1080px;
         }
 
+        .contents p {
+            margin-left: 30px;
+        }
+
         .members {
             width: 1280px;
-            height: 1000px;
+            height: 940px;
             background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
             border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
-            border-radius: 15px; /* 둥근 모서리 */
+            border-radius: 15px 15px 0 0;
             backdrop-filter: blur(10px); /* 글라스 효과 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
             color: #333; /* 어두운 글자색 */
             font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
             text-align: center;
-            overflow: hidden;
+            overflow-y: auto; /* 수직 스크롤바 추가 */
         }
 
         .members > div {
@@ -85,8 +89,8 @@
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
         }
 
-        .allocation-header{
-            width: 50px;!important;
+        .allocation-header, .allocation{
+            width: 35px;!important;
         }
 
         .members > div > div {
@@ -94,8 +98,12 @@
             margin-right: 10px;
             float: left;
             width: 200px; /* 각 div의 고정된 너비 */
+            margin-top: 10px; /* 간격을 주기 위해 추가 */
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+            align-items: center; /* 텍스트 상하 중앙 정렬 */
+            padding-top: 5px;
+            flex-direction: column;
         }
 
         .modal {
@@ -156,8 +164,12 @@
         .header > div {
             font-weight: bold;
             background-color: #f0f0f0;
-            padding: 10px;
+            /*padding: 10px;*/
             border-bottom: 1px solid #ddd;
+            text-align: center; /* 텍스트 좌우 중앙 정렬 */
+            line-height: 40px; /* 상하 중앙 정렬: div 높이와 같게 설정 */
+            height: 40px; /* 각 div의 높이 설정 */
+
         }
 
         .row > div {
@@ -235,9 +247,9 @@
         }
 
         #add-employees {
-            margin-left: 975px;
+            margin-left: 960px;
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 14px; /* 글자 크기 */
+            font-size: 16px; /* 글자 크기 */
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
@@ -309,18 +321,7 @@
             transform: translateY(0);
         }
 
-        /* 상태에 따른 css 설정 */
-        .allocation-unassigned {
-            background-color: #f5c6cb; /* 미배정: 연한 빨간색 */
-        }
 
-        .allocation-preassigned {
-            background-color: #c3e6cb; /* 예비배정: 연한 노란색 */
-        }
-
-        .allocation-assigned {
-            background-color: #bee5eb; /* 배정완료: 연한 녹색 */
-        }
 
         /* flexbox를 이용한 스킬 목록 스타일 */
         .skills-container {
@@ -350,6 +351,7 @@
 
 
         input[type="text"], select {
+            margin-left: 30px;
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ccc;
@@ -396,6 +398,25 @@
             margin-bottom: 16px;
         }
 
+        .employee{
+            border-bottom: gray 1px solid ;
+        }
+
+        .filterByProjectEndDate {
+            display: flex; /* Flexbox 레이아웃 사용 */
+            justify-content: center; /* 좌우로 가운데 정렬 */
+            margin-top: 5px;
+            height: 100%; /* 부모 요소의 전체 높이를 사용 */
+        }
+
+        /*.header > div, .row > div {*/
+        /*    display: flex; !* Use Flexbox layout *!*/
+        /*    justify-content: center; !* Horizontally center the content *!*/
+        /*    align-items: center; !* Vertically center the content *!*/
+        /*    height: 100%; !* Ensure the height of the div is fully used *!*/
+        /*    padding: 0 10px;*/
+        /*    box-sizing: border-box; !* Include padding and border in the element's total width and height *!*/
+        /*}*/
 
 
     </style>
@@ -415,39 +436,38 @@
 
         <!--        필터링 및 정렬        -->
         <div style="display: flex">
-        <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
-        <div>
-            <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
-            <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
-            <input type="radio" id="currentProjectEndDateDesc" name="sortCriteria" value="currentProjectEndDateDesc" onclick="updateHireDateSortOptions()">
-            <label for="currentProjectEndDateDesc">현재 프로젝트 종료일 내림차순</label>
-        </div>
+            <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
+            <div class="filterByProjectEndDate">
+                <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
+                <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
+                <input type="radio" id="currentProjectEndDateDesc" name="sortCriteria" value="currentProjectEndDateDesc" onclick="updateHireDateSortOptions()">
+                <label for="currentProjectEndDateDesc">현재 프로젝트 종료일 내림차순</label>
+            </div>
 
-        <select id="sortHireDateBy">
-            <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
-        </select>
+            <select id="sortHireDateBy">
+                <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
+            </select>
 
-        <select id="filterByAllocation">
-            <option value="">모든 상태</option>
-            <option value="-1">미배정</option>
-            <option value="0">예비배정</option>
-            <option value="1">배정</option>
-        </select>
+            <select id="filterByAllocation">
+                <option value="">모든 상태</option>
+                <option value="-1">미배정</option>
+                <option value="1">배정</option>
+            </select>
         </div>
 
         <div class="members">
             <div class="header">
-                <div class="allocation-header"></div>
+                <div class="allocation-header" style="visibility: hidden;"></div>
                 <div>名前</div>
                 <div>評価</div>
                 <div class="employee-address-header">住所</div>
-                <div>現在プロジェクト終了日</div>
-                <div class="last-project-end-date-header">最近プロジェクト完了日</div>
+                <div style="font-size: 13px;">現在プロジェクト終了日</div>
+                <div class="last-project-end-date-header" style="font-size: 13px;">最近プロジェクト完了日</div>
                 <div class="hire-date-header">入社日</div>
-                <div class="view-details-header"></div>
+                <div class="view-details-header" style="visibility: hidden;"></div>
 
             </div>
-            <div th:each="e : ${session.employees}" th:class="'employee ' +
+            <div class="employee" th:each="e : ${session.employees}" th:class="'employee ' +
                 (${e.allocation} == -1 ? 'allocation-unassigned' :
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))">
@@ -459,7 +479,6 @@
                 <div th:text="${e.name}" class="employee-name"></div>
                 <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"
                      class="employee-rating"></div>
-                <div th:text="${e.address}" class="employee-address"></div>
                 <div th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"
                      th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
                      class="current-project-end-date"></div>

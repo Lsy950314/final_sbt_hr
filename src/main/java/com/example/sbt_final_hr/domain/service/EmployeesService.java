@@ -17,9 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,16 +155,36 @@ public class EmployeesService {
     //8월 9일 10:44 read 기능 최적화 관련 시도중
     public List<EmployeesRequest> findAllEmployeesSummary() {
         //시간 측정
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
 
         //List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
         List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
 
-        long endTime = System.currentTimeMillis();
-        System.out.println("findAllEmployeesSummary took: " + (endTime - startTime) + " milliseconds");
+        //long endTime = System.currentTimeMillis();
+        //System.out.println("findAllEmployeesSummary took: " + (endTime - startTime) + " milliseconds");
 
         return employeesSummary;
-
     }
+
+    public Map<String, Integer> getCountEmployees(){
+        Map<String, Integer> countEmployees = new HashMap<>();
+
+        int totalEmployees = employeesRepository.countAllEmployees();
+        int assignedEmployees = employeesRepository.countAssignedEmployees();
+        int unassignedEmployees = employeesRepository.countUnassignedEmployees();
+
+        countEmployees.put("totalEmployees", totalEmployees);
+        countEmployees.put("assignedEmployees", assignedEmployees);
+        countEmployees.put("unassignedEmployees", unassignedEmployees);
+
+        return countEmployees;
+    }
+
+
+
+
+
+
+
 
 }
