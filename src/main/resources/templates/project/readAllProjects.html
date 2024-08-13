@@ -7,8 +7,8 @@
     <title>Project List</title>
     <style>
         .status-icon img {
-            width: 24px; /* 이미지의 너비를 24px로 설정 */
-            height: 24px; /* 이미지의 높이를 24px로 설정 */
+            width: 20px; /* 이미지의 너비를 24px로 설정 */
+            height: 20px; /* 이미지의 높이를 24px로 설정 */
             object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */
             margin: 0 5px; /* 이미지 주위에 약간의 여백을 추가 */
             vertical-align: middle; /* 텍스트와 함께 있을 때 이미지의 세로 정렬을 중앙으로 설정 */
@@ -35,40 +35,12 @@
 
         .menu {
             background-color: #1e90ff;
-            width: 350px;
+            width: 250px;
             height: 1080px;
         }
 
-        /*.menu {*/
-        /*    background-color: #1e90ff;*/
-        /*    width: 300px;*/
-        /*    height: 100vh;*/
-        /*    padding: 20px;*/
-        /*    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);*/
-        /*    display: flex; !* Flexbox를 사용하여 콘텐츠를 정렬 *!*/
-        /*    flex-direction: column; !* 세로로 정렬 *!*/
-        /*    justify-content: space-between;*/
-        /*    color: #fff;*/
-        /*    font-family: 'Roboto', sans-serif; !* 현대적인 느낌의 폰트 사용 *!*/
-        /*    font-size: 16px; !* 텍스트 크기 조정 *!*/
-        /*    transition: background-color 0.3s ease; !* 배경색 전환을 부드럽게 처리 *!*/
-        /*}*/
-
-
-        /*.menu a {*/
-        /*    color: #fff; !* 링크 텍스트를 하얀색으로 유지 *!*/
-        /*    text-decoration: none; !* 링크 밑줄 제거 *!*/
-        /*    margin-bottom: 15px; !* 링크 간 간격 조정 *!*/
-        /*    transition: color 0.3s ease; !* 링크 색상 전환을 부드럽게 처리 *!*/
-        /*}*/
-
-        /*.menu a:hover {*/
-        /*    color: #1e90ff; !* 링크에 마우스 오버 시 색상을 파란색으로 변경 *!*/
-        /*}*/
-
-
         .menus > li {
-            width: 300px;
+            width: 200px;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -104,22 +76,29 @@
 
         .contents {
             background-color: #f5f5f5;
-            width: 1500px;
+            width: 1170px;
             height: 1080px;
+            border-radius: 15px 15px 0 0;
         }
 
+        .contents p {
+            height: 35px;
+            margin-left: 30px;
+        }
+
+
         .projects {
-            width: 1280px;
-            height: 800px;
+            width: 1170px;
+            height: 940px;
             background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
             border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
-            border-radius: 15px; /* 둥근 모서리 */
+            border-radius: 15px 15px 0 0;
             backdrop-filter: blur(10px); /* 글라스 효과 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-            /*display: flex;*/
             color: #333; /* 어두운 글자색 */
             font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
             text-align: center;
+            overflow-y: auto; /* 수직 스크롤바 추가 */
         }
 
         .projects > div {
@@ -127,6 +106,25 @@
             margin-right: 40px;
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
             align-items: center;
+            border-bottom: 1px solid #c6c6c6;
+        }
+
+        .allocation-header, .allocation {
+            min-width: 35px;
+            max-width: 35px;
+            flex: 0 0 35px;
+        }
+
+        .start-date-header, .end-date-header, .start-date, .end-date{
+            min-width: 150px;
+            max-width: 150px;
+            flex: 0 0 150px;
+        }
+
+        .project-name-header, .client-company-header, .project-name, .client-company{
+            min-width: 270px;
+            max-width: 270px;
+            flex: 0 0 270px;
         }
 
         .projects > div > div {
@@ -134,9 +132,31 @@
             margin-right: 10px;
             float: left;
             width: 200px; /* 각 div의 고정된 너비 */
+            margin-top: 10px; /* 간격을 주기 위해 추가 */
             margin-bottom: 10px; /* 간격을 주기 위해 추가 */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+            align-items: center; /* 텍스트 상하 중앙 정렬 */
+            padding-top: 5px;
+            flex-direction: column;
         }
+
+        .header, .row {
+            display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+        }
+
+        .header > div {
+            font-weight: bold;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            text-align: center; /* 텍스트 좌우 중앙 정렬 */
+            line-height: 40px; /* 상하 중앙 정렬을 위해 div 높이와 동일하게 설정 */
+            height: 40px; /* 각 div의 높이 설정 */
+            display: flex; /* flexbox를 사용하여 상하 중앙 정렬 */
+            align-items: center; /* 상하 중앙 정렬 */
+            justify-content: center; /* 좌우 중앙 정렬 */
+        }
+
+        /* 모달 css */
 
         .modal {
             display: none; /* 숨김 처리 */
@@ -153,16 +173,16 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 중앙 정렬 */
+            margin: 5% auto; /* 중앙 정렬 */
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; /* 너비 조정 */
+            width: 90%;
+            height: 80%;
         }
-
 
         .modal-button {
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 1rem; /* 글자 크기 */
+            font-size: 14px; /* 글자 크기 */
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
@@ -170,53 +190,38 @@
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
-            padding: 10px 20px; /* 내부 여백 */
+            padding: 7px 14px; /* 내부 여백 */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
             cursor: pointer; /* 커서 변경 */
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
-        }
-
-        .header {
-            display: flex;
-        }
-
-        .header > div {
-            font-weight: bold;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .row > div {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .row > div:nth-child(6) {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .modal-projects > div {
             display: flex;
         }
 
-        /* 모달 본문 */
-
         #modal-body {
             display: flex;
-
-            gap: 20px;
+            flex-direction: column;
         }
 
+        .matchButton {
+            width: 150px;
+            margin-left: auto;
+            margin-bottom: auto;
+            display: block;
+        }
 
         #project-info {
-            display: table;
-            width: 100%;
-            border-collapse: collapse;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            width: 95%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            padding: 20px;
             font-family: Arial, sans-serif;
-            margin: 20px 0;
+            background-color: #f9f9f9;
         }
 
         #project-info .data-row {
@@ -255,10 +260,12 @@
             margin-bottom: 5px;
         }
 
+        /* 프로젝트 추가 버튼 스타일 */
+
         #add-projects {
-            margin-left: 870px;
+            margin-left: 960px;
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 13px; /* 글자 크기 */
+            font-size: 16px; /* 글자 크기 */
             color: #fff; /* 텍스트 색상 */
             background: linear-gradient(
                     45deg,
@@ -266,7 +273,7 @@
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
-            padding: 5px 10px; /* 내부 여백 */
+            padding: 7px 14px; /* 내부 여백 */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
             cursor: pointer; /* 커서 변경 */
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
@@ -331,6 +338,7 @@
         }
 
         input[type="text"], select {
+            margin-left: 30px;
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ccc;
@@ -338,7 +346,6 @@
             margin-right: 8px;
             margin-bottom: 12px;
             box-sizing: border-box;
-            width: 200px;
         }
 
         input[type="text"]:focus, select:focus {
@@ -382,16 +389,17 @@
         }
 
         /* 전체 필터 및 정렬 섹션 스타일 */
+
         .filter-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
         }
 
         .hidden {
             display: none;
         }
+
+
 
 
     </style>
@@ -411,41 +419,42 @@
         </p>
 
         <!--        필터링 및 정렬        -->
+        <div class="filter-container">
+            <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
 
-        <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
+            <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
 
-        <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
-
-        <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
-            <option value="startDate" th:selected="${sortBy == 'startDate'}">프로젝트 시작일 순</option>
-            <option value="endDate" th:selected="${sortBy == 'endDate'}">프로젝트 종료일 순</option>
-        </select>
-        <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
-        <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
-        <!--        프로젝트 상태에 따라 필터링         -->
-        <select id="filterByStatus" th:onchange="filterByStatus()">
-            <option value="" th:selected="${filterStatus == null}">모든 상태</option>
-            <option value="-1" th:selected="${filterStatus == -1}">미배정</option>
-            <option value="1" th:selected="${filterStatus == 1}">배정완료</option>
-            <option value="2" th:selected="${filterStatus == 2}">완료</option>
-        </select>
+            <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
+                <option value="startDate" th:selected="${sortBy == 'startDate'}">프로젝트 시작일 순</option>
+                <option value="endDate" th:selected="${sortBy == 'endDate'}">프로젝트 종료일 순</option>
+            </select>
+            <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
+            <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
+            <!--        프로젝트 상태에 따라 필터링         -->
+            <select id="filterByStatus" th:onchange="filterByStatus()">
+                <option value="" th:selected="${filterStatus == null}">모든 상태</option>
+                <option value="-1" th:selected="${filterStatus == -1}">미배정</option>
+                <option value="1" th:selected="${filterStatus == 1}">배정완료</option>
+                <option value="2" th:selected="${filterStatus == 2}">완료</option>
+            </select>
+        </div>
 
         <div class="projects">
             <div class="header">
-                <div></div>
-                <div>プロジェクト名</div>
-                <div>クライアント会社</div>
-                <div>プロジェクト開始日</div>
-                <div>プロジェクト終了日</div>
-                <div></div>
-                <div></div>
+                <div class="allocation-header" style="visibility: hidden"></div>
+                <div class="project-name-header">プロジェクト名</div>
+                <div class="client-company-header">クライアント会社</div>
+                <div class="start-date-header">開始日</div>
+                <div class="end-date-header">終了日</div>
+                <div style="visibility: hidden"></div>
+                <div style="visibility: hidden"></div>
             </div>
             <div th:class="'project ' + (${p.status == -1} ? 'project-unassigned' : (${p.status == 1} ? 'project-assigned' : (${p.status} == 2 ? 'project-completed' : '')))"
                  th:each="p : ${session.projects}">
                 <div class="project-id" th:text="${p.projectId}" style="display: none"></div>
                 <div class="status" th:text="${p.status}" style="display: none"></div>
 
-                <div class="status-icon" th:switch="${p.status}">
+                <div class="status-icon allocation" th:switch="${p.status}">
                     <img th:case="-1" th:src="@{/img/project/need.png}" alt="배정필요"/>
                     <img th:case="1" th:src="@{/img/project/matched.png}" alt="배정완료"/>
                     <img th:case="2" th:src="@{/img/project/done.png}" alt="프로젝트 완료"/>
@@ -455,7 +464,7 @@
                 <div class="start-date" th:text="${p.startDate}"></div>
                 <div class="end-date" th:text="${p.endDate}"></div>
                 <div>
-                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細を見る
+                    <button class="modal-button" th:onclick="'showProjectDetails('+${p.projectId}+')'">詳細
                     </button>
                 </div>
                 <div>
@@ -471,6 +480,13 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal()">&times;</span>
+            <!-- 새로운 제목 영역 추가 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <span id="project-title" style="font-weight: bold; font-size: 18px;">111</span>
+                </div>
+                <button class="matchButton" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
+            </div>
             <div id="modal-body">
                 <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
@@ -489,6 +505,85 @@
 </div>
 
 <script th:inline="javascript">
+    function showProjectDetails(projectId) {
+
+        fetch(`/getInfoByProjectID?id=${projectId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+
+                document.getElementById('project-title').textContent = `${data.project.projectId} . ${data.project.projectName}`;
+
+                const modalBody = document.getElementById('modal-body');
+                modalBody.innerHTML = `
+                    <div id="project-info">
+     <div class="data-row">
+         <div class="label">勤務先住所:</div>
+         <div class="value">${data.project.workLocation}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">顧客先会社:</div>
+         <div class="value">${data.project.clientCompany}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">ステータス:</div>
+         <div class="value">${data.project.status}</div>
+     </div>
+     <div class="data-row">
+         <div class="label">連絡先電話:</div>
+         <div class="value">${data.project.contactPhone}</div>
+     </div>
+    <div class="data-row">
+        <div class="label">プロジェクト要件:</div>
+        <div class="value modal-projectRequirements">
+            ${data.projectRequirements.map(req => `
+                <div>
+                    スキル: ${req.skill.skillName},
+                    必要経験: ${req.requiredExperience}ヶ月,
+                    必要人数: ${req.requiredCount}人 + test
+                </div>
+            `).join('')}
+        </div>
+    </div>
+    <div class="data-row">
+        <div class="label">従業員プロジェクト:</div>
+        <div class="value">
+            <ul>
+                 ${data.employeesProjects.map((empProj, index) => `
+                <li>
+                                        직원 이름: ${empProj.employeeName || 'N/A'}
+                                        <button onclick="cancelAssignment(${data.projectId}, ${data.eprID[index]}, ${data.projectRequirements[index].id})">배정 취소</button>
+                                    </li>
+            `).join('')}
+            </ul>
+            <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
+        </div>
+    </div>
+    <div id="button-container">
+    <button id="update-btn">수정</button>
+    <button id="delete-btn">삭제</button>
+    </div>
+</div>
+
+
+
+
+                `;
+
+                document.getElementById('update-btn').addEventListener('click', function () {
+                    updateProject(projectId);
+                })
+
+                document.getElementById('delete-btn').addEventListener('click', function () {
+                    deleteProject(projectId);
+                })
+                openModal();
+            })
+            .catch(error => {
+                console.error('Error fetching project details:', error);
+            });
+    }
+
     function filterByStatus() {
         const selectedStatus = document.getElementById('filterByStatus').value;
         const projects = document.querySelectorAll('.projects > .project');
@@ -610,82 +705,6 @@
         location.href = "/employees?projectId=" + projectId;
     }
 
-    function showProjectDetails(projectId) {
-
-        fetch(`/getInfoByProjectID?id=${projectId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                const modalBody = document.getElementById('modal-body');
-                modalBody.innerHTML = `
-                    <div id="project-info">
-     <div class="data-row">
-         <div class="label">勤務先住所:</div>
-         <div class="value">${data.project.workLocation}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">顧客先会社:</div>
-         <div class="value">${data.project.clientCompany}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">ステータス:</div>
-         <div class="value">${data.project.status}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">連絡先電話:</div>
-         <div class="value">${data.project.contactPhone}</div>
-     </div>
-    <div class="data-row">
-        <div class="label">プロジェクト要件:</div>
-        <div class="value modal-projectRequirements">
-            ${data.projectRequirements.map(req => `
-                <div>
-                    スキル: ${req.skill.skillName},
-                    必要経験: ${req.requiredExperience}ヶ月,
-                    必要人数: ${req.requiredCount}人 + test
-                </div>
-            `).join('')}
-        </div>
-    </div>
-    <div class="data-row">
-        <div class="label">従業員プロジェクト:</div>
-        <div class="value">
-            <ul>
-                 ${data.employeesProjects.map(empProj => `
-                <li>
-        직원 이름: ${empProj.employeeName || 'N/A'}
-    </li>
-<button> 배정 취소 </button>
-            `).join('')}
-            </ul>
-            <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
-        </div>
-    </div>
-    <div id="button-container">
-    <button id="update-btn">수정</button>
-    <button id="delete-btn">삭제</button>
-    </div>
-</div>
-
-                    <div>
-        <button onclick="navigateToMatchManagement()">매치버튼</button>
-    </div>
-                `;
-
-                document.getElementById('update-btn').addEventListener('click', function () {
-                    updateProject(projectId);
-                })
-
-                document.getElementById('delete-btn').addEventListener('click', function () {
-                    deleteProject(projectId);
-                })
-                openModal();
-            })
-            .catch(error => {
-                console.error('Error fetching project details:', error);
-            });
-    }
-
     function showCompleteModal(projectId) {
         console.log(projectId)
         const completeModalBody = document.getElementById('complete-modal-body');
@@ -803,12 +822,41 @@
                 startDateElement.style.color = 'orange';
                 startDateElement.style.fontWeight = 'bold';
             }
-            if( imminentEnd <= imminentEndDays && imminentEnd >= 0) {
+            if (imminentEnd <= imminentEndDays && imminentEnd >= 0) {
                 endDateElement.style.color = 'red';
                 endDateElement.style.fontWeight = 'bold';
             }
         });
 
+    }
+
+    function cancelAssignment(projectId, employeeId, projectRequirementsId) {
+        console.log(projectId)
+        console.log(employeeId)
+        console.log(projectRequirementsId)
+        const payload = {
+            projectId: projectId,
+            employeeId: employeeId,
+            projectRequirementsId: projectRequirementsId
+        };
+        const url = `/matchCancel?projectId=${projectId}&employeeId=${employeeId}&projectRequirementsId=${projectRequirementsId}`;
+
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === "취소 성공") {
+                    alert("배정이 취소되었습니다.");
+                    // 필요하다면 모달을 닫거나 페이지를 새로고침
+                } else {
+                    alert("배정 취소에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error('Error cancelling assignment:', error);
+                alert("배정 취소 중 오류가 발생했습니다.");
+            });
     }
 
     window.onclick = function (event) {

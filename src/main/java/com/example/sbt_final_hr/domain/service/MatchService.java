@@ -70,8 +70,9 @@ public class MatchService {
         // 배정 로직을 반대로
         // 충족인원 -1
         if (projectRequirementsService.decreaseFulfilledCount(projectRequirementsId) &&
-                employeesProjectsService.deleteEmployeesProjects(employeeId, projectId, projectRequirementsId) &&
-                employeesService.restoreEndDates(employeeId)
+                employeesProjectsService.deleteEmployeesProjects(employeeId, projectId) &&
+                employeesService.restoreEndDates(employeeId) &&
+                employeesService.updateAllocationTo(employeeId, -1)
         ) {// 모든 로직이 성공하면 프로젝트의 status 값 -1로 바꿔주기
             projectsService.updateStatusTo(projectId, -1);
             return true;
