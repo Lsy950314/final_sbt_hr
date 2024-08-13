@@ -55,19 +55,19 @@ public class ProjectController {
                                   @RequestParam(value = "sortBy", required = false) String sortBy,
                                   Model model) {
 //      long startTime = System.currentTimeMillis();
-        System.out.println(filterStatus);
-        System.out.println(sortBy);
 
+//        System.out.println(filterStatus);
+//        System.out.println(sortBy);
 
         List<ProjectsRequest> projects;
         String projectsType = (String) httpSession.getAttribute("projectsType");
 
-        if(employeeId != null) {
+        if (employeeId != null) {
             projects = projectsService.getProjectByEmployee(employeeId);
             httpSession.setAttribute("projects", projects);
             httpSession.setAttribute("projectsType", "employee");
         } else {
-            if(projectsType == null || !projectsType.equals("all")){
+            if (projectsType == null || !projectsType.equals("all")) {
                 projects = projectsService.getAllProjectsSummary();
                 httpSession.setAttribute("projects", projects);
                 httpSession.setAttribute("projectsType", "all");
@@ -156,7 +156,7 @@ public class ProjectController {
     }
 
     @PostMapping("/createProject")
-    public String createProject(@ModelAttribute ProjectsRequest projectsRequest) {
+    public String createProject(@ModelAttribute ProjectsRequest projectsRequest, HttpSession httpSession) {
         Projects project = projectsService.createProject(projectsRequest);
 
         if (projectsRequest.getProjectRequirements() != null) {
@@ -166,7 +166,8 @@ public class ProjectController {
             }
         }
 
-        return "redirect:/createProject";
+        httpSession.removeAttribute("projects");
+        return "redirect:/readAllProjects";
     }
 
     @GetMapping("/updateProject")

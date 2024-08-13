@@ -14,7 +14,8 @@ import java.util.List;
 public interface EmployeesProjectsRepository extends JpaRepository<EmployeesProjects, Long> {
     List<EmployeesProjects> findByProject_ProjectId(Long id);
     List<EmployeesProjects> findByEmployee_EmployeeId(Long employeeId);
-    EmployeesProjects findByEmployee_EmployeeIdAndProject_ProjectIdAndId (Long employeeId, Long projectId, Long projectRequirementsId);
+
+    EmployeesProjects findByEmployee_EmployeeIdAndProject_ProjectId (Long employeeId, Long projectId);
 
     @Modifying
     @Query("UPDATE EmployeesProjects ep SET ep.starPoint = :starPoint WHERE ep.employee.employeeId = :employeeId AND ep.project.projectId = :projectId")

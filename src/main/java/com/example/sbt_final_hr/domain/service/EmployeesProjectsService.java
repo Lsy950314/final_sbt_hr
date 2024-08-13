@@ -44,9 +44,9 @@ public class EmployeesProjectsService {
         return employeesProjectsRepository.findAll();
     }
 
-    public boolean deleteEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementsId) {
-        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectIdAndId(
-                employeeId, projectId, projectRequirementsId);
+    public boolean deleteEmployeesProjects(Long employeeId, Long projectId) {
+        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectId(
+                employeeId, projectId);
         if (employeesProjects != null) {
             employeesProjectsRepository.delete(employeesProjects);
             return true;
