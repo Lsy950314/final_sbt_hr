@@ -25,6 +25,10 @@ public class ProjectRequirementsService {
         this.skillsRepository = skillsRepository;
     }
 
+    public List<ProjectRequirements> findByProjectId(Long projectId) {
+        return projectRequirementsRepository.findByProject_ProjectId(projectId);
+    }
+
     public ProjectRequirements getRequirementsById(Long id) {
         return projectRequirementsRepository.findById(id).orElseThrow();
     }
