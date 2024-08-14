@@ -9,7 +9,7 @@
     let map;
     let marker;
     let autocomplete;
-    const skills = /*[[${skills}]]*/[];
+    const skills = /*[[${skills}]]*/'[]';
 
     function initMap() {
         const initialLocation = { lat: 35.6895, lng: 139.6917 };
@@ -76,6 +76,7 @@
     window.onload = function() {
         initMap();
     };
+
 </script>
 <style>
     #map {
@@ -176,7 +177,7 @@
         text-decoration: underline;
     }
 </style>
-<body onload="initMap()">
+
 <h1>Edit Employee</h1>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
@@ -188,10 +189,10 @@
     <input type="text" id="address" th:field="*{address}"/><br/>
 
     <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
+    <input type="text" id="latitude"  th:field="*{latitude}"/><br/>
 
     <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
+    <input type="text" id="longitude"  th:field="*{longitude}"/><br/>
 
     <div id="map" style="display: none;"></div>
 
