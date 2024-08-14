@@ -391,7 +391,7 @@
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #6c757d; /* 회색 계열 */
+            background-color: #ef4747;
             color: white;
             font-size: 16px;
             cursor: pointer;
@@ -400,14 +400,36 @@
 
         /* delete-btn 호버 효과 */
         #delete-btn:hover {
-            background-color: #5a6268;
+            background-color: #b11212;
             transform: translateY(-2px);
         }
 
         /* delete-btn 활성화 효과 */
         #delete-btn:active {
-            background-color: #545b62;
+            background-color: #b11212;
             transform: translateY(0);
+        }
+
+        #employeeList-btn{
+            transition: transform 0.3s;
+        }
+
+        #employeeList-btn:hover{
+            transform: translateY(-2px);
+        }
+
+        #assign-btn{
+            background-color: #ade8ff;
+            color: #000000;
+            border-color: #c9fff6;
+            transition: transform 0.3s;
+        }
+
+        #assign-btn:hover {
+            background-color: #ade8ff;
+            color: #000000;
+            border-color: #c9fff6;
+            transform: translateY(-2px);
         }
 
         input[type="text"], select {
@@ -558,8 +580,8 @@
                     <span id="project-dates" style="margin-left: 10px; font-size: 14px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
-                    <button th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여 사원 상세보기</button>
+                    <button id="assign-btn" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
+                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여 사원 상세보기</button>
                     <button id="update-btn">수정</button>
                     <button id="delete-btn">삭제</button>
                 </div>
