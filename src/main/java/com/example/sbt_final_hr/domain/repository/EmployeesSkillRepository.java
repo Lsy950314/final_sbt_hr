@@ -28,7 +28,4 @@ public interface EmployeesSkillRepository extends JpaRepository<EmployeesSkill, 
     void updateSkillCareerOfProjectParticipants(@Param("employeeId") Long employeeId, @Param("skillId") Long skillId, @Param("projectDuration") double projectDuration);
 
 
-
-
-
 }

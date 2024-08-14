@@ -155,14 +155,18 @@
             <a href="/readAllProjects?filterStatus=-1">
                 <button class="shortcut-button">미배정 프로젝트 확인</button>
             </a>
-            <button class="shortcut-button">대기중인 사원 보러가기(코드 작성중)</button>
+            <a href="/employees?filterAllocation=-1">
+            <button class="shortcut-button">대기중인 사원 보러가기</button>
+            </a>
         </div>
 
         <div class="shortcuts">
             <a href="/readAllProjects?sortBy=endDate">
                 <button class="shortcut-button">종료 임박 프로젝트 확인</button>
             </a>
-            <button class="shortcut-button">곧 프로젝트 끝나는 사원 보러 가기(코드 작성중)</button>
+            <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
+                <button class="shortcut-button">곧 프로젝트 끝나는 사원 보러 가기</button>
+            </a>
         </div>
     </div>
 </div>
