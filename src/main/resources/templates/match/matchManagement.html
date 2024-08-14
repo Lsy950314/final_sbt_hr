@@ -177,9 +177,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            margin-left: 150px;
-            width: 300px;
-            max-width: 300px;
+            width: 85%;
         }
 
         .project-requirement {
@@ -250,14 +248,12 @@
         }
 
         .employee-list {
-            margin-left: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
             /*margin: 0 auto;*/
-            width: 600px;
-            max-width: 800px;
+            width: 94%;
         }
 
         .employee-entry {
@@ -362,88 +358,79 @@
             /*justify-content: center;*/
         }
 
+        .layout {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .left-panel {
+            width: 20%;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+
+        .center-panel {
+            width: 50%;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #ffffff;
+        }
+
+        .right-panel {
+            width: 30%;
+            padding: 10px;
+            background-color: #e9e9e9;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="contents" style="display: flex">
-
-    <!--<div> -&#45;&#45; 프로젝트 인력 요구사항 -&#45;&#45;</div>-->
-    <div>
+<div class="layout">
+    <div class="left-panel">
+        <!-- 요구 스킬 조건들 나열 -->
         <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
             <div class="project-requirement">
                 <div class="requirement-skill" th:text="'필요스킬 ' + ${pr.getSkill().getSkillName()}"></div>
                 <div class="requirement-experience" th:text="'필요경력 ' + ${pr.getRequiredExperience()}"></div>
                 <div class="requirement-count" th:text="'필요인원 ' + ${pr.getRequiredCount()}"></div>
                 <div class="fulfilled-count" th:text="'충족인원 ' + ${pr.fulfilledCount}"></div>
-                <br>
             </div>
         </div>
     </div>
 
-    <!--<div> -&#45;&#45;조건 만족 사원-&#45;&#45;</div>-->
-    <div>
-
+    <div class="center-panel">
+        <!-- 사원 카드 리스트 -->
         <div class="employee-list" th:each="e : ${employeeEntries}">
-            <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
+            <div class="employee-entry">
+                <!-- 사원 정보 -->
                 <div class="employee-name" th:text="'이름 = ' + ${e.key.getName()}"></div>
-                <div class="employee-preferred-skill"
-                     th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
-                <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
-                    <div class="employee-skill"
-                         th:text="(${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
-                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
-                           name="employee-skill-name"
-                           th:value="${s.getSkill().skillName}"
-                           th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
-                    <label th:for="'checkbox-' + ${stat.index}">比較</label>
-                </div>
-                <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
-                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
-
-
-                <div class="assign-button-container">
-
-
-                    <button class="assign-button"
-                            th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
-                        배정하기
-                    </button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 모달 창 -->
-    <div id="project-requirement-modal" style="display: none;">
-        <div style="background-color: white; padding: 20px; border-radius: 8px;">
-            <h3>프로젝트 요구사항 선택</h3>
-            <div id="modal-requirements-list">
-                <!-- 여기서 요구사항 목록을 렌더링 -->
-            </div>
-            <button onclick="closeModal()">닫기</button>
-        </div>
-    </div>
-
-    <div id="selected-info">
-        <div id="selected-info-table">
-            <div class="table-header">
-                <div class="table-row">
-                    <div class="table-cell">이름</div>
-                    <div class="table-cell">보유 스킬</div>
-                    <div class="table-cell">경력</div>
-                    <div class="table-cell">예상 통근 소요시간</div>
-                    <div class="table-cell">대기기간</div>
-                </div>
-            </div>
-            <div id="selected-info-body">
-                <!-- 여기서 체크박스 클릭 시 행이 추가됨 -->
+                <div class="employee-preferred-skill" th:text="'선호스킬 = ' + (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></div>
+                <!-- 기타 사원 정보들 -->
             </div>
         </div>
     </div>
 
+    <div class="right-panel">
+        <!-- 비교 정보 -->
+        <div id="selected-info">
+            <div id="selected-info-table">
+                <div class="table-header">
+                    <div class="table-row">
+                        <div class="table-cell">이름</div>
+                        <div class="table-cell">보유 스킬</div>
+                        <div class="table-cell">경력</div>
+                        <div class="table-cell">예상 통근 소요시간</div>
+                        <div class="table-cell">대기기간</div>
+                    </div>
+                </div>
+                <div id="selected-info-body">
+                    <!-- 체크박스 클릭 시 행이 추가됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
