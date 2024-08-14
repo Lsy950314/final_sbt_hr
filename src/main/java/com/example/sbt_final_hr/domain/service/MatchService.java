@@ -167,19 +167,28 @@ public class MatchService {
         return Integer.MAX_VALUE;
     }
 
+    public List<Employees> filterByAllocation(List<Employees> employees){
+        return employees.stream()
+                .filter(employee -> employee.getAllocation() == -1)
+                .collect(Collectors.toList());
+    }
+
     public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
         long startTime = System.currentTimeMillis();
+
 
         long step1StartTime = System.currentTimeMillis();
         List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
         long step1EndTime = System.currentTimeMillis();
-
         System.out.println("요구 스킬을 충족하는 사원들 : " + filteredEmployeesByRequirements);
 
         long step2StartTime = System.currentTimeMillis();
-        List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
+        List<Employees> availableEmployees = filterByAllocation(filteredEmployeesByRequirements);
         long step2EndTime = System.currentTimeMillis();
-        System.out.println("진행 중인 프로젝트 기간과 겹치지 않는 사원들 : " + availableEmployees);
+        System.out.println("현재 미배정 상태인 사원들 : " + availableEmployees);
+
+//      List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
+//      System.out.println("진행 중인 프로젝트 기간과 겹치지 않는 사원들 : " + availableEmployees);
 
         long step3StartTime = System.currentTimeMillis();
         Map<Employees, Integer> finalEmployees = filterByCommutingTime(availableEmployees, project);
