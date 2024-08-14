@@ -176,7 +176,7 @@
             margin: 5% auto; /* 중앙 정렬 */
             padding: 20px;
             border: 1px solid #888;
-            width: 90%;
+            width: 75%;
             height: 80%;
         }
 
@@ -259,6 +259,35 @@
             margin-bottom: 10px;
         }
 
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #b7c6ec;
+        }
+
+        .skill-info {
+            display: flex;
+            flex: 1;
+            text-align: left; /* 왼쪽 정렬 */
+            align-items: center;
+        }
+
+        .skill-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+
+        .experience-info {
+            flex: 1;
+            text-align: center; /* 가운데 정렬 */
+        }
+
+        .count-info {
+            flex: 1;
+            text-align: right; /* 오른쪽 정렬 */
+        }
 
         #project-info ul {
             list-style: none;
@@ -518,7 +547,7 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
-                    <button onclick="readEmployeesByProjectId()"> 참여 사원 상세보기</button>
+                    <button th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여 사원 상세보기</button>
                     <button id="update-btn">수정</button>
                     <button id="delete-btn">삭제</button>
                 </div>
@@ -590,7 +619,11 @@
             <div class="value">${data.project.clientCompany}</div>
         </div>
         <div class="data-row">
-            <div class="label">連絡先電話:</div>
+            <div class="label">顧客先担当者:</div>
+            <div class="value">${data.project.contactName}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">担当者連絡先:</div>
             <div class="value">${data.project.contactPhone}</div>
         </div>
         <div class="data-row">
@@ -607,12 +640,18 @@
             <div class="label">プロジェクト要件:</div>
             <div class="value modal-projectRequirements">
                 ${data.projectRequirements.map(req => `
-                    <div>
-                        スキル: ${req.skill.skillName},
-                        必要経験: ${req.requiredExperience}ヶ月,
-                        必要人数: ${req.requiredCount}人,
-                        充足人数: ${req.fulfilledCount}人
+                <div class="requirement-item">
+                    <div class="skill-info">
+                    <img src="/img/skillicons/${req.skill.skillName.toLowerCase()}-icon.png" alt="${req.skill.skillName}" class="skill-icon">
+                    ${req.skill.skillName}
                     </div>
+                    <div class="experience-info">
+                    必要経験: ${(req.requiredExperience / 12).toFixed(1)} 年
+                    </div>
+                    <div class="count-info">
+                    充足人数: ${req.fulfilledCount} / ${req.requiredCount}
+                    </div>
+                </div>
                 `).join('')}
             </div>
         </div>
@@ -860,9 +899,7 @@
         }
     }
 
-    function readEmployeesByProjectId() {
-        projectId =
-
+    function readEmployeesByProjectId(projectId) {
         location.href = "/employees?projectId=" + projectId;
     }
 
