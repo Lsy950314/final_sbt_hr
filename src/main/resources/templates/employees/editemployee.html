@@ -9,10 +9,10 @@
     let map;
     let marker;
     let autocomplete;
-    const skills = /*[[${skills}]]*/'[]';
+    const skills = /*[[${skills}]]*/ [];
 
     function initMap() {
-        const initialLocation = {lat: 35.6895, lng: 139.6917};
+        const initialLocation = { lat: /*[[${employeesRequest.latitude}]]*/, lng: /*[[${employeesRequest.longitude}]]*/ };
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -47,8 +47,8 @@
     }
 
     function addSkillCareer() {
-        const skillCareerContainer = document.getElementById('newSkillCareerContainer');
-        const index = skillCareerContainer.children.length;
+        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const index = skillCareerContainer.querySelectorAll('.skillCareer-item').length;
 
         const skillCareerItem = document.createElement('div');
         skillCareerItem.classList.add('skillCareer-item');
@@ -77,13 +77,27 @@
     function removeSkillCareer(button) {
         const skillCareerItem = button.parentElement;
         skillCareerItem.remove();
+
+        // 기존 항목에 대해 인덱스를 다시 할당
+        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const items = skillCareerContainer.querySelectorAll('.skillCareer-item');
+        items.forEach((item, index) => {
+            const skillSelect = item.querySelector('select');
+            const careerInput = item.querySelector('input[type="number"]');
+
+            skillSelect.setAttribute('name', `employeesSkillRequests[${index}].skill.skillId`);
+            skillSelect.setAttribute('id', `employeesSkillRequests[${index}].skill.skillId`);
+
+            careerInput.setAttribute('name', `employeesSkillRequests[${index}].skillCareer`);
+            careerInput.setAttribute('id', `employeesSkillRequests[${index}].skillCareer`);
+        });
+        // 기존 항목에 대해 인덱스를 다시 할당
     }
 
 
     window.onload = function () {
         initMap();
     };
-
 </script>
 <style>
     #map {
@@ -91,25 +105,26 @@
         width: 350px;
     }
 
-    h1, h3 {
+    h1 {
         text-align: center;
-        /*color: #2c3e50;*/
+        font-size: 24px;
+        margin-bottom: 20px;
     }
 
     form {
-        max-width: 700px;
+        max-width: 600px;
         margin: 0 auto;
         background: #fff;
-        padding: 25px;
+        padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     label {
         display: block;
         font-weight: bold;
         margin-bottom: 8px;
-        color: #34495e;
+        color: #333;
     }
 
     input[type="text"], input[type="date"], select, input[type="file"] {
@@ -119,13 +134,12 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     input[type="text"]:focus, input[type="date"]:focus, select:focus, input[type="file"]:focus {
-        border-color: #2980b9;
+        border-color: #4CAF50;
         outline: none;
-        box-shadow: 0 0 4px rgba(41, 128, 185, 0.5);
     }
 
     button[type="submit"], button[type="button"] {
@@ -137,45 +151,17 @@
         border-radius: 4px;
         font-size: 16px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
         margin-top: 10px;
     }
 
-    button[type="submit"]:hover, button[type="button"]:hover {
-        background-color: #1f5a85;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
+    .form-group {
         margin-bottom: 20px;
-    }
-
-    table, th, td {
-        border: 1px solid #ccc;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #f2f2f2;
-        color: #2c3e50;
-    }
-
-    img {
-        max-width: 150px;
-        border-radius: 4px;
-        margin-top: 10px;
     }
 
     a {
         display: block;
         text-align: center;
-        color: #2980b9;
+        color: #4CAF50;
         margin-top: 20px;
         text-decoration: none;
     }
@@ -183,57 +169,44 @@
     a:hover {
         text-decoration: underline;
     }
-</style>
 
-<h1>Edit Employee</h1>
+</style>
+<body onload="initMap()">
+<h1>Edit Employee(Photo)</h1>
 <form th:action="@{/employees/update}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:field="*{employeeId}"/><br>  <!-- 숨겨진 필드로 ID 추가 -->
+    <input type="hidden" th:field="*{employeeId}"/>
 
     <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}" placeholder="Enter name"/><br/>
+    <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
 
     <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}"/><br/>
+    <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
 
-    <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" th:field="*{latitude}"/><br/>
-
-    <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" th:field="*{longitude}"/><br/>
-
+    <input type="text" id="latitude" th:field="*{latitude}" /><br/>
+    <input type="text" id="longitude" th:field="*{longitude}" /><br/>
     <div id="map" style="display: none;"></div>
 
-    <label for="lastProjectEndDate">Last Project End Date:</label>
-    <input type="date" id="lastProjectEndDate" th:field="*{lastProjectEndDate}"/><br/>
-
-    <label for="currentProjectEndDate">Current Project End Date:</label>
-    <input type="date" id="currentProjectEndDate" th:field="*{currentProjectEndDate}"/><br/>
-
-    <!-- 기존 이미지 보여주기 -->
-    <div id="existingImageContainer" th:if="*{image}">
-        <label>Existing Image:</label><br/>
-        <img th:src="@{${employeesRequest.image}}" alt="Employee Image"/><br/>
+    <div class="form-group">
+        <label for="imageFile">Upload New Image:</label>
+        <input type="file" id="imageFile" name="imageFile">
+        <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>
+        <div th:if="*{image}">
+            <p>Current Image:</p>
+            <img th:src="@{${employeesRequest.image}}" alt="Employee Image" style="max-width: 150px; border-radius: 4px; margin-top: 10px;">
+        </div>
     </div>
-
-    <label for="imageFile">Upload New Image:</label>
-    <input type="file" id="imageFile" name="imageFile"/><br/>
-    <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/><br/>
 
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
         <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
-                Language
-            </option>
+            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}" th:selected="${skill.skillId} == ${employeesRequest.preferredLanguage}">Select Language</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="preferredProjectType">Preferred Project Type:</label>
         <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
-                Select Project Type
-            </option>
+            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}" th:selected="${type.projectTypeId} == ${employeesRequest.preferredProjectType}">Select Project Type</option>
         </select>
     </div>
 
@@ -241,62 +214,27 @@
     <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
 
     <label for="hireDate">Hire Date:</label>
-    <input type="date" id="hireDate" th:field="*{hireDate}"/><br/>
+    <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
 
-    <!-- 추가된 Skill Career 섹션 -->
-    <h3>기존 등록된 사원 프로그래밍 경력</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Skill</th>
-            <th>Career (Months)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="employeesSkillRequest : ${employeesRequest.employeesSkillRequests}">
-            <td>
-                <span th:text="${employeesSkillRequest.skill.skillId}"></span>
-                <select class="current_select" th:attr="data-skill=${employeesSkillRequest.skill.skillName}">
+    <!-- Skill Career 섹션 -->
+    <h3>Existing Skills</h3>
+    <div id="skillCareerContainer">
+        <div th:each="employeesSkillRequest, iter : ${employeesRequest.employeesSkillRequests}" class="form-group skillCareer-item">
+            <label>Skill:</label>
+            <select th:field="*{employeesSkillRequests[__${iter.index}__].skill.skillId}">
+                <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}" th:selected="${skill.skillId} == ${employeesSkillRequest.skill.skillId}"></option>
+            </select>
 
-                </select>
-            </td>
-            <td th:attr="data-carrer=${employeesSkillRequest.skillCareer}">Career (Months) : <input
-                    th:value="${employeesSkillRequest.skillCareer}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <!-- 추가된 Skill Career 섹션 끝 -->
-    <script>
-        console.log(1)
-        let skillOptions = '';
-        skills.forEach(skill => {
-            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
-        });
-        console.log(skillOptions);
-        document.querySelectorAll(".current_select").forEach((select) => {
-            select.innerHTML = skillOptions;
-        });
-
-        document.querySelectorAll(".current_select").forEach((select) => {
-            let skill = select.dataset.skill;
-            console.log(skill);
-            for (let i = 0; i < select.options.length; i++) {
-                if (select.options[i].innerText === skill) {
-                    select.options[i].selected = true;
-                    break;  // 일치하는 항목을 찾으면 루프를 종료합니다.
-                }
-            }
-        });
-
-    </script>
-
-
-    <!-- 새로운 Skill Career 추가 -->
-    <h3>New Programming Skills</h3>
-    <div id="newSkillCareerContainer"></div>
+            <label>Career (Months):</label>
+            <input type="number" th:field="*{employeesSkillRequests[__${iter.index}__].skillCareer}" />
+            <button type="button" onclick="removeSkillCareer(this)">Remove</button>
+        </div>
+    </div>
     <div class="form-group">
         <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
     </div>
+
+    <br/>
 
     <button type="submit">Update Employee</button>
 </form>
