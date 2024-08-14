@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Document</title>
     <style>
 
@@ -133,25 +133,6 @@
             height: 80%;
         }
 
-        .modal-division {
-            display: flex; !important; /* Flexbox 레이아웃을 사용하여 내부 콘텐츠를 가로로 배치합니다. */
-        }
-
-        .close {
-            color: #aaa; /* 닫기 버튼의 색상을 회색으로 설정합니다. */
-            float: right; /* 닫기 버튼을 오른쪽으로 정렬합니다. */
-            font-size: 28px; /* 글자 크기를 28px로 설정합니다. */
-            font-weight: bold; /* 글자 굵기를 굵게 설정합니다. */
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black; /* 마우스 오버 또는 포커스 시 닫기 버튼의 색상을 검정색으로 변경합니다. */
-            text-decoration: none; /* 텍스트 밑줄을 제거합니다. */
-            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
-        }
-
-        /* 버튼 스타일 */
         .modal-button, #add-employees {
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
             font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
@@ -168,6 +149,87 @@
             cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
             transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
+
+        /*.modal-division {*/
+        /*    display: flex; !important; !* Flexbox 레이아웃을 사용하여 내부 콘텐츠를 가로로 배치합니다. *!*/
+        /*}*/
+
+        #employee-info {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            gap: 10px;
+            width: 95%;
+            margin: 10px auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        #employee-info .data-row {
+            display: flex;
+        }
+
+        #employee-info .label, #employee-info .value {
+            padding: 10px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+
+
+        #employee-info-left {
+            grid-column: 1;
+        }
+
+        #employee-info-right  {
+            grid-column: 2;
+        }
+
+        /* 사원 상세 정보 관련 스타일 */
+        #employee-info, #employee-skills {
+            flex: 1; /* 오른쪽 및 왼쪽 영역이 전체 너비의 절반을 차지하도록 설정합니다. */
+            padding-left: 20px; /* 왼쪽 패딩을 추가하여 요소 간의 간격을 유지합니다. */
+            display: grid; /* 그리드 레이아웃을 사용합니다. */
+            grid-template-columns: 33% 66%;
+        }
+
+        #employee-info .label, #employee-skills .label {
+            font-weight: bold; /* 레이블을 굵게 설정합니다. */
+            color: #fff;
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2, /* 파란색 계열 시작 색상 */
+                    #87cefa /* 파란색 계열 끝 색상 */
+            );
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-right: 1px solid #ddd; /* 오른쪽 경계선을 추가합니다. */
+        }
+
+        #employee-info .value, #employee-skills .value {
+            padding: 10px; /* 내부 여백을 10px 줍니다. */
+            border-left: 1px solid #ddd; /* 왼쪽 경계선을 추가합니다. */
+        }
+
+
+
+
+        .close {
+            color: #aaa; /* 닫기 버튼의 색상을 회색으로 설정합니다. */
+            float: right; /* 닫기 버튼을 오른쪽으로 정렬합니다. */
+            font-size: 28px; /* 글자 크기를 28px로 설정합니다. */
+            font-weight: bold; /* 글자 굵기를 굵게 설정합니다. */
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black; /* 마우스 오버 또는 포커스 시 닫기 버튼의 색상을 검정색으로 변경합니다. */
+            text-decoration: none; /* 텍스트 밑줄을 제거합니다. */
+            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+        }
+
+        /* 버튼 스타일 */
+
 
         #update-btn, #delete-btn, #detail-btn {
             padding: 10px 20px; /* 내부 여백을 설정합니다. */
@@ -228,30 +290,7 @@
             margin-left: auto;
         }
 
-        /* 사원 상세 정보 관련 스타일 */
-        #employee-info, #employee-skills {
-            flex: 1; /* 오른쪽 및 왼쪽 영역이 전체 너비의 절반을 차지하도록 설정합니다. */
-            padding-left: 20px; /* 왼쪽 패딩을 추가하여 요소 간의 간격을 유지합니다. */
-            display: grid; /* 그리드 레이아웃을 사용합니다. */
-            grid-template-columns: 1fr 2fr; /* 2개의 열로 구성된 그리드를 만듭니다. 첫 번째 열은 1fr, 두 번째 열은 2fr 크기입니다. */
-        }
 
-        #employee-info .label, #employee-skills .label {
-            font-weight: bold; /* 레이블을 굵게 설정합니다. */
-            color: #fff;
-            background: linear-gradient(
-                    45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */
-                    #87cefa /* 파란색 계열 끝 색상 */
-            );
-            padding: 10px; /* 내부 여백을 10px 줍니다. */
-            border-right: 1px solid #ddd; /* 오른쪽 경계선을 추가합니다. */
-        }
-
-        #employee-info .value, #employee-skills .value {
-            padding: 10px; /* 내부 여백을 10px 줍니다. */
-            border-left: 1px solid #ddd; /* 왼쪽 경계선을 추가합니다. */
-        }
 
         /* 스킬 및 프로젝트 목록 스타일 */
         #skills-list, #projectsList {
@@ -391,16 +430,16 @@
         </ul>
     </div>
     <div class="contents">
-        <p style="font-size: 26px">社員リスト <span><button th:onclick="createEmployee()"
-                                                            id="add-employees">社員追加</button></span></p>
+        <p style="font-size: 26px">社員リスト <span><button id="add-employees"
+                                                            th:onclick="createEmployee()">社員追加</button></span></p>
 
         <!--        필터링 및 정렬        -->
         <div style="display: flex">
-            <input type="text" id="filterByEmployeeName" placeholder="사원 이름 검색" oninput="filterByEmployeeName()">
+            <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="사원 이름 검색" type="text">
             <div class="filterByProjectEndDate">
-                <input type="radio" id="lastProjectEndDateAsc" name="sortCriteria" value="lastProjectEndDateAsc" onclick="updateHireDateSortOptions()">
+                <input id="lastProjectEndDateAsc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="lastProjectEndDateAsc">
                 <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
-                <input type="radio" id="currentProjectEndDateDesc" name="sortCriteria" value="currentProjectEndDateDesc" onclick="updateHireDateSortOptions()">
+                <input id="currentProjectEndDateDesc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="currentProjectEndDateDesc">
                 <label for="currentProjectEndDateDesc">현재 프로젝트 종료일 내림차순</label>
             </div>
 
@@ -427,25 +466,25 @@
                 <div class="view-details-header" style="visibility: hidden;"></div>
 
             </div>
-            <div class="employee" th:each="e : ${session.employees}" th:class="'employee ' +
+            <div class="employee" th:class="'employee ' +
                 (${e.allocation} == -1 ? 'allocation-unassigned' :
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
-                (${e.allocation} == 1 ? 'allocation-assigned' : '')))">
+                (${e.allocation} == 1 ? 'allocation-assigned' : '')))" th:each="e : ${session.employees}">
                 <div class="allocation">
-                    <img th:if="${e.allocation == -1}" src="/img/employees/unassigned.png" alt="Unassigned" style="width: 15px; height: 15px;">
-                    <img th:if="${e.allocation == 0}" src="/img/employees/preassigned.png" alt="Preassigned" style="width: 15px; height: 15px;">
-                    <img th:if="${e.allocation == 1}" src="/img/employees/assigned.png" alt="Assigned" style="width: 15px; height: 15px;">
+                    <img alt="Unassigned" src="/img/employees/unassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == -1}">
+                    <img alt="Preassigned" src="/img/employees/preassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == 0}">
+                    <img alt="Assigned" src="/img/employees/assigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == 1}">
                 </div>
-                <div th:text="${e.name}" class="employee-name"></div>
-                <div th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"
-                     class="employee-rating"></div>
-                <div th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"
+                <div class="employee-name" th:text="${e.name}"></div>
+                <div class="employee-rating"
+                     th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"></div>
+                <div class="current-project-end-date"
                      th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
-                     class="current-project-end-date"></div>
-                <div th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : 'No experience'}"
+                     th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"></div>
+                <div class="last-project-end-date"
                      th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
-                     class="last-project-end-date"></div>
-                <div th:text="${e.hireDate}" class="hire-date"></div>
+                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : 'No experience'}"></div>
+                <div class="hire-date" th:text="${e.hireDate}"></div>
                 <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
                 </div>
@@ -453,7 +492,7 @@
             </div>
         </div>
         <!-- 모달 구조 -->
-        <div id="myModal" class="modal">
+        <div class="modal" id="myModal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <div id="employeeDetails"></div>
@@ -497,36 +536,54 @@
 </div>
 
 </div>
-<div class="modal-division">
-                       <div id="employee-info" style="flex: 1; padding-right: 20px;">
-    <!-- 왼쪽 섹션: 사원 정보 -->
-    <p class="label" style="background-color: white"></p>
-    <img src="${employeeImage}" alt="Employee Image" style="width: 150px; height: 150px; border-radius: 20%;"/>
-    <p class="label">Address:</p>
-    <p class="value">${data.address}</p>
-    <p class="label">最近プロジェクト完了日:</p>
-    <p class="value">${data.lastProjectEndDate || 'No experience'}</p>
-    <p class="label">現在プロジェクト終了日:</p>
-    <p class="value">${data.currentProjectEndDate || 'Not allocated'}</p>
-    <p class="label">電話番号:</p>
-    <p class="value">${data.contactNumber}</p>
-    <p class="label">入社日:</p>
-    <p class="value">${data.hireDate}</p>
-    <p class="label">興味ある言語:</p>
-    <p class="value">${data.preferredLanguage}</p>
-    <p class="label">興味ある案件種類:</p>
-    <p class="value">${data.preferredProjectType}</p>
+<div id="employee-info">
+<div id="employee-info-left">
+        <div class="data-row">
+            <div class="label">写真:</div>
+            <div class="value"><img src="${employeeImage}" alt="Employee Image" style="width: 150px; height: 150px; border-radius: 20%;"/>
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="label">住所:</div>
+            <div class="value">${data.address}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">最近プロジェクト完了日:</div>
+            <div class="value">${data.lastProjectEndDate || 'No experience'}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">現在プロジェクト終了日:</div>
+            <div class="value">${data.currentProjectEndDate || 'Not allocated'}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">電話番号:</div>
+            <div class="value">${data.contactNumber}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">入社日:</div>
+            <div class="value">${data.hireDate}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">興味ある言語:</div>
+            <div class="value">${data.preferredLanguage}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">興味ある案件種類:</div>
+            <div class="value">${data.preferredProjectType}</div>
+        </div>
+
+
 </div>
 
-<div id="employee-skills" style="flex: 1; padding-left: 20px;">
-
-    <!-- 오른쪽 섹션: Skills & Career, Projects -->
-    <p class="label">Skills & Career:</p>
-    <p class="value" id="skillsAndCareer"></p>
-    <p class="label">Projects:</p>
-    <p class="value" id="projectsList"></p>
-
-
+<div id="employee-info-right">
+<div class="data-row">
+            <div class="label">Skills & Career:</div>
+            <div class="value" id="skillsAndCareer"></div>
+        </div>
+        <div class="data-row">
+            <div class="label">Projects:</div>
+            <div class="value" id="projectsList"></div>
+        </div>
 </div>
 
 </div>

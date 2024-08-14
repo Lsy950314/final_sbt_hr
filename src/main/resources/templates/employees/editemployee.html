@@ -12,7 +12,7 @@
     const skills = /*[[${skills}]]*/'[]';
 
     function initMap() {
-        const initialLocation = { lat: 35.6895, lng: 139.6917 };
+        const initialLocation = {lat: 35.6895, lng: 139.6917};
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -29,7 +29,7 @@
         autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function() {
+        autocomplete.addListener('place_changed', function () {
             const place = autocomplete.getPlace();
             if (!place.geometry) {
                 alert("No details available for input: '" + place.name + "'");
@@ -69,11 +69,18 @@
                 <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
                 <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
             </div>
+            <button type="button" onclick="removeSkillCareer(this)">Remove</button>
         `;
         skillCareerContainer.appendChild(skillCareerItem);
     }
 
-    window.onload = function() {
+    function removeSkillCareer(button) {
+        const skillCareerItem = button.parentElement;
+        skillCareerItem.remove();
+    }
+
+
+    window.onload = function () {
         initMap();
     };
 
@@ -189,10 +196,10 @@
     <input type="text" id="address" th:field="*{address}"/><br/>
 
     <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude"  th:field="*{latitude}"/><br/>
+    <input type="text" id="latitude" th:field="*{latitude}"/><br/>
 
     <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude"  th:field="*{longitude}"/><br/>
+    <input type="text" id="longitude" th:field="*{longitude}"/><br/>
 
     <div id="map" style="display: none;"></div>
 
@@ -215,14 +222,18 @@
     <div class="form-group">
         <label for="preferredLanguage">Preferred Language:</label>
         <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
+            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
+                Language
+            </option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="preferredProjectType">Preferred Project Type:</label>
         <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Select Project Type</option>
+            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
+                Select Project Type
+            </option>
         </select>
     </div>
 
@@ -243,12 +254,42 @@
         </thead>
         <tbody>
         <tr th:each="employeesSkillRequest : ${employeesRequest.employeesSkillRequests}">
-            <td th:text="${employeesSkillRequest.skill.skillName}"></td>
-            <td th:text="${employeesSkillRequest.skillCareer}"></td>
+            <td>
+                <span th:text="${employeesSkillRequest.skill.skillId}"></span>
+                <select class="current_select" th:attr="data-skill=${employeesSkillRequest.skill.skillName}">
+
+                </select>
+            </td>
+            <td th:attr="data-carrer=${employeesSkillRequest.skillCareer}">Career (Months) : <input
+                    th:value="${employeesSkillRequest.skillCareer}"></td>
         </tr>
         </tbody>
     </table>
     <!-- 추가된 Skill Career 섹션 끝 -->
+    <script>
+        console.log(1)
+        let skillOptions = '';
+        skills.forEach(skill => {
+            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+        });
+        console.log(skillOptions);
+        document.querySelectorAll(".current_select").forEach((select) => {
+            select.innerHTML = skillOptions;
+        });
+
+        document.querySelectorAll(".current_select").forEach((select) => {
+            let skill = select.dataset.skill;
+            console.log(skill);
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].innerText === skill) {
+                    select.options[i].selected = true;
+                    break;  // 일치하는 항목을 찾으면 루프를 종료합니다.
+                }
+            }
+        });
+
+    </script>
+
 
     <!-- 새로운 Skill Career 추가 -->
     <h3>New Programming Skills</h3>
