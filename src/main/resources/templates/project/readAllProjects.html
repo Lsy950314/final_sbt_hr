@@ -115,13 +115,13 @@
             flex: 0 0 35px;
         }
 
-        .start-date-header, .end-date-header, .start-date, .end-date{
+        .start-date-header, .end-date-header, .start-date, .end-date {
             min-width: 150px;
             max-width: 150px;
             flex: 0 0 150px;
         }
 
-        .project-name-header, .client-company-header, .project-name, .client-company{
+        .project-name-header, .client-company-header, .project-name, .client-company {
             min-width: 270px;
             max-width: 270px;
             flex: 0 0 270px;
@@ -205,19 +205,12 @@
             flex-direction: column;
         }
 
-        .matchButton {
-            width: 150px;
-            margin-left: auto;
-            margin-bottom: auto;
-            display: block;
-        }
-
         #project-info {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 33% 66%;
             gap: 10px;
             width: 95%;
-            margin: 20px auto;
+            margin: 10px auto;
             border: 1px solid #ddd;
             padding: 20px;
             font-family: Arial, sans-serif;
@@ -225,20 +218,37 @@
         }
 
         #project-info .data-row {
-            display: table-row;
+            display: flex;
         }
 
         #project-info .label, #project-info .value {
-            display: table-cell;
             padding: 10px;
             border: 1px solid #ddd;
             vertical-align: top;
         }
 
+        .modal-projectRequirements {
+            display: block;
+        }
+
+        .project-info-left {
+            grid-column: 1;
+        }
+
+        .project-info-right {
+            grid-column: 2;
+        }
+
         #project-info .label {
             background-color: #f4f4f4;
             font-weight: bold;
-            width: 20%;
+            width: 150px; /* 가로 길이를 150px로 설정 */
+            white-space: nowrap; /* 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트는 숨김 */
+            text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            vertical-align: top;
         }
 
         #project-info .value {
@@ -258,6 +268,28 @@
 
         #project-info li {
             margin-bottom: 5px;
+        }
+
+        /* 매칭 취소를 위한 프로젝트 요구사항 선택 모달 */
+
+        #project-requirement-modal {
+            display: none; /* 숨김 처리 */
+            position: fixed; /* 모달을 화면 중앙에 고정 */
+            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+        }
+
+        #project-requirement-modal .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 중앙 정렬 */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
         }
 
         /* 프로젝트 추가 버튼 스타일 */
@@ -400,8 +432,6 @@
         }
 
 
-
-
     </style>
 </head>
 <body>
@@ -481,15 +511,32 @@
         <div class="modal-content">
             <span class="close-button" onclick="closeModal()">&times;</span>
             <!-- 새로운 제목 영역 추가 -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center">
                 <div>
                     <span id="project-title" style="font-weight: bold; font-size: 18px;">111</span>
                 </div>
-                <button class="matchButton" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="showCompleteModal(${data.projectId})"> 프로젝트 완료하기 </button>
+                    <button onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
+                    <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기</button>
+                    <button id="update-btn">수정</button>
+                    <button id="delete-btn">삭제</button>
+                </div>
             </div>
             <div id="modal-body">
                 <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
+        </div>
+    </div>
+
+    <!-- 배정 취소를 위한 프로젝트 요구사항 선택 모달 -->
+    <div id="project-requirement-modal" style="display: none;">
+        <div style="background-color: white; padding: 20px; border-radius: 8px;">
+            <h3>프로젝트 요구사항 선택</h3>
+            <div id="modal-requirements-list">
+                <!-- 여기서 요구사항 목록을 렌더링 -->
+            </div>
+            <button onclick="closeProjectRequirementModal()">닫기</button>
         </div>
     </div>
 
@@ -516,59 +563,58 @@
 
                 const modalBody = document.getElementById('modal-body');
                 modalBody.innerHTML = `
-                    <div id="project-info">
-     <div class="data-row">
-         <div class="label">勤務先住所:</div>
-         <div class="value">${data.project.workLocation}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">顧客先会社:</div>
-         <div class="value">${data.project.clientCompany}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">ステータス:</div>
-         <div class="value">${data.project.status}</div>
-     </div>
-     <div class="data-row">
-         <div class="label">連絡先電話:</div>
-         <div class="value">${data.project.contactPhone}</div>
-     </div>
-    <div class="data-row">
-        <div class="label">プロジェクト要件:</div>
-        <div class="value modal-projectRequirements">
-            ${data.projectRequirements.map(req => `
-                <div>
-                    スキル: ${req.skill.skillName},
-                    必要経験: ${req.requiredExperience}ヶ月,
-                    必要人数: ${req.requiredCount}人 + test
-                </div>
-            `).join('')}
+<div id="project-info">
+    <div class="project-info-left">
+        <div class="data-row">
+            <div class="label">勤務先住所:</div>
+            <div class="value">${data.project.workLocation}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">顧客先会社:</div>
+            <div class="value">${data.project.clientCompany}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">連絡先電話:</div>
+            <div class="value">${data.project.contactPhone}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">ステータス:</div>
+            <div class="value">${data.project.status}</div>
+        </div>
+        <div class="data-row">
+            <div class="label">案件種類:</div>
+            <div class="value">${data.project.projectType.projectTypeName}</div>
         </div>
     </div>
-    <div class="data-row">
-        <div class="label">従業員プロジェクト:</div>
-        <div class="value">
-            <ul>
-                 ${data.employeesProjects.map((empProj, index) => `
-                <li>
-                                        직원 이름: ${empProj.employeeName || 'N/A'}
-                                        <button onclick="cancelAssignment(${data.projectId}, ${data.eprID[index]}, ${data.projectRequirements[index].id})">배정 취소</button>
-                                    </li>
-            `).join('')}
-            </ul>
-            <button onclick="readEmployeesByProjectId(${data.projectId})"> 참여 사원 상세보기 </button>
+    <div class="project-info-right">
+        <div class="data-row">
+            <div class="label">プロジェクト要件:</div>
+            <div class="value modal-projectRequirements">
+                ${data.projectRequirements.map(req => `
+                    <div>
+                        スキル: ${req.skill.skillName},
+                        必要経験: ${req.requiredExperience}ヶ月,
+                        必要人数: ${req.requiredCount}人,
+                        充足人数: ${req.fulfilledCount}人
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        <div class="data-row">
+            <div class="label">配属中従業員:</div>
+            <div class="value">
+                <select id="employeeDropdown">
+                    <option value="">사원을 선택하세요</option>
+                    ${data.employeesProjects.map((empProj, index) => `
+                        <option value="${index}">${empProj.employeeName || 'N/A'}</option>
+                    `).join('')}
+                </select>
+                <button onclick="cancelSelectedAssignment(${data.projectId}, ${data.epID})">배정 취소</button>
+            </div>
         </div>
     </div>
-    <div id="button-container">
-    <button id="update-btn">수정</button>
-    <button id="delete-btn">삭제</button>
-    </div>
-</div>
+</div>`;
 
-
-
-
-                `;
 
                 document.getElementById('update-btn').addEventListener('click', function () {
                     updateProject(projectId);
@@ -582,6 +628,101 @@
             .catch(error => {
                 console.error('Error fetching project details:', error);
             });
+    }
+
+    function cancelSelectedAssignment(projectId, epID) {
+
+        const employeeDropdown = document.getElementById('employeeDropdown');
+        const selectedIndex = employeeDropdown.value;
+        if (selectedIndex === "") {
+            alert("사원을 선택하세요.");
+            return;
+        }
+        const employeeId = epID[selectedIndex];
+        fetch(`/getProjectRequirements?projectId=${projectId}`)
+            .then(response => response.json())
+            .then(projectRequirements => {
+                // 데이터 타입 확인
+                console.log("Received projectRequirements:", projectRequirements);
+                if (Array.isArray(projectRequirements)) {
+                    openProjectRequirementModal(projectId, epID, projectRequirements);
+                } else {
+                    console.error("Error: projectRequirements is not an array");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching project requirements:', error);
+            });
+    }
+
+    function openProjectRequirementModal(projectId, employeeId, projectRequirements) {
+        const modalRequirementsList = document.getElementById('modal-requirements-list');
+        modalRequirementsList.innerHTML = '';  // 기존 내용을 초기화
+
+        // 프로젝트 요구사항을 모달에 렌더링
+        projectRequirements.forEach(req => {
+            const requirementElement = document.createElement('div');
+            requirementElement.innerHTML = `
+            <label>
+                <input type="radio" name="projectRequirement" value="${req.id}">
+                스킬: ${req.skill.skillName}, 필요 경험: ${req.requiredExperience}개월, 필요 인원: ${req.requiredCount}명
+            </label>
+        `;
+            modalRequirementsList.appendChild(requirementElement);
+        });
+
+        const confirmButton = document.createElement('button');
+        confirmButton.textContent = '확인';
+        confirmButton.onclick = function() {
+            confirmCancelAssignment(projectId, employeeId);
+        };
+        modalRequirementsList.appendChild(confirmButton);
+
+        document.getElementById('project-requirement-modal').style.display = 'block';
+    }
+
+    function confirmCancelAssignment(projectId, employeeId) {
+        const selectedRequirement = document.querySelector('input[name="projectRequirement"]:checked');
+        if (!selectedRequirement) {
+            alert('요구사항을 선택하세요.');
+            return;
+        }
+
+        const projectRequirementsId = selectedRequirement.value;
+        if (confirm('정말 배정을 취소하시겠습니까?')) {
+            cancelAssignment(projectId, employeeId, projectRequirementsId);
+            closeProjectRequirementModal();
+        }
+    }
+
+    function cancelAssignment(projectId, employeeId, projectRequirementsId) {
+        console.log(projectId)
+        console.log(employeeId)
+        console.log(projectRequirementsId)
+
+        const url = `/matchCancel?projectId=${projectId}&employeeId=${employeeId}&projectRequirementsId=${projectRequirementsId}`;
+
+        fetch(url, {
+            method: 'GET'
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === "취소 성공") {
+                    alert("배정이 취소되었습니다.");
+                    // 필요하다면 모달을 닫거나 페이지를 새로고침
+                } else {
+                    alert("배정 취소에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error('Error cancelling assignment:', error);
+                alert("배정 취소 중 오류가 발생했습니다.");
+            });
+    }
+
+
+    function closeProjectRequirementModal() {
+        document.getElementById('project-requirement-modal').style.display = 'none';
     }
 
     function filterByStatus() {
@@ -720,15 +861,15 @@
             .then(data => {
                 console.log("Received data:", data);
                 const employeesProjects = data.employeesProjects;
-                const eprID = data.eprID;
+                const epID = data.epID;
 
-                console.log(eprID);
+                console.log(epID);
 
                 const employeesDiv = document.getElementById('assigned-employees');
                 //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
                 employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
             <li>
-                ${eprID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
+                ${epID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
                 <select id="star-point-${index}">
                     ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
                 </select>
@@ -740,7 +881,7 @@
                     const projectParticipantsInfos = employeesProjects.map((ep, index) => {
                         const starPoint = document.getElementById(`star-point-${index}`).value;
                         const result = {
-                            employeeId: eprID[index],
+                            employeeId: epID[index],
                             starPoint: parseFloat(starPoint),
                             skillId: ep.skill.skillId,
                             projectDuration: parseFloat(ep.projectDuration)
@@ -802,6 +943,7 @@
     }
 
     const imminentStartDays = /*[[${imminentStartDays}]]*/ 0;
+
     const imminentEndDays = /*[[${imminentEndDays}]]*/ 0;
 
     function updateProjectDatesStyles() {
@@ -828,35 +970,6 @@
             }
         });
 
-    }
-
-    function cancelAssignment(projectId, employeeId, projectRequirementsId) {
-        console.log(projectId)
-        console.log(employeeId)
-        console.log(projectRequirementsId)
-        const payload = {
-            projectId: projectId,
-            employeeId: employeeId,
-            projectRequirementsId: projectRequirementsId
-        };
-        const url = `/matchCancel?projectId=${projectId}&employeeId=${employeeId}&projectRequirementsId=${projectRequirementsId}`;
-
-        fetch(url, {
-            method: 'GET'
-        })
-            .then(response => response.text())
-            .then(result => {
-                if (result === "취소 성공") {
-                    alert("배정이 취소되었습니다.");
-                    // 필요하다면 모달을 닫거나 페이지를 새로고침
-                } else {
-                    alert("배정 취소에 실패했습니다.");
-                }
-            })
-            .catch(error => {
-                console.error('Error cancelling assignment:', error);
-                alert("배정 취소 중 오류가 발생했습니다.");
-            });
     }
 
     window.onclick = function (event) {
