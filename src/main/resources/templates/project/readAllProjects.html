@@ -240,7 +240,7 @@
         }
 
         #project-info .label {
-            background-color: #f4f4f4;
+            background-color: #71b6ff;
             font-weight: bold;
             width: 150px; /* 가로 길이를 150px로 설정 */
             white-space: nowrap; /* 줄바꿈 방지 */
@@ -249,6 +249,11 @@
             padding: 10px;
             border: 1px solid #ddd;
             vertical-align: top;
+        }
+
+        .unassigned-status {
+            color: red;
+            font-weight: bold;
         }
 
         #project-info .value {
@@ -287,6 +292,13 @@
         .count-info {
             flex: 1;
             text-align: right; /* 오른쪽 정렬 */
+            font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
+            color: black; /* 기본적으로 검은색 글씨 */
+        }
+
+        .low-fulfillment {
+            color: red;
+            font-weight: bold;
         }
 
         #project-info ul {
@@ -592,9 +604,11 @@
                 document.getElementById('project-dates').textContent = `${data.project.startDate} ~ ${data.project.endDate}`;
 
                 let statusText;
+                let statusClass = "";
                 switch(data.project.status) {
                     case -1:
                         statusText = "배정 필요(미배정)";
+                        statusClass = "unassigned-status";
                         break;
                     case 1:
                         statusText = "배정 완료";
@@ -612,7 +626,8 @@
     <div class="project-info-left">
         <div class="data-row">
             <div class="label">勤務先住所:</div>
-            <div class="value">${data.project.workLocation}</div>
+            <div class="value">${data.project.workLocation}  <button onclick="visitGoogleMap(${data.project.latitude}, ${data.project.longitude})">地図で見る</button>
+            </div>
         </div>
         <div class="data-row">
             <div class="label">顧客先会社:</div>
@@ -628,7 +643,7 @@
         </div>
         <div class="data-row">
             <div class="label">ステータス:</div>
-            <div class="value">${statusText}</div>
+            <div class="value ${statusClass}">${statusText}</div>
         </div>
         <div class="data-row">
             <div class="label">案件種類:</div>
@@ -648,7 +663,7 @@
                     <div class="experience-info">
                     必要経験: ${(req.requiredExperience / 12).toFixed(1)} 年
                     </div>
-                    <div class="count-info">
+                     <div class="count-info ${req.fulfilledCount < req.requiredCount ? 'low-fulfillment' : ''}">
                     充足人数: ${req.fulfilledCount} / ${req.requiredCount}
                     </div>
                 </div>
@@ -683,6 +698,11 @@
             .catch(error => {
                 console.error('Error fetching project details:', error);
             });
+    }
+
+    function visitGoogleMap(latitude, longitude) {
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        window.open(googleMapsUrl, '_blank');
     }
 
     function cancelSelectedAssignment(projectId, epID) {
