@@ -175,6 +175,7 @@ public class EmployeesController {
                     .map(EmployeesSkill::toDto)
                     .collect(Collectors.toList());
             employeesRequest.setEmployeesSkillRequests(skillRequests);
+//            System.out.println(employeesRequest.getEmployeesSkillRequests());
             model.addAttribute("employeesRequest", employeesRequest);
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
@@ -198,6 +199,8 @@ public class EmployeesController {
         Employees employee = employeesRequest.toEntity();
         employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
         employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
+
+
         if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
