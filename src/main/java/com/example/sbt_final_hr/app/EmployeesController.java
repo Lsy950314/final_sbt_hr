@@ -123,6 +123,8 @@ public class EmployeesController {
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
         response.put("preferredLanguage", employee.getSkill().getSkillName());
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
+        response.put("latitude", employee.getLatitude());
+        response.put("longitude", employee.getLongitude());
         //8월 7일 10:48 시도중
         response.put("image", employee.getImage());
 
@@ -163,23 +165,22 @@ public class EmployeesController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/edit/{id}")
-    public String showEditEmployeeForm(@PathVariable Long id, Model model) {
+    public String showEditEmployeeForm(@PathVariable("id") Long id, Model model) {
         Optional<Employees> employees = employeesService.findById(id);
         if (employees.isPresent()) {
             Employees employee = employees.get();
-            // 사원의 프로그래밍 경력 출력
             List<EmployeesSkill> skills = employee.getSkills();
             EmployeesRequest employeesRequest = employee.toDto();
             List<EmployeesSkillRequest> skillRequests = skills.stream()
                     .map(EmployeesSkill::toDto)
                     .collect(Collectors.toList());
             employeesRequest.setEmployeesSkillRequests(skillRequests);
-//            System.out.println(employeesRequest.getEmployeesSkillRequests());
             model.addAttribute("employeesRequest", employeesRequest);
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
-            return "employees/editEmployee";
+            return "employees/editemployee";
         } else {
             return "redirect:/employees";
         }

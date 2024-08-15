@@ -111,6 +111,19 @@
         }
 
         /* 모달 관련 스타일 */
+        /*.modal {*/
+        /*    display: none; !* 모달을 기본적으로 숨김 처리합니다. *!*/
+        /*    position: fixed; !* 모달을 화면 중앙에 고정합니다. *!*/
+        /*    z-index: 1; !* 다른 콘텐츠 위에 모달이 표시되도록 설정합니다. *!*/
+        /*    left: 0; !* 모달의 왼쪽 위치를 0으로 설정하여 전체 너비를 차지하게 합니다. *!*/
+        /*    top: 0; !* 모달의 상단 위치를 0으로 설정하여 전체 높이를 차지하게 합니다. *!*/
+        /*    width: 100%; !* 모달의 너비를 화면 전체로 설정합니다. *!*/
+        /*    height: 100%; !* 모달의 높이를 화면 전체로 설정합니다. *!*/
+        /*    overflow: auto; !* 모달 내부가 넘칠 경우 스크롤을 가능하게 만듭니다. *!*/
+        /*    background-color: rgb(0, 0, 0); !* 모달의 배경색을 검정색으로 설정합니다. *!*/
+        /*    background-color: rgba(0, 0, 0, 0.4); !* 모달 배경을 약간 투명하게 만듭니다. *!*/
+        /*}*/
+        /*8월 15일 모달 관련 스타일 */
         .modal {
             display: none; /* 모달을 기본적으로 숨김 처리합니다. */
             position: fixed; /* 모달을 화면 중앙에 고정합니다. */
@@ -120,28 +133,52 @@
             width: 100%; /* 모달의 너비를 화면 전체로 설정합니다. */
             height: 100%; /* 모달의 높이를 화면 전체로 설정합니다. */
             overflow: auto; /* 모달 내부가 넘칠 경우 스크롤을 가능하게 만듭니다. */
-            background-color: rgb(0, 0, 0); /* 모달의 배경색을 검정색으로 설정합니다. */
             background-color: rgba(0, 0, 0, 0.4); /* 모달 배경을 약간 투명하게 만듭니다. */
         }
 
+        /*.modal-content {*/
+        /*    background-color: #fefefe;*/
+        /*    margin: 5% auto; !* 중앙 정렬 *!*/
+        /*    padding: 20px;*/
+        /*    border: 1px solid #888;*/
+        /*    width: 90%;*/
+        /*    height: 80%;*/
+        /*}*/
+        /*8월 15일 모달 관련 스타일 */
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; /* 중앙 정렬 */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 90%;
-            height: 80%;
+            background-color: #fefefe; /* 모달 내부 배경색을 흰색으로 설정합니다. */
+            margin: 5% auto; /* 모달을 화면 중앙에 배치합니다. */
+            padding: 20px; /* 모달 내부 패딩을 설정합니다. */
+            border: 1px solid #888; /* 모달 테두리를 연한 회색으로 설정합니다. */
+            width: 75%; /* 모달 너비를 화면의 75%로 설정합니다. */
+            height: 80%; /* 모달 높이를 화면의 80%로 설정합니다. */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 약간의 그림자 효과를 추가합니다. */
         }
 
+
+        /*.modal-button, #add-employees {*/
+        /*    font-family: "Noto Sans JP", sans-serif; !* 일본어 텍스트에 어울리는 글꼴을 사용합니다. *!*/
+        /*    font-size: 14px; !* 글자 크기를 14px로 설정합니다. *!*/
+        /*    color: #fff; !* 텍스트 색상을 흰색으로 설정합니다. *!*/
+        /*    background: linear-gradient(*/
+        /*            45deg,*/
+        /*            #4a90e2, !* 파란색 계열 시작 색상 *!*/
+        /*            #87cefa !* 파란색 계열 끝 색상 *!*/
+        /*    ); !* 버튼 배경색을 그라데이션으로 설정합니다. *!*/
+        /*    border: none; !* 기본 테두리를 제거합니다. *!*/
+        /*    border-radius: 20px; !* 버튼에 둥근 테두리를 적용합니다. *!*/
+        /*    padding: 7px 14px; !* 내부 여백을 설정합니다. *!*/
+        /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); !* 상자 그림자 효과를 추가합니다. *!*/
+        /*    cursor: pointer; !* 마우스 포인터를 손가락 모양으로 변경합니다. *!*/
+        /*    transition: background 0.3s ease, transform 0.3s ease; !* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. *!*/
+        /*}*/
+
+        /*8월 15일 모달 관련 스타일 */
         .modal-button, #add-employees {
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
             font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
             color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
-            background: linear-gradient(
-                    45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */
-                    #87cefa /* 파란색 계열 끝 색상 */
-            ); /* 버튼 배경색을 그라데이션으로 설정합니다. */
+            background: linear-gradient(45deg, #4a90e2, #87cefa); /* 버튼 배경색을 그라데이션으로 설정합니다. */
             border: none; /* 기본 테두리를 제거합니다. */
             border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
             padding: 7px 14px; /* 내부 여백을 설정합니다. */
@@ -154,17 +191,7 @@
         /*    display: flex; !important; !* Flexbox 레이아웃을 사용하여 내부 콘텐츠를 가로로 배치합니다. *!*/
         /*}*/
 
-        #employee-info {
-            display: grid;
-            grid-template-columns: 50% 50%;
-            gap: 10px;
-            width: 95%;
-            margin: 10px auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-        }
+
 
         #employee-info .data-row {
             display: flex;
@@ -186,34 +213,41 @@
             grid-column: 2;
         }
 
-        /* 사원 상세 정보 관련 스타일 */
-        #employee-info, #employee-skills {
-            flex: 1; /* 오른쪽 및 왼쪽 영역이 전체 너비의 절반을 차지하도록 설정합니다. */
-            padding-left: 20px; /* 왼쪽 패딩을 추가하여 요소 간의 간격을 유지합니다. */
-            display: grid; /* 그리드 레이아웃을 사용합니다. */
-            grid-template-columns: 33% 66%;
-        }
 
-        #employee-info .label, #employee-skills .label {
-            font-weight: bold; /* 레이블을 굵게 설정합니다. */
-            color: #fff;
-            background: linear-gradient(
-                    45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */
-                    #87cefa /* 파란색 계열 끝 색상 */
-            );
-            padding: 10px; /* 내부 여백을 10px 줍니다. */
-            border-right: 1px solid #ddd; /* 오른쪽 경계선을 추가합니다. */
-        }
-
-        #employee-info .value, #employee-skills .value {
-            padding: 10px; /* 내부 여백을 10px 줍니다. */
-            border-left: 1px solid #ddd; /* 왼쪽 경계선을 추가합니다. */
+        #employee-info {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            gap: 10px;
+            width: 95%;
+            margin: 10px auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
         }
 
 
 
+        #employee-info .label {
+            background-color: #71b6ff;
+            font-weight: bold;
+            width: 250px; /* 가로 길이를 150px로 설정 */
+            white-space: nowrap; /* 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트는 숨김 */
+            text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
 
+        #employee-info .value {
+            width: 80%;
+        }
+
+
+
+
+        /*8월 15일 모달 관련 스타일 */
         .close {
             color: #aaa; /* 닫기 버튼의 색상을 회색으로 설정합니다. */
             float: right; /* 닫기 버튼을 오른쪽으로 정렬합니다. */
@@ -228,29 +262,109 @@
             cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
         }
 
+        #skillsAndCareer {
+            column-count: 2; /* 두 개의 열로 나누기 */
+            column-gap: 30px; /* 두 열 사이의 간격 설정 */
+            height: 300px; /* div의 고정된 높이 설정 (원하는 높이로 조정 가능) */
+            overflow-y: auto; /* 내용물이 div의 높이를 넘으면 스크롤 생성 */
+            padding: 10px; /* 내용물과 경계 사이의 패딩 설정 */
+            border-right: 1px solid #ddd; /* 가운데 경계선 */
+        }
+
+
+
+
+
         /* 버튼 스타일 */
 
-
-        #update-btn, #delete-btn, #detail-btn {
-            padding: 10px 20px; /* 내부 여백을 설정합니다. */
-            border: none; /* 기본 테두리를 제거합니다. */
-            border-radius: 5px; /* 버튼에 둥근 테두리를 적용합니다. */
-            background-color: #6c757d; /* 회색 계열 배경색을 설정합니다. */
-            color: white; /* 텍스트 색상을 흰색으로 설정합니다. */
-            font-size: 16px; /* 글자 크기를 16px로 설정합니다. */
-            cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
-            transition: background-color 0.3s, transform 0.3s; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
+        /* update-btn 스타일 */
+        #update-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6c757d; /* 회색 계열 */
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
-        #update-btn:hover, #delete-btn:hover {
-            background-color: #5a6268; /* 호버 시 배경색을 어두운 회색으로 변경합니다. */
-            transform: translateY(-2px); /* 약간 위로 이동하여 부드러운 효과를 줍니다. */
+        /* update-btn 호버 효과 */
+        #update-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
         }
 
-        #update-btn:active, #delete-btn:active {
-            background-color: #545b62; /* 클릭 시 배경색을 더 어두운 회색으로 변경합니다. */
-            transform: translateY(0); /* 클릭 시 원래 위치로 돌아오게 합니다. */
+        /* update-btn 활성화 효과 */
+        #update-btn:active {
+            background-color: #545b62;
+            transform: translateY(0);
         }
+
+        /* delete-btn 스타일 */
+        #delete-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ef4747;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* delete-btn 호버 효과 */
+        #delete-btn:hover {
+            background-color: #b11212;
+            transform: translateY(-2px);
+        }
+
+        /* delete-btn 활성화 효과 */
+        #delete-btn:active {
+            background-color: #b11212;
+            transform: translateY(0);
+        }
+
+        #projectList-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #87cefa;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #projectList-btn{
+            transition: transform 0.3s;
+        }
+        #projectList-btn:hover{
+            transform: translateY(-2px);
+        }
+
+
+
+        /*#update-btn, #delete-btn, #detail-btn {*/
+        /*    padding: 10px 20px; !* 내부 여백을 설정합니다. *!*/
+        /*    border: none; !* 기본 테두리를 제거합니다. *!*/
+        /*    border-radius: 5px; !* 버튼에 둥근 테두리를 적용합니다. *!*/
+        /*    background-color: #6c757d; !* 회색 계열 배경색을 설정합니다. *!*/
+        /*    color: white; !* 텍스트 색상을 흰색으로 설정합니다. *!*/
+        /*    font-size: 16px; !* 글자 크기를 16px로 설정합니다. *!*/
+        /*    cursor: pointer; !* 마우스 포인터를 손가락 모양으로 변경합니다. *!*/
+        /*    transition: background-color 0.3s, transform 0.3s; !* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. *!*/
+        /*}*/
+
+        /*#update-btn:hover, #delete-btn:hover {*/
+        /*    background-color: #5a6268; !* 호버 시 배경색을 어두운 회색으로 변경합니다. *!*/
+        /*    transform: translateY(-2px); !* 약간 위로 이동하여 부드러운 효과를 줍니다. *!*/
+        /*}*/
+
+        /*#update-btn:active, #delete-btn:active {*/
+        /*    background-color: #545b62; !* 클릭 시 배경색을 더 어두운 회색으로 변경합니다. *!*/
+        /*    transform: translateY(0); !* 클릭 시 원래 위치로 돌아오게 합니다. *!*/
+        /*}*/
 
         /* 필터 및 정렬 관련 스타일 */
         #filterByEmployeeName {
@@ -316,22 +430,21 @@
         }
 
         .skill-item {
-            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
-            justify-content: space-between; /* 아이템 간의 공간을 균등하게 배분합니다. */
-            width: 100%; /* 너비를 100%로 설정합니다. */
-            padding: 5px 0; /* 상하 패딩을 5px로 설정합니다. */
-            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #b7c6ec;
         }
 
-        .skill-item span {
-            flex: 1; /* Flexbox 내에서 균등한 공간을 차지하게 합니다. */
-        }
+        /*.skill-item span {*/
+        /*    flex: 1; !* Flexbox 내에서 균등한 공간을 차지하게 합니다. *!*/
+        /*}*/
 
         .project-item {
-            display: flex; /* Flexbox 레이아웃을 사용하여 가로로 나열합니다. */
-            justify-content: space-between; /* 아이템 간의 공간을 균등하게 배분합니다. */
-            padding: 5px; /* 내부 여백을 5px 줍니다. */
-            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #b7c6ec;
         }
 
         .project-item .project-name,
@@ -414,6 +527,8 @@
             gap: 10px; /* 버튼 간의 간격을 10px로 설정합니다. */
             margin-top: 20px; /* 버튼들이 섹션과 일정 간격을 두도록 설정합니다. */
         }
+
+
 
 
     </style>
@@ -524,36 +639,34 @@
                     .then(data => {
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
-                            const defaultImage = '/img/default-photo.jpeg';
-                            const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
 <div class="employeeIdAndNameAndButton">
-<div>${data.employeeId}.${data.name}</div>
+<div id="employee-title" style="font-weight: bold; font-size: 18px;">${data.employeeId}.${data.name}</div>
 <div>
+    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">参加プロジェクト全体を見る</button>
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
     <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">削除</button>
-    <button id="detail-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">詳細</button>
 </div>
 
 </div>
 <div id="employee-info">
 <div id="employee-info-left">
         <div class="data-row">
-            <div class="label">写真:</div>
+            <div class="label">プロフィール写真:</div>
             <div class="value"><img src="${employeeImage}" alt="Employee Image" style="width: 150px; height: 150px; border-radius: 20%;"/>
             </div>
         </div>
         <div class="data-row">
             <div class="label">住所:</div>
-            <div class="value">${data.address}</div>
+            <div class="value">${data.address} <button onclick="visitGoogleMap(${data.latitude}, ${data.longitude})">地図で見る</button></div>
         </div>
         <div class="data-row">
             <div class="label">最近プロジェクト完了日:</div>
-            <div class="value">${data.lastProjectEndDate || 'No experience'}</div>
+            <div class="value">${data.lastProjectEndDate || 'プロジェクト経験なし'}</div>
         </div>
         <div class="data-row">
             <div class="label">現在プロジェクト終了日:</div>
-            <div class="value">${data.currentProjectEndDate || 'Not allocated'}</div>
+            <div class="value">${data.currentProjectEndDate || '配属されていない'}</div>
         </div>
         <div class="data-row">
             <div class="label">電話番号:</div>
@@ -577,17 +690,19 @@
 
 <div id="employee-info-right">
 <div class="data-row">
-            <div class="label">Skills & Career:</div>
+            <div class="label">プログラミング経歴:</div>
             <div class="value" id="skillsAndCareer"></div>
         </div>
         <div class="data-row">
-            <div class="label">Projects:</div>
+            <div class="label" >最近参加案件:</div>
             <div class="value" id="projectsList"></div>
         </div>
 </div>
 
 </div>
                     `;
+                            const defaultImage = '/img/default-photo.jpeg';
+                            const employeeImage = data.image ? data.image : defaultImage;
 
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
@@ -601,46 +716,46 @@
                                     let iconHtml = '';
                                     switch(skill.skillName.toLowerCase()) {
                                         case 'java':
-                                            iconHtml = '<img src="/img/skillicons/java-icon.png" alt="Java" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/java-icon.png" alt="Java" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'javascript':
-                                            iconHtml = '<img src="/img/skillicons/javascript-icon.png" alt="JavaScript" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/javascript-icon.png" alt="JavaScript" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'python':
-                                            iconHtml = '<img src="/img/skillicons/python-icon.png" alt="Python" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/python-icon.png" alt="Python" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'ruby':
-                                            iconHtml = '<img src="/img/skillicons/ruby-icon.png" alt="Ruby" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/ruby-icon.png" alt="Ruby" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'php':
-                                            iconHtml = '<img src="/img/skillicons/php-icon.png" alt="PHP" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/php-icon.png" alt="PHP" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'go':
-                                            iconHtml = '<img src="/img/skillicons/go-icon.png" alt="Go" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/go-icon.png" alt="Go" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'c#':
-                                            iconHtml = '<img src="/img/skillicons/c-sharp-icon.png" alt="C#" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/c-sharp-icon.png" alt="C#" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'html':
-                                            iconHtml = '<img src="/img/skillicons/html-icon.png" alt="HTML" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/html-icon.png" alt="HTML" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'node.js':
-                                            iconHtml = '<img src="/img/skillicons/node-js-icon.png" alt="Node.js" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/node-js-icon.png" alt="Node.js" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'css':
-                                            iconHtml = '<img src="/img/skillicons/css-icon.png" alt="CSS" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/css-icon.png" alt="CSS" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'vue.js':
-                                            iconHtml = '<img src="/img/skillicons/vue-js-icon.png" alt="Vue.js" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/vue-js-icon.png" alt="Vue.js" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         case 'react':
-                                            iconHtml = '<img src="/img/skillicons/react-icon.png" alt="React" style="width: 16px; height: 16px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/react-icon.png" alt="React" style="width: 20px; height: 20px; margin-right: 5px;">';
                                             break;
                                         // 추가적인 케이스는 필요에 따라 추가
                                         default:
                                             iconHtml = ''; // 기본값은 아이콘 없음
                                     }
-                                    skillItem.innerHTML = `${iconHtml}<span>${skill.skillName}</span><span>${years} years</span>`;
+                                    skillItem.innerHTML = `${iconHtml}<span>${skill.skillName}</span><span>${years} 年</span>`;
                                     skillsAndCareerElement.appendChild(skillItem);
                                 });
                             }
@@ -984,6 +1099,11 @@
                 }
             }
         }
+    }
+
+    function visitGoogleMap(latitude, longitude) {
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+        window.open(googleMapsUrl, '_blank');
     }
 
 
