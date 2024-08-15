@@ -529,12 +529,12 @@
 
         <!--        필터링 및 정렬        -->
         <div style="display: flex">
-            <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="사원 이름 검색" type="text">
+            <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="社員名検索" type="text">
             <div class="filterByProjectEndDate">
                 <input id="lastProjectEndDateAsc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="lastProjectEndDateAsc">
-                <label for="lastProjectEndDateAsc">최근 프로젝트 종료일 오름차순</label>
+                <label for="lastProjectEndDateAsc">直近案件終了日昇順</label>
                 <input id="currentProjectEndDateDesc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="currentProjectEndDateDesc">
-                <label for="currentProjectEndDateDesc">현재 프로젝트 종료일 내림차순</label>
+                <label for="currentProjectEndDateDesc">現在案件終了日降順</label>
             </div>
 
             <select id="sortHireDateBy">
@@ -542,9 +542,10 @@
             </select>
 
             <select id="filterByAllocation">
-                <option value="">모든 상태</option>
-                <option value="-1">미배정</option>
-                <option value="1">배정</option>
+                <option value="">全体の状態</option>
+                <option value="-1">未配属</option>
+                <option value="1">配属</option>
+
             </select>
         </div>
 
@@ -855,8 +856,8 @@
     function updateHireDateSortOptions() {
         const hireDateSelect = document.getElementById('sortHireDateBy');
         hireDateSelect.innerHTML = `
-        <option value="ascHireDate">입사일 오름차순</option>
-        <option value="descHireDate">입사일 내림차순</option>
+        <option value="ascHireDate">入社日昇順</option>
+        <option value="descHireDate">入社日降順</option>
     `;
     }
 
