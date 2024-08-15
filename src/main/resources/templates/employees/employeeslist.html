@@ -340,31 +340,12 @@
             transition: transform 0.3s;
         }
         #projectList-btn:hover{
+            background-color: #6bb5e6;
             transform: translateY(-2px);
         }
 
 
 
-        /*#update-btn, #delete-btn, #detail-btn {*/
-        /*    padding: 10px 20px; !* 내부 여백을 설정합니다. *!*/
-        /*    border: none; !* 기본 테두리를 제거합니다. *!*/
-        /*    border-radius: 5px; !* 버튼에 둥근 테두리를 적용합니다. *!*/
-        /*    background-color: #6c757d; !* 회색 계열 배경색을 설정합니다. *!*/
-        /*    color: white; !* 텍스트 색상을 흰색으로 설정합니다. *!*/
-        /*    font-size: 16px; !* 글자 크기를 16px로 설정합니다. *!*/
-        /*    cursor: pointer; !* 마우스 포인터를 손가락 모양으로 변경합니다. *!*/
-        /*    transition: background-color 0.3s, transform 0.3s; !* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. *!*/
-        /*}*/
-
-        /*#update-btn:hover, #delete-btn:hover {*/
-        /*    background-color: #5a6268; !* 호버 시 배경색을 어두운 회색으로 변경합니다. *!*/
-        /*    transform: translateY(-2px); !* 약간 위로 이동하여 부드러운 효과를 줍니다. *!*/
-        /*}*/
-
-        /*#update-btn:active, #delete-btn:active {*/
-        /*    background-color: #545b62; !* 클릭 시 배경색을 더 어두운 회색으로 변경합니다. *!*/
-        /*    transform: translateY(0); !* 클릭 시 원래 위치로 돌아오게 합니다. *!*/
-        /*}*/
 
         /* 필터 및 정렬 관련 스타일 */
         #filterByEmployeeName {
@@ -529,8 +510,6 @@
         }
 
 
-
-
     </style>
 
 
@@ -639,11 +618,13 @@
                     .then(data => {
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
+                            const defaultImage = '/img/default-photo.jpeg';
+                            const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
 <div class="employeeIdAndNameAndButton">
 <div id="employee-title" style="font-weight: bold; font-size: 18px;">${data.employeeId}.${data.name}</div>
 <div>
-    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">参加プロジェクト全体を見る</button>
+    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">プロジェクト参加履歴</button>
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
     <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">削除</button>
 </div>
@@ -701,8 +682,6 @@
 
 </div>
                     `;
-                            const defaultImage = '/img/default-photo.jpeg';
-                            const employeeImage = data.image ? data.image : defaultImage;
 
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
