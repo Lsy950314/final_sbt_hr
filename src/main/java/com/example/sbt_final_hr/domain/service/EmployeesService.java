@@ -63,6 +63,7 @@ public class EmployeesService {
         if (employees.getPreviousProjectEndDate() != null) {
             employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
             employees.setPreviousProjectEndDate(null);
+            employees.setCurrentProjectEndDate(null);
             employeesRepository.save(employees);
             return true;
         }
