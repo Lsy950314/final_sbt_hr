@@ -572,13 +572,13 @@
                 </div>
                 <div class="employee-name" th:text="${e.name}"></div>
                 <div class="employee-rating"
-                     th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'no point yet'}"></div>
+                     th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : '評価なし'}"></div>
                 <div class="current-project-end-date"
                      th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
-                     th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : 'Not allocated'}"></div>
+                     th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : '配属なし'}"></div>
                 <div class="last-project-end-date"
                      th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
-                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : 'No experience'}"></div>
+                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : '案件経験なし'}"></div>
                 <div class="hire-date" th:text="${e.hireDate}"></div>
                 <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
