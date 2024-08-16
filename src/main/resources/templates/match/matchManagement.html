@@ -336,8 +336,10 @@
         }
 
         .employee-skill {
+            width: 40%;
             padding-left: 10px;
             border-left: 3px solid #007bff;
+            align-items: center;
         }
 
         .commute-time {
@@ -402,7 +404,7 @@
         .employee-skills {
             display: flex;
             text-align: center;
-            /*justify-content: center;*/
+            align-items: center;
         }
 
         .layout {
@@ -483,12 +485,15 @@
                 </div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <img class="skill-icon skill-icon-${stat.index}" th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
-                    <div class="employee-skill" th:text="(${stat.index} + 1) + ': ' + (${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}) + ' ' + ${s.getSkillCareer()} + '개월'"></div>
+                    <div class="employee-skill" style="display: flex; justify-content: space-between;">
+                        <span class="skill-name" th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
+                        <span class="skill-career" th:text="${s.getSkillCareer()} + '개월'"></span>
+                    </div>
                     <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
                            name="employee-skill-name"
                            th:value="${s.getSkill().skillName}"
                            th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
-                    <label th:for="'checkbox-' + ${stat.index}">比較</label>
+                    <label th:for="'checkbox-' + ${stat.index}"></label>
                 </div>
                 <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
