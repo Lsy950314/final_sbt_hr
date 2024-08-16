@@ -521,10 +521,15 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
-        /*8월 16일 민승현 작업 코드 여기에 */
+        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
+        .project-requirement.completed-project {
+            background-color: #d3d3d3; /* 어두운 배경색을 설정 (여기서는 연한 회색) */
+            opacity: 0.8; /* 살짝 어둡게 만들기 위해 투명도 조정 */
+        }
+
         .count-info {
             font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
-            color: blue; /* 기본적으로 검은색 글씨 */
+            color: #6a89cc;
         }
 
         .low-fulfillment {
@@ -540,9 +545,7 @@
 
 
 
-
-
-        /*8월 16일 민승현 작업 코드 여기에 */
+        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
 
 
 
@@ -584,12 +587,13 @@
 
 <div class="layout">
     <div class="left-panel">
-        <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
-            <div class="project-requirement">
+        <div class="project-requirements-list">
+            <div class="project-requirement" th:classappend="${pr.fulfilledCount == pr.getRequiredCount()} ? 'completed-project' : ''"
+                 th:each="pr : ${projectRequirements}">
                 <div class="requirement-skill" th:text="${pr.getSkill().getSkillName()}"></div>
                 <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
-                <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>
-                <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>
+<!--                <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>-->
+<!--                <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>-->
                 <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
                      th:text="'充足人数: ' + ${pr.fulfilledCount} + ' / ' + ${pr.getRequiredCount()}">
                 </div>
