@@ -61,6 +61,7 @@ public class ProjectController {
 
         List<ProjectsRequest> projects;
         String projectsType = (String) httpSession.getAttribute("projectsType");
+        System.out.println(projectsType);
 
         if (employeeId != null) {
             projects = projectsService.getProjectByEmployee(employeeId);
@@ -173,6 +174,7 @@ public class ProjectController {
         }
 
         httpSession.removeAttribute("projects");
+        httpSession.removeAttribute("projectsType");
         return "redirect:/readAllProjects";
     }
 
@@ -210,6 +212,7 @@ public class ProjectController {
         }
 
         httpSession.removeAttribute("projects");
+        httpSession.removeAttribute("projectsType");
         return "redirect:/readAllProjects";
     }
 
@@ -221,6 +224,7 @@ public class ProjectController {
         System.out.println("삭제 성공");
 
         httpSession.removeAttribute("projects");
+        httpSession.removeAttribute("projectsType");
         return "redirect:/readAllProjects";
     }
 
