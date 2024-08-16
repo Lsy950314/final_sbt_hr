@@ -162,6 +162,26 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const experienceElements = document.querySelectorAll('.requirement-experience');
+            experienceElements.forEach(function(element) {
+                const experience = parseFloat(element.getAttribute('data-experience'));
+                if (!isNaN(experience)) {
+                    const years = Math.round((experience / 12) * 10) / 10;
+                    const displayYears = years % 1 === 0 ? years.toFixed(0) : years.toFixed(1);
+                    element.textContent = `必要経歴: ${displayYears}年`;
+                } else {
+                    element.textContent = '必要経歴: 0年';
+                }
+            });
+        });
+
+
+
+
+
+
     </script>
 
     <style>
@@ -372,6 +392,23 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
+        /*8월 16일 민승현 작업 코드 여기에 */
+
+
+
+
+
+
+
+
+
+
+
+        /*8월 16일 민승현 작업 코드 여기에 */
+
+
+
+
         .center-panel {
             width: 30%;
             padding: 10px;
@@ -405,9 +442,9 @@
         <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
             <div class="project-requirement">
                 <div class="requirement-skill" th:text="${pr.getSkill().getSkillName()}"></div>
-                <div class="requirement-experience" th:text="'필요경력 ' + ${pr.getRequiredExperience()}"></div>
-                <div class="requirement-count" th:text="'필요인원 ' + ${pr.getRequiredCount()}"></div>
-                <div class="fulfilled-count" th:text="'충족인원 ' + ${pr.fulfilledCount}"></div>
+                <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
+                <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>
+                <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>
             </div>
         </div>
     </div>
