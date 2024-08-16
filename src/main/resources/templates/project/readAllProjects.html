@@ -25,8 +25,8 @@
         }
 
         body {
-            width: 1920px;
-            height: 1080px;
+            overflow-y: hidden; /* Y축 스크롤 비활성화 */
+            overflow-x: auto;   /* X축 스크롤 활성화 */
         }
 
         ul {
@@ -36,7 +36,7 @@
         .menu {
             background-color: #1e90ff;
             width: 250px;
-            height: 1080px;
+            height: 97vh;
         }
 
         .menus > li {
@@ -77,8 +77,14 @@
         .contents {
             background-color: #f5f5f5;
             width: 1170px;
-            height: 1080px;
+            height: auto;
             border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .contents::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .contents p {
@@ -88,8 +94,9 @@
 
 
         .projects {
-            width: 1170px;
-            height: 940px;
+            width: 98%;;
+            height: 82vh;
+            margin-left: 1%;
             background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
             border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
             border-radius: 15px 15px 0 0;
@@ -177,7 +184,8 @@
             padding: 20px;
             border: 1px solid #888;
             width: 75%;
-            height: 80%;
+            height: auto;
+            border-radius: 10pt;
         }
 
         .modal-button {
@@ -190,7 +198,7 @@
             ); /* 버튼 배경색 그라데이션 */
             border: none; /* 기본 테두리 제거 */
             border-radius: 20px; /* 둥근 테두리 */
-            padding: 7px 14px; /* 내부 여백 */
+            padding: 3px 8px; /* 내부 여백 */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
             cursor: pointer; /* 커서 변경 */
             transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
@@ -207,7 +215,7 @@
 
         #project-info {
             display: grid;
-            grid-template-columns: 33% 66%;
+            grid-template-columns: 50% 50%;
             gap: 10px;
             width: 95%;
             margin: 10px auto;
@@ -410,19 +418,20 @@
             transform: translateY(0);
         }
 
-        #employeeList-btn{
+        #employeeList-btn {
             transition: transform 0.3s;
         }
 
-        #employeeList-btn:hover{
+        #employeeList-btn:hover {
             transform: translateY(-2px);
         }
 
-        #assign-btn{
+        #assign-btn {
             background-color: #ade8ff;
             color: #000000;
             border-color: #c9fff6;
             transition: transform 0.3s;
+            border-radius: 5pt;
         }
 
         #assign-btn:hover {
@@ -430,6 +439,7 @@
             color: #000000;
             border-color: #c9fff6;
             transform: translateY(-2px);
+            border-radius: 5pt;
         }
 
         input[type="text"], select {
@@ -494,11 +504,17 @@
             display: none;
         }
 
+        .container{
+            height: auto;
+            width: 95vw
+        ;
+        }
+
 
     </style>
 </head>
 <body>
-<div style="display: flex">
+<div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
             <li><a href="/index">MainPage</a></li>
@@ -572,16 +588,18 @@
     <!-- 모달 팝업 -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">&times;</span>
+            <span style="display: none;" class="close-button" onclick="closeModal()">&times;</span>
             <!-- 새로운 제목 영역 추가 -->
             <div style="display: flex; justify-content: space-between; align-items: center">
                 <div>
-                    <span id="project-title" style="font-weight: bold; font-size: 18px;"></span>
-                    <span id="project-dates" style="margin-left: 10px; font-size: 14px; color: grey;"></span>
+                    <span id="project-title" style="font-weight: bold; font-size: 25px;"></span>
+                    <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="assign-btn" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여 사원 상세보기</button>
+                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여
+                        사원 상세보기
+                    </button>
                     <button id="update-btn">수정</button>
                     <button id="delete-btn">삭제</button>
                 </div>
@@ -627,7 +645,7 @@
 
                 let statusText;
                 let statusClass = "";
-                switch(data.project.status) {
+                switch (data.project.status) {
                     case -1:
                         statusText = "배정 필요(미배정)";
                         statusClass = "unassigned-status";
@@ -772,7 +790,7 @@
 
         const confirmButton = document.createElement('button');
         confirmButton.textContent = '확인';
-        confirmButton.onclick = function() {
+        confirmButton.onclick = function () {
             confirmCancelAssignment(projectId, employeeId);
         };
         modalRequirementsList.appendChild(confirmButton);
