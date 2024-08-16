@@ -5,34 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인 페이지</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        body {
+            overflow-y: hidden; /* Y축 스크롤 비활성화 */
+            overflow-x: auto;   /* X축 스크롤 활성화 */
         }
 
-        .container {
-            display: flex;
-            height: 100vh;
-        }
 
         .menu {
             background-color: #1e90ff;
-            width: 350px;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #fff;
-        }
-
-        .menus {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+            width: 250px;
+            height: 97vh;
         }
 
         .menus > li {
-            width: 300px;
+            width: 200px;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -43,15 +29,22 @@
             font-size: 18px;
         }
 
+
         .menus li a {
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
-            padding: 15px 20px;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
             box-sizing: border-box;
-            color: inherit;
-            text-decoration: none;
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 색상을 상속 */
+        }
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .menus li:hover {
@@ -61,18 +54,22 @@
             border-bottom-right-radius: 40px;
         }
 
-        .contents {
-            background-color: #f5f5f5;
-            flex-grow: 1;
-            padding: 20px;
-            box-sizing: border-box;
+        .menus li a:hover {
+            color: #fff; /* 마우스를 호버할 때 글씨 색을 하얗게 */
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .contents {
+            background-color: #f5f5f5;
+            width: 1170px;
+            height: auto;
+            border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .contents p {
+            height: 35px;
+            margin-left: 30px;
         }
 
         .statistics {
@@ -112,10 +109,16 @@
         }
 
 
+        .container {
+            display: flex;
+            height: 95vh;
+        }
+
     </style>
 </head>
 <body>
-<div style="display: flex">
+
+<div class="container" style="display: flex">
     <!-- 대시보드 영역 -->
     <div class="menu">
         <ul class="menus">
@@ -128,10 +131,9 @@
     <!-- 메인 콘텐츠 영역 -->
     <div class="contents">
         <!-- 상단 제목과 로그인 기능 -->
-        <div class="header">
-            <div class="title">타이틀</div>
+        <p style="font-size: 26px">メイン·ページ</p>
             <div class="login-function">로그인 기능</div>
-        </div>
+
 
         <div class="statistics">
             <div class="project-stats">

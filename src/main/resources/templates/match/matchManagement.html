@@ -141,7 +141,19 @@
                     element.textContent = text.replace(matches[0], rounded);
                 }
             });
-        })
+
+            //8월 16일 추가된 기능: 프로젝트 리스트에서 'completed-project' 클래스가 있는 항목을 리스트의 끝으로 이동->잘 안됨
+            const projectRequirementsList = document.querySelector('.project-requirements-list');
+            const projectRequirements = document.querySelectorAll('.project-requirement');
+
+            projectRequirements.forEach(function(requirement) {
+                if (requirement.classList.contains('completed-project')) {
+                    projectRequirementsList.appendChild(requirement);
+                }
+            });
+
+        }); //document.addEventListener 끝
+
 
 
         function calculateMonthsDifference(endDate) {
