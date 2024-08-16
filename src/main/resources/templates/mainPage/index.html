@@ -133,32 +133,40 @@
             <div class="login-function">로그인 기능</div>
         </div>
 
-        <!-- 좌우로 나뉜 통계 영역 -->
         <div class="statistics">
-            <!-- 사원 통계 -->
-            <div class="employee-stats">
-                <h3>사원 통계</h3>
+            <div class="project-stats">
+                <h3>프로젝트 통계</h3>
                 <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
-                <div>진행 중인 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
+                <div>배정 완료(진행 중) 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
                 <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
             </div>
 
-            <!-- 프로젝트 통계 -->
-            <div class="project-stats">
-                <h3>프로젝트 통계</h3>
-                <!-- 프로젝트 통계 내용 -->
+            <div class="employee-stats">
+                <h3>사원 통계</h3>
+                <div>고객상주업무의 총 사원 수 : <span th:text="${countEmployees['totalEmployees']}"></span> </div>
+                <div>현재 프로젝트 배치중인 사원 수 : <span th:text="${countEmployees['assignedEmployees']}"></span></div>
+                <div>현재 대기중인 사원 수 : <span th:text="${countEmployees['unassignedEmployees']}"></span></div>
+
             </div>
         </div>
 
         <!-- 바로가기 버튼들 -->
         <div class="shortcuts">
-            <a href="/readAllProjects?filterStatus=-1"><button class="shortcut-button">미배정 프로젝트 확인</button></a>
-            <button class="shortcut-button">바로가기2</button>
+            <a href="/readAllProjects?filterStatus=-1">
+                <button class="shortcut-button">미배정 프로젝트 확인</button>
+            </a>
+            <a href="/employees?filterAllocation=-1">
+            <button class="shortcut-button">대기중인 사원 보러가기</button>
+            </a>
         </div>
 
         <div class="shortcuts">
-            <a href="/readAllProjects?sortBy=endDate"><button class="shortcut-button">종료 임박 프로젝트 확인</button></a>
-            <button class="shortcut-button">바로가기4</button>
+            <a href="/readAllProjects?sortBy=endDate">
+                <button class="shortcut-button">종료 임박 프로젝트 확인</button>
+            </a>
+            <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
+                <button class="shortcut-button">곧 프로젝트 끝나는 사원 보러 가기</button>
+            </a>
         </div>
     </div>
 </div>

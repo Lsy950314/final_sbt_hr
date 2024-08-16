@@ -65,21 +65,32 @@ public class EmployeesController {
     }
 
 
-    //8월 9일 10:44 read 기능 최적화 관련 시도중
+
     @GetMapping
-    public String listEmployeesSummary(@RequestParam(name = "name", required = false) String name,
-                                @RequestParam(name = "projectId", required = false) Long projectId,
-                                Model model) {
-        List<EmployeesRequest> employees;
+    public String listEmployeesSummary(HttpSession httpSession, @RequestParam(name = "name", required = false) String name,
+                                       @RequestParam(name = "projectId", required = false) Long projectId,
+                                       Model model) {
+
+
         if (projectId != null) {
-            model.addAttribute("employees", employeesService.findByProjectId(projectId));
+            List<Employees> employees;
+            employees = employeesService.findByProjectId(projectId);
+            httpSession.setAttribute("employees", employees);
         } else if (name != null && !name.isEmpty()) {
-            model.addAttribute("employees", employeesService.findByName(name));
+            List<Employees> employees;
+            employees = employeesService.findByName(name);
+            httpSession.setAttribute("employees", employees);
         } else {
-            model.addAttribute("employees", employeesService.findAllEmployeesSummary());
+            List<EmployeesRequest> employees;
+            employees = employeesService.findAllEmployeesSummary();
+            //model.addAttribute("employees", employees);
+            httpSession.setAttribute("employees", employees);
         }
+
         return "employees/employeeslist";
     }
+
+
 
 
     @PostMapping("/getModalData")
@@ -112,6 +123,8 @@ public class EmployeesController {
         response.put("hireDate", employee.getHireDate() != null ? employee.getHireDate().format(formatter) : null);
         response.put("preferredLanguage", employee.getSkill().getSkillName());
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
+        response.put("latitude", employee.getLatitude());
+        response.put("longitude", employee.getLongitude());
         //8월 7일 10:48 시도중
         response.put("image", employee.getImage());
 
@@ -152,12 +165,12 @@ public class EmployeesController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/edit/{id}")
-    public String showEditEmployeeForm(@PathVariable Long id, Model model) {
+    public String showEditEmployeeForm(@PathVariable("id") Long id, Model model) {
         Optional<Employees> employees = employeesService.findById(id);
         if (employees.isPresent()) {
             Employees employee = employees.get();
-            // 사원의 프로그래밍 경력 출력
             List<EmployeesSkill> skills = employee.getSkills();
             EmployeesRequest employeesRequest = employee.toDto();
             List<EmployeesSkillRequest> skillRequests = skills.stream()
@@ -167,11 +180,13 @@ public class EmployeesController {
             model.addAttribute("employeesRequest", employeesRequest);
             model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
             model.addAttribute("skills", skillsService.getAllSkills());
-            return "employees/editEmployee";
+            return "employees/editemployee";
         } else {
             return "redirect:/employees";
         }
     }
+
+
 
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
@@ -187,6 +202,8 @@ public class EmployeesController {
         Employees employee = employeesRequest.toEntity();
         employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
         employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
+
+
         if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);

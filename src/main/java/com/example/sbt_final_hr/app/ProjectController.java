@@ -55,19 +55,19 @@ public class ProjectController {
                                   @RequestParam(value = "sortBy", required = false) String sortBy,
                                   Model model) {
 //      long startTime = System.currentTimeMillis();
-        System.out.println(filterStatus);
-        System.out.println(sortBy);
 
+//        System.out.println(filterStatus);
+//        System.out.println(sortBy);
 
         List<ProjectsRequest> projects;
         String projectsType = (String) httpSession.getAttribute("projectsType");
 
-        if(employeeId != null) {
+        if (employeeId != null) {
             projects = projectsService.getProjectByEmployee(employeeId);
             httpSession.setAttribute("projects", projects);
             httpSession.setAttribute("projectsType", "employee");
         } else {
-            if(projectsType == null || !projectsType.equals("all")){
+            if (projectsType == null || !projectsType.equals("all")) {
                 projects = projectsService.getAllProjectsSummary();
                 httpSession.setAttribute("projects", projects);
                 httpSession.setAttribute("projectsType", "all");
@@ -107,13 +107,13 @@ public class ProjectController {
                     return request;
                 }).toList();
 
-        List<Long> eprID = new ArrayList<Long>();
+        List<Long> epID = new ArrayList<Long>();
         for (EmployeesProjectsRequest req : employeesProjectsRequests) {
             if (req.getEmployeeName() != null) {
                 System.out.print("Employee ID: " + req.getEmployee().getEmployeeId());
                 System.out.println(" Employee: " + req.getEmployeeName());
 
-                eprID.add(req.getEmployee().getEmployeeId());
+                epID.add(req.getEmployee().getEmployeeId());
             } else {
                 System.out.println("Employee is null or name is null");
             }
@@ -132,16 +132,22 @@ public class ProjectController {
         // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
         session.setAttribute("employeesProjects", employeesProjectsRequests);
 
-        session.setAttribute("eprID", eprID);
+        session.setAttribute("epID", epID);
 
         Map<String, Object> response = new HashMap<>();
         response.put("project", projectsService.getProjectById(id));
         response.put("projectId", id);
         response.put("projectRequirements", projectRequirements);
         response.put("employeesProjects", employeesProjectsRequests);
-        response.put("eprID", eprID);
+        response.put("epID", epID);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getProjectRequirements")
+    @ResponseBody
+    public List<ProjectRequirements> getProjectRequirements(@RequestParam Long projectId) {
+        return projectRequirementsService.findByProjectId(projectId);
     }
 
 
@@ -156,7 +162,7 @@ public class ProjectController {
     }
 
     @PostMapping("/createProject")
-    public String createProject(@ModelAttribute ProjectsRequest projectsRequest) {
+    public String createProject(@ModelAttribute ProjectsRequest projectsRequest, HttpSession httpSession) {
         Projects project = projectsService.createProject(projectsRequest);
 
         if (projectsRequest.getProjectRequirements() != null) {
@@ -166,7 +172,8 @@ public class ProjectController {
             }
         }
 
-        return "redirect:/createProject";
+        httpSession.removeAttribute("projects");
+        return "redirect:/readAllProjects";
     }
 
     @GetMapping("/updateProject")

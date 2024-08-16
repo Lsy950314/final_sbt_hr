@@ -25,6 +25,10 @@ public class ProjectRequirementsService {
         this.skillsRepository = skillsRepository;
     }
 
+    public List<ProjectRequirements> findByProjectId(Long projectId) {
+        return projectRequirementsRepository.findByProject_ProjectId(projectId);
+    }
+
     public ProjectRequirements getRequirementsById(Long id) {
         return projectRequirementsRepository.findById(id).orElseThrow();
     }
@@ -44,6 +48,7 @@ public class ProjectRequirementsService {
         if (projectRequirements.getRequiredCount() != projectRequirements.getFulfilledCount()) {
 //            System.out.println(projectRequirements.getRequiredCount());
             projectRequirements.setFulfilledCount(projectRequirements.getFulfilledCount() + 1);
+            System.out.println("요구사항 인원 추가 성공");
             return true;
         } else {
             throw new RuntimeException("이미 충족된 요구사항입니다. 배정된 사원을 취소한 뒤 새로운 사원을 배정하세요");

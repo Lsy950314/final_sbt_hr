@@ -44,9 +44,9 @@ public class EmployeesProjectsService {
         return employeesProjectsRepository.findAll();
     }
 
-    public boolean deleteEmployeesProjects(Long employeeId, Long projectId, Long projectRequirementsId) {
-        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectIdAndId(
-                employeeId, projectId, projectRequirementsId);
+    public boolean deleteEmployeesProjects(Long employeeId, Long projectId) {
+        EmployeesProjects employeesProjects = employeesProjectsRepository.findByEmployee_EmployeeIdAndProject_ProjectId(
+                employeeId, projectId);
         if (employeesProjects != null) {
             employeesProjectsRepository.delete(employeesProjects);
             return true;
@@ -72,6 +72,7 @@ public class EmployeesProjectsService {
             EmployeesProjects savedEntity = employeesProjectsRepository.save(employeesProjectsRequest.toEntity());
 
             // save가 null을 반환하지 않으면 성공으로 간주하고 true 반환
+            System.out.println("사원-프로젝트 테이블 추가 성공");
             return savedEntity != null;
         } catch (Exception e) {
             // 예외가 발생하면 false 반환
