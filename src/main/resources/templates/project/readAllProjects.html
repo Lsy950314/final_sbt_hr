@@ -697,8 +697,8 @@
                 ${data.projectRequirements.map(req => `
                 <div class="requirement-item">
                     <div class="skill-info">
-                    <img src="/img/skillicons/${req.skill.skillName.toLowerCase()}-icon.png" alt="${req.skill.skillName}" class="skill-icon">
-                    ${req.skill.skillName}
+                      <img class="skill-icon" data-skill-name="${req.skill.skillName.toLowerCase()}" alt="${req.skill.skillName}">
+                    <span>${req.skill.skillName}</span>
                     </div>
                     <div class="experience-info">
                     必要経験: ${(req.requiredExperience / 12).toFixed(1)} 年
@@ -725,6 +725,29 @@
     </div>
 </div>`;
 
+                // 이미지 설정
+                const skillIconMap = {
+                    'java': '/img/skillicons/java-icon.png',
+                    'javascript': '/img/skillicons/javascript-icon.png',
+                    'python': '/img/skillicons/python-icon.png',
+                    'ruby': '/img/skillicons/ruby-icon.png',
+                    'php': '/img/skillicons/php-icon.png',
+                    'go': '/img/skillicons/go-icon.png',
+                    'c#': '/img/skillicons/c-sharp-icon.png',
+                    'html': '/img/skillicons/html-icon.png',
+                    'node.js': '/img/skillicons/node-js-icon.png',
+                    'css': '/img/skillicons/css-icon.png',
+                    'vue.js': '/img/skillicons/vue-js-icon.png',
+                    'react': '/img/skillicons/react-icon.png'
+                    // 필요에 따라 추가
+                };
+
+                document.querySelectorAll('.skill-icon').forEach(imgElement => {
+                    const skillName = imgElement.getAttribute('data-skill-name');
+                    if (skillIconMap[skillName]) {
+                        imgElement.src = skillIconMap[skillName];
+                    }
+                });
 
                 document.getElementById('update-btn').addEventListener('click', function () {
                     updateProject(projectId);
@@ -1099,6 +1122,7 @@
         filterByStatus();
         sortProjectsByDate();
     }
+
 </script>
 </body>
 </html>
