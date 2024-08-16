@@ -594,8 +594,6 @@
                  th:each="pr : ${projectRequirements}">
                 <div class="requirement-skill" th:text="${pr.getSkill().getSkillName()}"></div>
                 <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
-                <!--                <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>-->
-                <!--                <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>-->
                 <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
                      th:text="'充足人数: ' + ${pr.fulfilledCount} + ' / ' + ${pr.getRequiredCount()}">
                 </div>
