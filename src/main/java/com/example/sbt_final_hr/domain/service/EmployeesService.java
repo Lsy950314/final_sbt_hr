@@ -130,9 +130,11 @@ public class EmployeesService {
         return employeesProjects.stream().map(EmployeesProjects::getEmployee).collect(Collectors.toList());
     }
 
-//    public List<Employees> findAllOrderByEmployeeNameAsc() {
-//        return employeesRepository.findAllOrderByEmployeeNameAsc();
-//    }
+    public Employees findByEmployeeId(Long employeeId) {
+        return employeesRepository.findById(employeeId).orElse(null);
+    }
+
+
 
     @Transactional
     public boolean updateAllocationTo(long id, int num) {

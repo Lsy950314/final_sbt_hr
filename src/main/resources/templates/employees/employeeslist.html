@@ -9,7 +9,7 @@
 
         body {
             width: 1920px;
-            height: 1280px;
+            height: 1080px;
         }
 
         /* 메뉴 관련 스타일 */
@@ -151,8 +151,9 @@
             padding: 20px; /* 모달 내부 패딩을 설정합니다. */
             border: 1px solid #888; /* 모달 테두리를 연한 회색으로 설정합니다. */
             width: 75%; /* 모달 너비를 화면의 75%로 설정합니다. */
-            height: 80%; /* 모달 높이를 화면의 80%로 설정합니다. */
+            height: auto; /* 모달 높이를 화면의 80%로 설정합니다. */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 약간의 그림자 효과를 추가합니다. */
+            border-radius: 10pt;
         }
 
 
@@ -509,13 +510,18 @@
             margin-top: 20px; /* 버튼들이 섹션과 일정 간격을 두도록 설정합니다. */
         }
 
+        .container {
+            height: auto;
+            width: 75vw
+        }
+
 
     </style>
 
 
 </head>
 <body>
-<div style="display: flex">
+<div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
             <li><a href="/index">MainPage</a></li>
@@ -589,7 +595,7 @@
         <!-- 모달 구조 -->
         <div class="modal" id="myModal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span style="display: none" class="close">&times;</span>
                 <div id="employeeDetails"></div>
             </div>
         </div>
@@ -623,7 +629,7 @@
                             const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
 <div class="employeeIdAndNameAndButton">
-<div id="employee-title" style="font-weight: bold; font-size: 18px;">${data.employeeId}.${data.name}</div>
+<div id="employee-title" style="font-weight: bold; font-size: 25px;">${data.employeeId}.${data.name}</div>
 <div>
     <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">プロジェクト参加履歴</button>
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
@@ -696,40 +702,40 @@
                                     let iconHtml = '';
                                     switch(skill.skillName.toLowerCase()) {
                                         case 'java':
-                                            iconHtml = '<img src="/img/skillicons/java-icon.png" alt="Java" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/java-icon.png" alt="Java" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'javascript':
-                                            iconHtml = '<img src="/img/skillicons/javascript-icon.png" alt="JavaScript" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/javascript-icon.png" alt="JavaScript" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'python':
-                                            iconHtml = '<img src="/img/skillicons/python-icon.png" alt="Python" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/python-icon.png" alt="Python" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'ruby':
-                                            iconHtml = '<img src="/img/skillicons/ruby-icon.png" alt="Ruby" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/ruby-icon.png" alt="Ruby" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'php':
-                                            iconHtml = '<img src="/img/skillicons/php-icon.png" alt="PHP" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/php-icon.png" alt="PHP" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'go':
-                                            iconHtml = '<img src="/img/skillicons/go-icon.png" alt="Go" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/go-icon.png" alt="Go" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'c#':
-                                            iconHtml = '<img src="/img/skillicons/c-sharp-icon.png" alt="C#" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/c-sharp-icon.png" alt="C#" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'html':
-                                            iconHtml = '<img src="/img/skillicons/html-icon.png" alt="HTML" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/html-icon.png" alt="HTML" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'node.js':
-                                            iconHtml = '<img src="/img/skillicons/node-js-icon.png" alt="Node.js" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/node-js-icon.png" alt="Node.js" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'css':
-                                            iconHtml = '<img src="/img/skillicons/css-icon.png" alt="CSS" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/css-icon.png" alt="CSS" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'vue.js':
-                                            iconHtml = '<img src="/img/skillicons/vue-js-icon.png" alt="Vue.js" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/vue-js-icon.png" alt="Vue.js" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         case 'react':
-                                            iconHtml = '<img src="/img/skillicons/react-icon.png" alt="React" style="width: 20px; height: 20px; margin-right: 5px;">';
+                                            iconHtml = '<img src="/img/skillicons/react-icon.png" alt="React" style="width: 23px; height: 23px; margin-right: 5px;">';
                                             break;
                                         // 추가적인 케이스는 필요에 따라 추가
                                         default:
