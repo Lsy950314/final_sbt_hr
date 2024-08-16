@@ -212,6 +212,104 @@
         }
 
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.assign-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const employeeId = event.target.getAttribute('data-employee-id');
+                    const projectId = event.target.getAttribute('data-project-id');
+                    selectProjectRequest(employeeId, projectId);
+                })
+            })
+        })
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const selectedInfoBody = document.getElementById('selected-info-body');
+                    const tableHeader = document.querySelector('.table-header');
+
+                    const name = this.getAttribute('data-employee-name');
+                    const skill = this.value;
+                    let career = this.getAttribute('data-skill-career');
+                    const commuteTime = this.getAttribute('data-commute-time');
+                    const lastEndDate = this.getAttribute('data-end-date');
+
+                    // 반올림 처리
+                    if (career) {
+                        career = Math.round(parseFloat(career) * 10) / 10;
+                    }
+
+                    const careerYear = (career/12).toFixed(1);
+
+
+                    let waitingPeriod = '대기기간 없음';
+                    if (lastEndDate) {
+                        waitingPeriod = `${calculateMonthsDifference(lastEndDate)} ヶ月`;
+                    }
+
+                    if (this.checked) {
+                        const employeeId = this.getAttribute('data-employee-id');
+                        const employeeInfoRow = document.createElement('div');
+                        employeeInfoRow.classList.add('table-row');
+                        employeeInfoRow.setAttribute('data-employee-name', name);
+                        employeeInfoRow.setAttribute('data-employee-id', employeeId);
+                        employeeInfoRow.innerHTML = `
+                    <div class="table-cell">${name}</div>
+                    <div class="table-cell">${skill}</div>
+                    <div class="table-cell">${careerYear} 年</div>
+                    <div class="table-cell">${commuteTime} 分</div>
+                    <div class="table-cell">${waitingPeriod}</div>
+                `;
+
+                        // row 를 누르면 해당 사원 위치로 스크롤 시키기
+                        employeeInfoRow.addEventListener('click', function () {
+                            const employeeId = this.getAttribute('data-employee-id');
+                            const employeeEntry = document.querySelector(`.employee-entry[data-employee-id="${employeeId}"]`);
+                            if (employeeEntry) {
+                                employeeEntry.scrollIntoView({behavior: 'smooth'});
+                            }
+                        });
+                        selectedInfoBody.appendChild(employeeInfoRow);
+                    } else {
+                        // 체크 해제 시 해당 행 제거
+                        const existingRow = selectedInfoBody.querySelector(`.table-row[data-employee-name="${name}"]`);
+                        if (existingRow) {
+                            selectedInfoBody.removeChild(existingRow);
+                        }
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.employee-skill').forEach(function (element) {
+                let text = element.textContent;
+                let matches = text.match(/(\d+\.\d+)/);
+                if (matches) {
+                    let rounded = parseFloat(matches[0]).toFixed(1);
+                    element.textContent = text.replace(matches[0], rounded);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const experienceElements = document.querySelectorAll('.requirement-experience');
+            experienceElements.forEach(function(element) {
+                const experience = parseFloat(element.getAttribute('data-experience'));
+                if (!isNaN(experience)) {
+                    const years = Math.round((experience / 12) * 10) / 10;
+                    const displayYears = years % 1 === 0 ? years.toFixed(0) : years.toFixed(1);
+                    element.textContent = `必要経歴: ${displayYears}年`;
+                } else {
+                    element.textContent = '必要経歴: 0年';
+                }
+            });
+        });
+
+
+
+
+
 
     </script>
 
@@ -425,6 +523,35 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
+        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
+        .project-requirement.completed-project {
+            background-color: #d3d3d3; /* 어두운 배경색을 설정 (여기서는 연한 회색) */
+            opacity: 0.8; /* 살짝 어둡게 만들기 위해 투명도 조정 */
+        }
+
+        .count-info {
+            font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
+            color: #6a89cc;
+        }
+
+        .low-fulfillment {
+            font-weight: bold;
+            color: red;
+        }
+
+
+
+
+
+
+
+
+
+        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
+
+
+
+
         .center-panel {
             width: 30%;
             padding: 10px;
@@ -462,15 +589,16 @@
 
 <div class="layout">
     <div class="left-panel">
-        <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
-            <div class="project-requirement">
-                <div class="requirement-skill">
-                    <img class="skill-icon" th:data-skill-name="${pr.getSkill().getSkillName().toLowerCase()}">
-                    <span th:text="${pr.getSkill().getSkillName()}"></span>
+        <div class="project-requirements-list">
+            <div class="project-requirement" th:classappend="${pr.fulfilledCount == pr.getRequiredCount()} ? 'completed-project' : ''"
+                 th:each="pr : ${projectRequirements}">
+                <div class="requirement-skill" th:text="${pr.getSkill().getSkillName()}"></div>
+                <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
+                <!--                <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>-->
+                <!--                <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>-->
+                <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
+                     th:text="'充足人数: ' + ${pr.fulfilledCount} + ' / ' + ${pr.getRequiredCount()}">
                 </div>
-                <div class="requirement-experience" th:text="'필요경력 ' + ${pr.getRequiredExperience()}"></div>
-                <div class="requirement-count" th:text="'필요인원 ' + ${pr.getRequiredCount()}"></div>
-                <div class="fulfilled-count" th:text="'충족인원 ' + ${pr.fulfilledCount}"></div>
             </div>
         </div>
     </div>
