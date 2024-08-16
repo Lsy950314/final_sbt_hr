@@ -291,6 +291,26 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const experienceElements = document.querySelectorAll('.requirement-experience');
+            experienceElements.forEach(function(element) {
+                const experience = parseFloat(element.getAttribute('data-experience'));
+                if (!isNaN(experience)) {
+                    const years = Math.round((experience / 12) * 10) / 10;
+                    const displayYears = years % 1 === 0 ? years.toFixed(0) : years.toFixed(1);
+                    element.textContent = `必要経歴: ${displayYears}年`;
+                } else {
+                    element.textContent = '必要経歴: 0年';
+                }
+            });
+        });
+
+
+
+
+
+
     </script>
 
     <style>
@@ -502,6 +522,15 @@
         }
 
         /*8월 16일 민승현 작업 코드 여기에 */
+        .count-info {
+            font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
+            color: blue; /* 기본적으로 검은색 글씨 */
+        }
+
+        .low-fulfillment {
+            font-weight: bold;
+            color: red;
+        }
 
 
 
@@ -561,6 +590,9 @@
                 <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
                 <div class="requirement-count" th:text="'必要人数: ' + ${pr.getRequiredCount()} +'人'" ></div>
                 <div class="fulfilled-count" th:text="'充足人数 ' + ${pr.fulfilledCount} +'人'"></div>
+                <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
+                     th:text="'充足人数: ' + ${pr.fulfilledCount} + ' / ' + ${pr.getRequiredCount()}">
+                </div>
             </div>
         </div>
     </div>
