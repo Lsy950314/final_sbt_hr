@@ -530,7 +530,7 @@
         </ul>
     </div>
     <div class="contents">
-        <p style="font-size: 26px">社員リスト <span><button id="add-employees"
+        <p style="display: flex; justify-content: space-between; align-items: center; font-size: 26px">社員リスト <span><button id="add-employees"
                                                             th:onclick="createEmployee()">社員追加</button></span></p>
 
         <!--        필터링 및 정렬        -->
@@ -693,54 +693,34 @@
                             const skillsAndCareerElement = document.getElementById('skillsAndCareer');
                             if (data.skills && data.skills.length > 0) {
                                 data.skills.sort((a, b) => b.skillCareer - a.skillCareer);
+
+                                // 아이콘 경로를 스킬 이름과 매핑하는 객체
+                                const skillIconMap = {
+                                    'java': '/img/skillicons/java-icon.png',
+                                    'javascript': '/img/skillicons/javascript-icon.png',
+                                    'python': '/img/skillicons/python-icon.png',
+                                    'ruby': '/img/skillicons/ruby-icon.png',
+                                    'php': '/img/skillicons/php-icon.png',
+                                    'go': '/img/skillicons/go-icon.png',
+                                    'c#': '/img/skillicons/c-sharp-icon.png',
+                                    'html': '/img/skillicons/html-icon.png',
+                                    'node.js': '/img/skillicons/node-js-icon.png',
+                                    'css': '/img/skillicons/css-icon.png',
+                                    'vue.js': '/img/skillicons/vue-js-icon.png',
+                                    'react': '/img/skillicons/react-icon.png'
+                                    // 필요에 따라 추가
+                                };
+
                                 data.skills.forEach(skill => {
                                     const years = Math.round((skill.skillCareer / 12) * 10) / 10;
                                     const skillItem = document.createElement('div');
                                     skillItem.className = 'skill-item';
 
-                                    // 특정 텍스트에 따른 아이콘 지정
-                                    let iconHtml = '';
-                                    switch(skill.skillName.toLowerCase()) {
-                                        case 'java':
-                                            iconHtml = '<img src="/img/skillicons/java-icon.png" alt="Java" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'javascript':
-                                            iconHtml = '<img src="/img/skillicons/javascript-icon.png" alt="JavaScript" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'python':
-                                            iconHtml = '<img src="/img/skillicons/python-icon.png" alt="Python" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'ruby':
-                                            iconHtml = '<img src="/img/skillicons/ruby-icon.png" alt="Ruby" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'php':
-                                            iconHtml = '<img src="/img/skillicons/php-icon.png" alt="PHP" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'go':
-                                            iconHtml = '<img src="/img/skillicons/go-icon.png" alt="Go" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'c#':
-                                            iconHtml = '<img src="/img/skillicons/c-sharp-icon.png" alt="C#" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'html':
-                                            iconHtml = '<img src="/img/skillicons/html-icon.png" alt="HTML" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'node.js':
-                                            iconHtml = '<img src="/img/skillicons/node-js-icon.png" alt="Node.js" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'css':
-                                            iconHtml = '<img src="/img/skillicons/css-icon.png" alt="CSS" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'vue.js':
-                                            iconHtml = '<img src="/img/skillicons/vue-js-icon.png" alt="Vue.js" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        case 'react':
-                                            iconHtml = '<img src="/img/skillicons/react-icon.png" alt="React" style="width: 23px; height: 23px; margin-right: 5px;">';
-                                            break;
-                                        // 추가적인 케이스는 필요에 따라 추가
-                                        default:
-                                            iconHtml = ''; // 기본값은 아이콘 없음
-                                    }
+                                    // 스킬 이름에 따라 아이콘 경로 가져오기
+                                    const iconPath = skillIconMap[skill.skillName.toLowerCase()] || ''; // 기본값은 빈 문자열
+
+                                    const iconHtml = iconPath ? `<img src="${iconPath}" alt="${skill.skillName}" style="width: 23px; height: 23px; margin-right: 5px;">` : '';
+
                                     skillItem.innerHTML = `${iconHtml}<span>${skill.skillName}</span><span>${years} 年</span>`;
                                     skillsAndCareerElement.appendChild(skillItem);
                                 });
