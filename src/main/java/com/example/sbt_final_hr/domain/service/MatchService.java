@@ -176,7 +176,6 @@ public class MatchService {
     public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
         long startTime = System.currentTimeMillis();
 
-
         long step1StartTime = System.currentTimeMillis();
         List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
         long step1EndTime = System.currentTimeMillis();
