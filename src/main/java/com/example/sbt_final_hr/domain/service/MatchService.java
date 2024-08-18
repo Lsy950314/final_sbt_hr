@@ -167,12 +167,14 @@ public class MatchService {
         return Integer.MAX_VALUE;
     }
 
-    public List<Employees> filterByAllocation(List<Employees> employees){
-        return employees.stream()
-                .filter(employee -> employee.getAllocation() == -1)
-                .collect(Collectors.toList());
-    }
+//    public List<Employees> filterByAllocation(List<Employees> employees){
+//        return employees.stream()
+//                .filter(employee -> employee.getAllocation() == -1)
+//                .collect(Collectors.toList());
+//    }
 
+    
+    // 현 상태: STEP 1 + 2 합쳐서, 요구조건 부합하는 사원들 중 ALLOCATION 이 -1인 사람들만 걸러낸 후 통근시간 판단
     public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
         long startTime = System.currentTimeMillis();
 
@@ -181,16 +183,13 @@ public class MatchService {
         long step1EndTime = System.currentTimeMillis();
         System.out.println("요구 스킬을 충족하는 사원들 : " + filteredEmployeesByRequirements);
 
-        long step2StartTime = System.currentTimeMillis();
-        List<Employees> availableEmployees = filterByAllocation(filteredEmployeesByRequirements);
-        long step2EndTime = System.currentTimeMillis();
-        System.out.println("현재 미배정 상태인 사원들 : " + availableEmployees);
-
-//      List<Employees> availableEmployees = filterByProjectDates(filteredEmployeesByRequirements, project);
-//      System.out.println("진행 중인 프로젝트 기간과 겹치지 않는 사원들 : " + availableEmployees);
+//        long step2StartTime = System.currentTimeMillis();
+//        List<Employees> availableEmployees = filterByAllocation(filteredEmployeesByRequirements);
+//        long step2EndTime = System.currentTimeMillis();
+//        System.out.println("현재 미배정 상태인 사원들 : " + availableEmployees);
 
         long step3StartTime = System.currentTimeMillis();
-        Map<Employees, Integer> finalEmployees = filterByCommutingTime(availableEmployees, project);
+        Map<Employees, Integer> finalEmployees = filterByCommutingTime(filteredEmployeesByRequirements, project);
         long step3EndTime = System.currentTimeMillis();
         System.out.println("통근 시간 조건을 만족하는 사원들 : " + finalEmployees);
 
@@ -199,7 +198,7 @@ public class MatchService {
 
         System.out.println("Total time: " + (endTime - startTime) + " milliseconds");
         System.out.println("Step 1 (filterEmployeesByProjectRequirements) took: " + (step1EndTime - step1StartTime) + " milliseconds");
-        System.out.println("Step 2 (filterByProjectDates) took: " + (step2EndTime - step2StartTime) + " milliseconds");
+//        System.out.println("Step 2 (filterByProjectDates) took: " + (step2EndTime - step2StartTime) + " milliseconds");
         System.out.println("Step 3 (filterByCommutingTime) took: " + (step3EndTime - step3StartTime) + " milliseconds");
 
         return finalEmployees;
