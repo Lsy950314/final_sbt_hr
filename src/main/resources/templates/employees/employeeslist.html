@@ -4,30 +4,27 @@
     <meta charset="UTF-8"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Document</title>
+    <title>プロジェクトチーム編成システム</title>
     <style>
 
         body {
-            width: 1920px;
-            height: 1080px;
-        }
-
-        /* 메뉴 관련 스타일 */
-        .menu {
-            background-color: #1e90ff; /* 메뉴의 배경색을 파란색으로 설정합니다. */
-            width: 250px; /* 메뉴의 너비를 250px로 설정합니다. */
-            height: 1080px; /* 메뉴의 높이를 1080px로 설정합니다. */
+            overflow-y: hidden; /* Y축 스크롤 비활성화 */
+            overflow-x: auto;   /* X축 스크롤 활성화 */
+            padding: 0;
+            margin: 0;
         }
 
         ul {
             list-style: none; /* 리스트의 기본 불릿(점) 스타일을 제거합니다. */
         }
 
-        .menus {
-            list-style: none; /* 메뉴 리스트의 기본 불릿(점) 스타일을 제거합니다. */
-            padding: 0; /* 패딩을 제거하여 메뉴 리스트를 꽉 채웁니다. */
-            margin: 0; /* 기본 마진을 제거합니다. */
+        /* 메뉴 관련 스타일 */
+        .menu {
+            background-color: #1e90ff; /* 메뉴의 배경색을 파란색으로 설정합니다. */
+            width: 250px;
+            height: 100vh;
         }
+
 
         .menus > li {
             width: 200px; /* 메뉴 항목의 너비를 200px로 설정합니다. */
@@ -50,6 +47,12 @@
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산을 합니다. */
         }
 
+        .menus {
+            list-style: none; /* 메뉴 리스트의 기본 불릿(점) 스타일을 제거합니다. */
+            padding: 0; /* 패딩을 제거하여 메뉴 리스트를 꽉 채웁니다. */
+            margin: 0; /* 기본 마진을 제거합니다. */
+        }
+
         .menus li:hover {
             background: linear-gradient(45deg, #1e90ff, #00bfff); /* 메뉴 항목에 그라데이션 배경을 추가합니다. */
             color: #fff; /* 글자색을 흰색으로 변경합니다. */
@@ -59,28 +62,37 @@
 
         /* 콘텐츠 영역 관련 스타일 */
         .contents {
-            background-color: #f5f5f5; /* 콘텐츠 영역의 배경색을 밝은 회색으로 설정합니다. */
-            width: 1500px; /* 콘텐츠 영역의 너비를 1500px로 설정합니다. */
-            height: 1080px; /* 콘텐츠 영역의 높이를 1080px로 설정합니다. */
+            background-color: #f5f5f5;
+            width: 1170px;
+            height: auto;
+            border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .contents::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .contents p {
-            margin-left: 30px; /* 콘텐츠 내부의 p 요소에 왼쪽 여백을 30px 줍니다. */
+            height: 35px;
+            margin-left: 30px;
         }
 
         /* 구성원 리스트 관련 스타일 */
         .members {
-            width: 1280px; /* 구성원 리스트의 너비를 1280px로 설정합니다. */
-            height: 940px; /* 구성원 리스트의 높이를 940px로 설정합니다. */
-            background: rgba(173, 216, 230, 0.2); /* 하늘색 반투명 배경을 설정합니다. */
-            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계선을 설정합니다. */
-            border-radius: 15px 15px 0 0; /* 상단 두 모서리에 둥근 테두리를 적용합니다. */
-            backdrop-filter: blur(10px); /* 글라스 효과를 주어 배경을 흐리게 만듭니다. */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과를 추가합니다. */
-            color: #333; /* 텍스트 색상을 어두운 회색으로 설정합니다. */
-            font-family: "Arial", sans-serif; /* 깔끔한 폰트를 사용합니다. */
-            text-align: center; /* 텍스트를 가운데 정렬합니다. */
-            overflow-y: auto; /* 수직 스크롤바를 추가하여 콘텐츠가 넘칠 때 스크롤 가능하게 만듭니다. */
+            width: 98%;;
+            height: 82vh;
+            margin-left: 1%;
+            background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
+            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
+            border-radius: 15px 15px 0 0;
+            backdrop-filter: blur(10px); /* 글라스 효과 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+            color: #333; /* 어두운 글자색 */
+            font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
+            text-align: center;
+            overflow-y: auto; /* 수직 스크롤바 추가 */
         }
 
         .members > div {
@@ -88,6 +100,7 @@
             margin-right: 40px;
             overflow: hidden; /* Clearfix 효과를 위해 추가 */
             align-items: center;
+            border-bottom: 1px solid #c6c6c6; /*8월 16일 확인중*/
         }
 
         .allocation-header, .allocation {
@@ -106,24 +119,10 @@
             margin-bottom: 10px; /* 하단 여백을 10px 줍니다. */
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산을 합니다. */
             align-items: center; /* 텍스트를 상하 중앙 정렬합니다. */
-            padding-top: 7px; /* 상단 패딩을 5px 줍니다. */
+            padding-top: 5px; /* 상단 패딩을 5px 줍니다. */
             flex-direction: column; /* 자식 요소들을 세로로 정렬합니다. */
         }
 
-        /* 모달 관련 스타일 */
-        /*.modal {*/
-        /*    display: none; !* 모달을 기본적으로 숨김 처리합니다. *!*/
-        /*    position: fixed; !* 모달을 화면 중앙에 고정합니다. *!*/
-        /*    z-index: 1; !* 다른 콘텐츠 위에 모달이 표시되도록 설정합니다. *!*/
-        /*    left: 0; !* 모달의 왼쪽 위치를 0으로 설정하여 전체 너비를 차지하게 합니다. *!*/
-        /*    top: 0; !* 모달의 상단 위치를 0으로 설정하여 전체 높이를 차지하게 합니다. *!*/
-        /*    width: 100%; !* 모달의 너비를 화면 전체로 설정합니다. *!*/
-        /*    height: 100%; !* 모달의 높이를 화면 전체로 설정합니다. *!*/
-        /*    overflow: auto; !* 모달 내부가 넘칠 경우 스크롤을 가능하게 만듭니다. *!*/
-        /*    background-color: rgb(0, 0, 0); !* 모달의 배경색을 검정색으로 설정합니다. *!*/
-        /*    background-color: rgba(0, 0, 0, 0.4); !* 모달 배경을 약간 투명하게 만듭니다. *!*/
-        /*}*/
-        /*8월 15일 모달 관련 스타일 */
         .modal {
             display: none; /* 모달을 기본적으로 숨김 처리합니다. */
             position: fixed; /* 모달을 화면 중앙에 고정합니다. */
@@ -136,15 +135,6 @@
             background-color: rgba(0, 0, 0, 0.4); /* 모달 배경을 약간 투명하게 만듭니다. */
         }
 
-        /*.modal-content {*/
-        /*    background-color: #fefefe;*/
-        /*    margin: 5% auto; !* 중앙 정렬 *!*/
-        /*    padding: 20px;*/
-        /*    border: 1px solid #888;*/
-        /*    width: 90%;*/
-        /*    height: 80%;*/
-        /*}*/
-        /*8월 15일 모달 관련 스타일 */
         .modal-content {
             background-color: #fefefe; /* 모달 내부 배경색을 흰색으로 설정합니다. */
             margin: 5% auto; /* 모달을 화면 중앙에 배치합니다. */
@@ -156,23 +146,6 @@
             border-radius: 10pt;
         }
 
-
-        /*.modal-button, #add-employees {*/
-        /*    font-family: "Noto Sans JP", sans-serif; !* 일본어 텍스트에 어울리는 글꼴을 사용합니다. *!*/
-        /*    font-size: 14px; !* 글자 크기를 14px로 설정합니다. *!*/
-        /*    color: #fff; !* 텍스트 색상을 흰색으로 설정합니다. *!*/
-        /*    background: linear-gradient(*/
-        /*            45deg,*/
-        /*            #4a90e2, !* 파란색 계열 시작 색상 *!*/
-        /*            #87cefa !* 파란색 계열 끝 색상 *!*/
-        /*    ); !* 버튼 배경색을 그라데이션으로 설정합니다. *!*/
-        /*    border: none; !* 기본 테두리를 제거합니다. *!*/
-        /*    border-radius: 20px; !* 버튼에 둥근 테두리를 적용합니다. *!*/
-        /*    padding: 7px 14px; !* 내부 여백을 설정합니다. *!*/
-        /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); !* 상자 그림자 효과를 추가합니다. *!*/
-        /*    cursor: pointer; !* 마우스 포인터를 손가락 모양으로 변경합니다. *!*/
-        /*    transition: background 0.3s ease, transform 0.3s ease; !* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. *!*/
-        /*}*/
 
         /*8월 15일 모달 관련 스타일 */
         .modal-button, #add-employees {
@@ -188,9 +161,6 @@
             transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
 
-        /*.modal-division {*/
-        /*    display: flex; !important; !* Flexbox 레이아웃을 사용하여 내부 콘텐츠를 가로로 배치합니다. *!*/
-        /*}*/
 
 
 
@@ -472,12 +442,15 @@
         }
 
         .header > div {
-            font-weight: bold; /* 글자 굵기를 굵게 설정합니다. */
-            background-color: #f0f0f0; /* 배경색을 연한 회색으로 설정합니다. */
-            border-bottom: 1px solid #ddd; /* 하단에 경계선을 추가합니다. */
-            text-align: center; /* 텍스트를 가운데 정렬합니다. */
-            line-height: 40px; /* 줄 간격을 설정하여 텍스트를 상하 중앙 정렬합니다. */
-            height: 40px; /* 각 div의 높이를 40px로 설정합니다. */
+            font-weight: bold;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            text-align: center; /* 텍스트 좌우 중앙 정렬 */
+            line-height: 40px; /* 상하 중앙 정렬을 위해 div 높이와 동일하게 설정 */
+            height: 40px; /* 각 div의 높이 설정 */
+            display: flex; /* flexbox를 사용하여 상하 중앙 정렬 */
+            align-items: center; /* 상하 중앙 정렬 */
+            justify-content: center; /* 좌우 중앙 정렬 */
         }
 
         .row > div {
@@ -512,7 +485,7 @@
 
         .container {
             height: auto;
-            width: 75vw
+            width: 95vw;
         }
 
 
@@ -904,6 +877,9 @@
                     return primarySortResult;
                 }
             });
+
+
+
         }
 
         filteredEmployees.forEach(employee => {
