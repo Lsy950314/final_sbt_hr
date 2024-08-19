@@ -718,7 +718,7 @@
                 <select id="employeeDropdown">
                     <option value="">사원을 선택하세요</option>
                     ${data.employeesProjects.map((empProj, index) => `
-                        <option value="${index}">${empProj.employeeName || 'N/A'}</option>
+                        <option value="${index}">${empProj.employeeName || 'N/A'} + ${empProj.skill.skillName}</option>
                     `).join('')}
                 </select>
                 <button onclick='cancelSelectedAssignment(${data.projectId}, ${JSON.stringify(data.epID)})'>배정 취소</button>
