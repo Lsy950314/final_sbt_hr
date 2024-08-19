@@ -22,6 +22,7 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
             "JOIN e.skills es " +
             "JOIN ProjectRequirements pr ON pr.skill.skillId = es.skill.skillId " +
             "WHERE pr.project.projectId = :projectId " +
+            "AND e.allocation = -1 " +
             "AND es.skillCareer >= pr.requiredExperience")
     List<Employees> findEmployeesByProjectRequirements(@Param("projectId") Long projectId);
 

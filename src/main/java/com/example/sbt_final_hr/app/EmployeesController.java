@@ -68,9 +68,8 @@ public class EmployeesController {
 
     @GetMapping
     public String listEmployeesSummary(HttpSession httpSession, @RequestParam(name = "name", required = false) String name,
-                                       @RequestParam(name = "projectId", required = false) Long projectId,
+                                       @RequestParam(name = "projectId", required = false) Long projectId, @RequestParam(name = "employeeId", required = false) Long employeeId,
                                        Model model) {
-
 
         if (projectId != null) {
             List<Employees> employees;
@@ -79,6 +78,10 @@ public class EmployeesController {
         } else if (name != null && !name.isEmpty()) {
             List<Employees> employees;
             employees = employeesService.findByName(name);
+            httpSession.setAttribute("employees", employees);
+        } else if (employeeId != null) {
+            Employees employees;
+            employees = employeesService.findByEmployeeId(employeeId);
             httpSession.setAttribute("employees", employees);
         } else {
             List<EmployeesRequest> employees;
