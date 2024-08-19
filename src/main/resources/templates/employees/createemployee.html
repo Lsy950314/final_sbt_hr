@@ -4,171 +4,6 @@
     <title>プロジェクトチーム編成システム</title>
     <meta charset="UTF-8">
 </head>
-<style>
-
-    body {
-        overflow-y: hidden; /* Y축 스크롤 비활성화 */
-        overflow-x: auto; /* X축 스크롤 활성화 */
-        padding: 0;
-        margin: 0;
-    }
-
-
-    #map {
-        height: 350px;
-        width: 350px;
-    }
-
-    .menu {
-        background-color: #1e90ff;
-        width: 250px;
-        height: 100vh;
-    }
-
-    .menus > li {
-        width: 200px;
-        height: 40px;
-        justify-content: center;
-        align-items: center;
-        padding: 15px 20px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        text-align: center;
-        font-size: 18px;
-    }
-
-    .menus li a {
-        display: block;
-        width: 100%;
-        height: 100%;
-        text-align: center; /* 텍스트 가운데 정렬 */
-        padding: 15px 20px; /* a 요소에 패딩을 적용 */
-        box-sizing: border-box;
-        text-decoration: none; /* 밑줄 제거 */
-        color: inherit; /* 부모 요소의 색상을 상속 */
-    }
-
-
-    .menus {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .menus li:hover {
-        background: linear-gradient(45deg, #1e90ff, #00bfff);
-        color: #fff;
-        border-top-right-radius: 40px;
-        border-bottom-right-radius: 40px;
-    }
-
-    .contents {
-        background-color: #f5f5f5;
-        width: 1170px;
-        height: auto;
-        border-radius: 15px 15px 0 0;
-        overflow-y: auto;
-        scrollbar-width: none;
-    }
-
-    .contents::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
-    }
-
-    .contents p {
-        height: 35px;
-        margin-left: 30px;
-    }
-
-    /* 기존 form 스타일 유지 */
-    form {
-        max-width: 50%;
-        max-height: 75%;
-        background: rgba(173, 216, 230, 0.2);
-        margin: 0 auto;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
-        scrollbar-width: none;
-    }
-
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #333;
-    }
-
-    input[type="text"], input[type="date"], select, input[type="file"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-
-    #addSkillCareer-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        background-color: #87cefa;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-
-    #submit-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        background-color: #71b6ff;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-
-    #delete-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        background-color: #ef4747;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-
-
-    .container {
-        height: auto;
-        width: 95vw;
-    }
-
-    #back-to-employeeslist {
-        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
-        font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
-        color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
-        background: linear-gradient(45deg, #4a90e2, #87cefa); /* 버튼 배경색을 그라데이션으로 설정합니다. */
-        border: none; /* 기본 테두리를 제거합니다. */
-        border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
-        padding: 7px 14px; /* 내부 여백을 설정합니다. */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
-        cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
-        transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
-    }
-
-    .form-group {
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-
-
-</style>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
 <script th:inline="javascript">
     let map;
@@ -179,7 +14,7 @@
     const skills = /*[[${skills}]]*/[];
 
     function initMap() {
-        const initialLocation = {lat: 35.6895, lng: 139.6917};
+        const initialLocation = { lat: 35.6895, lng: 139.6917 };
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -196,7 +31,7 @@
         autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function () {
+        autocomplete.addListener('place_changed', function() {
             const place = autocomplete.getPlace();
             if (!place.geometry) {
                 alert("No details available for input: '" + place.name + "'");
@@ -270,9 +105,257 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     window.onload = function () {
         initMap();
     };
+    // //스킬 중복 체크 시도중
+    // function isDuplicateSkill(selectedSkillId) {
+    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
+    //
+    //     console.log("Checking for duplicates...");
+    //     console.log("Selected Skill ID:", selectedSkillId);
+    //
+    //     for (let i = 0; i < skillSelects.length; i++) {
+    //         console.log("Comparing with Skill ID:", skillSelects[i].value);
+    //         if (skillSelects[i].value === selectedSkillId) {
+    //             console.log("Duplicate found!");
+    //             return true;
+    //         }
+    //     }
+    //
+    //     console.log("No duplicates found.");
+    //     return false;
+    // }
+    //
+    // function addSkillCareer() {
+    //     const skillCareerContainer = document.getElementById('skillCareerContainer');
+    //     const index = skillCareerContainer.children.length;
+    //
+    //     // 새로 추가할 스킬 선택 필드를 생성하기 전에 중복 확인
+    //     let skillOptions = '';
+    //     skills.forEach(skill => {
+    //         skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+    //     });
+    //
+    //     const skillCareerItem = document.createElement('div');
+    //     skillCareerItem.classList.add('skillCareer-item');
+    //
+    //     skillCareerItem.innerHTML = `
+    //     <div class="form-group">
+    //         <label for="employeesskill[${index}].skill.skillId">Skill:</label>
+    //         <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required onchange="validateSkillSelection(this)">
+    //             ${skillOptions}
+    //         </select>
+    //     </div>
+    //     <div class="form-group">
+    //         <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
+    //         <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+    //     </div>
+    //     <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
+    // `;
+    //     skillCareerContainer.appendChild(skillCareerItem);
+    // }
+    //
+    // document.getElementById('submit-btn').addEventListener('click', function(event) {
+    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
+    //     const selectedSkills = new Set();
+    //
+    //     for (let i = 0; i < skillSelects.length; i++) {
+    //         const skillId = skillSelects[i].value;
+    //         console.log("Submitting form, checking skill:", skillId);
+    //         if (selectedSkills.has(skillId)) {
+    //             alert('スキルの選択に重複があります。異なるスキルを選択してください。');
+    //             event.preventDefault(); // 폼 제출 중단
+    //             skillSelects[i].focus(); // 중복된 필드에 포커스
+    //             return;
+    //         }
+    //         selectedSkills.add(skillId);
+    //     }
+    //
+    //     // 여기서 다른 추가 검증을 할 수 있습니다.
+    // });
+
+
+    //스킬 중복 체크 시도중
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
+<style>
 
+    body {
+        overflow-y: hidden; /* Y축 스크롤 비활성화 */
+        overflow-x: auto; /* X축 스크롤 활성화 */
+        padding: 0;
+        margin: 0;
+    }
+
+
+    #map {
+        height: 350px;
+        width: 350px;
+    }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .menus > li {
+            width: 200px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            box-sizing: border-box;
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 색상을 상속 */
+        }
+
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .contents {
+            background-color: #f5f5f5;
+            width: 1170px;
+            height: auto;
+            border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .contents::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+    .contents p {
+        height: 35px;
+        margin-left: 30px;
+    }
+
+    /* 기존 form 스타일 유지 */
+    form {
+        max-width: 50%;
+        max-height: 75%;
+        background: rgba(173, 216, 230, 0.2);
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="date"], select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+    #addSkillCareer-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #87cefa;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    #submit-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #71b6ff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    #delete-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #ef4747;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+
+        .container {
+            height: auto;
+            width: 95vw;
+        }
+
+    #back-to-employeeslist {
+        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
+        font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
+        color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
+        background: linear-gradient(45deg, #4a90e2, #87cefa); /* 버튼 배경색을 그라데이션으로 설정합니다. */
+        border: none; /* 기본 테두리를 제거합니다. */
+        border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
+        padding: 7px 14px; /* 내부 여백을 설정합니다. */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
+        cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+        transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
+    }
+
+    .form-group {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+
+    </style>
 </head>
 <body>
 <div class="container" style="display: flex">
@@ -295,6 +378,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
             <label for="address">Address:</label>
             <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+
             <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
             <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
             <div id="map" style="display: none;"></div>
