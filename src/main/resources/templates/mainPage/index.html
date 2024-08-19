@@ -3,18 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인 페이지</title>
+    <title>プロジェクトチーム編成システム</title>
     <style>
         body {
             overflow-y: hidden; /* Y축 스크롤 비활성화 */
             overflow-x: auto;   /* X축 스크롤 활성화 */
+            padding: 0;
+            margin: 0;
+        }
+
+
+        .login-box {
+            width: 150px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: rgba(173, 216, 230, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05); /* 그림자를 약하게 조정 */
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #a9b7c6; /* 연한 색상으로 변경 */
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: lightgrey; /* 배경색을 더 연하게 */
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6c757d; /* 눈에 덜 띄는 회색 톤으로 변경 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .login-box button:hover {
+            background-color: #5a6268; /* 호버 시 색상을 약간 더 진한 회색으로 변경 */
         }
 
 
         .menu {
             background-color: #1e90ff;
             width: 250px;
-            height: 97vh;
+            height: 100vh;
         }
 
         .menus > li {
@@ -28,7 +68,6 @@
             text-align: center;
             font-size: 18px;
         }
-
 
         .menus li a {
             display: block;
@@ -76,44 +115,60 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            margin-left: 1%
         }
 
         .employee-stats, .project-stats {
-            width: 48%;
-            background-color: #ffffff;
-            padding: 20px;
+            width: 49%;
+            padding: 10px;
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(173, 216, 230, 0.2);
+
         }
 
         .shortcuts {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            margin-top: 10px;
             margin-bottom: 10px;
         }
 
         .shortcut-button {
-            width: 48%;
+            width: 100%; /* 부모 요소의 너비를 채우도록 설정 */
             padding: 15px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            text-overflow: ellipsis; /* 넘치는 텍스트를 생략 부호(...)로 표시 */
+            transition: font-size 0.2s ease; /* 글자 크기 변경 시 부드러운 전환 */
         }
 
         .shortcut-button:hover {
             background-color: #0056b3;
         }
 
+        .shortcut-button-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .shortcut-button-container .shortcut-button {
+            flex: 1;
+            margin: 5px; /* 버튼 간의 간격을 추가 */
+        }
 
         .container {
             display: flex;
             height: 95vh;
         }
-
     </style>
 </head>
 <body>
@@ -121,6 +176,11 @@
 <div class="container" style="display: flex">
     <!-- 대시보드 영역 -->
     <div class="menu">
+        <div class="login-box">
+            <input type="text" placeholder="ユーザーID" />
+            <input type="password" placeholder="パスワード" />
+            <button>ログイン</button>
+        </div>
         <ul class="menus">
             <li><a href="/index">MainPage</a></li>
             <li><a href="/employees">社員リスト</a></li>
@@ -132,43 +192,60 @@
     <div class="contents">
         <!-- 상단 제목과 로그인 기능 -->
         <p style="font-size: 26px">メイン·ページ</p>
-            <div class="login-function">로그인 기능</div>
-
+        <div class="login-function">로그인 기능</div>
 
         <div class="statistics">
             <div class="project-stats">
-                <h3>프로젝트 통계</h3>
-                <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
-                <div>배정 완료(진행 중) 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
-                <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
+                <h3>プロジェクト統計</h3>
+                <div style="display: flex; flex-direction: column; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden; width: 80%;">
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">総プロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['totalProjects']} +'個'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #fff; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">割り当て完了および進行プロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['assignedProjects']}+'個'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">未割り当てプロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['unassignedProjects']}+'個'"></span></div>
+                    </div>
+                </div>
+                <div class="shortcuts shortcut-button-container">
+                    <a href="/readAllProjects?filterStatus=-1">
+                        <button class="shortcut-button">未割り当てプロジェクト確認へ</button>
+                    </a>
+                    <a href="/readAllProjects?sortBy=endDate">
+                        <button class="shortcut-button">終了間近のプロジェクト確認へ</button>
+                    </a>
+                </div>
             </div>
 
             <div class="employee-stats">
-                <h3>사원 통계</h3>
-                <div>고객상주업무의 총 사원 수 : <span th:text="${countEmployees['totalEmployees']}"></span> </div>
-                <div>현재 프로젝트 배치중인 사원 수 : <span th:text="${countEmployees['assignedEmployees']}"></span></div>
-                <div>현재 대기중인 사원 수 : <span th:text="${countEmployees['unassignedEmployees']}"></span></div>
-
+                <h3>社員統計</h3>
+                <div style="display: flex; flex-direction: column; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden; width: 80%;">
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">客先常駐業務担当の総社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['totalEmployees']} +'人'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #fff; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">現在プロジェクトに配置中の社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['assignedEmployees']}+'人'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">現在待機中の社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['unassignedEmployees']}+'人'"></span></div>
+                    </div>
+                </div>
+                <div class="shortcuts shortcut-button-container">
+                    <a href="/employees?filterAllocation=-1">
+                        <button class="shortcut-button">待機中の社員確認へ</button>
+                    </a>
+                    <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
+                        <button class="shortcut-button">担当プロジェクト終了に近い社員確認へ</button>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <!-- 바로가기 버튼들 -->
-        <div class="shortcuts">
-            <a href="/readAllProjects?filterStatus=-1">
-                <button class="shortcut-button">미배정 프로젝트 확인</button>
-            </a>
-            <a href="/employees?filterAllocation=-1">
-            <button class="shortcut-button">대기중인 사원 보러가기</button>
-            </a>
-        </div>
-
-        <div class="shortcuts">
-            <a href="/readAllProjects?sortBy=endDate">
-                <button class="shortcut-button">종료 임박 프로젝트 확인</button>
-            </a>
-            <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
-                <button class="shortcut-button">곧 프로젝트 끝나는 사원 보러 가기</button>
-            </a>
         </div>
     </div>
 </div>
