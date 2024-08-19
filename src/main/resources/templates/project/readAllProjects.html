@@ -560,22 +560,22 @@
 
         <!--        필터링 및 정렬        -->
         <div class="filter-container">
-            <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
+            <input type="text" id="filterByProjectName" placeholder="プロジェクト名で検索" oninput="filterByProjectName()">
 
-            <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
+            <input type="text" id="filterByClientName" placeholder="クライアント会社で検索" oninput="filterByClientName()">
 
             <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
-                <option value="startDate" th:selected="${sortBy == 'startDate'}">프로젝트 시작일 순</option>
-                <option value="endDate" th:selected="${sortBy == 'endDate'}">프로젝트 종료일 순</option>
+                <option value="startDate" th:selected="${sortBy == 'startDate'}">開始日順</option>
+                <option value="endDate" th:selected="${sortBy == 'endDate'}">終了日順</option>
             </select>
             <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
             <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
             <!--        프로젝트 상태에 따라 필터링         -->
             <select id="filterByStatus" th:onchange="filterByStatus()">
-                <option value="" th:selected="${filterStatus == null}">모든 상태</option>
-                <option value="-1" th:selected="${filterStatus == -1}">미배정</option>
-                <option value="1" th:selected="${filterStatus == 1}">배정완료</option>
-                <option value="2" th:selected="${filterStatus == 2}">완료</option>
+                <option value="" th:selected="${filterStatus == null}">全て</option>
+                <option value="-1" th:selected="${filterStatus == -1}">配属必要</option>
+                <option value="1" th:selected="${filterStatus == 1}">配属済</option>
+                <option value="2" th:selected="${filterStatus == 2}">終了</option>
             </select>
         </div>
 
@@ -595,9 +595,9 @@
                 <div class="status" th:text="${p.status}" style="display: none"></div>
 
                 <div class="status-icon allocation" th:switch="${p.status}">
-                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="배정필요"/>
-                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="배정완료"/>
-                    <img th:case="2" th:src="@{/img/project/done.png}" alt="프로젝트 완료"/>
+                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="配属必要"/>
+                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="配属済"/>
+                    <img th:case="2" th:src="@{/img/project/done.png}" alt="終了"/>
                 </div>
                 <div class="project-name" th:text="${p.projectName}"></div>
                 <div class="client-company" th:text="${p.clientCompany}"></div>
@@ -627,12 +627,11 @@
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <button id="assign-btn" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여
-                        사원 상세보기
+                    <button id="assign-btn" onclick="navigateToMatchManagement()">配属ページへ</button>
+                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 配属社員リストへ
                     </button>
-                    <button id="update-btn">수정</button>
-                    <button id="delete-btn">삭제</button>
+                    <button id="update-btn">修正</button>
+                    <button id="delete-btn">削除</button>
                 </div>
             </div>
             <div id="modal-body">
@@ -694,17 +693,17 @@
                 let statusClass = "";
                 switch (data.project.status) {
                     case -1:
-                        statusText = "배정 필요(미배정)";
+                        statusText = "配属必要";
                         statusClass = "unassigned-status";
                         break;
                     case 1:
-                        statusText = "배정 완료";
+                        statusText = "配属済";
                         break;
                     case 2:
-                        statusText = "프로젝트 종료";
+                        statusText = "終了";
                         break;
                     default:
-                        statusText = "알 수 없음"; // 예상치 못한 값에 대한 기본값
+                        statusText = "ステータスが分かりません"; // 예상치 못한 값에 대한 기본값
                 }
 
                 const modalBody = document.getElementById('modal-body');
@@ -739,7 +738,7 @@
     </div>
     <div class="project-info-right">
         <div class="data-row">
-            <div class="label">プロジェクト要件:</div>
+            <div class="label">スキル要件:</div>
             <div class="value modal-projectRequirements">
                 ${data.projectRequirements.map(req => `
                 <div class="requirement-item">
@@ -761,12 +760,12 @@
             <div class="label">配属中従業員:</div>
             <div class="value">
                 <select id="employeeDropdown">
-                    <option value="">사원을 선택하세요</option>
+                    <option value="">社員選択</option>
                     ${data.employeesProjects.map((empProj, index) => `
-                        <option value="${index}">${empProj.employeeName || 'N/A'} + ${empProj.skill.skillName}</option>
+                        <option value="${index}">${empProj.employeeName || 'N/A'} : ${empProj.skill.skillName}に配属中</option>
                     `).join('')}
                 </select>
-                <button onclick='cancelSelectedAssignment(${data.projectId}, ${JSON.stringify(data.epID)})'>배정 취소</button>
+                <button onclick='cancelSelectedAssignment(${data.projectId}, ${JSON.stringify(data.epID)})'>配属キャンセル</button>
             </div>
         </div>
     </div>
@@ -803,7 +802,7 @@
         const employeeDropdown = document.getElementById('employeeDropdown');
         const selectedIndex = employeeDropdown.value;
         if (selectedIndex === "") {
-            alert("사원을 선택하세요.");
+            alert("社員を選んでください");
             return;
         }
         // console.log('epId 배열:' + epID);
@@ -860,6 +859,7 @@
         confirmButton.textContent = '配属キャンセル';
         confirmButton.style.width = '20%';
         confirmButton.style.margin = 'auto';
+        confirmButton.style.marginTop = '1%;';
         confirmButton.onclick = function () {
             confirmCancelAssignment(projectId, employeeId);
         };
@@ -871,12 +871,12 @@
     function confirmCancelAssignment(projectId, employeeId) {
         const selectedRequirement = document.querySelector('input[name="projectRequirement"]:checked');
         if (!selectedRequirement) {
-            alert('요구사항을 선택하세요.');
+            alert('項目を選んでください');
             return;
         }
 
         const projectRequirementsId = selectedRequirement.value;
-        if (confirm('정말 배정을 취소하시겠습니까?')) {
+        if (confirm('本当に配属をキャンセルしますか?')) {
             cancelAssignment(projectId, employeeId, projectRequirementsId);
             closeProjectRequirementModal();
         }
@@ -895,16 +895,16 @@
             .then(response => response.text())
             .then(result => {
                 if (result === "취소 성공") {
-                    alert("배정이 취소되었습니다.");
+                    alert("配属がキャンセルされました");
                     // 필요하다면 모달을 닫거나 페이지를 새로고침
                     location.reload()
                 } else {
-                    alert("배정 취소에 실패했습니다.");
+                    alert("配属がキャンセルが失敗しました");
                 }
             })
             .catch(error => {
                 console.error('Error cancelling assignment:', error);
-                alert("배정 취소 중 오류가 발생했습니다.");
+                alert("配属がキャンセルの途中エラーが発生しました");
             });
     }
 
@@ -1024,7 +1024,7 @@
     }
 
     function deleteProject(projectId) {
-        if (confirm("정말로 삭제하시겠습니까?")) {
+        if (confirm("本当にプロジェクトを削除しますか")) {
             location.href = "/deleteProject?id=" + projectId;
         }
     }
