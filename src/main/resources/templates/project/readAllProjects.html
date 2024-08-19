@@ -508,8 +508,37 @@
 
         .container{
             height: auto;
-            width: 95vw
-        ;
+            width: 95vw;
+        }
+
+        .cancel-requirement-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #b7c6ec;
+            padding: 10px 0; /* 각 항목 간격 조정 */
+        }
+
+        .cancel-requirement-skill-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .cancel-skill-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .cancel-requirement-experience-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .cancel-requirement-count-info {
+            flex: 1;
+            text-align: right;
         }
 
 
@@ -614,12 +643,11 @@
 
     <!-- 배정 취소를 위한 프로젝트 요구사항 선택 모달 -->
     <div id="project-requirement-modal" style="display: none;">
-        <div style="background-color: white; padding: 20px; border-radius: 8px;">
-            <h3>프로젝트 요구사항 선택</h3>
-            <div id="modal-requirements-list">
+        <div style="background-color: white; padding: 20px; border-radius: 8px; width: 40%; margin: auto; display: flex; flex-direction: column; align-items: center;">
+            <h3>配属キャンセルする項目を選んでください</h3>
+            <div id="modal-requirements-list" style="width: 100%; display: flex; flex-direction: column; ">
                 <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
-            <button onclick="closeProjectRequirementModal()">닫기</button>
         </div>
     </div>
 
@@ -635,6 +663,23 @@
 </div>
 
 <script th:inline="javascript">
+    // 이미지 설정
+    const skillIconMap = {
+        'java': '/img/skillicons/java-icon.png',
+        'javascript': '/img/skillicons/javascript-icon.png',
+        'python': '/img/skillicons/python-icon.png',
+        'ruby': '/img/skillicons/ruby-icon.png',
+        'php': '/img/skillicons/php-icon.png',
+        'go': '/img/skillicons/go-icon.png',
+        'c#': '/img/skillicons/c-sharp-icon.png',
+        'html': '/img/skillicons/html-icon.png',
+        'node.js': '/img/skillicons/node-js-icon.png',
+        'css': '/img/skillicons/css-icon.png',
+        'vue.js': '/img/skillicons/vue-js-icon.png',
+        'react': '/img/skillicons/react-icon.png'
+        // 필요에 따라 추가
+    };
+
     function showProjectDetails(projectId) {
 
         fetch(`/getInfoByProjectID?id=${projectId}`)
@@ -727,23 +772,6 @@
     </div>
 </div>`;
 
-                // 이미지 설정
-                const skillIconMap = {
-                    'java': '/img/skillicons/java-icon.png',
-                    'javascript': '/img/skillicons/javascript-icon.png',
-                    'python': '/img/skillicons/python-icon.png',
-                    'ruby': '/img/skillicons/ruby-icon.png',
-                    'php': '/img/skillicons/php-icon.png',
-                    'go': '/img/skillicons/go-icon.png',
-                    'c#': '/img/skillicons/c-sharp-icon.png',
-                    'html': '/img/skillicons/html-icon.png',
-                    'node.js': '/img/skillicons/node-js-icon.png',
-                    'css': '/img/skillicons/css-icon.png',
-                    'vue.js': '/img/skillicons/vue-js-icon.png',
-                    'react': '/img/skillicons/react-icon.png'
-                    // 필요에 따라 추가
-                };
-
                 document.querySelectorAll('.skill-icon').forEach(imgElement => {
                     const skillName = imgElement.getAttribute('data-skill-name');
                     if (skillIconMap[skillName]) {
@@ -804,17 +832,34 @@
         // 프로젝트 요구사항을 모달에 렌더링
         projectRequirements.forEach(req => {
             const requirementElement = document.createElement('div');
+            requirementElement.classList.add('cancel-requirement-item'); // 새로운 클래스명 추가
             requirementElement.innerHTML = `
-            <label>
-                <input type="radio" name="projectRequirement" value="${req.id}">
-                스킬: ${req.skill.skillName}, 필요 경험: ${req.requiredExperience}개월, 필요 인원: ${req.requiredCount}명
-            </label>
+            <div class="cancel-requirement-skill-info">
+             <input type="radio" name="projectRequirement" value="${req.id}">
+                <img class="cancel-skill-icon" data-skill-name="${req.skill.skillName.toLowerCase()}" alt="${req.skill.skillName}">
+                <span>${req.skill.skillName}</span>
+            </div>
+            <div class="cancel-requirement-experience-info">
+                必要経験: ${(req.requiredExperience / 12).toFixed(1)} 年
+            </div>
+            <div class="cancel-requirement-count-info ${req.fulfilledCount < req.requiredCount ? 'low-fulfillment' : ''}">
+                充足人数: ${req.fulfilledCount} / ${req.requiredCount}
+            </div>
         `;
             modalRequirementsList.appendChild(requirementElement);
         });
 
+        document.querySelectorAll('.cancel-skill-icon').forEach(imgElement => {
+            const skillName = imgElement.getAttribute('data-skill-name');
+            if (skillIconMap[skillName]) {
+                imgElement.src = skillIconMap[skillName];
+            }
+        });
+
         const confirmButton = document.createElement('button');
-        confirmButton.textContent = '확인';
+        confirmButton.textContent = '配属キャンセル';
+        confirmButton.style.width = '20%';
+        confirmButton.style.margin = 'auto';
         confirmButton.onclick = function () {
             confirmCancelAssignment(projectId, employeeId);
         };
@@ -1117,6 +1162,8 @@
     window.onclick = function (event) {
         if (event.target == document.getElementById('modal')) {
             closeModal();
+        } else if (event.target == document.getElementById('project-requirement-modal')) {
+            closeProjectRequirementModal();
         }
     }
     window.onload = function () {
