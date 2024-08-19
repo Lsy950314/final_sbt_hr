@@ -1,9 +1,174 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Employee</title>
+    <title>プロジェクトチーム編成システム</title>
     <meta charset="UTF-8">
 </head>
+<style>
+
+    body {
+        overflow-y: hidden; /* Y축 스크롤 비활성화 */
+        overflow-x: auto; /* X축 스크롤 활성화 */
+        padding: 0;
+        margin: 0;
+    }
+
+
+    #map {
+        height: 350px;
+        width: 350px;
+    }
+
+    .menu {
+        background-color: #1e90ff;
+        width: 250px;
+        height: 100vh;
+    }
+
+    .menus > li {
+        width: 200px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .menus li a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center; /* 텍스트 가운데 정렬 */
+        padding: 15px 20px; /* a 요소에 패딩을 적용 */
+        box-sizing: border-box;
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소의 색상을 상속 */
+    }
+
+
+    .menus {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .menus li:hover {
+        background: linear-gradient(45deg, #1e90ff, #00bfff);
+        color: #fff;
+        border-top-right-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
+
+    .contents {
+        background-color: #f5f5f5;
+        width: 1170px;
+        height: auto;
+        border-radius: 15px 15px 0 0;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .contents::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    .contents p {
+        height: 35px;
+        margin-left: 30px;
+    }
+
+    /* 기존 form 스타일 유지 */
+    form {
+        max-width: 50%;
+        max-height: 75%;
+        background: rgba(173, 216, 230, 0.2);
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    input[type="text"], input[type="date"], select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    #addSkillCareer-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #87cefa;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    #submit-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #71b6ff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    #delete-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #ef4747;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+
+    .container {
+        height: auto;
+        width: 95vw;
+    }
+
+    #back-to-employeeslist {
+        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
+        font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
+        color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
+        background: linear-gradient(45deg, #4a90e2, #87cefa); /* 버튼 배경색을 그라데이션으로 설정합니다. */
+        border: none; /* 기본 테두리를 제거합니다. */
+        border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
+        padding: 7px 14px; /* 내부 여백을 설정합니다. */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
+        cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
+        transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
+    }
+
+    .form-group {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+
+</style>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
 <script th:inline="javascript">
     let map;
@@ -14,7 +179,7 @@
     const skills = /*[[${skills}]]*/[];
 
     function initMap() {
-        const initialLocation = { lat: 35.6895, lng: 139.6917 };
+        const initialLocation = {lat: 35.6895, lng: 139.6917};
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -31,7 +196,7 @@
         autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function() {
+        autocomplete.addListener('place_changed', function () {
             const place = autocomplete.getPlace();
             if (!place.geometry) {
                 alert("No details available for input: '" + place.name + "'");
@@ -71,172 +236,114 @@
                 <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
                 <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
             </div>
+            <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
         `;
         skillCareerContainer.appendChild(skillCareerItem);
     }
+
     /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
 
 name="employeesSkillRequests[0].skill.skillId"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkill().getSkillId()와 매핑됩니다.
 name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkillCareer()와 매핑됩니다.
 이를 통해 EmployeesRequest 객체의 employeesSkillRequests 리스트 필드가 자동으로 설정되고, 리스트 내 각 EmployeesSkillRequest 객체의 skill 필드와 skillCareer 필드가 설정됩니다.*/
 
-    window.onload = function() {
+    function removeSkills(button) {
+        const skillCareerItem = button.parentElement;
+        skillCareerItem.remove();
+    }
+
+
+    function redirectToEmployeesList() {
+        window.location.href = "/employees";
+    }
+
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('imagePreview');
+            output.src = reader.result;
+            output.style.display = 'block';  // 이미지를 표시합니다.
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    window.onload = function () {
         initMap();
     };
+
 </script>
-<style>
-    #map {
-        height: 350px;
-        width: 350px;
-    }
 
-    /*button{*/
-    /*    font-family: "Noto Sans JP", sans-serif; !* 일본어 텍스트에 어울리는 글꼴 사용 *!*/
-    /*    font-size: 0.8rem; !* 글자 크기 *!*/
-    /*    color: #fff; !* 텍스트 색상 *!*/
-    /*    background: linear-gradient(*/
-    /*            45deg,*/
-    /*            #4a90e2, !* 파란색 계열 시작 색상 *! #87cefa !* 파란색 계열 끝 색상 *!*/
-    /*    ); !* 버튼 배경색 그라데이션 *!*/
-    /*    border: none; !* 기본 테두리 제거 *!*/
-    /*    border-radius: 20px; !* 둥근 테두리 *!*/
-    /*    padding: 7px 14px; !* 내부 여백 *!*/
-    /*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); !* 상자 그림자 *!*/
-    /*    cursor: pointer; !* 커서 변경 *!*/
-    /*    transition: background 0.3s ease, transform 0.3s ease; !* 부드러운 전환 효과 *!*/
-    /*}*/
-
-    /*body {*/
-    /*    font-family: 'Arial', sans-serif;*/
-    /*    background-color: #f4f7f6;*/
-    /*    color: #333;*/
-    /*    margin: 0;*/
-    /*    padding: 20px;*/
-    /*}*/
-
-    h1 {
-        text-align: center;
-        font-size: 24px;
-        /*color: #4CAF50;*/
-        margin-bottom: 20px;
-    }
-
-    form {
-        max-width: 600px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #333;
-    }
-
-    input[type="text"], input[type="date"], select, input[type="file"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-
-    input[type="text"]:focus, input[type="date"]:focus, select:focus, input[type="file"]:focus {
-        border-color: #4CAF50;
-        outline: none;
-    }
-
-    button[type="submit"], button[type="button"] {
-        width: 100%;
-        padding: 12px;
-        background-color: #2980b9;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    a {
-        display: block;
-        text-align: center;
-        color: #4CAF50;
-        margin-top: 20px;
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: underline;
-    }
-
-</style>
-<body onload="initMap()">
-<h1>Create Employee(Photo)</h1>
-<form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post" enctype="multipart/form-data">
-    <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
-
-    <label for="address">Address:</label>
-    <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
-
-<!--    <label for="latitude" style="display: none;">Latitude:</label>-->
-    <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
-<!--    <label for="longitude" style="display: none;">Longitude:</label>-->
-    <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
-    <div id="map" style="display: none;"></div>
-<!--    <label for="lastProjectEndDate">Last Project End Date:</label>-->
-    <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
-
-<!--    <label for="currentProjectEndDate">Current Project End Date:</label>-->
-    <input type="date" id="currentProjectEndDate" style="display: none;" th:field="*{currentProjectEndDate}"/><br/>
-
-    <div class="form-group">
-        <label for="imageFile">Upload Image:</label>
-        <input type="file" id="imageFile" name="imageFile" required>
+</head>
+<body>
+<div class="container" style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li><a href="/index">MainPage</a></li>
+            <li><a href="/employees">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
+        </ul>
     </div>
+    <div class="contents">
+        <p style="text-align: center; font-size: 26px">社員追加 </p>
+        <button
+                type="button" id="back-to-employeeslist" style="justify-content: flex-end"
+                th:onclick="|redirectToEmployeesList()|">社員リスト</button>
+        <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post"
+              enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
 
-    <div class="form-group">
-        <label for="preferredLanguage">Preferred Language:</label>
-        <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
-            <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select Language</option>
-        </select>
+            <label for="address">Address:</label>
+            <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+            <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
+            <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
+            <div id="map" style="display: none;"></div>
+            <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
+            <input type="date" id="currentProjectEndDate" style="display: none;"
+                   th:field="*{currentProjectEndDate}"/><br/>
+
+            <div class="form-group">
+                <label for="imageFile">Upload Image:</label>
+                <input type="file" id="imageFile" name="imageFile" onchange="previewImage(event)">
+                <br/>
+                <img id="imagePreview" style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
+            </div>
+
+            <div class="form-group">
+                <label for="preferredLanguage">Preferred Language:</label>
+                <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
+                    <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
+                        Language
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preferredProjectType">Preferred Project Type:</label>
+                <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
+                    <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
+                            th:text="${type.projectTypeName}">Select Project Type
+                    </option>
+                </select>
+            </div>
+
+            <label for="contactNumber">Contact Number:</label>
+            <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
+
+            <label for="hireDate">Hire Date:</label>
+            <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
+
+            <div id="skillCareerContainer"></div>
+            <div class="form-group">
+                <button type="button" id="addSkillCareer-btn" onclick="addSkillCareer()">Add SkillCareer</button>
+            </div>
+
+            <br/>
+
+            <button type="submit" id="submit-btn">Create Employee</button>
+        </form>
+
     </div>
-
-    <div class="form-group">
-        <label for="preferredProjectType">Preferred Project Type:</label>
-        <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Select Project Type</option>
-        </select>
-    </div>
-
-    <label for="contactNumber">Contact Number:</label>
-    <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
-
-    <label for="hireDate">Hire Date:</label>
-    <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
-
-    <!-- Skill Career 섹션 -->
-    <div id="skillCareerContainer"></div>
-    <div class="form-group">
-        <button type="button" onclick="addSkillCareer()">Add SkillCareer</button>
-    </div>
-
-    <br/>
-
-    <button type="submit">Create Employee</button>
-</form>
-
-<a href="/employees">Back to Employees List</a>
+</div>
 </body>
 </html>
