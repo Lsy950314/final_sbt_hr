@@ -229,7 +229,7 @@ public class ProjectController {
     }
 
     @PostMapping("/completeProject")
-    public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload, HttpSession httpSession) {
         Long projectId = ((Number) payload.get("projectId")).longValue();
         List<Map<String, Object>> projectParticipantsInfos = (List<Map<String, Object>>) payload.get("projectParticipantsInfos");
         System.out.println("Project ID: " + projectId);
@@ -253,7 +253,9 @@ public class ProjectController {
         }
         // 프로젝트의 status를 1 => 2로 변경
         projectsService.updateStatusTo(projectId, 2);
-        return ResponseEntity.ok().body("Project completed successfully");
+        httpSession.removeAttribute("projects");
+        httpSession.removeAttribute("projectsType");
+        return ResponseEntity.ok().body("プロジェクトが完了処理されました");
     }
 
 }

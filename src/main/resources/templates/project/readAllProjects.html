@@ -1189,8 +1189,9 @@
             .then(response => response.text())
             .then(text => {
                 console.log('Response from server:', text);
-                if (text === "Project completed successfully") {
-                    closeCompleteModal();  // 함수 호출
+                if (text === "プロジェクトが完了処理されました") {
+                    closeCompleteModal();
+                    window.location.href = '/readAllProjects';
                 } else {
                     console.error('Unexpected response:', text);
                 }
