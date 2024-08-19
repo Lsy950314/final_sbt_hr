@@ -21,6 +21,13 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-career').forEach(element => {
+                const months = parseFloat(element.getAttribute('data-month'));
+                if (!isNaN(months)) {
+                    const years = (months / 12).toFixed(1);
+                    element.textContent = `${years} 年`;
+                }
+            });
 
             // 선호 스킬 아이콘 설정
             document.querySelectorAll('.preferred-skill-icon').forEach(iconElement => {
@@ -185,7 +192,7 @@
                 // console.log(pr)
                 const requirementDiv = document.createElement('div');
                 const experienceYear = (pr.requiredExperience / 12).toFixed(1);
-                requirementDiv.textContent = `スキル: ${pr.skill.skillName}, 経歴: ${experienceYear}年`;
+                requirementDiv.textContent = `${pr.skill.skillName}, 経歴: ${experienceYear}年`;
                 requirementDiv.setAttribute('data-requirement-id', pr.id);
                 requirementDiv.classList.add('requirement-option');
 
@@ -440,7 +447,6 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
-        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
         .project-requirement.completed-project {
             background-color: #d3d3d3; /* 어두운 배경색을 설정 (여기서는 연한 회색) */
             opacity: 0.8; /* 살짝 어둡게 만들기 위해 투명도 조정 */
@@ -518,15 +524,18 @@
                 <div class="employee-preferred-skill">
                     <img class="preferred-skill-icon skill-icon"
                          th:data-skill-name="${e.key.getSkill() != null ? e.key.getSkill().getSkillName().toLowerCase() : ''}">
-                    <span th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
+                    <span th:text="'興味ある言語 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
                 </div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <img class="skill-icon skill-icon-${stat.index}"
                          th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
                     <div class="employee-skill" style="display: flex; justify-content: space-between;">
-                        <span class="skill-name"
-                              th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
-                        <span class="skill-career" th:text="${s.getSkillCareer()} + '개월'"></span>
+    <span class="skill-name"
+          style="flex: 1;"
+          th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
+                        <span class="skill-career"
+                              style="flex: 1; text-align: right;"
+                              th:attr="data-month=${s.getSkillCareer()}"></span>
                     </div>
                     <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
                            name="employee-skill-name"
@@ -534,13 +543,13 @@
                            th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}"></label>
                 </div>
-                <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
-                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
+                <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
+                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
 
                 <div class="assign-button-container">
                     <button class="assign-button"
                             th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
-                        배정하기
+                        配属する
                     </button>
                 </div>
             </div>
@@ -569,7 +578,7 @@
     <!-- 모달 창 -->
     <div id="project-requirement-modal" style="display: none;">
         <div style="background-color: white; padding: 20px; border-radius: 8px;">
-            <h3>프로젝트 요구사항 선택</h3>
+            <h3>要求項目の選択</h3>
             <div id="modal-requirements-list">
                 <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
