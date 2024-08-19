@@ -575,6 +575,20 @@
             flex-direction: column;
         }
 
+        .complete-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+        }
+
+        .complete-button:hover {
+            background-color: #218838; /* 호버 시 더 짙은 녹색 */
+        }
+
 
     </style>
 </head>
@@ -1094,7 +1108,7 @@
 
                 const employeesDiv = document.getElementById('assigned-employees');
                 //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
-                employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
+                employeesDiv.innerHTML = '<p>評価:</p><ul>' + employeesProjects.map((ep, index) => `
             <li>
                 ${epID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
                 <select id="star-point-${index}">

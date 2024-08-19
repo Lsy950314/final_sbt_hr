@@ -80,27 +80,28 @@ public class MatchController {
     }
 
     @GetMapping("/matchEmployeeProject")
-    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload) {
+    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload, HttpSession httpSession) {
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
 
-//      System.out.println(projectId);
-//      System.out.println(employeeId);
-//      System.out.println(projectRequirementsId);
         if (matchService.matchEmployeeToProject(projectId, employeeId, projectRequirementsId)) {
+            httpSession.removeAttribute("projects");
+            httpSession.removeAttribute("projectsType");
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/matchCancel")
-    public ResponseEntity<String> matchCancelEmployeeProject(@RequestParam Map<String, String> payload) {
+    public ResponseEntity<String> matchCancelEmployeeProject(@RequestParam Map<String, String> payload, HttpSession httpSession) {
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
 
         if (matchService.matchCancel(projectId, employeeId, projectRequirementsId)) {
+            httpSession.removeAttribute("projects");
+            httpSession.removeAttribute("projectsType");
             return ResponseEntity.ok("취소 성공");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("취소 실패");
