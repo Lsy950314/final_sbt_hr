@@ -14,7 +14,7 @@
     const skills = /*[[${skills}]]*/[];
 
     function initMap() {
-        const initialLocation = { lat: 35.6895, lng: 139.6917 };
+        const initialLocation = {lat: 35.6895, lng: 139.6917};
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -31,7 +31,7 @@
         autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function() {
+        autocomplete.addListener('place_changed', function () {
             const place = autocomplete.getPlace();
             if (!place.geometry) {
                 alert("No details available for input: '" + place.name + "'");
@@ -47,10 +47,6 @@
             document.getElementById('longitude').value = place.geometry.location.lng();
         });
     }
-
-
-
-
 
 
     /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
@@ -71,7 +67,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
     function previewImage(event) {
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function () {
             const output = document.getElementById('imagePreview');
             output.src = reader.result;
             output.style.display = 'block';  // 이미지를 표시합니다.
@@ -82,7 +78,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     window.onload = function () {
         initMap();
     };
-
 
 
     function addSkillCareer() {
@@ -110,7 +105,8 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             </div>
             <div class="form-group">
                 <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
-                <input type="number" style="font-size: 16pt" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+                <input type="number" style="font-size: 16pt" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required
+                 min="1" oninput="this.value = Math.max(this.value, 1)">
                 ヶ月
             </div>
             <button type="button" id="delete-btn" onclick="removeSkills(this)">追加取り消し</button>
@@ -119,6 +115,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
 
     }
+
     //8월 20일 10:06 시도중
     function validateDuplicateSkills() {
         const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
@@ -139,7 +136,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         return hasDuplicates;
     }
 
-    document.getElementById('addSkillCareer-btn').addEventListener('click', function(event) {
+    document.getElementById('addSkillCareer-btn').addEventListener('click', function (event) {
         if (validateDuplicateSkills()) {
             event.preventDefault(); // 중복이 있을 때 추가 버튼이 동작하지 않도록 합니다.
         } else {
@@ -147,18 +144,13 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         }
     });
 
-    document.querySelector('form').addEventListener('submit', function(event) {
+    document.querySelector('form').addEventListener('submit', function (event) {
         if (validateDuplicateSkills()) {
             event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
             alert('同じプログラミング言語のキャリアを重複して入力できません');
         }
     });
     //8월 20일 10:06 시도중
-
-
-
-
-
 
 
 </script>
@@ -171,75 +163,72 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         margin: 0;
     }
 
+    .container {
+        height: auto;
+        width: 95vw;
+    }
 
     #map {
         height: 350px;
         width: 350px;
     }
 
-        .menu {
-            background-color: #1e90ff;
-            width: 250px;
-            height: 100vh;
-        }
+    .menu {
+        background-color: #1e90ff;
+        width: 250px;
+        height: 100vh;
+    }
 
-        .menus > li {
-            width: 200px;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            text-align: center;
-            font-size: 18px;
-        }
+    .menus > li {
+        width: 200px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-align: center;
+        font-size: 18px;
+    }
 
-        .menus li a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            text-align: center; /* 텍스트 가운데 정렬 */
-            padding: 15px 20px; /* a 요소에 패딩을 적용 */
-            box-sizing: border-box;
-            text-decoration: none; /* 밑줄 제거 */
-            color: inherit; /* 부모 요소의 색상을 상속 */
-        }
+    .menus li a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center; /* 텍스트 가운데 정렬 */
+        padding: 15px 20px; /* a 요소에 패딩을 적용 */
+        box-sizing: border-box;
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소의 색상을 상속 */
+    }
 
+    .menus {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-        .menus {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .menus li:hover {
+        background: linear-gradient(45deg, #1e90ff, #00bfff);
+        color: #fff;
+        border-top-right-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
 
-        .menus li:hover {
-            background: linear-gradient(45deg, #1e90ff, #00bfff);
-            color: #fff;
-            border-top-right-radius: 40px;
-            border-bottom-right-radius: 40px;
-        }
+    .contents {
+        background-color: #f5f5f5;
+        width: 1170px;
+        height: auto;
+        border-radius: 15px 15px 0 0;
+        overflow-y: auto;
+        scrollbar-width: none;
 
-        .contents {
-            background-color: #f5f5f5;
-            width: 1170px;
-            height: auto;
-            border-radius: 15px 15px 0 0;
-            overflow-y: auto;
-            scrollbar-width: none;
-
-            display: flex;
-            flex-direction: column; /* 수직 방향으로 요소 배치 */
-        }
-
-        .contents::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
-
-    .button-container {
         display: flex;
-        justify-content: flex-end; /* 버튼을 오른쪽 끝으로 이동 */
-        margin-bottom: 10px; /* 버튼과 폼 사이의 간격 */
+        flex-direction: column; /* 수직 방향으로 요소 배치 */
+    }
+
+    .contents::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
     }
 
     .contents p {
@@ -247,7 +236,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         margin-left: 30px;
     }
 
-    /* 기존 form 스타일 유지 */
     form {
         max-width: 50%;
         max-height: 55%;
@@ -266,22 +254,22 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         text-align: left;
     }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
-        }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
 
-        input[type="text"], input[type="date"], select, input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+    input[type="text"], input[type="date"], select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
 
     #addSkillCareer-btn {
         padding: 10px 20px;
@@ -316,12 +304,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         transition: background-color 0.3s, transform 0.3s;
     }
 
-
-        .container {
-            height: auto;
-            width: 95vw;
-        }
-
     #back-to-employeeslist {
         font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
         font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
@@ -335,6 +317,11 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
     }
 
+    .button-container {
+        display: flex;
+        justify-content: flex-end; /* 버튼을 오른쪽 끝으로 이동 */
+        margin-bottom: 10px; /* 버튼과 폼 사이의 간격 */
+    }
 
     button {
         display: inline-block;
@@ -352,7 +339,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     }
 
 
-    </style>
+</style>
 </head>
 <body>
 <div class="container" style="display: flex">
@@ -366,31 +353,39 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     <div class="contents">
         <p style="text-align: center; font-size: 26px">社員追加 </p>
         <div class="button-container">
-            <button type="button" id="back-to-employeeslist" th:onclick="|redirectToEmployeesList()|">社員リスト</button>
+            <button type="button" id="back-to-employeeslist" th:onclick="|redirectToEmployeesList()|">社員リスト
+            </button>
         </div>
         <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post"
               enctype="multipart/form-data">
             <div class="form-group">
-            <label for="name">社員名</label><br/>
-            <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
+                <label for="name">社員名</label><br/>
+                <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
             </div>
+
             <div class="form-group">
-            <label for="address">住所</label><br/>
-            <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+                <label for="address">住所</label><br/>
+                <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
             </div>
+
             <div class="form-group">
-            <label for="hireDate">入社日</label><br/>
-            <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
+                <label for="hireDate">入社日</label><br/>
+                <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
             </div>
+
             <div class="form-group">
-            <label for="contactNumber">電話番号</label><br/>
-            <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
+                <label for="contactNumber">電話番号</label><br/>
+                <input type="text" id="contactNumber" th:field="*{contactNumber}"
+                       placeholder="Enter contact number"/><br/>
             </div>
+
             <div class="form-group">
                 <label for="imageFile">プロフィール写真登録</label><br/>
-                <input type="file" id="imageFile" name="imageFile" style="background-color: white" onchange="previewImage(event)">
+                <input type="file" id="imageFile" name="imageFile" style="background-color: white"
+                       onchange="previewImage(event)">
                 <br/>
-                <img id="imagePreview" style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
+                <img id="imagePreview"
+                     style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
             </div>
 
             <div class="form-group">
@@ -418,7 +413,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
             <br/>
             <div class="form-group">
-                <button type="submit" id="submit-btn">社員登録</button>
+                <button type="submit" id="submit-btn">社員情報登録</button>
             </div>
             <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
             <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
