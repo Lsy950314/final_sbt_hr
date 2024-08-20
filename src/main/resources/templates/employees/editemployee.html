@@ -47,6 +47,10 @@
     }
 
     function addSkillCareer() {
+        if (validateDuplicateSkills()) {
+            return; // 중복이 있으면 새로운 항목을 추가하지 않습니다.
+        }
+
         const skillCareerContainer = document.getElementById('skillCareerContainer');
         const index = skillCareerContainer.querySelectorAll('.skillCareer-item').length;
 
@@ -67,11 +71,15 @@
             </div>
             <div class="form-group">
                 <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
-                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required
+                min="1" oninput="this.value = Math.max(this.value, 1)">
+                ヶ月
             </div>
-            <button type="button" onclick="removeSkillCareer(this)">追加取り消し</button>
+            <button type="button" id="delete-btn"  onclick="removeSkillCareer(this)">追加取り消し</button>
         `;
         skillCareerContainer.appendChild(skillCareerItem);
+        skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
+
     }
 
     function removeSkillCareer(button) {
@@ -94,6 +102,47 @@
         });
         // 기존 항목에 대해 인덱스를 다시 할당
     }
+
+    //8월 20일 10:06 시도중
+    function validateDuplicateSkills() {
+        const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
+        const selectedSkills = new Set();
+        let hasDuplicates = false;
+
+        skillSelects.forEach(select => {
+            console.log('Selected value:', select.value); // 선택된 값 확인
+            if (selectedSkills.has(select.value)) {
+                hasDuplicates = true;
+            }
+            selectedSkills.add(select.value);
+        });
+
+        if (hasDuplicates) {
+            alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
+
+        return hasDuplicates;
+    }
+
+    document.getElementById('addSkillCareer-btn').addEventListener('click', function (event) {
+        if (validateDuplicateSkills()) {
+            event.preventDefault(); // 중복이 있을 때 추가 버튼이 동작하지 않도록 합니다.
+        } else {
+            addSkillCareer();
+        }
+    });
+
+    function handleSubmit(event) {
+        const hasDuplicates = validateDuplicateSkills(); // 중복 체크
+        if (hasDuplicates) {
+            event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
+            console.log('Form submission prevented due to duplicate skills.'); // 폼 제출이 막혔을 때 로그 출력
+            // alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
+    }
+    //8월 20일 10:06 시도중
+
+
 
     function redirectToEmployeesList() {
         window.location.href = "/employees";
@@ -367,13 +416,13 @@
             <div id="skillCareerContainer">
                 <div th:each="employeesSkillRequest, iter : ${employeesRequest.employeesSkillRequests}"
                      class="form-group skillCareer-item">
-                    <label>Skill:</label>
+                    <label>기존등록언어</label>
                     <select th:field="*{employeesSkillRequests[__${iter.index}__].skill.skillId}">
                         <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}"
                                 th:selected="${skill.skillId} == ${employeesSkillRequest.skill.skillId}"></option>
                     </select>
 
-                    <label>Career (Months):</label>
+                    <label>기존등록경력(Months):</label>
                     <input type="number" th:field="*{employeesSkillRequests[__${iter.index}__].skillCareer}"/>
                     <button type="button" id="delete-btn" onclick="removeSkillCareer(this)">追加取り消し</button>
                 </div>
@@ -385,7 +434,7 @@
 
             <br/>
 
-            <button type="submit" id="submit-btn">社員情報更新</button>
+            <button type="submit" id="submit-btn" onclick="handleSubmit(event)">社員情報更新</button>
 
             <input type="text" id="latitude" style="display: none;" th:field="*{latitude}"/><br/>
             <input type="text" id="longitude" style="display: none;" th:field="*{longitude}"/><br/>
