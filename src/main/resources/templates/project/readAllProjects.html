@@ -445,7 +445,6 @@
         }
 
         input[type="text"], select {
-            margin-left: 30px;
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ccc;
@@ -508,10 +507,111 @@
 
         .container{
             height: auto;
-            width: 95vw
-        ;
+            width: 95vw;
         }
 
+        .cancel-requirement-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #b7c6ec;
+            padding: 10px 0; /* 각 항목 간격 조정 */
+            transition: background-color 0.3s ease;
+        }
+
+        .cancel-requirement-item:hover {
+            background-color: #f0f0f0; /* 마우스가 올라갈 때 배경색을 어둡게 변경 */
+        }
+
+        .cancel-requirement-skill-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .cancel-skill-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .cancel-requirement-experience-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .cancel-requirement-count-info {
+            flex: 1;
+            text-align: right;
+        }
+
+        .cancel-requirement-modal {
+            display: none; /* 숨김 처리 */
+            position: fixed; /* 모달을 화면 중앙에 고정 */
+            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+        }
+
+        .cancel-requirement-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 40%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-requirements-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .complete-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+        }
+
+        .complete-button:hover {
+            background-color: #218838; /* 호버 시 더 짙은 녹색 */
+        }
+
+        .cancel-employees-select{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cancel-employees-select select {
+            width: 75%; /* select 요소의 너비를 부모 요소에 맞춤 */
+            margin-bottom: 10px; /* 버튼과의 간격 조정 */
+        }
+
+        .cancel-employees-select button {
+            width: 40%; /* 버튼의 너비를 컨텐츠에 맞춤 */
+            padding: 8px 16px; /* 버튼의 패딩 조정 */
+            background-color: #d9534f; /* 버튼의 배경색 */
+            color: white; /* 버튼의 텍스트 색상 */
+            border: none; /* 버튼의 테두리 제거 */
+            border-radius: 5px; /* 버튼의 모서리 둥글게 */
+            cursor: pointer; /* 버튼에 커서 포인터 추가 */
+        }
+
+        .cancel-employees-select button:hover {
+            background-color: #c9302c /* 버튼에 호버 시 더 진한 배경색 */
+        }
 
     </style>
 </head>
@@ -531,22 +631,22 @@
 
         <!--        필터링 및 정렬        -->
         <div class="filter-container">
-            <input type="text" id="filterByProjectName" placeholder="프로젝트 이름 검색" oninput="filterByProjectName()">
+            <input type="text" id="filterByProjectName" placeholder="プロジェクト名で検索" oninput="filterByProjectName()">
 
-            <input type="text" id="filterByClientName" placeholder="고객사 이름 검색" oninput="filterByClientName()">
+            <input type="text" id="filterByClientName" placeholder="クライアント会社で検索" oninput="filterByClientName()">
 
             <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
-                <option value="startDate" th:selected="${sortBy == 'startDate'}">프로젝트 시작일 순</option>
-                <option value="endDate" th:selected="${sortBy == 'endDate'}">프로젝트 종료일 순</option>
+                <option value="startDate" th:selected="${sortBy == 'startDate'}">開始日順</option>
+                <option value="endDate" th:selected="${sortBy == 'endDate'}">終了日順</option>
             </select>
             <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
             <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
             <!--        프로젝트 상태에 따라 필터링         -->
             <select id="filterByStatus" th:onchange="filterByStatus()">
-                <option value="" th:selected="${filterStatus == null}">모든 상태</option>
-                <option value="-1" th:selected="${filterStatus == -1}">미배정</option>
-                <option value="1" th:selected="${filterStatus == 1}">배정완료</option>
-                <option value="2" th:selected="${filterStatus == 2}">완료</option>
+                <option value="" th:selected="${filterStatus == null}">全て</option>
+                <option value="-1" th:selected="${filterStatus == -1}">配属必要</option>
+                <option value="1" th:selected="${filterStatus == 1}">配属済</option>
+                <option value="2" th:selected="${filterStatus == 2}">終了</option>
             </select>
         </div>
 
@@ -566,9 +666,9 @@
                 <div class="status" th:text="${p.status}" style="display: none"></div>
 
                 <div class="status-icon allocation" th:switch="${p.status}">
-                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="배정필요"/>
-                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="배정완료"/>
-                    <img th:case="2" th:src="@{/img/project/done.png}" alt="프로젝트 완료"/>
+                    <img th:case="-1" th:src="@{/img/project/need.png}" alt="配属必要"/>
+                    <img th:case="1" th:src="@{/img/project/matched.png}" alt="配属済"/>
+                    <img th:case="2" th:src="@{/img/project/done.png}" alt="終了"/>
                 </div>
                 <div class="project-name" th:text="${p.projectName}"></div>
                 <div class="client-company" th:text="${p.clientCompany}"></div>
@@ -598,12 +698,11 @@
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
-                    <button id="assign-btn" onclick="navigateToMatchManagement()">배정 페이지로 이동</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 참여
-                        사원 상세보기
+                    <button id="assign-btn" onclick="navigateToMatchManagement()">配属ページへ</button>
+                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 配属社員リストへ
                     </button>
-                    <button id="update-btn">수정</button>
-                    <button id="delete-btn">삭제</button>
+                    <button id="update-btn">修正</button>
+                    <button id="delete-btn">削除</button>
                 </div>
             </div>
             <div id="modal-body">
@@ -613,13 +712,12 @@
     </div>
 
     <!-- 배정 취소를 위한 프로젝트 요구사항 선택 모달 -->
-    <div id="project-requirement-modal" style="display: none;">
-        <div style="background-color: white; padding: 20px; border-radius: 8px;">
-            <h3>프로젝트 요구사항 선택</h3>
-            <div id="modal-requirements-list">
+    <div id="project-requirement-modal" class="cancel-requirement-modal">
+        <div class="cancel-requirement-modal-content">
+            <h3>配属中のスキルを選んでください</h3>
+            <div id="modal-requirements-list" class="modal-requirements-list">
                 <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
-            <button onclick="closeProjectRequirementModal()">닫기</button>
         </div>
     </div>
 
@@ -635,6 +733,23 @@
 </div>
 
 <script th:inline="javascript">
+    // 이미지 설정
+    const skillIconMap = {
+        'java': '/img/skillicons/java-icon.png',
+        'javascript': '/img/skillicons/javascript-icon.png',
+        'python': '/img/skillicons/python-icon.png',
+        'ruby': '/img/skillicons/ruby-icon.png',
+        'php': '/img/skillicons/php-icon.png',
+        'go': '/img/skillicons/go-icon.png',
+        'c#': '/img/skillicons/c-sharp-icon.png',
+        'html': '/img/skillicons/html-icon.png',
+        'node.js': '/img/skillicons/node-js-icon.png',
+        'css': '/img/skillicons/css-icon.png',
+        'vue.js': '/img/skillicons/vue-js-icon.png',
+        'react': '/img/skillicons/react-icon.png'
+        // 필요에 따라 추가
+    };
+
     function showProjectDetails(projectId) {
 
         fetch(`/getInfoByProjectID?id=${projectId}`)
@@ -649,17 +764,17 @@
                 let statusClass = "";
                 switch (data.project.status) {
                     case -1:
-                        statusText = "배정 필요(미배정)";
+                        statusText = "配属必要";
                         statusClass = "unassigned-status";
                         break;
                     case 1:
-                        statusText = "배정 완료";
+                        statusText = "配属済";
                         break;
                     case 2:
-                        statusText = "프로젝트 종료";
+                        statusText = "終了";
                         break;
                     default:
-                        statusText = "알 수 없음"; // 예상치 못한 값에 대한 기본값
+                        statusText = "ステータスが分かりません"; // 예상치 못한 값에 대한 기본값
                 }
 
                 const modalBody = document.getElementById('modal-body');
@@ -694,7 +809,7 @@
     </div>
     <div class="project-info-right">
         <div class="data-row">
-            <div class="label">プロジェクト要件:</div>
+            <div class="label">スキル要件:</div>
             <div class="value modal-projectRequirements">
                 ${data.projectRequirements.map(req => `
                 <div class="requirement-item">
@@ -714,35 +829,18 @@
         </div>
         <div class="data-row">
             <div class="label">配属中従業員:</div>
-            <div class="value">
+            <div class="value cancel-employees-select">
                 <select id="employeeDropdown">
-                    <option value="">사원을 선택하세요</option>
+                    <option value="">社員選択</option>
                     ${data.employeesProjects.map((empProj, index) => `
-                        <option value="${index}">${empProj.employeeName || 'N/A'}</option>
+                        <option value="${index}">${empProj.employeeName || 'N/A'} : ${empProj.skill.skillName}に配属中</option>
                     `).join('')}
                 </select>
-                <button onclick='cancelSelectedAssignment(${data.projectId}, ${JSON.stringify(data.epID)})'>배정 취소</button>
+                <button onclick='cancelSelectedAssignment(${data.projectId}, ${JSON.stringify(data.epID)})'>配属キャンセル</button>
             </div>
         </div>
     </div>
 </div>`;
-
-                // 이미지 설정
-                const skillIconMap = {
-                    'java': '/img/skillicons/java-icon.png',
-                    'javascript': '/img/skillicons/javascript-icon.png',
-                    'python': '/img/skillicons/python-icon.png',
-                    'ruby': '/img/skillicons/ruby-icon.png',
-                    'php': '/img/skillicons/php-icon.png',
-                    'go': '/img/skillicons/go-icon.png',
-                    'c#': '/img/skillicons/c-sharp-icon.png',
-                    'html': '/img/skillicons/html-icon.png',
-                    'node.js': '/img/skillicons/node-js-icon.png',
-                    'css': '/img/skillicons/css-icon.png',
-                    'vue.js': '/img/skillicons/vue-js-icon.png',
-                    'react': '/img/skillicons/react-icon.png'
-                    // 필요에 따라 추가
-                };
 
                 document.querySelectorAll('.skill-icon').forEach(imgElement => {
                     const skillName = imgElement.getAttribute('data-skill-name');
@@ -775,7 +873,7 @@
         const employeeDropdown = document.getElementById('employeeDropdown');
         const selectedIndex = employeeDropdown.value;
         if (selectedIndex === "") {
-            alert("사원을 선택하세요.");
+            alert("社員を選んでください");
             return;
         }
         // console.log('epId 배열:' + epID);
@@ -804,20 +902,58 @@
         // 프로젝트 요구사항을 모달에 렌더링
         projectRequirements.forEach(req => {
             const requirementElement = document.createElement('div');
+            requirementElement.classList.add('cancel-requirement-item'); // 새로운 클래스명 추가
             requirementElement.innerHTML = `
-            <label>
-                <input type="radio" name="projectRequirement" value="${req.id}">
-                스킬: ${req.skill.skillName}, 필요 경험: ${req.requiredExperience}개월, 필요 인원: ${req.requiredCount}명
-            </label>
+            <div class="cancel-requirement-skill-info">
+             <input type="radio" name="projectRequirement" value="${req.id}">
+                <img class="cancel-skill-icon" data-skill-name="${req.skill.skillName.toLowerCase()}" alt="${req.skill.skillName}">
+                <span>${req.skill.skillName}</span>
+            </div>
+            <div class="cancel-requirement-experience-info">
+                必要経験: ${(req.requiredExperience / 12).toFixed(1)} 年
+            </div>
+            <div class="cancel-requirement-count-info ${req.fulfilledCount < req.requiredCount ? 'low-fulfillment' : ''}">
+                充足人数: ${req.fulfilledCount} / ${req.requiredCount}
+            </div>
         `;
+            requirementElement.addEventListener('click', () => {
+                const radioInput = requirementElement.querySelector('input[type="radio"]');
+                radioInput.checked = true;
+            });
+
             modalRequirementsList.appendChild(requirementElement);
         });
 
+        document.querySelectorAll('.cancel-skill-icon').forEach(imgElement => {
+            const skillName = imgElement.getAttribute('data-skill-name');
+            if (skillIconMap[skillName]) {
+                imgElement.src = skillIconMap[skillName];
+            }
+        });
+
+
+
         const confirmButton = document.createElement('button');
-        confirmButton.textContent = '확인';
-        confirmButton.onclick = function () {
-            confirmCancelAssignment(projectId, employeeId);
+        confirmButton.textContent = '配属キャンセル';
+        confirmButton.style.width = '20%';
+        confirmButton.style.margin = '3% auto 0 auto';
+
+// 배경색과 호버 시 배경색 적용
+        confirmButton.style.backgroundColor = '#d9534f'; // 버튼의 배경색을 중간 정도로 설정
+        confirmButton.style.color = 'white';
+        confirmButton.style.border = 'none';
+        confirmButton.style.borderRadius = '5px';
+        confirmButton.style.cursor = 'pointer';
+
+// 호버 시 배경색 변화
+        confirmButton.onmouseover = function() {
+            confirmButton.style.backgroundColor = '#c9302c'; // 호버 시 더 진한 배경색
         };
+
+        confirmButton.onmouseout = function() {
+            confirmButton.style.backgroundColor = '#d9534f'; // 기본 배경색으로 되돌림
+        };
+
         modalRequirementsList.appendChild(confirmButton);
 
         document.getElementById('project-requirement-modal').style.display = 'block';
@@ -826,12 +962,12 @@
     function confirmCancelAssignment(projectId, employeeId) {
         const selectedRequirement = document.querySelector('input[name="projectRequirement"]:checked');
         if (!selectedRequirement) {
-            alert('요구사항을 선택하세요.');
+            alert('項目を選んでください');
             return;
         }
 
         const projectRequirementsId = selectedRequirement.value;
-        if (confirm('정말 배정을 취소하시겠습니까?')) {
+        if (confirm('本当に配属をキャンセルしますか?')) {
             cancelAssignment(projectId, employeeId, projectRequirementsId);
             closeProjectRequirementModal();
         }
@@ -850,16 +986,16 @@
             .then(response => response.text())
             .then(result => {
                 if (result === "취소 성공") {
-                    alert("배정이 취소되었습니다.");
+                    alert("配属がキャンセルされました");
                     // 필요하다면 모달을 닫거나 페이지를 새로고침
                     location.reload()
                 } else {
-                    alert("배정 취소에 실패했습니다.");
+                    alert("配属がキャンセルが失敗しました");
                 }
             })
             .catch(error => {
                 console.error('Error cancelling assignment:', error);
-                alert("배정 취소 중 오류가 발생했습니다.");
+                alert("配属がキャンセルの途中エラーが発生しました");
             });
     }
 
@@ -979,7 +1115,7 @@
     }
 
     function deleteProject(projectId) {
-        if (confirm("정말로 삭제하시겠습니까?")) {
+        if (confirm("本当にプロジェクトを削除しますか")) {
             location.href = "/deleteProject?id=" + projectId;
         }
     }
@@ -1009,7 +1145,7 @@
 
                 const employeesDiv = document.getElementById('assigned-employees');
                 //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
-                employeesDiv.innerHTML = '<p>프로젝트 참여 사원 점수 부여:</p><ul>' + employeesProjects.map((ep, index) => `
+                employeesDiv.innerHTML = '<p>評価:</p><ul>' + employeesProjects.map((ep, index) => `
             <li>
                 ${epID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
                 <select id="star-point-${index}">
@@ -1053,8 +1189,9 @@
             .then(response => response.text())
             .then(text => {
                 console.log('Response from server:', text);
-                if (text === "Project completed successfully") {
-                    closeCompleteModal();  // 함수 호출
+                if (text === "プロジェクトが完了処理されました") {
+                    closeCompleteModal();
+                    window.location.href = '/readAllProjects';
                 } else {
                     console.error('Unexpected response:', text);
                 }
@@ -1117,6 +1254,8 @@
     window.onclick = function (event) {
         if (event.target == document.getElementById('modal')) {
             closeModal();
+        } else if (event.target == document.getElementById('project-requirement-modal')) {
+            closeProjectRequirementModal();
         }
     }
     window.onload = function () {
