@@ -405,7 +405,7 @@
 
             <div class="form-group">
                 <label for="imageFile">新たなプロフィール写真登録</label>
-                <input type="file" id="imageFile" name="imageFile">
+                <input type="file" id="imageFile" name="imageFile" style="background-color: white">
                 <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>
                 <div th:if="*{image}" style="text-align: center;">
                     <p>既登録プロフィール写真</p>

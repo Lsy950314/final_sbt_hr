@@ -144,12 +144,15 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         }
     });
 
-    document.querySelector('form').addEventListener('submit', function (event) {
-        if (validateDuplicateSkills()) {
+    function handleSubmit(event) {
+        const hasDuplicates = validateDuplicateSkills(); // 중복 체크
+        if (hasDuplicates) {
             event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
-            alert('同じプログラミング言語のキャリアを重複して入力できません');
+            console.log('Form submission prevented due to duplicate skills.'); // 폼 제출이 막혔을 때 로그 출력
+            // alert('同じプログラミング言語のキャリアを重複して入力できません');
         }
-    });
+    }
+
     //8월 20일 10:06 시도중
 
 
@@ -238,14 +241,23 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
     form {
         max-width: 50%;
-        max-height: 55%;
+        max-height: 750px; /* 폼의 최대 높이를 설정합니다 */
         background: rgba(173, 216, 230, 0.2);
         margin: 0 auto;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
-        scrollbar-width: none;
+        overflow-y: auto; /* 폼 내부에서 수직 스크롤을 활성화합니다 */
+        scrollbar-width: none; /* Firefox에서 스크롤바를 숨깁니다 */
+    }
+
+    form::-webkit-scrollbar {
+        width: 0px; /* Chrome, Safari, Opera에서 스크롤바를 숨깁니다 */
+        background: transparent; /* 스크롤바 트랙을 투명하게 만듭니다 */
+    }
+
+    form::-webkit-scrollbar-thumb {
+        background-color: transparent; /* 스크롤바 핸들을 투명하게 만듭니다 */
     }
 
     .form-group {
@@ -359,37 +371,39 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post"
               enctype="multipart/form-data">
             <div class="form-group">
-                <label for="name">社員名</label><br/>
+                <label for="name">社員名</label>
                 <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
             </div>
 
             <div class="form-group">
-                <label for="address">住所</label><br/>
+                <label for="address">住所</label>
                 <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
             </div>
 
             <div class="form-group">
-                <label for="hireDate">入社日</label><br/>
+                <label for="hireDate">入社日</label>
                 <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
             </div>
 
             <div class="form-group">
-                <label for="contactNumber">電話番号</label><br/>
+                <label for="contactNumber">電話番号</label>
                 <input type="text" id="contactNumber" th:field="*{contactNumber}"
                        placeholder="Enter contact number"/><br/>
             </div>
 
             <div class="form-group">
-                <label for="imageFile">プロフィール写真登録</label><br/>
+                <label for="imageFile">プロフィール写真登録</label>
                 <input type="file" id="imageFile" name="imageFile" style="background-color: white"
                        onchange="previewImage(event)">
                 <br/>
-                <img id="imagePreview"
-                     style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
+                <div style="text-align: center;">
+                    <img id="imagePreview"
+                         style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="preferredLanguage">興味ある言語</label><br/>
+                <label for="preferredLanguage">興味ある言語</label>
                 <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
                     <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
                         Language
@@ -398,7 +412,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             </div>
 
             <div class="form-group">
-                <label for="preferredProjectType">興味ある案件種類</label><br/>
+                <label for="preferredProjectType">興味ある案件種類</label>
                 <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
                     <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
                             th:text="${type.projectTypeName}">Select Project Type
@@ -412,9 +426,10 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             </div>
 
             <br/>
-            <div class="form-group">
-                <button type="submit" id="submit-btn">社員情報登録</button>
-            </div>
+
+            <button type="submit" id="submit-btn" onclick="handleSubmit(event)">社員情報登録</button>
+
+
             <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
             <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
             <div id="map" style="display: none;"></div>
