@@ -71,11 +71,11 @@
             </div>
             <div class="form-group">
                 <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
-                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required
+                <input type="number" id="employeesSkillRequests[${index}].skillCareer" style="font-size: 14pt" name="employeesSkillRequests[${index}].skillCareer" required
                 min="1" oninput="this.value = Math.max(this.value, 1)">
                 ヶ月
             </div>
-            <button type="button" id="delete-btn"  onclick="removeSkillCareer(this)">追加取り消し</button>
+            <button type="button" id="delete-btn" onclick="removeSkillCareer(this)">追加取り消し</button>
         `;
         skillCareerContainer.appendChild(skillCareerItem);
         skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
@@ -141,6 +141,18 @@
         }
     }
     //8월 20일 10:06 시도중
+    function formatSkillCareer() {
+        const skillCareerInputs = document.querySelectorAll('input[name^="employeesSkillRequests"][type="number"]');
+
+        skillCareerInputs.forEach(input => {
+            const value = parseFloat(input.value);
+            if (value % 1 === 0) {
+                input.value = value.toFixed(0); // 소수점 이하가 0인 경우 정수로 표시
+            }
+        });
+    }
+
+
 
 
 
@@ -238,14 +250,23 @@
 
     form {
         max-width: 50%;
-        max-height: 55%;
+        max-height: 750px; /* 폼의 최대 높이를 설정합니다 */
         background: rgba(173, 216, 230, 0.2);
         margin: 0 auto;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
-        scrollbar-width: none;
+        overflow-y: auto; /* 폼 내부에서 수직 스크롤을 활성화합니다 */
+        scrollbar-width: none; /* Firefox에서 스크롤바를 숨깁니다 */
+    }
+
+    form::-webkit-scrollbar {
+        width: 0px;  /* Chrome, Safari, Opera에서 스크롤바를 숨깁니다 */
+        background: transparent; /* 스크롤바 트랙을 투명하게 만듭니다 */
+    }
+
+    form::-webkit-scrollbar-thumb {
+        background-color: transparent; /* 스크롤바 핸들을 투명하게 만듭니다 */
     }
 
     .form-group {
@@ -386,10 +407,10 @@
                 <label for="imageFile">新たなプロフィール写真登録</label>
                 <input type="file" id="imageFile" name="imageFile">
                 <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>
-                <div th:if="*{image}">
+                <div th:if="*{image}" style="text-align: center;">
                     <p>既登録プロフィール写真</p>
                     <img th:src="@{${employeesRequest.image}}" alt="Employee Image"
-                         style="max-width: 150px; border-radius: 4px; margin-top: 10px;">
+                         style="max-width: 200px; border-radius: 4px; margin-top:5px; margin-bottom: 5px;">
                 </div>
             </div>
 
@@ -416,15 +437,16 @@
             <div id="skillCareerContainer">
                 <div th:each="employeesSkillRequest, iter : ${employeesRequest.employeesSkillRequests}"
                      class="form-group skillCareer-item">
-                    <label>기존등록언어</label>
+                    <label>プログラミング言語</label>
                     <select th:field="*{employeesSkillRequests[__${iter.index}__].skill.skillId}">
                         <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}"
                                 th:selected="${skill.skillId} == ${employeesSkillRequest.skill.skillId}"></option>
                     </select>
 
-                    <label>기존등록경력(Months):</label>
-                    <input type="number" th:field="*{employeesSkillRequests[__${iter.index}__].skillCareer}"/>
-                    <button type="button" id="delete-btn" onclick="removeSkillCareer(this)">追加取り消し</button>
+                    <label>経歴年数</label>
+                    <input type="number" style="font-size: 14pt" th:field="*{employeesSkillRequests[__${iter.index}__].skillCareer}"
+                    required min="1" oninput="this.value = Math.max(this.value, 1)"/>ヶ月
+                    <button type="button" id="delete-btn" style="margin-top: 8px" onclick="removeSkillCareer(this)">追加取り消し</button>
                 </div>
             </div>
 
