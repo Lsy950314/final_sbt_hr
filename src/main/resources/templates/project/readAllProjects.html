@@ -628,6 +628,38 @@
             background-color: #f9f9f9;
         }
 
+        .employee-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        .employee-table-header, .employee-table-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .employee-table-row {
+            display: flex;
+            width: 100%;
+        }
+
+        .employee-table-cell {
+            flex: 1; /* 모든 셀을 동일한 너비로 */
+            padding: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .header-cell {
+            font-weight: bold;
+            background-color: #71b6ff;
+            text-align: center;
+        }
+
+
 
 
 
@@ -743,7 +775,7 @@
     <!-- 완료 모달 팝업 -->
     <div id="complete-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button" onclick="closeCompleteModal()">&times;</span>
+            <span style="display: none;" class="close-button" onclick="closeCompleteModal()">&times;</span>
             <div id="complete-modal-body">
                 <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
@@ -1180,29 +1212,29 @@
 // 해당 프로젝트 참여 사원에게 해당 안건 점수 부여
                 employeesDiv.innerHTML = `
     <p>参加社員の評価点数入力してください</p>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th style="border: 1px solid #ddd; padding: 8px;">社員番号また名前</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">担当プログラミング言語</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">評価点数</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${employeesProjects.map((ep, index) => `
-                <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${epID[index]}.${ep.employeeName}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${ep.skill.skillName}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                        <select id="star-point-${index}">
+    <div class="employee-table">
+    <div class="employee-table-header">
+        <div class="employee-table-row">
+            <div class="employee-table-cell header-cell">社員番号また名前</div>
+            <div class="employee-table-cell header-cell">担当プログラミング言語</div>
+            <div class="employee-table-cell header-cell">評価点数</div>
+        </div>
+    </div>
+    <div class="employee-table-body">
+        ${employeesProjects.map((ep, index) => `
+            <div class="employee-table-row">
+                <div class="employee-table-cell">${epID[index]}.${ep.employeeName}</div>
+                <div class="employee-table-cell">${ep.skill.skillName}</div>
+                <div class="employee-table-cell">
+                    <select id="star-point-${index}">
                         <option value="" selected>選択</option> <!-- 기본값으로 선택될 옵션 -->
-                            ${[...Array(11)].map((_, i) => `
-                                <option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
-                        </select>　/ 5
-                    </td>
-                </tr>`).join('')}
-        </tbody>
-    </table>`;
+                        ${[...Array(11)].map((_, i) => `
+                            <option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
+                    </select> / 5
+                </div>
+            </div>`).join('')}
+    </div>
+</div>`;
 
 
                 // "はい" 버튼 클릭 시 completeProject 함수 호출
