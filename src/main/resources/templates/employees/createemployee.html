@@ -48,33 +48,10 @@
         });
     }
 
-    function addSkillCareer() {
-        const skillCareerContainer = document.getElementById('skillCareerContainer');
-        const index = skillCareerContainer.children.length;
 
-        const skillCareerItem = document.createElement('div');
-        skillCareerItem.classList.add('skillCareer-item');
 
-        let skillOptions = '';
-        skills.forEach(skill => {
-            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
-        });
 
-        skillCareerItem.innerHTML = `
-            <div class="form-group">
-                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
-                    ${skillOptions}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
-                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
-            </div>
-            <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
-        `;
-        skillCareerContainer.appendChild(skillCareerItem);
-    }
+
 
     /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
 
@@ -105,84 +82,77 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     window.onload = function () {
         initMap();
     };
-    // //스킬 중복 체크 시도중
-    // function isDuplicateSkill(selectedSkillId) {
-    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
-    //
-    //     console.log("Checking for duplicates...");
-    //     console.log("Selected Skill ID:", selectedSkillId);
-    //
-    //     for (let i = 0; i < skillSelects.length; i++) {
-    //         console.log("Comparing with Skill ID:", skillSelects[i].value);
-    //         if (skillSelects[i].value === selectedSkillId) {
-    //             console.log("Duplicate found!");
-    //             return true;
-    //         }
-    //     }
-    //
-    //     console.log("No duplicates found.");
-    //     return false;
-    // }
-    //
-    // function addSkillCareer() {
-    //     const skillCareerContainer = document.getElementById('skillCareerContainer');
-    //     const index = skillCareerContainer.children.length;
-    //
-    //     // 새로 추가할 스킬 선택 필드를 생성하기 전에 중복 확인
-    //     let skillOptions = '';
-    //     skills.forEach(skill => {
-    //         skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
-    //     });
-    //
-    //     const skillCareerItem = document.createElement('div');
-    //     skillCareerItem.classList.add('skillCareer-item');
-    //
-    //     skillCareerItem.innerHTML = `
-    //     <div class="form-group">
-    //         <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-    //         <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required onchange="validateSkillSelection(this)">
-    //             ${skillOptions}
-    //         </select>
-    //     </div>
-    //     <div class="form-group">
-    //         <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
-    //         <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
-    //     </div>
-    //     <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
-    // `;
-    //     skillCareerContainer.appendChild(skillCareerItem);
-    // }
-    //
-    // document.getElementById('submit-btn').addEventListener('click', function(event) {
-    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
-    //     const selectedSkills = new Set();
-    //
-    //     for (let i = 0; i < skillSelects.length; i++) {
-    //         const skillId = skillSelects[i].value;
-    //         console.log("Submitting form, checking skill:", skillId);
-    //         if (selectedSkills.has(skillId)) {
-    //             alert('スキルの選択に重複があります。異なるスキルを選択してください。');
-    //             event.preventDefault(); // 폼 제출 중단
-    //             skillSelects[i].focus(); // 중복된 필드에 포커스
-    //             return;
-    //         }
-    //         selectedSkills.add(skillId);
-    //     }
-    //
-    //     // 여기서 다른 추가 검증을 할 수 있습니다.
-    // });
-
-
-    //스킬 중복 체크 시도중
 
 
 
+    function addSkillCareer() {
+        if (validateDuplicateSkills()) {
+            return; // 중복이 있으면 새로운 항목을 추가하지 않습니다.
+        }
 
+        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const index = skillCareerContainer.children.length;
 
+        const skillCareerItem = document.createElement('div');
+        skillCareerItem.classList.add('skillCareer-item');
 
+        let skillOptions = '';
+        skills.forEach(skill => {
+            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+        });
 
+        skillCareerItem.innerHTML = `
+            <div class="form-group">
+                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
+                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
+                    ${skillOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
+                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+            </div>
+            <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
+        `;
+        skillCareerContainer.appendChild(skillCareerItem);
+        skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
 
+    }
+    //8월 20일 10:06 시도중
+    function validateDuplicateSkills() {
+        const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
+        const selectedSkills = new Set();
+        let hasDuplicates = false;
 
+        skillSelects.forEach(select => {
+            if (selectedSkills.has(select.value)) {
+                hasDuplicates = true;
+            }
+            selectedSkills.add(select.value);
+        });
+
+        if (hasDuplicates) {
+            alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
+
+        return hasDuplicates;
+    }
+
+    document.getElementById('addSkillCareer-btn').addEventListener('click', function(event) {
+        if (validateDuplicateSkills()) {
+            event.preventDefault(); // 중복이 있을 때 추가 버튼이 동작하지 않도록 합니다.
+        } else {
+            addSkillCareer();
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+        if (validateDuplicateSkills()) {
+            event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
+            alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
+    });
+    //8월 20일 10:06 시도중
 
 
 
@@ -270,7 +240,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     /* 기존 form 스타일 유지 */
     form {
         max-width: 50%;
-        max-height: 75%;
+        max-height: 55%;
         background: rgba(173, 216, 230, 0.2);
         margin: 0 auto;
         padding: 20px;
