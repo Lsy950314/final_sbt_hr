@@ -103,16 +103,17 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
         skillCareerItem.innerHTML = `
             <div class="form-group">
-                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
+                <label for="employeesskill[${index}].skill.skillId">プログラミング言語</label>
                 <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
                     ${skillOptions}
                 </select>
             </div>
             <div class="form-group">
-                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
-                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+                <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
+                <input type="number" style="font-size: 16pt" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
+                ヶ月
             </div>
-            <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
+            <button type="button" id="delete-btn" onclick="removeSkills(this)">追加取り消し</button>
         `;
         skillCareerContainer.appendChild(skillCareerItem);
         skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
@@ -226,11 +227,20 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             border-radius: 15px 15px 0 0;
             overflow-y: auto;
             scrollbar-width: none;
+
+            display: flex;
+            flex-direction: column; /* 수직 방향으로 요소 배치 */
         }
 
         .contents::-webkit-scrollbar {
             display: none; /* Chrome, Safari, Opera */
         }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end; /* 버튼을 오른쪽 끝으로 이동 */
+        margin-bottom: 10px; /* 버튼과 폼 사이의 간격 */
+    }
 
     .contents p {
         height: 35px;
@@ -248,6 +258,12 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
         scrollbar-width: none;
+    }
+
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: left;
     }
 
         label {
@@ -319,9 +335,20 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
     }
 
-    .form-group {
-        margin-top: 15px;
-        margin-bottom: 15px;
+
+    button {
+        display: inline-block;
+        text-align: center;
+        margin: 0 auto; /* 버튼을 가운데 정렬 */
+    }
+
+    button[type="submit"], button[type="button"] {
+        display: block;
+        margin: 0 auto; /* submit 및 추가 버튼을 가운데 정렬 */
+    }
+
+    #back-to-employeeslist {
+        margin: 0; /* 오버라이드: 오른쪽으로 붙는 버튼은 margin 제거 */
     }
 
 
@@ -338,33 +365,36 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     </div>
     <div class="contents">
         <p style="text-align: center; font-size: 26px">社員追加 </p>
-        <button
-                type="button" id="back-to-employeeslist" style="justify-content: flex-end"
-                th:onclick="|redirectToEmployeesList()|">社員リスト</button>
+        <div class="button-container">
+            <button type="button" id="back-to-employeeslist" th:onclick="|redirectToEmployeesList()|">社員リスト</button>
+        </div>
         <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post"
               enctype="multipart/form-data">
-            <label for="name">Name:</label>
-            <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
-
-            <label for="address">Address:</label>
-            <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
-
-            <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
-            <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
-            <div id="map" style="display: none;"></div>
-            <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
-            <input type="date" id="currentProjectEndDate" style="display: none;"
-                   th:field="*{currentProjectEndDate}"/><br/>
-
             <div class="form-group">
-                <label for="imageFile">Upload Image:</label>
-                <input type="file" id="imageFile" name="imageFile" onchange="previewImage(event)">
+            <label for="name">社員名</label><br/>
+            <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
+            </div>
+            <div class="form-group">
+            <label for="address">住所</label><br/>
+            <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+            </div>
+            <div class="form-group">
+            <label for="hireDate">入社日</label><br/>
+            <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
+            </div>
+            <div class="form-group">
+            <label for="contactNumber">電話番号</label><br/>
+            <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
+            </div>
+            <div class="form-group">
+                <label for="imageFile">プロフィール写真登録</label><br/>
+                <input type="file" id="imageFile" name="imageFile" style="background-color: white" onchange="previewImage(event)">
                 <br/>
                 <img id="imagePreview" style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
             </div>
 
             <div class="form-group">
-                <label for="preferredLanguage">Preferred Language:</label>
+                <label for="preferredLanguage">興味ある言語</label><br/>
                 <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
                     <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
                         Language
@@ -373,7 +403,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             </div>
 
             <div class="form-group">
-                <label for="preferredProjectType">Preferred Project Type:</label>
+                <label for="preferredProjectType">興味ある案件種類</label><br/>
                 <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
                     <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
                             th:text="${type.projectTypeName}">Select Project Type
@@ -381,20 +411,22 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
                 </select>
             </div>
 
-            <label for="contactNumber">Contact Number:</label>
-            <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
-
-            <label for="hireDate">Hire Date:</label>
-            <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
-
             <div id="skillCareerContainer"></div>
             <div class="form-group">
-                <button type="button" id="addSkillCareer-btn" onclick="addSkillCareer()">Add SkillCareer</button>
+                <button type="button" id="addSkillCareer-btn" onclick="addSkillCareer()">プログラミング経歴追加</button>
             </div>
 
             <br/>
+            <div class="form-group">
+                <button type="submit" id="submit-btn">社員登録</button>
+            </div>
+            <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
+            <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
+            <div id="map" style="display: none;"></div>
+            <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
+            <input type="date" id="currentProjectEndDate" style="display: none;"
+                   th:field="*{currentProjectEndDate}"/><br/>
 
-            <button type="submit" id="submit-btn">Create Employee</button>
         </form>
 
     </div>
