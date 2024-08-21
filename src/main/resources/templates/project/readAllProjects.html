@@ -185,7 +185,7 @@
             margin: 5% auto; /* 모달을 화면 중앙에 배치합니다. */
             padding: 20px;
             border: 1px solid #888;
-            width: 50%;
+            width: 75%;
             height: auto;
             border-radius: 10pt;
         }
@@ -1261,6 +1261,9 @@
                 const epID = data.epID;
 
                 console.log(epID);
+
+                const projectFinishTitle = document.getElementById('project-finish-title');
+                projectFinishTitle.innerHTML = `プロジェクト「${data.project.projectName}」を完了処理しますか？`;
 
                 const employeesDiv = document.getElementById('assigned-employees');
 // 해당 프로젝트 참여 사원에게 해당 안건 점수 부여

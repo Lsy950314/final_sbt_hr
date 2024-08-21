@@ -20,6 +20,40 @@
             margin-bottom: 30px;
         }
 
+        .error-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 20px;
+            z-index: 1000;
+            width: 300px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-popup-content {
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #721c24;
+        }
+
+        .close-button:hover {
+            color: #f5c6cb;
+        }
+
         .form-container {
             max-width: 700px;
             margin: 0 auto;
@@ -104,7 +138,8 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         const apiKey = [[${apiKey}]];
-        const skills = /*[[${skills}]]*/ '[]'; // skills 변수를 Thymeleaf로 전달
+        const skills = /*[[${skills}]]*/ '[]';
+        const projectId = /*[[${projectId}]]*/ '';
 
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
@@ -135,7 +170,7 @@
             });
         };
 
-        function addRequirement(skillId = '', requiredExperience = '', requiredCount = '', index = null) {
+        function addRequirement(skillId = '', requiredExperience = '', requiredCount = '', index = null, requirementId = null) {
             const requirementsContainer = document.getElementById('requirementsContainer');
             if (index === null) {
                 index = requirementsContainer.children.length;
@@ -143,6 +178,7 @@
 
             const requirementItem = document.createElement('div');
             requirementItem.classList.add('requirement-item');
+            requirementItem.style.position = 'relative';
 
             let skillOptions = '';
             skills.forEach(skill => {
@@ -151,24 +187,54 @@
             });
 
             requirementItem.innerHTML = `
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
-                    <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
-                        ${skillOptions}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
-                </div>
-                <button type="button" onclick="removeRequirement(this)">Remove</button>
-            `;
+        <div class="form-group">
+            <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+            <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
+                ${skillOptions}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
+            <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
+        </div>
+        <div class="form-group">
+            <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+            <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
+        </div>
+        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">要求スキル削除</button>
+        <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
+    `;
             requirementsContainer.appendChild(requirementItem);
         }
+
+        function deleteRequirement(button, projectId, skillId, requiredExperience) {
+            if (confirm('정말 이 요구사항을 삭제하시겠습니까?')) {
+                fetch(`/deleteRequirement`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        projectId: projectId,
+                        skillId: skillId,
+                        requiredExperience: requiredExperience
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        alert('요구사항이 삭제되었습니다.');
+                        // 삭제된 후 페이지를 다시 로드
+                        location.reload();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message);
+                });
+            }
+        }
+
+
         function removeRequirement(button) {
             const requirementItem = button.parentElement;
             requirementItem.remove();
@@ -206,10 +272,21 @@
             return true;
         }
         /*]]>*/
+
+        function closeErrorPopup() {
+            document.getElementById('error-popup').style.display = 'none';
+        }
+
     </script>
 </head>
 <body>
 <h1>Update Project</h1>
+<div id="error-popup" th:if="${errorMessage}" class="error-popup">
+    <div class="error-popup-content">
+        <span class="close-button" onclick="closeErrorPopup()">&times;</span>
+        <p th:text="${errorMessage}"></p>
+    </div>
+</div>
 <form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
     <div class="form-group">
         <label for="projectName">Project Name:</label>
@@ -268,9 +345,6 @@
     <button type="submit">Update Project</button>
 </form>
 
-<div th:if="${error}">
-    <p th:text="${error}" style="color:red;"></p>
-</div>
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

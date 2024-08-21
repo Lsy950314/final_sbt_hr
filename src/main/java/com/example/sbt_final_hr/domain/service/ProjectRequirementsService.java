@@ -1,17 +1,13 @@
 package com.example.sbt_final_hr.domain.service;
 
-import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
-import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.ProjectRequirements;
-import com.example.sbt_final_hr.domain.model.entity.Projects;
-import com.example.sbt_final_hr.domain.model.entity.Skills;
 import com.example.sbt_final_hr.domain.repository.ProjectRequirementsRepository;
 import com.example.sbt_final_hr.domain.repository.ProjectsRepository;
 import com.example.sbt_final_hr.domain.repository.SkillsRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +20,32 @@ public class ProjectRequirementsService {
         this.projectRequirementsRepository = projectRequirementsRepository;
         this.projectsRepository = projectsRepository;
         this.skillsRepository = skillsRepository;
+    }
+
+    public ProjectRequirements findByProjectIdAndSkillIdAndRequiredExperience(Long projectId, Long skillId, int requiredExperience) {
+        return projectRequirementsRepository.findByProject_ProjectIdAndSkill_SkillIdAndRequiredExperience(projectId,
+                skillId,
+                requiredExperience);
+    }
+
+    public void createOrUpdateProjectRequirements(ProjectRequirements projectRequirements) {
+        // 주어진 프로젝트 ID와 스킬 ID를 기반으로 기존의 요구사항을 찾음
+        Optional<ProjectRequirements> existingRequirement = projectRequirementsRepository.findByProject_ProjectIdAndSkill_SkillId(
+                projectRequirements.getProject().getProjectId(),
+                projectRequirements.getSkill().getSkillId()
+        );
+
+        if (existingRequirement.isPresent()) {
+            // 기존 요구사항이 존재하면, 필요한 필드만 업데이트
+            ProjectRequirements existing = existingRequirement.get();
+            existing.setRequiredExperience(projectRequirements.getRequiredExperience());
+            existing.setRequiredCount(projectRequirements.getRequiredCount());
+            // 필요한 경우 다른 필드들도 업데이트 가능
+            projectRequirementsRepository.save(existing);
+        } else {
+            // 기존 요구사항이 없으면 새로 추가
+            projectRequirementsRepository.save(projectRequirements);
+        }
     }
 
     public List<ProjectRequirements> findByProjectId(Long projectId) {
@@ -105,6 +127,10 @@ public class ProjectRequirementsService {
     public void deleteByProjectId(Long projectId) {
         List<ProjectRequirements> requirements = projectRequirementsRepository.findByProject_ProjectId(projectId);
         projectRequirementsRepository.deleteAll(requirements);
+    }
+
+    public void deleteById(Long id) {
+        projectRequirementsRepository.deleteById(id);
     }
 }
 
