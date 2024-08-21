@@ -190,6 +190,17 @@
             border-radius: 10pt;
         }
 
+        #project-finish-modal {
+            background-color: #fefefe; /* 모달 내부 배경색을 흰색으로 설정합니다. */
+            margin: 5% auto;
+            padding: 20px; /* 모달 내부 패딩을 설정합니다. */
+            border: 1px solid #888; /* 모달 테두리를 연한 회색으로 설정합니다. */
+            width: 50%; /* 모달 너비를 화면의 75%로 설정합니다. */
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 약간의 그림자 효과를 추가합니다. */
+            border-radius: 10pt;
+        }
+
         .modal-button {
             font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
             font-size: 14px; /* 글자 크기 */
@@ -626,6 +637,19 @@
             padding: 20px;
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
+            height: auto;
+            max-height: 750pt;
+            overflow-y: auto; /* 수직 스크롤을 활성화 */
+            scrollbar-width: none; /* Firefox에서 스크롤바 숨김 */
+        }
+
+        #assigned-employees-evaluation::-webkit-scrollbar {
+            width: 0px;  /* Chrome, Safari, Opera에서 스크롤바 숨김 */
+            background: transparent; /* 스크롤바 트랙을 투명하게 설정 */
+        }
+
+        #assigned-employees-evaluation::-webkit-scrollbar-thumb {
+            background-color: transparent; /* 스크롤바 핸들을 투명하게 설정 */
         }
 
         .employee-table {
@@ -644,20 +668,52 @@
         .employee-table-row {
             display: flex;
             width: 100%;
+            align-items: center; /* 수직 방향으로 가운데 정렬 */
+            justify-content: center; /* 수평 방향으로 가운데 정렬 */
+            text-align: center; /* 텍스트를 가운데 정렬 */
+            border: 1px solid #ddd;
         }
 
         .employee-table-cell {
             flex: 1; /* 모든 셀을 동일한 너비로 */
             padding: 8px;
-            border: 1px solid #ddd;
             box-sizing: border-box;
+            border-left: 1px solid #ddd; /* Add left border */
+            border-right: 1px solid #ddd; /* Add right border */
+        }
+
+        .employee-table-cell:first-child {
+            border-left: none; /* Remove left border for the first cell */
+        }
+
+        .employee-table-cell:last-child {
+            border-right: none; /* Remove right border for the last cell */
         }
 
         .header-cell {
             font-weight: bold;
             background-color: #71b6ff;
             text-align: center;
+            border: 1px solid #ddd;
         }
+
+
+        .header-cell {
+            font-weight: bold;
+            background-color: #71b6ff;
+            text-align: center;
+            border-left: 1px solid #ddd; /* Add left border */
+            border-right: 1px solid #ddd; /* Add right border */
+        }
+
+        .header-cell:first-child {
+            border-left: none; /* Remove left border for the first header cell */
+        }
+
+        .header-cell:last-child {
+            border-right: none; /* Remove right border for the last header cell */
+        }
+
 
 
 
@@ -774,7 +830,7 @@
 
     <!-- 완료 모달 팝업 -->
     <div id="complete-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" id="project-finish-modal">
             <span style="display: none;" class="close-button" onclick="closeCompleteModal()">&times;</span>
             <div id="complete-modal-body">
                 <!-- 여기에 동적으로 내용이 추가됩니다 -->
@@ -1182,8 +1238,6 @@
         completeModalBody.innerHTML = `
 <div class="projectFinishAndYesOrNoButton">
 <div id="project-finish-title" style="font-weight: bold; font-size: 25px;">プロジェクトを完了処理しますか？</div>
-
-
                             <div id="complete-button-container">
                                 <button id="yes-btn">はい</button>
                                 <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
@@ -1226,7 +1280,8 @@
                 <div class="employee-table-cell">${epID[index]}.${ep.employeeName}</div>
                 <div class="employee-table-cell">${ep.skill.skillName}</div>
                 <div class="employee-table-cell">
-                    <select id="star-point-${index}">
+                    <select class="star-point" id="star-point-${index}"
+                    style="padding: 0; margin:0 ">
                         <option value="" selected>選択</option> <!-- 기본값으로 선택될 옵션 -->
                         ${[...Array(11)].map((_, i) => `
                             <option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
@@ -1366,4 +1421,5 @@
 
 </script>
 </body>
+
 </html>

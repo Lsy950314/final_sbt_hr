@@ -326,4 +326,19 @@
     <p th:text="${error}" style="color:red;"></p>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('contactPhone').addEventListener('input', function (event) {
+            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+
+            if (input.length > 3 && input.length <= 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+            } else if (input.length > 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+            }
+
+            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+        });
+    });
+</script>
 </html>
