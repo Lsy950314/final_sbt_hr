@@ -182,10 +182,10 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; /* 중앙 정렬 */
+            margin: 5% auto; /* 모달을 화면 중앙에 배치합니다. */
             padding: 20px;
             border: 1px solid #888;
-            width: 75%;
+            width: 50%;
             height: auto;
             border-radius: 10pt;
         }
@@ -373,7 +373,7 @@
         }
 
         /* update-btn 스타일 */
-        #update-btn {
+        #update-btn, #yes-btn {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -385,19 +385,19 @@
         }
 
         /* update-btn 호버 효과 */
-        #update-btn:hover {
+        #update-btn, #yes-btn:hover {
             background-color: #5a6268;
             transform: translateY(-2px);
         }
 
         /* update-btn 활성화 효과 */
-        #update-btn:active {
+        #update-btn, #yes-btn:active {
             background-color: #545b62;
             transform: translateY(0);
         }
 
         /* delete-btn 스타일 */
-        #delete-btn {
+        #delete-btn, #no-btn {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -409,13 +409,13 @@
         }
 
         /* delete-btn 호버 효과 */
-        #delete-btn:hover {
+        #delete-btn, #no-btn:hover {
             background-color: #b11212;
             transform: translateY(-2px);
         }
 
         /* delete-btn 활성화 효과 */
-        #delete-btn:active {
+        #delete-btn, #no-btn:active {
             background-color: #b11212;
             transform: translateY(0);
         }
@@ -613,6 +613,57 @@
             background-color: #c9302c /* 버튼에 호버 시 더 진한 배경색 */
         }
 
+        .projectFinishAndYesOrNoButton {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #assigned-employees-evaluation {
+            width: 95%;
+            margin: 10px auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .employee-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        .employee-table-header, .employee-table-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .employee-table-row {
+            display: flex;
+            width: 100%;
+        }
+
+        .employee-table-cell {
+            flex: 1; /* 모든 셀을 동일한 너비로 */
+            padding: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .header-cell {
+            font-weight: bold;
+            background-color: #71b6ff;
+            text-align: center;
+        }
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -724,7 +775,7 @@
     <!-- 완료 모달 팝업 -->
     <div id="complete-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button" onclick="closeCompleteModal()">&times;</span>
+            <span style="display: none;" class="close-button" onclick="closeCompleteModal()">&times;</span>
             <div id="complete-modal-body">
                 <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
@@ -1126,14 +1177,28 @@
 
     function showCompleteModal(projectId) {
         console.log(projectId)
+
         const completeModalBody = document.getElementById('complete-modal-body');
-        completeModalBody.innerHTML = `<p>プロジェクト ID: ${projectId} を完了処理しますか？</p>
-                            <div id="assigned-employees"></div>
-                            <div id="assigned-projects"></div>
+        completeModalBody.innerHTML = `
+<div class="projectFinishAndYesOrNoButton">
+<div id="project-finish-title" style="font-weight: bold; font-size: 25px;">プロジェクトを完了処理しますか？</div>
+
+
                             <div id="complete-button-container">
                                 <button id="yes-btn">はい</button>
                                 <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
-                            </div>`;
+                            </div>
+          </div>
+<div id="assigned-employees-evaluation">
+                            <div id="assigned-employees"></div>
+</div>
+                            <div id="assigned-projects"></div>
+
+
+
+
+
+`;
         fetch(`/getInfoByProjectID?id=${projectId}`)
             .then(response => response.json())
             .then(data => {
@@ -1144,30 +1209,64 @@
                 console.log(epID);
 
                 const employeesDiv = document.getElementById('assigned-employees');
-                //해당 프로젝트 참여 사원에게 해당 안건 점수 부여
-                employeesDiv.innerHTML = '<p>評価:</p><ul>' + employeesProjects.map((ep, index) => `
-            <li>
-                ${epID[index]} ${ep.employeeName} ${ep.projectDuration} ${ep.skill.skillId}, ${ep.skill.skillName}
-                <select id="star-point-${index}">
-                    ${[...Array(11)].map((_, i) => `<option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
-                </select>
-            </li>`).join('') + '</ul>';
+// 해당 프로젝트 참여 사원에게 해당 안건 점수 부여
+                employeesDiv.innerHTML = `
+    <p>参加社員の評価点数入力してください</p>
+    <div class="employee-table">
+    <div class="employee-table-header">
+        <div class="employee-table-row">
+            <div class="employee-table-cell header-cell">社員番号また名前</div>
+            <div class="employee-table-cell header-cell">担当プログラミング言語</div>
+            <div class="employee-table-cell header-cell">評価点数</div>
+        </div>
+    </div>
+    <div class="employee-table-body">
+        ${employeesProjects.map((ep, index) => `
+            <div class="employee-table-row">
+                <div class="employee-table-cell">${epID[index]}.${ep.employeeName}</div>
+                <div class="employee-table-cell">${ep.skill.skillName}</div>
+                <div class="employee-table-cell">
+                    <select id="star-point-${index}">
+                        <option value="" selected>選択</option> <!-- 기본값으로 선택될 옵션 -->
+                        ${[...Array(11)].map((_, i) => `
+                            <option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
+                    </select> / 5
+                </div>
+            </div>`).join('')}
+    </div>
+</div>`;
 
 
                 // "はい" 버튼 클릭 시 completeProject 함수 호출
                 document.getElementById('yes-btn').addEventListener('click', function () {
-                    const projectParticipantsInfos = employeesProjects.map((ep, index) => {
-                        const starPoint = document.getElementById(`star-point-${index}`).value;
-                        const result = {
-                            employeeId: epID[index],
-                            starPoint: parseFloat(starPoint),
-                            skillId: ep.skill.skillId,
-                            projectDuration: parseFloat(ep.projectDuration)
-                        };
-                        console.log(result); // 콘솔에 출력
-                        return result;
+                    const allSelects = document.querySelectorAll('select[id^="star-point-"]');
+                    let allValid = true;
+
+                    allSelects.forEach(select => {
+                        if (select.value === "") { // "スコア選択"이 선택된 상태
+                            allValid = false;
+                            alert('すべての社員に点数を選択してください。');
+                            select.focus();
+                            return false; // 반복문 종료
+                        }
                     });
-                    completeProject(projectId, projectParticipantsInfos);
+
+
+                    if (allValid) {
+                        const projectParticipantsInfos = employeesProjects.map((ep, index) => {
+                            const starPoint = document.getElementById(`star-point-${index}`).value;
+                            const result = {
+                                employeeId: epID[index],
+                                starPoint: parseFloat(starPoint),
+                                skillId: ep.skill.skillId,
+                                projectDuration: parseFloat(ep.projectDuration)
+                            };
+                            console.log(result); // 콘솔에 출력
+                            return result;
+                        });
+                        completeProject(projectId, projectParticipantsInfos);
+                    }
+
                 });
             })
             .catch(error => {

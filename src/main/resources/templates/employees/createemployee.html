@@ -14,7 +14,7 @@
     const skills = /*[[${skills}]]*/[];
 
     function initMap() {
-        const initialLocation = { lat: 35.6895, lng: 139.6917 };
+        const initialLocation = {lat: 35.6895, lng: 139.6917};
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: initialLocation,
@@ -31,7 +31,7 @@
         autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
 
-        autocomplete.addListener('place_changed', function() {
+        autocomplete.addListener('place_changed', function () {
             const place = autocomplete.getPlace();
             if (!place.geometry) {
                 alert("No details available for input: '" + place.name + "'");
@@ -48,33 +48,6 @@
         });
     }
 
-    function addSkillCareer() {
-        const skillCareerContainer = document.getElementById('skillCareerContainer');
-        const index = skillCareerContainer.children.length;
-
-        const skillCareerItem = document.createElement('div');
-        skillCareerItem.classList.add('skillCareer-item');
-
-        let skillOptions = '';
-        skills.forEach(skill => {
-            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
-        });
-
-        skillCareerItem.innerHTML = `
-            <div class="form-group">
-                <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
-                    ${skillOptions}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
-                <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
-            </div>
-            <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
-        `;
-        skillCareerContainer.appendChild(skillCareerItem);
-    }
 
     /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
 
@@ -94,7 +67,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
     function previewImage(event) {
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function () {
             const output = document.getElementById('imagePreview');
             output.src = reader.result;
             output.style.display = 'block';  // 이미지를 표시합니다.
@@ -105,89 +78,82 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     window.onload = function () {
         initMap();
     };
-    // //스킬 중복 체크 시도중
-    // function isDuplicateSkill(selectedSkillId) {
-    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
-    //
-    //     console.log("Checking for duplicates...");
-    //     console.log("Selected Skill ID:", selectedSkillId);
-    //
-    //     for (let i = 0; i < skillSelects.length; i++) {
-    //         console.log("Comparing with Skill ID:", skillSelects[i].value);
-    //         if (skillSelects[i].value === selectedSkillId) {
-    //             console.log("Duplicate found!");
-    //             return true;
-    //         }
-    //     }
-    //
-    //     console.log("No duplicates found.");
-    //     return false;
-    // }
-    //
-    // function addSkillCareer() {
-    //     const skillCareerContainer = document.getElementById('skillCareerContainer');
-    //     const index = skillCareerContainer.children.length;
-    //
-    //     // 새로 추가할 스킬 선택 필드를 생성하기 전에 중복 확인
-    //     let skillOptions = '';
-    //     skills.forEach(skill => {
-    //         skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
-    //     });
-    //
-    //     const skillCareerItem = document.createElement('div');
-    //     skillCareerItem.classList.add('skillCareer-item');
-    //
-    //     skillCareerItem.innerHTML = `
-    //     <div class="form-group">
-    //         <label for="employeesskill[${index}].skill.skillId">Skill:</label>
-    //         <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required onchange="validateSkillSelection(this)">
-    //             ${skillOptions}
-    //         </select>
-    //     </div>
-    //     <div class="form-group">
-    //         <label for="employeesSkillRequests[${index}].skillCareer">Skill Career:</label>
-    //         <input type="number" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required>
-    //     </div>
-    //     <button type="button" id="delete-btn" onclick="removeSkills(this)">Remove</button>
-    // `;
-    //     skillCareerContainer.appendChild(skillCareerItem);
-    // }
-    //
-    // document.getElementById('submit-btn').addEventListener('click', function(event) {
-    //     const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
-    //     const selectedSkills = new Set();
-    //
-    //     for (let i = 0; i < skillSelects.length; i++) {
-    //         const skillId = skillSelects[i].value;
-    //         console.log("Submitting form, checking skill:", skillId);
-    //         if (selectedSkills.has(skillId)) {
-    //             alert('スキルの選択に重複があります。異なるスキルを選択してください。');
-    //             event.preventDefault(); // 폼 제출 중단
-    //             skillSelects[i].focus(); // 중복된 필드에 포커스
-    //             return;
-    //         }
-    //         selectedSkills.add(skillId);
-    //     }
-    //
-    //     // 여기서 다른 추가 검증을 할 수 있습니다.
-    // });
 
 
-    //스킬 중복 체크 시도중
+    function addSkillCareer() {
+        if (validateDuplicateSkills()) {
+            return; // 중복이 있으면 새로운 항목을 추가하지 않습니다.
+        }
 
+        const skillCareerContainer = document.getElementById('skillCareerContainer');
+        const index = skillCareerContainer.children.length;
 
+        const skillCareerItem = document.createElement('div');
+        skillCareerItem.classList.add('skillCareer-item');
 
+        let skillOptions = '';
+        skills.forEach(skill => {
+            skillOptions += `<option value="${skill.skillId}">${skill.skillName}</option>`;
+        });
 
+        skillCareerItem.innerHTML = `
+            <div class="form-group">
+                <label for="employeesskill[${index}].skill.skillId">プログラミング言語</label>
+                <select id="employeesskill[${index}].skill.skillId" name="employeesSkillRequests[${index}].skill.skillId" required>
+                    ${skillOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
+                <input type="number" style="font-size: 14pt" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required
+                 min="1" oninput="this.value = Math.max(this.value, 1)">
+                ヶ月
+            </div>
+            <button type="button" id="delete-btn" onclick="removeSkills(this)">追加取り消し</button>
+        `;
+        skillCareerContainer.appendChild(skillCareerItem);
+        skillCareerItem.querySelector('select').addEventListener('change', validateDuplicateSkills);
 
+    }
 
+    //8월 20일 10:06 시도중
+    function validateDuplicateSkills() {
+        const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
+        const selectedSkills = new Set();
+        let hasDuplicates = false;
 
+        skillSelects.forEach(select => {
+            if (selectedSkills.has(select.value)) {
+                hasDuplicates = true;
+            }
+            selectedSkills.add(select.value);
+        });
 
+        if (hasDuplicates) {
+            alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
 
+        return hasDuplicates;
+    }
 
+    document.getElementById('addSkillCareer-btn').addEventListener('click', function (event) {
+        if (validateDuplicateSkills()) {
+            event.preventDefault(); // 중복이 있을 때 추가 버튼이 동작하지 않도록 합니다.
+        } else {
+            addSkillCareer();
+        }
+    });
 
+    function handleSubmit(event) {
+        const hasDuplicates = validateDuplicateSkills(); // 중복 체크
+        if (hasDuplicates) {
+            event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
+            console.log('Form submission prevented due to duplicate skills.'); // 폼 제출이 막혔을 때 로그 출력
+            // alert('同じプログラミング言語のキャリアを重複して入力できません');
+        }
+    }
 
-
-
+    //8월 20일 10:06 시도중
 
 
 </script>
@@ -200,102 +166,122 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         margin: 0;
     }
 
+    .container {
+        height: auto;
+        width: 95vw;
+    }
 
     #map {
         height: 350px;
         width: 350px;
     }
 
-        .menu {
-            background-color: #1e90ff;
-            width: 250px;
-            height: 100vh;
-        }
+    .menu {
+        background-color: #1e90ff;
+        width: 250px;
+        height: 100vh;
+    }
 
-        .menus > li {
-            width: 200px;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            text-align: center;
-            font-size: 18px;
-        }
+    .menus > li {
+        width: 200px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-align: center;
+        font-size: 18px;
+    }
 
-        .menus li a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            text-align: center; /* 텍스트 가운데 정렬 */
-            padding: 15px 20px; /* a 요소에 패딩을 적용 */
-            box-sizing: border-box;
-            text-decoration: none; /* 밑줄 제거 */
-            color: inherit; /* 부모 요소의 색상을 상속 */
-        }
+    .menus li a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center; /* 텍스트 가운데 정렬 */
+        padding: 15px 20px; /* a 요소에 패딩을 적용 */
+        box-sizing: border-box;
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 요소의 색상을 상속 */
+    }
 
+    .menus {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-        .menus {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .menus li:hover {
+        background: linear-gradient(45deg, #1e90ff, #00bfff);
+        color: #fff;
+        border-top-right-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
 
-        .menus li:hover {
-            background: linear-gradient(45deg, #1e90ff, #00bfff);
-            color: #fff;
-            border-top-right-radius: 40px;
-            border-bottom-right-radius: 40px;
-        }
+    .contents {
+        background-color: #f5f5f5;
+        width: 1170px;
+        height: auto;
+        border-radius: 15px 15px 0 0;
+        overflow-y: auto;
+        scrollbar-width: none;
 
-        .contents {
-            background-color: #f5f5f5;
-            width: 1170px;
-            height: auto;
-            border-radius: 15px 15px 0 0;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
+        display: flex;
+        flex-direction: column; /* 수직 방향으로 요소 배치 */
+    }
 
-        .contents::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
+    .contents::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
 
     .contents p {
         height: 35px;
         margin-left: 30px;
     }
 
-    /* 기존 form 스타일 유지 */
     form {
         max-width: 50%;
-        max-height: 75%;
+        max-height: 750px; /* 폼의 최대 높이를 설정합니다 */
         background: rgba(173, 216, 230, 0.2);
         margin: 0 auto;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
-        scrollbar-width: none;
+        overflow-y: auto; /* 폼 내부에서 수직 스크롤을 활성화합니다 */
+        scrollbar-width: none; /* Firefox에서 스크롤바를 숨깁니다 */
     }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
-        }
+    form::-webkit-scrollbar {
+        width: 0px; /* Chrome, Safari, Opera에서 스크롤바를 숨깁니다 */
+        background: transparent; /* 스크롤바 트랙을 투명하게 만듭니다 */
+    }
 
-        input[type="text"], input[type="date"], select, input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+    form::-webkit-scrollbar-thumb {
+        background-color: transparent; /* 스크롤바 핸들을 투명하게 만듭니다 */
+    }
+
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    input[type="text"], input[type="date"], select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
 
     #addSkillCareer-btn {
         padding: 10px 20px;
@@ -330,12 +316,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         transition: background-color 0.3s, transform 0.3s;
     }
 
-
-        .container {
-            height: auto;
-            width: 95vw;
-        }
-
     #back-to-employeeslist {
         font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
         font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
@@ -349,13 +329,29 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
     }
 
-    .form-group {
-        margin-top: 15px;
-        margin-bottom: 15px;
+    .button-container {
+        display: flex;
+        justify-content: flex-end; /* 버튼을 오른쪽 끝으로 이동 */
+        margin-bottom: 10px; /* 버튼과 폼 사이의 간격 */
+    }
+
+    button {
+        display: inline-block;
+        text-align: center;
+        margin: 0 auto; /* 버튼을 가운데 정렬 */
+    }
+
+    button[type="submit"], button[type="button"] {
+        display: block;
+        margin: 0 auto; /* submit 및 추가 버튼을 가운데 정렬 */
+    }
+
+    #back-to-employeeslist {
+        margin: 0; /* 오버라이드: 오른쪽으로 붙는 버튼은 margin 제거 */
     }
 
 
-    </style>
+</style>
 </head>
 <body>
 <div class="container" style="display: flex">
@@ -368,33 +364,46 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     </div>
     <div class="contents">
         <p style="text-align: center; font-size: 26px">社員追加 </p>
-        <button
-                type="button" id="back-to-employeeslist" style="justify-content: flex-end"
-                th:onclick="|redirectToEmployeesList()|">社員リスト</button>
+        <div class="button-container">
+            <button type="button" id="back-to-employeeslist" th:onclick="|redirectToEmployeesList()|">社員リスト
+            </button>
+        </div>
         <form th:action="@{/employees/createemployee}" th:object="${employeesRequest}" method="post"
               enctype="multipart/form-data">
-            <label for="name">Name:</label>
-            <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
-
-            <label for="address">Address:</label>
-            <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
-
-            <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
-            <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
-            <div id="map" style="display: none;"></div>
-            <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
-            <input type="date" id="currentProjectEndDate" style="display: none;"
-                   th:field="*{currentProjectEndDate}"/><br/>
-
             <div class="form-group">
-                <label for="imageFile">Upload Image:</label>
-                <input type="file" id="imageFile" name="imageFile" onchange="previewImage(event)">
-                <br/>
-                <img id="imagePreview" style="display:none; margin-top: 10px; max-width: 30%; height: auto; border-radius: 8px;">
+                <label for="name">社員名</label>
+                <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
             </div>
 
             <div class="form-group">
-                <label for="preferredLanguage">Preferred Language:</label>
+                <label for="address">住所</label>
+                <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+            </div>
+
+            <div class="form-group">
+                <label for="hireDate">入社日</label>
+                <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
+            </div>
+
+            <div class="form-group">
+                <label for="contactNumber">電話番号</label>
+                <input type="text" id="contactNumber" th:field="*{contactNumber}"
+                       placeholder="Enter contact number"/><br/>
+            </div>
+
+            <div class="form-group">
+                <label for="imageFile">プロフィール写真登録</label>
+                <input type="file" id="imageFile" name="imageFile" style="background-color: white"
+                       onchange="previewImage(event)">
+                <br/>
+                <div style="text-align: center;">
+                    <img id="imagePreview"
+                         style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="preferredLanguage">興味ある言語</label>
                 <select id="preferredLanguage" th:field="*{preferredLanguage}" required>
                     <option th:each="skill : ${skills}" th:value="${skill.skillId}" th:text="${skill.skillName}">Select
                         Language
@@ -403,7 +412,7 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             </div>
 
             <div class="form-group">
-                <label for="preferredProjectType">Preferred Project Type:</label>
+                <label for="preferredProjectType">興味ある案件種類</label>
                 <select id="preferredProjectType" th:field="*{preferredProjectType}" required>
                     <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
                             th:text="${type.projectTypeName}">Select Project Type
@@ -411,20 +420,23 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
                 </select>
             </div>
 
-            <label for="contactNumber">Contact Number:</label>
-            <input type="text" id="contactNumber" th:field="*{contactNumber}" placeholder="Enter contact number"/><br/>
-
-            <label for="hireDate">Hire Date:</label>
-            <input type="date" id="hireDate" th:field="*{hireDate}" required/><br/>
-
             <div id="skillCareerContainer"></div>
             <div class="form-group">
-                <button type="button" id="addSkillCareer-btn" onclick="addSkillCareer()">Add SkillCareer</button>
+                <button type="button" id="addSkillCareer-btn" onclick="addSkillCareer()">プログラミング経歴追加</button>
             </div>
 
             <br/>
 
-            <button type="submit" id="submit-btn">Create Employee</button>
+            <button type="submit" id="submit-btn" onclick="handleSubmit(event)">社員情報登録</button>
+
+
+            <input type="text" id="latitude" style="display: none;" th:field="*{latitude}" readonly/><br/>
+            <input type="text" id="longitude" style="display: none;" th:field="*{longitude}" readonly/><br/>
+            <div id="map" style="display: none;"></div>
+            <input type="date" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
+            <input type="date" id="currentProjectEndDate" style="display: none;"
+                   th:field="*{currentProjectEndDate}"/><br/>
+
         </form>
 
     </div>

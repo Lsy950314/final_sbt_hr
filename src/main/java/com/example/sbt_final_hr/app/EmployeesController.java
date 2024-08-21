@@ -50,7 +50,6 @@ public class EmployeesController {
         model.addAttribute("employeesRequest", employeesRequest);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
         model.addAttribute("skills", skillsService.getAllSkills());
-        model.addAttribute("apiKey", apiKey);
         return "employees/createemployee";
     }
 
