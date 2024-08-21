@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,9 @@ public class EmployeesController {
     private final SkillsService skillsService;
     private final EmployeesSkillService employeesSkillService;
     private final ProjectsService projectsService;
+
+    @Value("${google.maps.api.key}")
+    private String apiKey;
 
     @Autowired
     public EmployeesController(EmployeesService employeesService, ProjectTypesService projectTypesService, SkillsService skillsService, EmployeesSkillService employeesSkillService, EmployeesProjectsService employeesProjectsService, EmployeesProjectsService employeesProjectsService1, ProjectsService projectsService) {
