@@ -12,45 +12,6 @@
             margin: 0;
         }
 
-
-        .login-box {
-            width: 150px;
-            margin: 0 auto;
-            padding: 15px;
-            background-color: rgba(173, 216, 230, 0.2);
-            border-radius: 10px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05); /* 그림자를 약하게 조정 */
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #a9b7c6; /* 연한 색상으로 변경 */
-            border-radius: 5px;
-            box-sizing: border-box;
-            background-color: lightgrey; /* 배경색을 더 연하게 */
-        }
-
-        .login-box button {
-            width: 100%;
-            padding: 10px;
-            background-color: #6c757d; /* 눈에 덜 띄는 회색 톤으로 변경 */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        .login-box button:hover {
-            background-color: #5a6268; /* 호버 시 색상을 약간 더 진한 회색으로 변경 */
-        }
-
-
         .menu {
             background-color: #1e90ff;
             width: 250px;
@@ -115,7 +76,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
-            margin-left: 1%
+            margin-left: 1%;
         }
 
         .employee-stats, .project-stats {
@@ -124,7 +85,6 @@
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: rgba(173, 216, 230, 0.2);
-
         }
 
         .shortcuts {
@@ -169,6 +129,18 @@
             display: flex;
             height: 95vh;
         }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin: 20px auto;
+            background-color: rgba(173, 216, 230, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -176,11 +148,6 @@
 <div class="container" style="display: flex">
     <!-- 대시보드 영역 -->
     <div class="menu">
-        <div class="login-box">
-            <input type="text" placeholder="ユーザーID" />
-            <input type="password" placeholder="パスワード" />
-            <button>ログイン</button>
-        </div>
         <ul class="menus">
             <li><a href="/index">MainPage</a></li>
             <li><a href="/employees">社員リスト</a></li>
@@ -191,8 +158,8 @@
     <!-- 메인 콘텐츠 영역 -->
     <div class="contents">
         <!-- 상단 제목과 로그인 기능 -->
-        <p style="font-size: 26px">メイン·ページ</p>
-        <div class="login-function">로그인 기능</div>
+        <p class="page-title">メイン·ページ</p>
+
 
         <div class="statistics">
             <div class="project-stats">
