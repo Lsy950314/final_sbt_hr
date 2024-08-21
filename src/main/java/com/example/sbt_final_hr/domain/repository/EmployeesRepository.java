@@ -14,10 +14,10 @@ import java.util.List;
 
 @Repository
 public interface EmployeesRepository extends JpaRepository<Employees, Long> {
-    // 추가적인 쿼리 메서드를 정의할 수 있습니다.
     List<Employees> findByNameContainingIgnoreCase(String name);
 
     // 특정 프로젝트 요구사항에 부합하는 사원 필터링
+    // allocation = -1 에 해당하는 index 를 생성해 두었음
     @Query("SELECT DISTINCT e FROM Employees e " +
             "JOIN e.skills es " +
             "JOIN ProjectRequirements pr ON pr.skill.skillId = es.skill.skillId " +
@@ -25,9 +25,6 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
             "AND e.allocation = -1 " +
             "AND es.skillCareer >= pr.requiredExperience")
     List<Employees> findEmployeesByProjectRequirements(@Param("projectId") Long projectId);
-
-    // 현재 프로젝트 종료일과 최근 프로젝트 종료일을 업데이트
-
 
     @Modifying
     @Transactional

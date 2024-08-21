@@ -161,7 +161,7 @@ public class MatchService {
         return Integer.MAX_VALUE;
     }
 
-    // 현 상태: STEP 1 + 2 합침, ALLOCATION 이 -1인 사람들 중 요구조건 맞는 사원만 걸러낸 후 통근시간 판단
+    // 현 상태: 2개의 STEP 합침, ALLOCATION 이 -1인 사람들 중 요구조건 맞는 사원만 걸러낸 후 통근시간 판단
     public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
         long startTime = System.currentTimeMillis();
 
