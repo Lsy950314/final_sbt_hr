@@ -9,6 +9,7 @@ import com.example.sbt_final_hr.domain.model.entity.*;
 import com.example.sbt_final_hr.domain.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -192,6 +193,7 @@ public class ProjectController {
                     return request;
                 }).collect(Collectors.toList()));
 
+        model.addAttribute("projectId", id);
         model.addAttribute("projectsRequest", projectsRequest);
         model.addAttribute("apiKey", apiKey);
         model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
@@ -200,14 +202,43 @@ public class ProjectController {
     }
 
     @PostMapping("/updateProject")
-    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest, HttpSession httpSession) {
-        Projects project = projectsService.updateProject(projectsRequest);
-        projectRequirementsService.deleteByProjectId(project.getProjectId());
+    public String updateProject(@ModelAttribute("projectsRequest") ProjectsRequest projectsRequest, HttpSession httpSession, Model model) {
+        List<ProjectRequirements> existingRequirements = projectRequirementsService.findByProjectId(projectsRequest.getProjectId());
 
-        if (projectsRequest.getProjectRequirements() != null) {
+        // 변경 감지 플래그
+        boolean hasChanges = false;
+
+        // 요청된 요구사항을 순회하며 기존 요구사항과 비교
+        for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
+            ProjectRequirements matchingRequirement = existingRequirements.stream()
+                    .filter(req -> req.getSkill().getSkillId().equals(requirementsRequest.getSkill().getSkillId()))
+                    .findFirst().orElse(null);
+
+            // 기존 요구사항이 존재하고, fulfilledCount가 0이 아닌 경우
+            if (matchingRequirement != null && matchingRequirement.getFulfilledCount() > 0) {
+                if (matchingRequirement.getRequiredExperience() != requirementsRequest.getRequiredExperience()
+                        || matchingRequirement.getRequiredCount() != requirementsRequest.getRequiredCount()) {
+                    // 에러 메시지와 함께 업데이트 차단
+                    model.addAttribute("errorMessage", "배정된 인원이 있는 요구사항을 변경할 수 없습니다. 먼저 해당 배정을 취소하세요.");
+                    model.addAttribute("projectsRequest", projectsRequest);
+                    model.addAttribute("apiKey", apiKey);
+                    model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+                    model.addAttribute("skills", skillsService.getAllSkills());
+                    return "project/updateProject";
+                }
+            } else {
+                hasChanges = true;
+            }
+        }
+
+        // 모든 검사를 통과했을 때만 프로젝트를 업데이트하고 요구사항을 변경
+        if (hasChanges) {
+            Projects project = projectsService.updateProject(projectsRequest);
+
+            // 기존 요구사항 삭제 후 새로 추가하는 방식이 아닌, 변경된 부분만 업데이트
             for (ProjectRequirementsRequest requirementsRequest : projectsRequest.getProjectRequirements()) {
                 ProjectRequirements projectRequirements = requirementsRequest.toEntity(project);
-                projectRequirementsService.createProjectRequirements(projectRequirements);
+                projectRequirementsService.createOrUpdateProjectRequirements(projectRequirements);
             }
         }
 
@@ -215,6 +246,22 @@ public class ProjectController {
         httpSession.removeAttribute("projectsType");
         return "redirect:/readAllProjects";
     }
+
+    @DeleteMapping("/deleteRequirement")
+    public ResponseEntity<String> deleteRequirement(@RequestBody Map<String, Object> payload) {
+        Long projectId = Long.parseLong(payload.get("projectId").toString());
+        Long skillId = Long.parseLong(payload.get("skillId").toString());
+        int requiredExperience = (int) Double.parseDouble(payload.get("requiredExperience").toString());
+
+        ProjectRequirements requirement = projectRequirementsService.findByProjectIdAndSkillIdAndRequiredExperience(projectId, skillId, requiredExperience);
+        if (requirement.getFulfilledCount() > 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("배정된 인원이 있는 요구사항은 삭제할 수 없습니다.");
+        }
+
+        projectRequirementsService.deleteById(requirement.getId());
+        return ResponseEntity.ok("요구사항이 삭제되었습니다.");
+    }
+
 
     @GetMapping("/deleteProject")
     public String deleteProject(@RequestParam Map<String, String> payload, Model model, HttpSession httpSession) {
