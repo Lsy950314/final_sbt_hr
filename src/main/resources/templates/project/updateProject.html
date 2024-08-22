@@ -166,6 +166,15 @@
         .double-group > div {
             width: 48%;
         }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            justify-content: stretch;
+            gap: 2vh;
+            margin: auto;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -328,48 +337,48 @@
         <form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post"
               class="form-container" id="projectForm" onsubmit="beforeSubmit()">
             <div class="form-group">
-                <label for="projectName">Project Name:</label>
+                <label for="projectName">プロジェクト名:</label>
                 <input type="text" id="projectName" th:field="*{projectName}" required>
             </div>
 
             <div class="form-group">
-                <label for="workLocation">Work Location:</label>
+                <label for="workLocation">勤務先:</label>
                 <input type="text" id="workLocation" th:field="*{workLocation}" required>
                 <input type="hidden" id="latitude" th:field="*{latitude}">
                 <input type="hidden" id="longitude" th:field="*{longitude}">
             </div>
 
             <div class="form-group">
-                <label for="clientCompany">Client Company:</label>
+                <label for="clientCompany">顧客社名:</label>
                 <input type="text" id="clientCompany" th:field="*{clientCompany}">
             </div>
 
             <div class="form-group double-group">
                 <div>
-                    <label for="startDate">Start Date:</label>
+                    <label for="startDate">開始日:</label>
                     <input type="date" id="startDate" th:field="*{startDate}">
                 </div>
 
                 <div>
-                    <label for="endDate">End Date:</label>
+                    <label for="endDate">終了日:</label>
                     <input type="date" id="endDate" th:field="*{endDate}">
                 </div>
             </div>
 
             <div class="form-group double-group">
                 <div>
-                    <label for="contactPhone">Contact Phone:</label>
+                    <label for="contactPhone">担当者連絡先:</label>
                     <input type="text" id="contactPhone" th:field="*{contactPhone}">
                 </div>
 
                 <div>
-                    <label for="contactName">Contact Name:</label>
+                    <label for="contactName">担当者名:</label>
                     <input type="text" id="contactName" th:field="*{contactName}">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="projectTypeId">Project Type:</label>
+                <label for="projectTypeId">案件種類:</label>
                 <select id="projectTypeId" th:field="*{projectTypeId}" required>
                     <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
                             th:text="${type.projectTypeName}">Project Type
@@ -379,15 +388,15 @@
 
             <div id="requirementsContainer" class="requirements-container"></div>
 
-            <div class="form-group">
+            <div class="form-group button-group">
                 <button type="button" onclick="addRequirement()">Add Requirement</button>
+                <button type="submit">Update Project</button>
             </div>
 
             <input type="hidden" id="projectId" th:field="*{projectId}">
             <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
             <input type="hidden" id="status" th:field="*{status}" value="-1">
 
-            <button type="submit">Update Project</button>
         </form>
 
     </div>

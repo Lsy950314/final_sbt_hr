@@ -35,8 +35,8 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center; /* 텍스트 가운데 정렬 */
-            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            text-align: center;
+            padding: 15px 20px;
             box-sizing: border-box;
         }
 
@@ -66,10 +66,10 @@
         }
 
         .form-container {
-            max-height: 85vh; /* 폼 높이 제한 */
-            overflow-y: scroll; /* 내부 스크롤 */
-            -ms-overflow-style: none;  /* 인터넷 익스플로러에서 스크롤바 제거 */
-            scrollbar-width: none;  /* 파이어폭스에서 스크롤바 제거 */
+            max-height: 85vh;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
@@ -77,7 +77,7 @@
         }
 
         .form-container::-webkit-scrollbar {
-            display: none; /* 웹킷 기반 브라우저에서 스크롤바 제거 */
+            display: none;
         }
 
         .form-group {
@@ -166,6 +166,15 @@
         .double-group > div {
             width: 48%;
         }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            justify-content: stretch;
+            gap: 2vh;
+            margin: auto;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -196,7 +205,6 @@
 
         window.onload = function () {
             initAutocomplete();
-            // 최소 하나의 요구 조건을 추가
             addRequirement();
         };
 
@@ -274,7 +282,6 @@
 
             return true;
         }
-
         /*]]>*/
     </script>
 </head>
@@ -292,48 +299,48 @@
         <form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
               onsubmit="return validateForm()">
             <div class="form-group">
-                <label for="projectName">Project Name:</label>
+                <label for="projectName">プロジェクト名:</label>
                 <input type="text" id="projectName" th:field="*{projectName}" required>
             </div>
 
             <div class="form-group">
-                <label for="workLocation">Work Location:</label>
+                <label for="workLocation">勤務先:</label>
                 <input type="text" id="workLocation" th:field="*{workLocation}" required>
                 <input type="hidden" id="latitude" th:field="*{latitude}">
                 <input type="hidden" id="longitude" th:field="*{longitude}">
             </div>
 
             <div class="form-group">
-                <label for="clientCompany">Client Company:</label>
+                <label for="clientCompany">顧客社名:</label>
                 <input type="text" id="clientCompany" th:field="*{clientCompany}">
             </div>
 
             <div class="form-group double-group">
                 <div>
-                    <label for="startDate">Start Date:</label>
+                    <label for="startDate">開始日:</label>
                     <input type="date" id="startDate" th:field="*{startDate}">
                 </div>
 
                 <div>
-                    <label for="endDate">End Date:</label>
+                    <label for="endDate">終了日:</label>
                     <input type="date" id="endDate" th:field="*{endDate}">
                 </div>
             </div>
 
             <div class="form-group double-group">
                 <div>
-                    <label for="contactPhone">Contact Phone:</label>
+                    <label for="contactPhone">担当者連絡先:</label>
                     <input type="text" id="contactPhone" th:field="*{contactPhone}">
                 </div>
 
                 <div>
-                    <label for="contactName">Contact Name:</label>
+                    <label for="contactName">担当者名:</label>
                     <input type="text" id="contactName" th:field="*{contactName}">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="projectTypeId">Project Type:</label>
+                <label for="projectTypeId">案件種類:</label>
                 <select id="projectTypeId" th:field="*{projectTypeId}" required>
                     <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
                             th:text="${type.projectTypeName}">
@@ -344,14 +351,14 @@
 
             <div id="requirementsContainer" class="requirements-container"></div>
 
-            <div class="form-group">
+            <div class="form-group button-group">
                 <button type="button" onclick="addRequirement()">Add Requirement</button>
+                <button type="submit">Create Project</button>
             </div>
 
             <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
             <input type="hidden" id="status" th:field="*{status}" value="-1">
 
-            <button type="submit">Create Project</button>
         </form>
 
         <div th:if="${error}">
