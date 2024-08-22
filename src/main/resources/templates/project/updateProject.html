@@ -9,8 +9,53 @@
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
+            padding: 0;
             margin: 0;
-            padding: 20px;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .menus > li {
+            width: 200px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding: 15px 20px;
+            box-sizing: border-box;
+        }
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
         h1 {
@@ -20,47 +65,19 @@
             margin-bottom: 30px;
         }
 
-        .error-popup {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            padding: 20px;
-            z-index: 1000;
-            width: 300px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .error-popup-content {
-            position: relative;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: transparent;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #721c24;
-        }
-
-        .close-button:hover {
-            color: #f5c6cb;
-        }
-
         .form-container {
-            max-width: 700px;
-            margin: 0 auto;
+            max-height: 85vh;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             background: #fff;
-            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding: 10pt;
+        }
+
+        .form-container::-webkit-scrollbar {
+            display: none;
         }
 
         .form-group {
@@ -134,6 +151,21 @@
             position: relative;
             z-index: 1;
         }
+
+        .insert-contents {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50vw;
+        }
+
+        .double-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .double-group > div {
+            width: 48%;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -201,7 +233,7 @@
             <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
             <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
         </div>
-        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">要求スキル削除</button>
+        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">요구사항 삭제</button>
         <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
     `;
             requirementsContainer.appendChild(requirementItem);
@@ -234,7 +266,6 @@
             }
         }
 
-
         function removeRequirement(button) {
             const requirementItem = button.parentElement;
             requirementItem.remove();
@@ -247,7 +278,6 @@
                 return false;
             }
 
-            // 각 필드가 채워져 있는지 확인
             const requirementItems = document.querySelectorAll('.requirement-item');
             for (const item of requirementItems) {
                 const skill = item.querySelector('select');
@@ -271,7 +301,6 @@
 
             return true;
         }
-        /*]]>*/
 
         function closeErrorPopup() {
             document.getElementById('error-popup').style.display = 'none';
@@ -280,84 +309,102 @@
     </script>
 </head>
 <body>
-<h1>Update Project</h1>
-<div id="error-popup" th:if="${errorMessage}" class="error-popup">
-    <div class="error-popup-content">
-        <span class="close-button" onclick="closeErrorPopup()">&times;</span>
-        <p th:text="${errorMessage}"></p>
+<div class="container" style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li><a href="/index">MainPage</a></li>
+            <li><a href="/employees">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
+        </ul>
+    </div>
+    <div class="insert-contents">
+        <h1>Update Project</h1>
+        <div id="error-popup" th:if="${errorMessage}" class="error-popup">
+            <div class="error-popup-content">
+                <span class="close-button" onclick="closeErrorPopup()">&times;</span>
+                <p th:text="${errorMessage}"></p>
+            </div>
+        </div>
+        <form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post"
+              class="form-container" id="projectForm" onsubmit="beforeSubmit()">
+            <div class="form-group">
+                <label for="projectName">Project Name:</label>
+                <input type="text" id="projectName" th:field="*{projectName}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="workLocation">Work Location:</label>
+                <input type="text" id="workLocation" th:field="*{workLocation}" required>
+                <input type="hidden" id="latitude" th:field="*{latitude}">
+                <input type="hidden" id="longitude" th:field="*{longitude}">
+            </div>
+
+            <div class="form-group">
+                <label for="clientCompany">Client Company:</label>
+                <input type="text" id="clientCompany" th:field="*{clientCompany}">
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" th:field="*{startDate}">
+                </div>
+
+                <div>
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" th:field="*{endDate}">
+                </div>
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                </div>
+
+                <div>
+                    <label for="contactName">Contact Name:</label>
+                    <input type="text" id="contactName" th:field="*{contactName}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="projectTypeId">Project Type:</label>
+                <select id="projectTypeId" th:field="*{projectTypeId}" required>
+                    <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
+                            th:text="${type.projectTypeName}">Project Type
+                    </option>
+                </select>
+            </div>
+
+            <div id="requirementsContainer" class="requirements-container"></div>
+
+            <div class="form-group">
+                <button type="button" onclick="addRequirement()">Add Requirement</button>
+            </div>
+
+            <input type="hidden" id="projectId" th:field="*{projectId}">
+            <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
+            <input type="hidden" id="status" th:field="*{status}" value="-1">
+
+            <button type="submit">Update Project</button>
+        </form>
+
     </div>
 </div>
-<form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
-    <div class="form-group">
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" th:field="*{projectName}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="workLocation">Work Location:</label>
-        <input type="text" id="workLocation" th:field="*{workLocation}" required>
-        <input type="hidden" id="latitude" th:field="*{latitude}">
-        <input type="hidden" id="longitude" th:field="*{longitude}">
-    </div>
-
-    <div class="form-group">
-        <label for="clientCompany">Client Company:</label>
-        <input type="text" id="clientCompany" th:field="*{clientCompany}">
-    </div>
-
-    <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" th:field="*{startDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" th:field="*{endDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactPhone">Contact Phone:</label>
-        <input type="text" id="contactPhone" th:field="*{contactPhone}" value="010-1234-5678">
-    </div>
-
-    <div class="form-group">
-        <label for="contactName">Contact Name:</label>
-        <input type="text" id="contactName" th:field="*{contactName}" value="担当者">
-    </div>
-
-    <div class="form-group">
-        <label for="projectTypeId">Project Type:</label>
-        <select id="projectTypeId" th:field="*{projectTypeId}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Project Type</option>
-        </select>
-    </div>
-
-    <div id="requirementsContainer" class="requirements-container"></div>
-
-    <div class="form-group">
-        <button type="button" onclick="addRequirement()">Add Requirement</button>
-    </div>
-
-    <input type="hidden" id="projectId" th:field="*{projectId}">
-    <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
-    <input type="hidden" id="status" th:field="*{status}" value="-1">
-
-    <button type="submit">Update Project</button>
-</form>
-
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('contactPhone').addEventListener('input', function (event) {
-            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+            let input = event.target.value.replace(/-/g, '');
 
             if (input.length > 3 && input.length <= 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3);
             } else if (input.length > 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
             }
 
-            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+            event.target.value = input;
         });
     });
 </script>
