@@ -3,6 +3,12 @@
 <head>
     <title>プロジェクトチーム編成システム</title>
     <meta charset="UTF-8">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr 일본어 설정 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 </head>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
 <script th:inline="javascript">
@@ -55,6 +61,7 @@ name="employeesSkillRequests[0].skill.skillId"는 employeesRequest.getEmployeesS
 name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkillCareer()와 매핑됩니다.
 이를 통해 EmployeesRequest 객체의 employeesSkillRequests 리스트 필드가 자동으로 설정되고, 리스트 내 각 EmployeesSkillRequest 객체의 skill 필드와 skillCareer 필드가 설정됩니다.*/
 
+
     function removeSkills(button) {
         const skillCareerItem = button.parentElement;
         skillCareerItem.remove();
@@ -63,6 +70,20 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
     function redirectToEmployeesList() {
         window.location.href = "/employees";
+    }
+
+    function updateFileName(event) {
+        const input = event.target;
+        const label = document.getElementById("fileLabel");
+
+        if (input.files && input.files.length > 0) {
+            label.textContent = input.files[0].name;
+        } else {
+            label.textContent = "ファイルを選択";
+        }
+
+        // 이미지 미리보기 업데이트
+        previewImage(event);
     }
 
     function previewImage(event) {
@@ -144,6 +165,15 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         }
     });
 
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // autohyphen 적용
+    //     const contactNumberInput = document.getElementById('contactNumber');
+    //     AutoHyphen.setup({
+    //         el: contactNumberInput,
+    //         pattern: '999-9999-9999'
+    //     });
+    // });
+
     function handleSubmit(event) {
         const hasDuplicates = validateDuplicateSkills(); // 중복 체크
         if (hasDuplicates) {
@@ -153,7 +183,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         }
     }
 
-    //8월 20일 10:06 시도중
 
 
 </script>
@@ -350,6 +379,27 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         margin: 0; /* 오버라이드: 오른쪽으로 붙는 버튼은 margin 제거 */
     }
 
+    .custom-file-upload {
+        width: 93%;
+        position: relative;
+        display: inline-block;
+        background-color: white;
+        padding: 6px 12px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .custom-file-upload input[type="file"] {
+        display: none;
+    }
+
+    #fileLabel {
+        cursor: pointer;
+    }
+
 
 </style>
 </head>
@@ -372,12 +422,12 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
               enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">社員名</label>
-                <input type="text" id="name" th:field="*{name}" placeholder="Enter name" required/><br/>
+                <input type="text" id="name" th:field="*{name}" placeholder="名前を入力" required/><br/>
             </div>
 
             <div class="form-group">
-                <label for="address">住所</label>
-                <input type="text" id="address" th:field="*{address}" placeholder="Enter address" required/><br/>
+                <label for="address">アドレス</label>
+                <input type="text" id="address" th:field="*{address}" placeholder="アドレスを入力" required/><br/>
             </div>
 
             <div class="form-group">
@@ -388,17 +438,18 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             <div class="form-group">
                 <label for="contactNumber">電話番号</label>
                 <input type="text" id="contactNumber" th:field="*{contactNumber}"
-                       placeholder="Enter contact number"/><br/>
+                       placeholder="連絡先番号を入力" maxlength="13" required/><br/>
             </div>
 
             <div class="form-group">
                 <label for="imageFile">プロフィール写真登録</label>
-                <input type="file" id="imageFile" name="imageFile" style="background-color: white"
-                       onchange="previewImage(event)">
+                <div class="custom-file-upload">
+                    <label for="imageFile" id="fileLabel">ファイルを選択</label>
+                    <input type="file" id="imageFile" name="imageFile" style="display: none;" onchange="updateFileName(event)">
+                </div>
                 <br/>
                 <div style="text-align: center;">
-                    <img id="imagePreview"
-                         style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
+                    <img id="imagePreview" style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
                 </div>
             </div>
 
@@ -442,4 +493,28 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
     </div>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('contactNumber').addEventListener('input', function (event) {
+            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+
+            if (input.length > 3 && input.length <= 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+            } else if (input.length > 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+            }
+
+            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#hireDate", {
+            locale: "ja", // 일본어 설정
+            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            altInput: true,
+            altFormat: "Y年m月d日" // 화면에 표시될 형식
+        });
+    });
+</script>
 </html>
