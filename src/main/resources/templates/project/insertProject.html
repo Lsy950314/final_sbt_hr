@@ -5,57 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert Project</title>
     <style>
-        /*body {*/
-        /*    font-family: Arial, sans-serif;*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    align-items: center;*/
-        /*}*/
-
-        /*.form-container {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    max-width: 800px;*/
-        /*}*/
-
-        /*.form-group {*/
-        /*    margin: 10px;*/
-        /*}*/
-
-        /*.form-group label {*/
-        /*    margin-bottom: 5px;*/
-        /*}*/
-
-        /*.form-group input, .form-group select {*/
-        /*    padding: 8px;*/
-        /*    font-size: 16px;*/
-        /*    width: 100%;*/
-        /*}*/
-
-        /*.requirements-container {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    margin: 10px;*/
-        /*}*/
-
-        /*.requirement-item {*/
-        /*    border: 1px solid #ccc;*/
-        /*    padding: 10px;*/
-        /*    margin-top: 10px;*/
-        /*}*/
-
-        /*button {*/
-        /*    margin-top: 20px;*/
-        /*    padding: 10px 20px;*/
-        /*    font-size: 16px;*/
-        /*}*/
-
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
+            padding: 0;
             margin: 0;
-            padding: 20px;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .menus > li {
+            width: 200px;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            box-sizing: border-box;
+        }
+
+        .menus {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
         h1 {
@@ -66,12 +66,18 @@
         }
 
         .form-container {
-            max-width: 700px;
-            margin: 0 auto;
+            max-height: 85vh; /* 폼 높이 제한 */
+            overflow-y: scroll; /* 내부 스크롤 */
+            -ms-overflow-style: none;  /* 인터넷 익스플로러에서 스크롤바 제거 */
+            scrollbar-width: none;  /* 파이어폭스에서 스크롤바 제거 */
             background: #fff;
-            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding: 10pt;
+        }
+
+        .form-container::-webkit-scrollbar {
+            display: none; /* 웹킷 기반 브라우저에서 스크롤바 제거 */
         }
 
         .form-group {
@@ -146,9 +152,20 @@
             z-index: 1;
         }
 
+        .insert-contents {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50vw;
+        }
 
+        .double-group {
+            display: flex;
+            justify-content: space-between;
+        }
 
-
+        .double-group > div {
+            width: 48%;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -189,6 +206,7 @@
 
             const requirementItem = document.createElement('div');
             requirementItem.classList.add('requirement-item');
+            requirementItem.style.position = 'relative';
 
             let skillOptions = '';
             skills.forEach(skill => {
@@ -210,7 +228,7 @@
         <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
         <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
     </div>
-    <button type="button" onclick="removeRequirement(this)">Remove</button>
+    <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; bottom: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
 `;
             requirementsContainer.appendChild(requirementItem);
         }
@@ -261,69 +279,85 @@
     </script>
 </head>
 <body>
-<h1>Insert New Project</h1>
-<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
-      onsubmit="return validateForm()">
-    <div class="form-group">
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" th:field="*{projectName}" required>
+<div class="container" style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li><a href="/index">MainPage</a></li>
+            <li><a href="/employees">社員リスト</a></li>
+            <li><a href="/readAllProjects">Projects</a></li>
+        </ul>
     </div>
+    <div class="insert-contents">
+        <h1>Insert New Project</h1>
+        <form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
+              onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="projectName">Project Name:</label>
+                <input type="text" id="projectName" th:field="*{projectName}" required>
+            </div>
 
-    <div class="form-group">
-        <label for="workLocation">Work Location:</label>
-        <input type="text" id="workLocation" th:field="*{workLocation}" required>
-        <input type="hidden" id="latitude" th:field="*{latitude}">
-        <input type="hidden" id="longitude" th:field="*{longitude}">
+            <div class="form-group">
+                <label for="workLocation">Work Location:</label>
+                <input type="text" id="workLocation" th:field="*{workLocation}" required>
+                <input type="hidden" id="latitude" th:field="*{latitude}">
+                <input type="hidden" id="longitude" th:field="*{longitude}">
+            </div>
+
+            <div class="form-group">
+                <label for="clientCompany">Client Company:</label>
+                <input type="text" id="clientCompany" th:field="*{clientCompany}">
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" th:field="*{startDate}">
+                </div>
+
+                <div>
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" th:field="*{endDate}">
+                </div>
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="contactPhone">Contact Phone:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                </div>
+
+                <div>
+                    <label for="contactName">Contact Name:</label>
+                    <input type="text" id="contactName" th:field="*{contactName}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="projectTypeId">Project Type:</label>
+                <select id="projectTypeId" th:field="*{projectTypeId}" required>
+                    <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
+                            th:text="${type.projectTypeName}">
+                        Project Type
+                    </option>
+                </select>
+            </div>
+
+            <div id="requirementsContainer" class="requirements-container"></div>
+
+            <div class="form-group">
+                <button type="button" onclick="addRequirement()">Add Requirement</button>
+            </div>
+
+            <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
+            <input type="hidden" id="status" th:field="*{status}" value="-1">
+
+            <button type="submit">Create Project</button>
+        </form>
+
+        <div th:if="${error}">
+            <p th:text="${error}" style="color:red;"></p>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="clientCompany">Client Company:</label>
-        <input type="text" id="clientCompany" th:field="*{clientCompany}">
-    </div>
-
-    <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" th:field="*{startDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" th:field="*{endDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactPhone">Contact Phone:</label>
-        <input type="text" id="contactPhone" th:field="*{contactPhone}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactName">Contact Name:</label>
-        <input type="text" id="contactName" th:field="*{contactName}">
-    </div>
-
-    <div class="form-group">
-        <label for="projectTypeId">Project Type:</label>
-        <select id="projectTypeId" th:field="*{projectTypeId}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
-                Project Type
-            </option>
-        </select>
-    </div>
-
-    <div id="requirementsContainer" class="requirements-container"></div>
-
-    <div class="form-group">
-        <button type="button" onclick="addRequirement()">Add Requirement</button>
-    </div>
-
-    <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
-    <input type="hidden" id="status" th:field="*{status}" value="-1">
-
-    <button type="submit">Create Project</button>
-</form>
-
-<div th:if="${error}">
-    <p th:text="${error}" style="color:red;"></p>
 </div>
 </body>
 <script>

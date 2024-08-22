@@ -255,11 +255,11 @@ public class ProjectController {
 
         ProjectRequirements requirement = projectRequirementsService.findByProjectIdAndSkillIdAndRequiredExperience(projectId, skillId, requiredExperience);
         if (requirement.getFulfilledCount() > 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("배정된 인원이 있는 요구사항은 삭제할 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("配属されている社員がいるため要求スキルを削除出来ません。");
         }
 
         projectRequirementsService.deleteById(requirement.getId());
-        return ResponseEntity.ok("요구사항이 삭제되었습니다.");
+        return ResponseEntity.ok("要求スキルが削除されました");
     }
 
 
@@ -268,7 +268,7 @@ public class ProjectController {
         long id = Long.parseLong(payload.get("id"));
         projectRequirementsService.deleteByProjectId(id);
         projectsService.deleteProject(id);
-        System.out.println("삭제 성공");
+        System.out.println("プログラミング削除完了");
 
         httpSession.removeAttribute("projects");
         httpSession.removeAttribute("projectsType");
