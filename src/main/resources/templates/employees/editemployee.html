@@ -109,7 +109,6 @@
         // 기존 항목에 대해 인덱스를 다시 할당
     }
 
-    //8월 20일 10:06 시도중
     function validateDuplicateSkills() {
         const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
         const selectedSkills = new Set();
@@ -158,10 +157,6 @@
         });
     }
 
-
-
-
-
     function redirectToEmployeesList() {
         window.location.href = "/employees";
     }
@@ -169,7 +164,6 @@
     window.onload = function () {
         initMap();
     };
-
 
     function updateFileName(event) {
         const input = event.target;
@@ -200,23 +194,6 @@
             imagePreview.style.display = 'none';
         }
     }
-
-    //
-    // function previewImage(event) {
-    //     const reader = new FileReader();
-    //     reader.onload = function () {
-    //         const output = document.getElementById('imagePreview');
-    //         output.src = reader.result;
-    //         output.style.display = 'block';  // 이미지를 표시합니다.
-    //     };
-    //     reader.readAsDataURL(event.target.files[0]);
-    // }
-    //
-    //
-
-
-
-
 
 </script>
 <style>
@@ -488,7 +465,6 @@
                 </div>
                 <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>
 
-                <!-- 기존 사진이 있을 경우에만 표시 -->
                 <div id="existingImageContainer" th:if="*{image}" style="text-align: center;">
                     <p>既登録プロフィール写真</p>
                     <img id="existingImageDisplay" th:src="@{${employeesRequest.image}}" alt="Employee Image"

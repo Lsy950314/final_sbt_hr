@@ -62,7 +62,7 @@ public class EmployeesRequest {
         this.setImage(imgPath); // 이미지를 설정합니다.
         return this.toEntity();
     }
-    //7월 31일 10:20 사진 관련 작업중
+
     public String getExistingImage() {
         return existingImage;
     }

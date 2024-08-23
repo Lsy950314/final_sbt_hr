@@ -201,7 +201,7 @@ public class EmployeesController {
                                  BindingResult result) throws IOException {
         if (!imageFile.isEmpty()) {
             String imagePath = employeesService.saveImage(imageFile);
-//            System.out.println("update요청시 imagePath나오나? " + imagePath);
+
             employeesRequest.setImage(imagePath);
         } else {// 새로운 이미지가 업로드되지 않은 경우
             employeesRequest.setImage(employeesRequest.getExistingImage());

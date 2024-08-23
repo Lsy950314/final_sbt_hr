@@ -562,7 +562,7 @@
                 <div class="allocation">
                     <img alt="Unassigned" src="/img/employees/unassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == -1}">
                     <img alt="Preassigned" src="/img/employees/preassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == 0}">
-                    <img alt="Assigned" src="/img/employees/assigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == 1}">
+                    <img alt="Assigned" src="/img/employees/verified-user.png" style="width: 25px; height: 25px;" th:if="${e.allocation == 1}">
                 </div>
                 <div class="employee-name" th:text="${e.name}"></div>
                 <div class="employee-rating"
@@ -1062,10 +1062,6 @@
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
         window.open(googleMapsUrl, '_blank');
     }
-
-
-
-
 
 
 </script>
