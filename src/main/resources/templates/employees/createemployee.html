@@ -55,13 +55,6 @@
     }
 
 
-    /*Spring MVC는 폼 데이터를 자바 객체로 바인딩할 때, 폼 필드의 name 속성과 객체의 속성 경로를 매핑하여 데이터를 설정합니다. 예를 들어:
-
-name="employeesSkillRequests[0].skill.skillId"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkill().getSkillId()와 매핑됩니다.
-name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSkillRequests().get(0).getSkillCareer()와 매핑됩니다.
-이를 통해 EmployeesRequest 객체의 employeesSkillRequests 리스트 필드가 자동으로 설정되고, 리스트 내 각 EmployeesSkillRequest 객체의 skill 필드와 skillCareer 필드가 설정됩니다.*/
-
-
     function removeSkills(button) {
         const skillCareerItem = button.parentElement;
         skillCareerItem.remove();
@@ -137,7 +130,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
 
     }
 
-    //8월 20일 10:06 시도중
     function validateDuplicateSkills() {
         const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
         const selectedSkills = new Set();
@@ -165,15 +157,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
         }
     });
 
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     // autohyphen 적용
-    //     const contactNumberInput = document.getElementById('contactNumber');
-    //     AutoHyphen.setup({
-    //         el: contactNumberInput,
-    //         pattern: '999-9999-9999'
-    //     });
-    // });
-
     function handleSubmit(event) {
         const hasDuplicates = validateDuplicateSkills(); // 중복 체크
         if (hasDuplicates) {
@@ -182,8 +165,6 @@ name="employeesSkillRequests[0].skillCareer"는 employeesRequest.getEmployeesSki
             // alert('同じプログラミング言語のキャリアを重複して入力できません');
         }
     }
-
-
 
 </script>
 <style>
