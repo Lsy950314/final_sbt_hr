@@ -27,11 +27,11 @@ public class ProjectsService {
     public Map<String, Integer> getCountProjects(){
         Map<String, Integer> countProjects = new HashMap<>();
 
-//        int totalProjects = projectsRepository.countAllProjects();
+        int totalProjects = projectsRepository.countAllProjects();
         int assignedProjects = projectsRepository.countAssignedProjects();
         int unassignedProjects = projectsRepository.countUnassignedProjects();
 
-//        countProjects.put("totalProjects", totalProjects);
+        countProjects.put("totalProjects", totalProjects);
         countProjects.put("assignedProjects", assignedProjects);
         countProjects.put("unassignedProjects", unassignedProjects);
 

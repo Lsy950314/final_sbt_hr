@@ -10,7 +10,7 @@
     <!-- Flatpickr 일본어 설정 -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 </head>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places&language=ja"></script>
 <script th:inline="javascript">
     let map;
     let marker;
@@ -109,7 +109,6 @@
         // 기존 항목에 대해 인덱스를 다시 할당
     }
 
-    //8월 20일 10:06 시도중
     function validateDuplicateSkills() {
         const skillSelects = document.querySelectorAll('select[name^="employeesSkillRequests"]');
         const selectedSkills = new Set();
@@ -158,10 +157,6 @@
         });
     }
 
-
-
-
-
     function redirectToEmployeesList() {
         window.location.href = "/employees";
     }
@@ -169,7 +164,6 @@
     window.onload = function () {
         initMap();
     };
-
 
     function updateFileName(event) {
         const input = event.target;
@@ -200,23 +194,6 @@
             imagePreview.style.display = 'none';
         }
     }
-
-    //
-    // function previewImage(event) {
-    //     const reader = new FileReader();
-    //     reader.onload = function () {
-    //         const output = document.getElementById('imagePreview');
-    //         output.src = reader.result;
-    //         output.style.display = 'block';  // 이미지를 표시합니다.
-    //     };
-    //     reader.readAsDataURL(event.target.files[0]);
-    // }
-    //
-    //
-
-
-
-
 
 </script>
 <style>
@@ -438,12 +415,6 @@
     }
 
 
-
-
-
-
-
-
 </style>
 <body onload="initMap()">
 <div class="container" style="display: flex">
@@ -486,24 +457,6 @@
                        placeholder="Enter contact number"/><br/>
             </div>
 
-<!--            <div class="form-group">-->
-<!--                <label for="imageFile">新たなプロフィール写真登録</label>-->
-<!--                <div class="custom-file-upload">-->
-<!--                    <label for="imageFile" id="fileLabel">ファイルを選択</label>-->
-<!--                    <input type="file" id="imageFile" name="imageFile" style="display: none;" onchange="updateFileName(event)">-->
-<!--                </div>-->
-<!--                <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>-->
-<!--                <div th:if="*{image}" style="text-align: center;">-->
-<!--                    <p>既登録プロフィール写真</p>-->
-<!--                    <img th:src="@{${employeesRequest.image}}" alt="Employee Image"-->
-<!--                         style="max-width: 200px; border-radius: 4px; margin-top:5px; margin-bottom: 5px;">-->
-<!--                </div>-->
-<!--                <div style="text-align: center;">-->
-<!--                    <img id="imagePreview" style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">-->
-<!--                </div>-->
-<!--            </div>-->
-
-
             <div class="form-group">
                 <label for="imageFile">新たなプロフィール写真登録</label>
                 <div class="custom-file-upload">
@@ -512,7 +465,6 @@
                 </div>
                 <input type="hidden" id="existingImage" name="existingImage" th:value="*{image}"/>
 
-                <!-- 기존 사진이 있을 경우에만 표시 -->
                 <div id="existingImageContainer" th:if="*{image}" style="text-align: center;">
                     <p>既登録プロフィール写真</p>
                     <img id="existingImageDisplay" th:src="@{${employeesRequest.image}}" alt="Employee Image"
