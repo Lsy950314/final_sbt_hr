@@ -94,15 +94,15 @@
 
                         // 스킬 아이콘과 이름을 포함한 HTML 생성
                         employeeInfoRow.innerHTML = `
-                        <div class="table-cell">${name}</div>
-                        <div class="table-cell">
-                            <img class="skill-icon" data-skill-name="${skillName}">
-                            <span>${skill}</span>
-                        </div>
-                        <div class="table-cell">${careerYear} 年</div>
-                        <div class="table-cell">${commuteTime} 分</div>
-                        <div class="table-cell">${waitingPeriod}</div>
-    `;
+    <div class="table-cell" data-employee-name="${name}">${name}</div>
+    <div class="table-cell" data-skill-name="${skillName}">
+        <img class="skill-icon" data-skill-name="${skillName}">
+        <span>${skill}</span>
+    </div>
+    <div class="table-cell" data-skill-career="${career}">${careerYear} 年</div>
+    <div class="table-cell" data-commute-time="${commuteTime}">${commuteTime} 分</div>
+    <div class="table-cell" data-end-date="${lastEndDate}">${waitingPeriod}</div>
+`;
 
                         const skillIconElement = employeeInfoRow.querySelector('.skill-icon');
                         if (skillIconMap[skillName]) {
@@ -149,10 +149,62 @@
                 }
             });
 
+            document.getElementById('sort-name').addEventListener('click', function() {
+                setSortIndicator(this);
+                sortTableByColumn('data-employee-name');
+            });
+
+            document.getElementById('sort-skill').addEventListener('click', function() {
+                setSortIndicator(this);
+                sortTableByColumn('data-skill-name');
+            });
+
+            document.getElementById('sort-career').addEventListener('click', function() {
+                setSortIndicator(this);
+                sortTableByColumn('data-skill-career', true);
+            });
+
+            document.getElementById('sort-commute').addEventListener('click', function() {
+                setSortIndicator(this);
+                sortTableByColumn('data-commute-time', true);
+            });
+
+            document.getElementById('sort-waiting').addEventListener('click', function() {
+                setSortIndicator(this);
+                sortTableByColumn('data-end-date', false, true);
+            });
 
         }); //document.addEventListener 끝
 
+        function setSortIndicator(sortedColumn) {
+            // 모든 header-cell 요소에서 'sorted' 클래스를 제거합니다.
+            document.querySelectorAll('.header-cell').forEach(cell => {
+                cell.classList.remove('sorted');
+            });
 
+            // 클릭된 헤더 셀에 'sorted' 클래스를 추가합니다.
+            sortedColumn.classList.add('sorted');
+        }
+
+        function sortTableByColumn(dataAttribute, isNumeric = false, isDate = false) {
+            const selectedInfoBody = document.getElementById('selected-info-body');
+            const rows = Array.from(selectedInfoBody.getElementsByClassName('table-row'));
+
+            rows.sort((a, b) => {
+                let aValue = a.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+                let bValue = b.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+
+                if (isNumeric) {
+                    return parseFloat(aValue) - parseFloat(bValue);
+                } else if (isDate) {
+                    return new Date(aValue) - new Date(bValue);
+                } else {
+                    return aValue.localeCompare(bValue);
+                }
+            });
+
+            rows.forEach(row => selectedInfoBody.appendChild(row));
+        }
 
         function calculateMonthsDifference(endDate) {
             const currentDate = new Date();
@@ -235,6 +287,14 @@
 
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
 
+        function clearEmployeeCheckboxes(employeeId) {
+            // 특정 employeeId를 가진 체크박스들을 모두 선택 해제
+            document.querySelectorAll(`.skill-checkbox[data-employee-id="${employeeId}"]`).forEach(checkbox => {
+                checkbox.checked = false;
+                // 해당 체크박스에 연결된 change 이벤트 트리거
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        }
     </script>
 
     <style>
@@ -304,6 +364,11 @@
         .table-row {
             display: flex;
             justify-content: space-between;
+        }
+
+        #selected-info-body .table-row:hover {
+            background-color: #d3d3d3; /* 원하는 배경색으로 변경 */
+            cursor: url('/img/project/move-to-employee.png'), auto;
         }
 
         .table-cell {
@@ -539,6 +604,29 @@
             align-items: center;
         }
 
+        .header-cell {
+            position: relative;
+            cursor: pointer; /* 마우스를 올리면 포인터 커서로 변경 */
+        }
+
+        .header-cell:hover {
+            background-color: #d3d3d3; /* 호버 시 배경색 변경 */
+            cursor: pointer; /* 포인터 커서로 변경 */
+        }
+
+        .header-cell::after {
+            content: ' ⇅'; /* 기본 화살표 기호 */
+            font-size: 12px; /* 기호 크기 조정 */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%); /* 수직 가운데 정렬 */
+            color: #17c71e; /* 기호 색상 */
+        }
+
+        .header-cell.sorted::after {
+            content: ' ✔'; /* 정렬 중인 셀에 체크 표시 기호 */
+        }
+
     </style>
 </head>
 <body>
@@ -594,6 +682,11 @@
                            th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}"></label>
                 </div>
+
+                <div class="clear-checkbox-container">
+                    <button type="button" class="clear-checkbox-button"  th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">チェックボックス一括クリア</button>
+                </div>
+
                 <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
 
@@ -612,15 +705,25 @@
             <div id="selected-info-table">
                 <div class="table-header">
                     <div class="table-row">
-                        <div class="table-cell">氏名</div>
-                        <div class="table-cell">スキル名</div>
-                        <div class="table-cell">経歴</div>
-                        <div class="table-cell">予想通勤時間</div>
-                        <div class="table-cell">待機期間</div>
+                        <div class="table-cell header-cell" id="sort-name">
+                            氏名
+                        </div>
+                        <div class="table-cell header-cell" id="sort-skill">
+                            スキル名
+                        </div>
+                        <div class="table-cell header-cell" id="sort-career">
+                            経歴
+                        </div>
+                        <div class="table-cell header-cell" id="sort-commute">
+                            予想通勤時間
+                        </div>
+                        <div class="table-cell header-cell" id="sort-waiting">
+                            待機期間
+                        </div>
                     </div>
                 </div>
                 <div id="selected-info-body">
-                    <!-- 여기서 체크박스 클릭 시 행이 추가됨 -->
+                    <!-- 체크박스를 클릭하여 행이 추가됨 -->
                 </div>
             </div>
         </div>
