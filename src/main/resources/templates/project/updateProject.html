@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr 일본어 설정 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Project</title>
+    <title>プロジェクト修正</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,7 +26,7 @@
         }
 
         .menus > li {
-            width: 200px;
+            width: 90%;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -321,13 +327,13 @@
 <div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li><a href="/index">MainPage</a></li>
+            <li><a href="/index">メイン·ページ</a></li>
             <li><a href="/employees">社員リスト</a></li>
-            <li><a href="/readAllProjects">Projects</a></li>
+            <li><a href="/readAllProjects">プロジェクトリスト</a></li>
         </ul>
     </div>
     <div class="insert-contents">
-        <h1>Update Project</h1>
+        <h1>プロジェクト修正</h1>
         <div id="error-popup" th:if="${errorMessage}" class="error-popup">
             <div class="error-popup-content">
                 <span class="close-button" onclick="closeErrorPopup()">&times;</span>
@@ -414,6 +420,14 @@
             }
 
             event.target.value = input;
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#startDate, #endDate", {
+            locale: "ja", // 일본어 설정
+            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            altInput: true,
+            altFormat: "Y年m月d日" // 화면에 표시될 형식
         });
     });
 </script>

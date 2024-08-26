@@ -42,7 +42,7 @@
         }
 
         .menus > li {
-            width: 200px;
+            width: 90%;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -727,9 +727,9 @@
 <div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li><a href="/index">MainPage</a></li>
+            <li><a href="/index">メイン·ページ</a></li>
             <li><a href="/employees">社員リスト</a></li>
-            <li><a href="/readAllProjects">Projects</a></li>
+            <li><a href="/readAllProjects">プロジェクトリスト</a></li>
         </ul>
     </div>
 
@@ -787,8 +787,7 @@
                     </button>
                 </div>
                 <div>
-                    <button th:class="'complete-button' + (${p.status != 1} ? ' hidden' : '')"
-                            th:onclick="'showCompleteModal('+${p.projectId}+')'">完了
+                    <button th:class="'complete-button' + (${p.status != 1} ? ' hidden' : '')">完了
                     </button>
                 </div>
             </div>
@@ -1232,8 +1231,27 @@
         location.href = "/employees?projectId=" + projectId;
     }
 
-    function showCompleteModal(projectId) {
-        console.log(projectId)
+    document.querySelectorAll('.complete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const projectId = this.closest('.project').querySelector('.project-id').textContent.trim();
+            showCompleteModal(projectId, this);
+        });
+    });
+
+    function showCompleteModal(projectId, buttonElement) {
+
+        const rowElement = buttonElement.closest('.project');
+        const endDateElement = rowElement.querySelector('.end-date');
+
+        const projectEndDate = new Date(endDateElement.textContent.trim());
+
+        // 현재 날짜를 가져옵니다.
+        const currentDate = new Date();
+
+        if (currentDate < projectEndDate) {
+            alert("まだ終了日以前です。");
+            return; // 로직을 중단
+        }
 
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `

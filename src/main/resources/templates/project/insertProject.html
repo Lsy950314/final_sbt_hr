@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr 일본어 설정 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Project</title>
+    <title>プロジェクト登録</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,7 +26,7 @@
         }
 
         .menus > li {
-            width: 200px;
+            width: 90%;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -289,13 +295,13 @@
 <div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li><a href="/index">MainPage</a></li>
+            <li><a href="/index">メイン·ページ</a></li>
             <li><a href="/employees">社員リスト</a></li>
-            <li><a href="/readAllProjects">Projects</a></li>
+            <li><a href="/readAllProjects">プロジェクトリスト</a></li>
         </ul>
     </div>
     <div class="insert-contents">
-        <h1>Insert New Project</h1>
+        <h1>プロジェクト登録</h1>
         <form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
               onsubmit="return validateForm()">
             <div class="form-group">
@@ -305,7 +311,7 @@
 
             <div class="form-group">
                 <label for="workLocation">勤務先:</label>
-                <input type="text" id="workLocation" th:field="*{workLocation}" required>
+                <input type="text" id="workLocation" placeholder="アドレスを入力" th:field="*{workLocation}" required>
                 <input type="hidden" id="latitude" th:field="*{latitude}">
                 <input type="hidden" id="longitude" th:field="*{longitude}">
             </div>
@@ -379,6 +385,15 @@
             }
 
             event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+        });
+
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#startDate, #endDate", {
+            locale: "ja", // 일본어 설정
+            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            altInput: true,
+            altFormat: "Y年m月d日" // 화면에 표시될 형식
         });
     });
 </script>
