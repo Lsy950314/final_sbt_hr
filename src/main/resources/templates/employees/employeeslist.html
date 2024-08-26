@@ -163,6 +163,11 @@
             transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
         }
 
+        #add-employees {
+            margin-right: 20px;
+            margin-top: 70px;
+        }
+
 
 
 
@@ -733,9 +738,6 @@
                             updateEmployee(employeeId);
                         });
 
-                        document.getElementById('delete-btn').addEventListener('click', function () {
-                            deleteEmployee(employeeId);
-                        });
 
                         modal.style.display = "block";
                     })
@@ -818,7 +820,7 @@
 
 
     function deleteEmployee(employeeId) {
-        if (confirm("정말로 삭제하시겠습니까?")) {
+        if (confirm("本当に削除しますか？")) {
             location.href = `/employees/delete/${employeeId}`;
         }
     }
@@ -1062,6 +1064,24 @@
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
         window.open(googleMapsUrl, '_blank');
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ratings = document.querySelectorAll('.employee-rating');
+
+        ratings.forEach(function (ratingElement, index) {
+            // 요소의 텍스트 내용을 가져와서 숫자로 변환
+            const rating = parseFloat(ratingElement.textContent.trim());
+
+
+            if (!isNaN(rating)) {
+                if (rating < 2.0) {
+                    ratingElement.style.color = 'blue';
+                } else if (rating >= 4.5) {
+                    ratingElement.style.color = 'rgba(255, 204, 0, 1)';
+                }
+            }
+        });
+    });
 
 
 </script>
