@@ -150,26 +150,41 @@
             });
 
             document.getElementById('sort-name').addEventListener('click', function() {
+                setSortIndicator(this);
                 sortTableByColumn('data-employee-name');
             });
 
             document.getElementById('sort-skill').addEventListener('click', function() {
+                setSortIndicator(this);
                 sortTableByColumn('data-skill-name');
             });
 
             document.getElementById('sort-career').addEventListener('click', function() {
+                setSortIndicator(this);
                 sortTableByColumn('data-skill-career', true);
             });
 
             document.getElementById('sort-commute').addEventListener('click', function() {
+                setSortIndicator(this);
                 sortTableByColumn('data-commute-time', true);
             });
 
             document.getElementById('sort-waiting').addEventListener('click', function() {
-                sortTableByColumn('data-end-date', true);
+                setSortIndicator(this);
+                sortTableByColumn('data-end-date', false, true);
             });
 
         }); //document.addEventListener 끝
+
+        function setSortIndicator(sortedColumn) {
+            // 모든 header-cell 요소에서 'sorted' 클래스를 제거합니다.
+            document.querySelectorAll('.header-cell').forEach(cell => {
+                cell.classList.remove('sorted');
+            });
+
+            // 클릭된 헤더 셀에 'sorted' 클래스를 추가합니다.
+            sortedColumn.classList.add('sorted');
+        }
 
         function sortTableByColumn(dataAttribute, isNumeric = false, isDate = false) {
             const selectedInfoBody = document.getElementById('selected-info-body');
@@ -580,9 +595,27 @@
             align-items: center;
         }
 
+        .header-cell {
+            position: relative;
+            cursor: pointer; /* 마우스를 올리면 포인터 커서로 변경 */
+        }
+
         .header-cell:hover {
             background-color: #d3d3d3; /* 호버 시 배경색 변경 */
             cursor: pointer; /* 포인터 커서로 변경 */
+        }
+
+        .header-cell::after {
+            content: ' ⇅'; /* 기본 화살표 기호 */
+            font-size: 12px; /* 기호 크기 조정 */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%); /* 수직 가운데 정렬 */
+            color: #555; /* 기호 색상 */
+        }
+
+        .header-cell.sorted::after {
+            content: ' ✔'; /* 정렬 중인 셀에 체크 표시 기호 */
         }
 
     </style>
@@ -658,11 +691,21 @@
             <div id="selected-info-table">
                 <div class="table-header">
                     <div class="table-row">
-                        <div class="table-cell header-cell" id="sort-name">氏名</div>
-                        <div class="table-cell header-cell" id="sort-skill">スキル名</div>
-                        <div class="table-cell header-cell" id="sort-career">経歴</div>
-                        <div class="table-cell header-cell" id="sort-commute">予想通勤時間</div>
-                        <div class="table-cell header-cell" id="sort-waiting">待機期間</div>
+                        <div class="table-cell header-cell" id="sort-name">
+                            氏名
+                        </div>
+                        <div class="table-cell header-cell" id="sort-skill">
+                            スキル名
+                        </div>
+                        <div class="table-cell header-cell" id="sort-career">
+                            経歴
+                        </div>
+                        <div class="table-cell header-cell" id="sort-commute">
+                            予想通勤時間
+                        </div>
+                        <div class="table-cell header-cell" id="sort-waiting">
+                            待機期間
+                        </div>
                     </div>
                 </div>
                 <div id="selected-info-body">
