@@ -126,6 +126,21 @@
             border-bottom: 1px solid #c6c6c6;
         }
 
+        .project-name,
+        .client-company{
+            white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+            overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
+            text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+            max-width: 100%; /* 컨테이너 너비를 넘어가지 않도록 최대 너비 설정 */
+            display: inline-block; /* 텍스트를 한 줄로 유지하기 위해 inline-block 사용 */
+        }
+
+        #project-title,
+        #project-info .value {
+            white-space: normal; /* 자동 줄바꿈 설정 */
+            overflow-wrap: break-word; /* 단어가 길 경우 줄바꿈 */
+        }
+
         .allocation-header, .allocation {
             min-width: 35px;
             max-width: 35px;
@@ -271,7 +286,7 @@
         #project-info .label {
             background-color: #71b6ff;
             font-weight: bold;
-            width: 150px; /* 가로 길이를 150px로 설정 */
+            width: 20%; /* 라벨의 고정 너비를 유지하지만, 필요에 따라 조정 */
             white-space: nowrap; /* 줄바꿈 방지 */
             overflow: hidden; /* 넘치는 텍스트는 숨김 */
             text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
@@ -286,7 +301,7 @@
         }
 
         #project-info .value {
-            width: 80%;
+            width: 70%;
         }
 
         .modal-projectRequirements div {
@@ -723,6 +738,19 @@
             border-right: none; /* Remove right border for the last header cell */
         }
 
+        #lookOnMap {
+            border: none;
+            border-radius: 5px;
+            background-color: #87cefa;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #lookOnMap:hover{
+            background-color: #6bb5e6;
+            transform: translateY(-2px);
+        }
 
 
 
@@ -823,7 +851,7 @@
             <span style="display: none;" class="close-button" onclick="closeModal()">&times;</span>
             <!-- 새로운 제목 영역 추가 -->
             <div style="display: flex; justify-content: space-between; align-items: center">
-                <div>
+                <div style="width: 55%">
                     <span id="project-title" style="font-weight: bold; font-size: 25px;"></span>
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
@@ -913,7 +941,7 @@
     <div class="project-info-left">
         <div class="data-row">
             <div class="label">勤務先住所:</div>
-            <div class="value">${data.project.workLocation}  <button onclick="visitGoogleMap(${data.project.latitude}, ${data.project.longitude})">地図で見る</button>
+            <div class="value">${data.project.workLocation}  <button  id="lookOnMap" onclick="visitGoogleMap(${data.project.latitude}, ${data.project.longitude})">地図で見る</button>
             </div>
         </div>
         <div class="data-row">
