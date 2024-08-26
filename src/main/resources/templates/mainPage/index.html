@@ -3,36 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인 페이지</title>
+    <title>プロジェクトチーム編成システム</title>
     <style>
-        body, html {
-            margin: 0;
+        body {
+            overflow-y: hidden; /* Y축 스크롤 비활성화 */
+            overflow-x: auto;   /* X축 스크롤 활성화 */
             padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
+            margin: 0;
         }
 
         .menu {
             background-color: #1e90ff;
-            width: 350px;
+            width: 250px;
             height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #fff;
-        }
-
-        .menus {
-            list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
         .menus > li {
-            width: 300px;
+            width: 101%;
             height: 40px;
             justify-content: center;
             align-items: center;
@@ -47,11 +34,25 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
-            padding: 15px 20px;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            padding: 15px 20px; /* a 요소에 패딩을 적용 */
             box-sizing: border-box;
-            color: inherit;
-            text-decoration: none;
+            text-decoration: none; /* 밑줄 제거 */
+            color: inherit; /* 부모 요소의 색상을 상속 */
+        }
+
+        .menus {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-icon {
+            width: 20%; /* 이미지의 너비 설정 */
+            height: auto; /* 이미지의 높이 설정 */
+            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
         }
 
         .menus li:hover {
@@ -61,112 +62,181 @@
             border-bottom-right-radius: 40px;
         }
 
-        .contents {
-            background-color: #f5f5f5;
-            flex-grow: 1;
-            padding: 20px;
-            box-sizing: border-box;
+        .menus li a:hover {
+            color: #fff; /* 마우스를 호버할 때 글씨 색을 하얗게 */
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .contents {
+            background-color: #f5f5f5;
+            width: 1170px;
+            height: auto;
+            border-radius: 15px 15px 0 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .contents p {
+            height: 35px;
+            margin-left: 30px;
         }
 
         .statistics {
+            width: 97%;
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            margin-left: 1%;
         }
 
         .employee-stats, .project-stats {
-            width: 48%;
-            background-color: #ffffff;
-            padding: 20px;
+            width: 49%;
+            padding: 10px;
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(173, 216, 230, 0.2);
         }
 
         .shortcuts {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            margin-top: 10px;
             margin-bottom: 10px;
         }
 
         .shortcut-button {
-            width: 48%;
+            width: 100%; /* 부모 요소의 너비를 채우도록 설정 */
             padding: 15px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            text-overflow: ellipsis; /* 넘치는 텍스트를 생략 부호(...)로 표시 */
+            transition: font-size 0.2s ease; /* 글자 크기 변경 시 부드러운 전환 */
         }
 
         .shortcut-button:hover {
             background-color: #0056b3;
         }
 
+        .shortcut-button-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
 
+        .shortcut-button-container .shortcut-button {
+            flex: 1;
+            margin: 5px; /* 버튼 간의 간격을 추가 */
+        }
+
+        .container {
+            display: flex;
+            height: 95vh;
+        }
+
+        .page-title {
+            width: 92%;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin: 20px auto;
+            background-color: rgba(173, 216, 230, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-<div style="display: flex">
-    <!-- 대시보드 영역 -->
+
+<div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
-            <li><a href="/index">MainPage</a></li>
-            <li><a href="/employees">社員リスト</a></li>
-            <li><a href="/readAllProjects">Projects</a></li>
+            <li>
+                <a href="/index">
+                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    メイン·ページ
+                </a>
+            </li>
+            <li>
+                <a href="/employees">
+                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    社員リスト
+                </a>
+            </li>
+            <li>
+                <a href="/readAllProjects">
+                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    プロジェクトリスト
+                </a>
+            </li>
         </ul>
     </div>
 
     <!-- 메인 콘텐츠 영역 -->
     <div class="contents">
         <!-- 상단 제목과 로그인 기능 -->
-        <div class="header">
-            <div class="title">타이틀</div>
-            <div class="login-function">로그인 기능</div>
-        </div>
+        <p class="page-title">メイン·ページ</p>
+
 
         <div class="statistics">
             <div class="project-stats">
-                <h3>프로젝트 통계</h3>
-                <div>총 프로젝트 수: <span th:text="${countProjects['totalProjects']}"></span></div>
-                <div>배정 완료(진행 중) 프로젝트 수: <span th:text="${countProjects['assignedProjects']}"></span></div>
-                <div>미배정 프로젝트 수: <span th:text="${countProjects['unassignedProjects']}"></span></div>
+                <h3>プロジェクト統計</h3>
+                <div style="display: flex; flex-direction: column; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden; width: 80%;">
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">総プロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['totalProjects']} +'個'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #fff; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">割り当て完了および進行プロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['assignedProjects']}+'個'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">未割り当てプロジェクト数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countProjects['unassignedProjects']}+'個'"></span></div>
+                    </div>
+                </div>
+                <div class="shortcuts shortcut-button-container">
+                    <a href="/readAllProjects?filterStatus=-1">
+                        <button class="shortcut-button">未割り当てプロジェクト確認へ</button>
+                    </a>
+                    <a href="/readAllProjects?sortBy=endDate">
+                        <button class="shortcut-button">終了間近のプロジェクト確認へ</button>
+                    </a>
+                </div>
             </div>
 
             <div class="employee-stats">
-                <h3>사원 통계</h3>
-                <div>고객상주업무의 총 사원 수 : <span th:text="${countEmployees['totalEmployees']}"></span> </div>
-                <div>현재 프로젝트 배치중인 사원 수 : <span th:text="${countEmployees['assignedEmployees']}"></span></div>
-                <div>현재 대기중인 사원 수 : <span th:text="${countEmployees['unassignedEmployees']}"></span></div>
-
+                <h3>社員統計</h3>
+                <div style="display: flex; flex-direction: column; margin: 0 auto; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden; width: 80%;">
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">客先常駐業務担当の総社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['totalEmployees']} +'人'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #fff; border-bottom: 1px solid #ddd;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">現在プロジェクトに配置中の社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['assignedEmployees']}+'人'"></span></div>
+                    </div>
+                    <div style="display: flex; padding: 10px; background-color: #f5f5f5;">
+                        <div style="flex: 4; font-weight: bold; border-right: 1px solid #ccc; padding-right: 10px;">現在待機中の社員数</div>
+                        <div style="flex: 1; text-align: right; padding-left: 10px;"><span th:text="${countEmployees['unassignedEmployees']}+'人'"></span></div>
+                    </div>
+                </div>
+                <div class="shortcuts shortcut-button-container">
+                    <a href="/employees?filterAllocation=-1">
+                        <button class="shortcut-button">待機中の社員確認へ</button>
+                    </a>
+                    <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
+                        <button class="shortcut-button">担当プロジェクト終了に近い社員確認へ</button>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <!-- 바로가기 버튼들 -->
-        <div class="shortcuts">
-            <a href="/readAllProjects?filterStatus=-1">
-                <button class="shortcut-button">미배정 프로젝트 확인</button>
-            </a>
-            <a href="/employees?filterAllocation=-1">
-            <button class="shortcut-button">대기중인 사원 보러가기</button>
-            </a>
-        </div>
-
-        <div class="shortcuts">
-            <a href="/readAllProjects?sortBy=endDate">
-                <button class="shortcut-button">종료 임박 프로젝트 확인</button>
-            </a>
-            <a href="/employees?filterAllocation=1&currentProjectEndDateDesc">
-                <button class="shortcut-button">곧 프로젝트 끝나는 사원 보러 가기</button>
-            </a>
         </div>
     </div>
 </div>

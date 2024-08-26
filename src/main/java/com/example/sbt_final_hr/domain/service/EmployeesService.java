@@ -90,9 +90,7 @@ public class EmployeesService {
         employeesRepository.deleteById(id);
     }
 
-    //13시 20분 시도중. chat gpt
     public String saveImage(MultipartFile image) throws IOException {
-        // Get the absolute path to the static folder
         ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
         File imgDir = imgDirResource.getFile();
 
@@ -110,7 +108,6 @@ public class EmployeesService {
 
         Files.write(filePath, image.getBytes());
 
-        // Return the relative path to be saved in the database
         return "/img/employees/" + newFilename;
     }
 
@@ -155,17 +152,8 @@ public class EmployeesService {
        
     }
 
-    //8월 9일 10:44 read 기능 최적화 관련 시도중
     public List<EmployeesRequest> findAllEmployeesSummary() {
-        //시간 측정
-        //long startTime = System.currentTimeMillis();
-
-        //List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
         List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
-
-        //long endTime = System.currentTimeMillis();
-        //System.out.println("findAllEmployeesSummary took: " + (endTime - startTime) + " milliseconds");
-
         return employeesSummary;
     }
 
@@ -182,12 +170,5 @@ public class EmployeesService {
 
         return countEmployees;
     }
-
-
-
-
-
-
-
 
 }

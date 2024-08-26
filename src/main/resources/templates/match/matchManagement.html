@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>매치 관리</title>
+    <title>配属管理</title>
     <script th:inline="javascript">
         const skillIconMap = {
             'java': '/img/skillicons/java-icon.png',
@@ -21,6 +21,13 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-career').forEach(element => {
+                const months = parseFloat(element.getAttribute('data-month'));
+                if (!isNaN(months)) {
+                    const years = (months / 12).toFixed(1);
+                    element.textContent = `${years} 年`;
+                }
+            });
 
             // 선호 스킬 아이콘 설정
             document.querySelectorAll('.preferred-skill-icon').forEach(iconElement => {
@@ -72,7 +79,7 @@
                     const careerYear = (career / 12).toFixed(1);
 
 
-                    let waitingPeriod = '대기기간 없음';
+                    let waitingPeriod = '待機期間無し';
                     if (lastEndDate) {
                         waitingPeriod = `${calculateMonthsDifference(lastEndDate)} ヶ月`;
                     }
@@ -87,15 +94,15 @@
 
                         // 스킬 아이콘과 이름을 포함한 HTML 생성
                         employeeInfoRow.innerHTML = `
-                        <div class="table-cell">${name}</div>
-                        <div class="table-cell">
-                            <img class="skill-icon" data-skill-name="${skillName}">
-                            <span>${skill}</span>
-                        </div>
-                        <div class="table-cell">${careerYear} 年</div>
-                        <div class="table-cell">${commuteTime} 分</div>
-                        <div class="table-cell">${waitingPeriod}</div>
-    `;
+    <div class="table-cell" data-employee-name="${name}">${name}</div>
+    <div class="table-cell" data-skill-name="${skillName}">
+        <img class="skill-icon" data-skill-name="${skillName}">
+        <span>${skill}</span>
+    </div>
+    <div class="table-cell" data-skill-career="${career}">${careerYear} 年</div>
+    <div class="table-cell" data-commute-time="${commuteTime}">${commuteTime} 分</div>
+    <div class="table-cell" data-end-date="${lastEndDate}">${waitingPeriod}</div>
+`;
 
                         const skillIconElement = employeeInfoRow.querySelector('.skill-icon');
                         if (skillIconMap[skillName]) {
@@ -141,8 +148,48 @@
                     element.textContent = text.replace(matches[0], rounded);
                 }
             });
-        })
 
+            document.getElementById('sort-name').addEventListener('click', function() {
+                sortTableByColumn('data-employee-name');
+            });
+
+            document.getElementById('sort-skill').addEventListener('click', function() {
+                sortTableByColumn('data-skill-name');
+            });
+
+            document.getElementById('sort-career').addEventListener('click', function() {
+                sortTableByColumn('data-skill-career', true);
+            });
+
+            document.getElementById('sort-commute').addEventListener('click', function() {
+                sortTableByColumn('data-commute-time', true);
+            });
+
+            document.getElementById('sort-waiting').addEventListener('click', function() {
+                sortTableByColumn('data-end-date', true);
+            });
+
+        }); //document.addEventListener 끝
+
+        function sortTableByColumn(dataAttribute, isNumeric = false, isDate = false) {
+            const selectedInfoBody = document.getElementById('selected-info-body');
+            const rows = Array.from(selectedInfoBody.getElementsByClassName('table-row'));
+
+            rows.sort((a, b) => {
+                let aValue = a.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+                let bValue = b.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+
+                if (isNumeric) {
+                    return parseFloat(aValue) - parseFloat(bValue);
+                } else if (isDate) {
+                    return new Date(aValue) - new Date(bValue);
+                } else {
+                    return aValue.localeCompare(bValue);
+                }
+            });
+
+            rows.forEach(row => selectedInfoBody.appendChild(row));
+        }
 
         function calculateMonthsDifference(endDate) {
             const currentDate = new Date();
@@ -159,10 +206,10 @@
             elements.forEach(element => {
                 const endDate = element.getAttribute('data-end-date');
                 if (endDate == null) {
-                    element.textContent = '대기기간 없음';
+                    element.textContent = '待機期間無し';
                 } else {
                     const monthsDifference = calculateMonthsDifference(endDate);
-                    element.textContent = `${monthsDifference} 개월`;
+                    element.textContent = `待機期間: ${monthsDifference} ヶ月`;
                 }
 
             });
@@ -182,7 +229,7 @@
                 // console.log(pr)
                 const requirementDiv = document.createElement('div');
                 const experienceYear = (pr.requiredExperience / 12).toFixed(1);
-                requirementDiv.textContent = `スキル: ${pr.skill.skillName}, 経歴: ${experienceYear}年`;
+                requirementDiv.textContent = `${pr.skill.skillName}, 経歴: ${experienceYear}年`;
                 requirementDiv.setAttribute('data-requirement-id', pr.id);
                 requirementDiv.classList.add('requirement-option');
 
@@ -198,22 +245,22 @@
         }
 
         function assignEmployeeToProject(employeeId, projectId, projectRequirementsId) {
-            if (confirm('배정하시겠습니까?')) {
+            if (confirm('プロジェクトに配属しますか')) {
                 fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
                     .then(response => {
                         if (response.ok) {
-                            alert('배정 완료');
+                            alert('配属完了');
                             window.location.href = '/matchManagement';
                         } else {
-                            alert('배정에 실패했습니다');
+                            alert('配属失敗');
                         }
                     })
                     .catch(error => {
                         console.error('Error: ', error);
-                        alert('서버 통신 오류');
+                        alert('サーバーエラー');
                     });
             } else {
-                alert('배정이 취소되었습니다.')
+                alert('配属処理がキャンセルされました')
             }
 
         }
@@ -231,6 +278,29 @@
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px; /* 버튼과 아래 콘텐츠 사이의 간격 */
+        }
+
+        .main-page-button,
+        .project-list-button {
+            padding: 5px 15px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .main-page-button:hover,
+        .project-list-button:hover {
+            background-color: #1f5a85;
         }
 
         .project-requirements-list {
@@ -271,6 +341,10 @@
         .table-row {
             display: flex;
             justify-content: space-between;
+        }
+
+        #selected-info-body .table-row:hover {
+            background-color: #d3d3d3; /* 원하는 배경색으로 변경 */
         }
 
         .table-cell {
@@ -324,6 +398,16 @@
             padding: 16px;
             margin: 10px 0;
             width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-employee-entry{
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            width: 94%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -437,7 +521,6 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
-        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
         .project-requirement.completed-project {
             background-color: #d3d3d3; /* 어두운 배경색을 설정 (여기서는 연한 회색) */
             opacity: 0.8; /* 살짝 어둡게 만들기 위해 투명도 조정 */
@@ -488,12 +571,30 @@
             display: none; /* Chrome, Safari, Opera */
         }
 
+        .requirement-modal-box{
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-cell:hover {
+            background-color: #d3d3d3; /* 호버 시 배경색 변경 */
+            cursor: pointer; /* 포인터 커서로 변경 */
+        }
+
     </style>
 </head>
 <body>
 
 <div class="layout">
     <div class="left-panel">
+        <div class="button-container">
+            <button onclick="location.href='/index'" class="main-page-button">メインページ</button>
+            <button onclick="location.href='/readAllProjects'" class="project-list-button">プロジェクトリスト</button>
+        </div>
         <div class="project-requirements-list" th:each="pr : ${projectRequirements}">
             <div class="project-requirement"
                  th:classappend="${pr.fulfilledCount == pr.getRequiredCount()} ? 'completed-project' : ''">
@@ -509,21 +610,29 @@
         </div>
     </div>
     <div class="center-panel">
+        <div th:if="${#lists.isEmpty(employeeEntries)}" class="no-employee-entry">
+            <div class="employee-name" style="text-align: center; color: #777;">
+                配属可能状態の社員無し
+            </div>
+        </div>
         <div class="employee-list" th:each="e : ${employeeEntries}">
             <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
                 <div class="employee-name" th:text="${e.key.getName()}"></div>
                 <div class="employee-preferred-skill">
                     <img class="preferred-skill-icon skill-icon"
                          th:data-skill-name="${e.key.getSkill() != null ? e.key.getSkill().getSkillName().toLowerCase() : ''}">
-                    <span th:text="'선호스킬 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
+                    <span th:text="'興味ある言語 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
                 </div>
                 <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
                     <img class="skill-icon skill-icon-${stat.index}"
                          th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
                     <div class="employee-skill" style="display: flex; justify-content: space-between;">
-                        <span class="skill-name"
-                              th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
-                        <span class="skill-career" th:text="${s.getSkillCareer()} + '개월'"></span>
+    <span class="skill-name"
+          style="flex: 1;"
+          th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
+                        <span class="skill-career"
+                              style="flex: 1; text-align: right;"
+                              th:attr="data-month=${s.getSkillCareer()}"></span>
                     </div>
                     <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
                            name="employee-skill-name"
@@ -531,13 +640,13 @@
                            th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}"></label>
                 </div>
-                <div class="commute-time" th:text="'예상 통근 소요시간 : ' + ${e.value} + '분'"></div>
-                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">대기기간 계산 중...</div>
+                <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
+                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
 
                 <div class="assign-button-container">
                     <button class="assign-button"
                             th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
-                        배정하기
+                        配属する
                     </button>
                 </div>
             </div>
@@ -549,15 +658,15 @@
             <div id="selected-info-table">
                 <div class="table-header">
                     <div class="table-row">
-                        <div class="table-cell">氏名</div>
-                        <div class="table-cell">スキル名</div>
-                        <div class="table-cell">経歴</div>
-                        <div class="table-cell">予想通勤時間</div>
-                        <div class="table-cell">待機期間</div>
+                        <div class="table-cell header-cell" id="sort-name">氏名</div>
+                        <div class="table-cell header-cell" id="sort-skill">スキル名</div>
+                        <div class="table-cell header-cell" id="sort-career">経歴</div>
+                        <div class="table-cell header-cell" id="sort-commute">予想通勤時間</div>
+                        <div class="table-cell header-cell" id="sort-waiting">待機期間</div>
                     </div>
                 </div>
                 <div id="selected-info-body">
-                    <!-- 여기서 체크박스 클릭 시 행이 추가됨 -->
+                    <!-- 체크박스를 클릭하여 행이 추가됨 -->
                 </div>
             </div>
         </div>
@@ -565,12 +674,12 @@
 
     <!-- 모달 창 -->
     <div id="project-requirement-modal" style="display: none;">
-        <div style="background-color: white; padding: 20px; border-radius: 8px;">
-            <h3>프로젝트 요구사항 선택</h3>
+        <div class="requirement-modal-box">
+            <h3>要求項目の選択</h3>
             <div id="modal-requirements-list">
                 <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
-            <button onclick="closeModal()">닫기</button>
+            <button onclick="closeModal()">閉じる</button>
         </div>
     </div>
 

@@ -1,16 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr 일본어 설정 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Project</title>
+    <title>プロジェクト修正</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
+            padding: 0;
             margin: 0;
-            padding: 20px;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .menus > li {
+            width: 101%;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding: 15px 20px;
+            box-sizing: border-box;
+        }
+
+        .menus {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-icon {
+            width: 20%; /* 이미지의 너비 설정 */
+            height: auto; /* 이미지의 높이 설정 */
+            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
         h1 {
@@ -21,12 +80,18 @@
         }
 
         .form-container {
-            max-width: 700px;
-            margin: 0 auto;
+            max-height: 85vh;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             background: #fff;
-            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding: 10pt;
+        }
+
+        .form-container::-webkit-scrollbar {
+            display: none;
         }
 
         .form-group {
@@ -100,14 +165,39 @@
             position: relative;
             z-index: 1;
         }
+
+        .insert-contents {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50vw;
+        }
+
+        .double-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .double-group > div {
+            width: 48%;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            justify-content: stretch;
+            gap: 2vh;
+            margin: auto;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
         const apiKey = [[${apiKey}]];
-        const skills = /*[[${skills}]]*/ '[]'; // skills 변수를 Thymeleaf로 전달
+        const skills = /*[[${skills}]]*/ '[]';
+        const projectId = /*[[${projectId}]]*/ '';
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
         script.async = true;
         document.head.appendChild(script);
 
@@ -135,7 +225,7 @@
             });
         };
 
-        function addRequirement(skillId = '', requiredExperience = '', requiredCount = '', index = null) {
+        function addRequirement(skillId = '', requiredExperience = '', requiredCount = '', index = null, requirementId = null) {
             const requirementsContainer = document.getElementById('requirementsContainer');
             if (index === null) {
                 index = requirementsContainer.children.length;
@@ -143,6 +233,7 @@
 
             const requirementItem = document.createElement('div');
             requirementItem.classList.add('requirement-item');
+            requirementItem.style.position = 'relative';
 
             let skillOptions = '';
             skills.forEach(skill => {
@@ -151,24 +242,53 @@
             });
 
             requirementItem.innerHTML = `
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
-                    <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
-                        ${skillOptions}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
-                </div>
-                <div class="form-group">
-                    <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
-                    <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
-                </div>
-                <button type="button" onclick="removeRequirement(this)">Remove</button>
-            `;
+        <div class="form-group">
+            <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+            <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
+                ${skillOptions}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
+            <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
+        </div>
+        <div class="form-group">
+            <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+            <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
+        </div>
+        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">요구사항 삭제</button>
+        <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
+    `;
             requirementsContainer.appendChild(requirementItem);
         }
+
+        function deleteRequirement(button, projectId, skillId, requiredExperience) {
+            if (confirm('정말 이 요구사항을 삭제하시겠습니까?')) {
+                fetch(`/deleteRequirement`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        projectId: projectId,
+                        skillId: skillId,
+                        requiredExperience: requiredExperience
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        alert('요구사항이 삭제되었습니다.');
+                        // 삭제된 후 페이지를 다시 로드
+                        location.reload();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message);
+                });
+            }
+        }
+
         function removeRequirement(button) {
             const requirementItem = button.parentElement;
             requirementItem.remove();
@@ -181,7 +301,6 @@
                 return false;
             }
 
-            // 각 필드가 채워져 있는지 확인
             const requirementItems = document.querySelectorAll('.requirement-item');
             for (const item of requirementItems) {
                 const skill = item.querySelector('select');
@@ -205,70 +324,134 @@
 
             return true;
         }
-        /*]]>*/
+
+        function closeErrorPopup() {
+            document.getElementById('error-popup').style.display = 'none';
+        }
+
     </script>
 </head>
 <body>
-<h1>Update Project</h1>
-<form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post" class="form-container" id="projectForm" onsubmit="beforeSubmit()">
-    <div class="form-group">
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" th:field="*{projectName}" required>
+<div class="container" style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li>
+                <a href="/index">
+                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    メイン·ページ
+                </a>
+            </li>
+            <li>
+                <a href="/employees">
+                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    社員リスト
+                </a>
+            </li>
+            <li>
+                <a href="/readAllProjects">
+                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    プロジェクトリスト
+                </a>
+            </li>
+        </ul>
     </div>
+    <div class="insert-contents">
+        <h1>プロジェクト修正</h1>
+        <div id="error-popup" th:if="${errorMessage}" class="error-popup">
+            <div class="error-popup-content">
+                <span class="close-button" onclick="closeErrorPopup()">&times;</span>
+                <p th:text="${errorMessage}"></p>
+            </div>
+        </div>
+        <form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post"
+              class="form-container" id="projectForm" onsubmit="beforeSubmit()">
+            <div class="form-group">
+                <label for="projectName">プロジェクト名:</label>
+                <input type="text" id="projectName" th:field="*{projectName}" required>
+            </div>
 
-    <div class="form-group">
-        <label for="workLocation">Work Location:</label>
-        <input type="text" id="workLocation" th:field="*{workLocation}" required>
-        <input type="hidden" id="latitude" th:field="*{latitude}">
-        <input type="hidden" id="longitude" th:field="*{longitude}">
+            <div class="form-group">
+                <label for="workLocation">勤務先:</label>
+                <input type="text" id="workLocation" th:field="*{workLocation}" required>
+                <input type="hidden" id="latitude" th:field="*{latitude}">
+                <input type="hidden" id="longitude" th:field="*{longitude}">
+            </div>
+
+            <div class="form-group">
+                <label for="clientCompany">顧客社名:</label>
+                <input type="text" id="clientCompany" th:field="*{clientCompany}">
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="startDate">開始日:</label>
+                    <input type="date" id="startDate" th:field="*{startDate}">
+                </div>
+
+                <div>
+                    <label for="endDate">終了日:</label>
+                    <input type="date" id="endDate" th:field="*{endDate}">
+                </div>
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="contactPhone">担当者連絡先:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                </div>
+
+                <div>
+                    <label for="contactName">担当者名:</label>
+                    <input type="text" id="contactName" th:field="*{contactName}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="projectTypeId">案件種類:</label>
+                <select id="projectTypeId" th:field="*{projectTypeId}" required>
+                    <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
+                            th:text="${type.projectTypeName}">Project Type
+                    </option>
+                </select>
+            </div>
+
+            <div id="requirementsContainer" class="requirements-container"></div>
+
+            <div class="form-group button-group">
+                <button type="button" onclick="addRequirement()">Add Requirement</button>
+                <button type="submit">Update Project</button>
+            </div>
+
+            <input type="hidden" id="projectId" th:field="*{projectId}">
+            <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
+            <input type="hidden" id="status" th:field="*{status}" value="-1">
+
+        </form>
+
     </div>
-
-    <div class="form-group">
-        <label for="clientCompany">Client Company:</label>
-        <input type="text" id="clientCompany" th:field="*{clientCompany}">
-    </div>
-
-    <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" th:field="*{startDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" th:field="*{endDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactPhone">Contact Phone:</label>
-        <input type="text" id="contactPhone" th:field="*{contactPhone}" value="010-1234-5678">
-    </div>
-
-    <div class="form-group">
-        <label for="contactName">Contact Name:</label>
-        <input type="text" id="contactName" th:field="*{contactName}" value="担当者">
-    </div>
-
-    <div class="form-group">
-        <label for="projectTypeId">Project Type:</label>
-        <select id="projectTypeId" th:field="*{projectTypeId}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">Project Type</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <button type="button" onclick="addRequirement()">Add Requirement</button>
-    </div>
-    <div id="requirementsContainer" class="requirements-container"></div>
-
-    <input type="hidden" id="projectId" th:field="*{projectId}">
-    <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
-    <input type="hidden" id="status" th:field="*{status}" value="-1">
-
-    <button type="submit">Update Project</button>
-</form>
-
-<div th:if="${error}">
-    <p th:text="${error}" style="color:red;"></p>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('contactPhone').addEventListener('input', function (event) {
+            let input = event.target.value.replace(/-/g, '');
+
+            if (input.length > 3 && input.length <= 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3);
+            } else if (input.length > 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
+            }
+
+            event.target.value = input;
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#startDate, #endDate", {
+            locale: "ja", // 일본어 설정
+            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            altInput: true,
+            altFormat: "Y年m月d日" // 화면에 표시될 형식
+        });
+    });
+</script>
 </html>

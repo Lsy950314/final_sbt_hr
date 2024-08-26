@@ -1,61 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Flatpickr 일본어 설정 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Project</title>
+    <title>プロジェクト登録</title>
     <style>
-        /*body {*/
-        /*    font-family: Arial, sans-serif;*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    align-items: center;*/
-        /*}*/
-
-        /*.form-container {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    max-width: 800px;*/
-        /*}*/
-
-        /*.form-group {*/
-        /*    margin: 10px;*/
-        /*}*/
-
-        /*.form-group label {*/
-        /*    margin-bottom: 5px;*/
-        /*}*/
-
-        /*.form-group input, .form-group select {*/
-        /*    padding: 8px;*/
-        /*    font-size: 16px;*/
-        /*    width: 100%;*/
-        /*}*/
-
-        /*.requirements-container {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    margin: 10px;*/
-        /*}*/
-
-        /*.requirement-item {*/
-        /*    border: 1px solid #ccc;*/
-        /*    padding: 10px;*/
-        /*    margin-top: 10px;*/
-        /*}*/
-
-        /*button {*/
-        /*    margin-top: 20px;*/
-        /*    padding: 10px 20px;*/
-        /*    font-size: 16px;*/
-        /*}*/
-
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
+            padding: 0;
             margin: 0;
-            padding: 20px;
+        }
+
+        .menu {
+            background-color: #1e90ff;
+            width: 250px;
+            height: 100vh;
+        }
+
+        .menus > li {
+            width: 101%;
+            height: 40px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .menus li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding: 15px 20px;
+            box-sizing: border-box;
+        }
+
+        .menus {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-icon {
+            width: 20%; /* 이미지의 너비 설정 */
+            height: auto; /* 이미지의 높이 설정 */
+            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+        }
+
+        .menus li:hover {
+            background: linear-gradient(45deg, #1e90ff, #00bfff);
+            color: #fff;
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
         h1 {
@@ -66,12 +80,18 @@
         }
 
         .form-container {
-            max-width: 700px;
-            margin: 0 auto;
+            max-height: 85vh;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
             background: #fff;
-            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding: 10pt;
+        }
+
+        .form-container::-webkit-scrollbar {
+            display: none;
         }
 
         .form-group {
@@ -146,9 +166,29 @@
             z-index: 1;
         }
 
+        .insert-contents {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50vw;
+        }
 
+        .double-group {
+            display: flex;
+            justify-content: space-between;
+        }
 
+        .double-group > div {
+            width: 48%;
+        }
 
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            justify-content: stretch;
+            gap: 2vh;
+            margin: auto;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -156,7 +196,7 @@
         const skills = /*[[${skills}]]*/ '[]';
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=ja`;
         script.async = true;
         document.head.appendChild(script);
 
@@ -179,7 +219,6 @@
 
         window.onload = function () {
             initAutocomplete();
-            // 최소 하나의 요구 조건을 추가
             addRequirement();
         };
 
@@ -189,6 +228,7 @@
 
             const requirementItem = document.createElement('div');
             requirementItem.classList.add('requirement-item');
+            requirementItem.style.position = 'relative';
 
             let skillOptions = '';
             skills.forEach(skill => {
@@ -210,7 +250,7 @@
         <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
         <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
     </div>
-    <button type="button" onclick="removeRequirement(this)">Remove</button>
+    <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; bottom: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
 `;
             requirementsContainer.appendChild(requirementItem);
         }
@@ -256,74 +296,128 @@
 
             return true;
         }
-
         /*]]>*/
     </script>
 </head>
 <body>
-<h1>Insert New Project</h1>
-<form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
-      onsubmit="return validateForm()">
-    <div class="form-group">
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" th:field="*{projectName}" required>
+<div class="container" style="display: flex">
+    <div class="menu">
+        <ul class="menus">
+            <li>
+                <a href="/index">
+                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    メイン·ページ
+                </a>
+            </li>
+            <li>
+                <a href="/employees">
+                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    社員リスト
+                </a>
+            </li>
+            <li>
+                <a href="/readAllProjects">
+                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    プロジェクトリスト
+                </a>
+            </li>
+        </ul>
     </div>
+    <div class="insert-contents">
+        <h1>プロジェクト登録</h1>
+        <form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
+              onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="projectName">プロジェクト名:</label>
+                <input type="text" id="projectName" th:field="*{projectName}" required>
+            </div>
 
-    <div class="form-group">
-        <label for="workLocation">Work Location:</label>
-        <input type="text" id="workLocation" th:field="*{workLocation}" required>
-        <input type="hidden" id="latitude" th:field="*{latitude}">
-        <input type="hidden" id="longitude" th:field="*{longitude}">
+            <div class="form-group">
+                <label for="workLocation">勤務先:</label>
+                <input type="text" id="workLocation" placeholder="アドレスを入力" th:field="*{workLocation}" required>
+                <input type="hidden" id="latitude" th:field="*{latitude}">
+                <input type="hidden" id="longitude" th:field="*{longitude}">
+            </div>
+
+            <div class="form-group">
+                <label for="clientCompany">顧客社名:</label>
+                <input type="text" id="clientCompany" th:field="*{clientCompany}">
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="startDate">開始日:</label>
+                    <input type="date" id="startDate" th:field="*{startDate}">
+                </div>
+
+                <div>
+                    <label for="endDate">終了日:</label>
+                    <input type="date" id="endDate" th:field="*{endDate}">
+                </div>
+            </div>
+
+            <div class="form-group double-group">
+                <div>
+                    <label for="contactPhone">担当者連絡先:</label>
+                    <input type="text" id="contactPhone" th:field="*{contactPhone}">
+                </div>
+
+                <div>
+                    <label for="contactName">担当者名:</label>
+                    <input type="text" id="contactName" th:field="*{contactName}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="projectTypeId">案件種類:</label>
+                <select id="projectTypeId" th:field="*{projectTypeId}" required>
+                    <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}"
+                            th:text="${type.projectTypeName}">
+                        Project Type
+                    </option>
+                </select>
+            </div>
+
+            <div id="requirementsContainer" class="requirements-container"></div>
+
+            <div class="form-group button-group">
+                <button type="button" onclick="addRequirement()">Add Requirement</button>
+                <button type="submit">Create Project</button>
+            </div>
+
+            <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
+            <input type="hidden" id="status" th:field="*{status}" value="-1">
+
+        </form>
+
+        <div th:if="${error}">
+            <p th:text="${error}" style="color:red;"></p>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="clientCompany">Client Company:</label>
-        <input type="text" id="clientCompany" th:field="*{clientCompany}">
-    </div>
-
-    <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" th:field="*{startDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" th:field="*{endDate}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactPhone">Contact Phone:</label>
-        <input type="text" id="contactPhone" th:field="*{contactPhone}">
-    </div>
-
-    <div class="form-group">
-        <label for="contactName">Contact Name:</label>
-        <input type="text" id="contactName" th:field="*{contactName}">
-    </div>
-
-    <div class="form-group">
-        <label for="projectTypeId">Project Type:</label>
-        <select id="projectTypeId" th:field="*{projectTypeId}" required>
-            <option th:each="type : ${projectTypes}" th:value="${type.projectTypeId}" th:text="${type.projectTypeName}">
-                Project Type
-            </option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <button type="button" onclick="addRequirement()">Add Requirement</button>
-    </div>
-
-    <div id="requirementsContainer" class="requirements-container"></div>
-
-    <input type="hidden" id="registrationDate" th:field="*{registrationDate}">
-    <input type="hidden" id="status" th:field="*{status}" value="-1">
-
-    <button type="submit">Create Project</button>
-</form>
-
-<div th:if="${error}">
-    <p th:text="${error}" style="color:red;"></p>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('contactPhone').addEventListener('input', function (event) {
+            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+
+            if (input.length > 3 && input.length <= 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+            } else if (input.length > 7) {
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+            }
+
+            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+        });
+
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#startDate, #endDate", {
+            locale: "ja", // 일본어 설정
+            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            altInput: true,
+            altFormat: "Y年m月d日" // 화면에 표시될 형식
+        });
+    });
+</script>
 </html>

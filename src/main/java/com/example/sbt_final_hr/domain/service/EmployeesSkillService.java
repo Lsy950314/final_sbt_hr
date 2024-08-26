@@ -69,26 +69,16 @@ public class EmployeesSkillService {
         employeesSkillRepository.save(employeesSkill);
     }
 
-    //7월31일 12:50 추가된 메서드
-//    public List<EmployeesSkillRequest> getSkillsByEmployeeId(Long employeeId) {
-//        return employeesSkillRepository.findByEmployeeEmployeeId(employeeId).stream()
-//                .map(EmployeesSkill::toDto)
-//                .collect(Collectors.toList());
-//    }
-    //7월31일 13:39 추가
     @Transactional
     public void deleteByEmployeeId(Long employeeId) {
         employeesSkillRepository.deleteByEmployeeEmployeeId(employeeId);
     }
 
-    //Transactional import 바꿈(jakarta->springframework)
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateSkillCareerOfProjectParticipants(List<Map<String, Object>> projectParticipantsInfos) {
         for (Map<String, Object> participantInfo : projectParticipantsInfos) {
             Long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
             Long skillId = ((Number) participantInfo.get("skillId")).longValue();
             Double projectDuration = ((Number) participantInfo.get("projectDuration")).doubleValue();
-            //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
             DefaultTransactionDefinition def = new DefaultTransactionDefinition();
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             TransactionStatus status = transactionManager.getTransaction(def);

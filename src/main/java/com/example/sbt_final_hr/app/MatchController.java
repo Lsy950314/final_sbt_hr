@@ -46,29 +46,18 @@ public class MatchController {
 //      List<ProjectRequirements> projectRequirements = (List<ProjectRequirements>) session.getAttribute("projectRequirements");
 //      List<EmployeesProjects> employeesProjects = (List<EmployeesProjects>) session.getAttribute("employeesProjects");
         if (projectId == null || projectRequirements == null) {
-            // 모달창을 띄우고 시간이 지난 후에 배정 관리 페이지 버튼을 누르는 바람에
-            // 세션이 만료된 경우, 에러 페이지로 리다이렉트하거나 적절한 처리를 수행
-            return "redirect:/readAllProjects";  // 리스트 페이지로 돌려보내기
+            return "redirect:/readAllProjects";
         }
 
-//      session.removeAttribute("projectId");
-//      session.removeAttribute("projectRequirements");
-//      session.removeAttribute("employeesProjects");
 
         Projects projects = projectsService.getProjectById(projectId);
-//      System.out.println(projects);
-//      System.out.println(projectRequirements);
-//      System.out.println(employeesProjects);
 
         model.addAttribute("Projects", projects);
 
-        // 해당 프로젝트의 요구사항
         model.addAttribute("projectRequirements", projectRequirements);
 
-        // 해당 프로젝트에 해당하는 사원-프로젝트 테이블 행
-//        model.addAttribute("employeesProjects", employeesProjects);
+//      model.addAttribute("employeesProjects", employeesProjects);
 
-        // 현재 시간 정보와 프로젝트 종료일을 통해 대기 기간을 얻어내기 위해서
         model.addAttribute("currentDate", LocalDate.now());
 
         Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
@@ -80,27 +69,28 @@ public class MatchController {
     }
 
     @GetMapping("/matchEmployeeProject")
-    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload) {
+    public ResponseEntity<Void> matchEmployeeProject(@RequestParam Map<String, String> payload, HttpSession httpSession) {
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
 
-//      System.out.println(projectId);
-//      System.out.println(employeeId);
-//      System.out.println(projectRequirementsId);
         if (matchService.matchEmployeeToProject(projectId, employeeId, projectRequirementsId)) {
+            httpSession.removeAttribute("projects");
+            httpSession.removeAttribute("projectsType");
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/matchCancel")
-    public ResponseEntity<String> matchCancelEmployeeProject(@RequestParam Map<String, String> payload) {
+    public ResponseEntity<String> matchCancelEmployeeProject(@RequestParam Map<String, String> payload, HttpSession httpSession) {
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long employeeId = Long.parseLong(payload.get("employeeId"));
         Long projectRequirementsId = Long.parseLong(payload.get("projectRequirementsId"));
 
         if (matchService.matchCancel(projectId, employeeId, projectRequirementsId)) {
+            httpSession.removeAttribute("projects");
+            httpSession.removeAttribute("projectsType");
             return ResponseEntity.ok("취소 성공");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("취소 실패");
