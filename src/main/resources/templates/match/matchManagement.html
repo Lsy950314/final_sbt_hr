@@ -287,6 +287,14 @@
 
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
 
+        function clearEmployeeCheckboxes(employeeId) {
+            // 특정 employeeId를 가진 체크박스들을 모두 선택 해제
+            document.querySelectorAll(`.skill-checkbox[data-employee-id="${employeeId}"]`).forEach(checkbox => {
+                checkbox.checked = false;
+                // 해당 체크박스에 연결된 change 이벤트 트리거
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        }
     </script>
 
     <style>
@@ -673,6 +681,11 @@
                            th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
                     <label th:for="'checkbox-' + ${stat.index}"></label>
                 </div>
+
+                <div class="clear-checkbox-container">
+                    <button type="button" class="clear-checkbox-button"  th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">チェックボックス一括クリア</button>
+                </div>
+
                 <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
                 <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
 
