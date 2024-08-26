@@ -94,15 +94,15 @@
 
                         // 스킬 아이콘과 이름을 포함한 HTML 생성
                         employeeInfoRow.innerHTML = `
-                        <div class="table-cell">${name}</div>
-                        <div class="table-cell">
-                            <img class="skill-icon" data-skill-name="${skillName}">
-                            <span>${skill}</span>
-                        </div>
-                        <div class="table-cell">${careerYear} 年</div>
-                        <div class="table-cell">${commuteTime} 分</div>
-                        <div class="table-cell">${waitingPeriod}</div>
-    `;
+    <div class="table-cell" data-employee-name="${name}">${name}</div>
+    <div class="table-cell" data-skill-name="${skillName}">
+        <img class="skill-icon" data-skill-name="${skillName}">
+        <span>${skill}</span>
+    </div>
+    <div class="table-cell" data-skill-career="${career}">${careerYear} 年</div>
+    <div class="table-cell" data-commute-time="${commuteTime}">${commuteTime} 分</div>
+    <div class="table-cell" data-end-date="${lastEndDate}">${waitingPeriod}</div>
+`;
 
                         const skillIconElement = employeeInfoRow.querySelector('.skill-icon');
                         if (skillIconMap[skillName]) {
@@ -149,10 +149,47 @@
                 }
             });
 
+            document.getElementById('sort-name').addEventListener('click', function() {
+                sortTableByColumn('data-employee-name');
+            });
+
+            document.getElementById('sort-skill').addEventListener('click', function() {
+                sortTableByColumn('data-skill-name');
+            });
+
+            document.getElementById('sort-career').addEventListener('click', function() {
+                sortTableByColumn('data-skill-career', true);
+            });
+
+            document.getElementById('sort-commute').addEventListener('click', function() {
+                sortTableByColumn('data-commute-time', true);
+            });
+
+            document.getElementById('sort-waiting').addEventListener('click', function() {
+                sortTableByColumn('data-end-date', true);
+            });
 
         }); //document.addEventListener 끝
 
+        function sortTableByColumn(dataAttribute, isNumeric = false, isDate = false) {
+            const selectedInfoBody = document.getElementById('selected-info-body');
+            const rows = Array.from(selectedInfoBody.getElementsByClassName('table-row'));
 
+            rows.sort((a, b) => {
+                let aValue = a.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+                let bValue = b.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
+
+                if (isNumeric) {
+                    return parseFloat(aValue) - parseFloat(bValue);
+                } else if (isDate) {
+                    return new Date(aValue) - new Date(bValue);
+                } else {
+                    return aValue.localeCompare(bValue);
+                }
+            });
+
+            rows.forEach(row => selectedInfoBody.appendChild(row));
+        }
 
         function calculateMonthsDifference(endDate) {
             const currentDate = new Date();
@@ -304,6 +341,10 @@
         .table-row {
             display: flex;
             justify-content: space-between;
+        }
+
+        #selected-info-body .table-row:hover {
+            background-color: #d3d3d3; /* 원하는 배경색으로 변경 */
         }
 
         .table-cell {
@@ -539,6 +580,11 @@
             align-items: center;
         }
 
+        .header-cell:hover {
+            background-color: #d3d3d3; /* 호버 시 배경색 변경 */
+            cursor: pointer; /* 포인터 커서로 변경 */
+        }
+
     </style>
 </head>
 <body>
@@ -612,15 +658,15 @@
             <div id="selected-info-table">
                 <div class="table-header">
                     <div class="table-row">
-                        <div class="table-cell">氏名</div>
-                        <div class="table-cell">スキル名</div>
-                        <div class="table-cell">経歴</div>
-                        <div class="table-cell">予想通勤時間</div>
-                        <div class="table-cell">待機期間</div>
+                        <div class="table-cell header-cell" id="sort-name">氏名</div>
+                        <div class="table-cell header-cell" id="sort-skill">スキル名</div>
+                        <div class="table-cell header-cell" id="sort-career">経歴</div>
+                        <div class="table-cell header-cell" id="sort-commute">予想通勤時間</div>
+                        <div class="table-cell header-cell" id="sort-waiting">待機期間</div>
                     </div>
                 </div>
                 <div id="selected-info-body">
-                    <!-- 여기서 체크박스 클릭 시 행이 추가됨 -->
+                    <!-- 체크박스를 클릭하여 행이 추가됨 -->
                 </div>
             </div>
         </div>
