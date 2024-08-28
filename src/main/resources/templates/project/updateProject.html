@@ -243,17 +243,17 @@
 
             requirementItem.innerHTML = `
         <div class="form-group">
-            <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+            <label for="projectRequirements[${index}].skill.skillId">言語:</label>
             <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
                 ${skillOptions}
             </select>
         </div>
         <div class="form-group">
-            <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-            <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>
+            <label for="projectRequirements[${index}].requiredExperience">要求スキル経験:</label>
+            <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" value="${requiredExperience}" required>ヶ月
         </div>
         <div class="form-group">
-            <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+            <label for="projectRequirements[${index}].requiredCount">要求人数:</label>
             <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
         </div>
         <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">要求スキル削除</button>
