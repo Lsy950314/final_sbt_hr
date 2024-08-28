@@ -174,6 +174,22 @@
                 sortTableByColumn('data-end-date', false, true);
             });
 
+            document.querySelectorAll('.skill-filter-checkbox').forEach(skillFilterCheckbox => {
+                skillFilterCheckbox.addEventListener('change', function() {
+                    const skillName = this.getAttribute('data-skill-name').toLowerCase();
+                    const isChecked = this.checked;
+
+                    document.querySelectorAll('.employee-entry .skill-checkbox').forEach(employeeSkillCheckbox => {
+                        const employeeSkillName = employeeSkillCheckbox.value.toLowerCase();
+
+                        if (employeeSkillName === skillName) {
+                            employeeSkillCheckbox.checked = isChecked;
+                            employeeSkillCheckbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+            });
+
         }); //document.addEventListener
 
         function filterEmployeesByCommuteTime() {
@@ -597,13 +613,17 @@
         .center-panel {
             width: 30%;
             padding: 10px;
-            overflow-y: auto;
+            overflow-y: hidden;
             background-color: #ffffff;
-            scrollbar-width: none; /* Firefox */
         }
 
-        .center-panel::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+        .scroll-container {
+            max-height: 100vh; /* 스크롤 영역의 최대 높이 */
+            overflow-y: auto; /* 스크롤을 가능하게 설정 */
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
         }
 
         .skill-icon {
@@ -657,6 +677,11 @@
             content: ' ✔'; /* 정렬 중인 셀에 체크 표시 기호 */
         }
 
+        .header-cell.sorted {
+            background-color: #c3eeff; /* 정렬 중인 셀의 배경색 */
+            font-weight: bold; /* 정렬 중인 셀의 글씨를 굵게 */
+        }
+
     </style>
 </head>
 <body>
@@ -673,6 +698,7 @@
                 <div class="requirement-skill">
                     <img class="skill-icon" th:data-skill-name="${pr.getSkill().getSkillName().toLowerCase()}">
                     <span th:text="${pr.getSkill().getSkillName()}"></span>
+                    <input type="checkbox" class="skill-filter-checkbox" th:attr="data-skill-name=${pr.getSkill().getSkillName().toLowerCase()}">
                 </div>
                 <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
                 <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
@@ -692,44 +718,47 @@
                 配属可能状態の社員無し
             </div>
         </div>
-        <div class="employee-list" th:each="e : ${employeeEntries}">
-            <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
-                <div class="employee-name" th:text="${e.key.getName()}"></div>
-                <div class="employee-preferred-skill">
-                    <img class="preferred-skill-icon skill-icon"
-                         th:data-skill-name="${e.key.getSkill() != null ? e.key.getSkill().getSkillName().toLowerCase() : ''}">
-                    <span th:text="'興味ある言語 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
-                </div>
-                <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
-                    <img class="skill-icon skill-icon-${stat.index}"
-                         th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
-                    <div class="employee-skill" style="display: flex; justify-content: space-between;">
-                        <span class="skill-name"
-                        style="flex: 1;"
-                        th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
-                        <span class="skill-career"
-                              style="flex: 1; text-align: right;"
-                              th:attr="data-month=${s.getSkillCareer()}"></span>
+        <div class="scroll-container">
+            <div class="employee-list" th:each="e : ${employeeEntries}">
+                <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
+                    <div class="employee-name" th:text="${e.key.getName()}"></div>
+                    <div class="employee-preferred-skill">
+                        <img class="preferred-skill-icon skill-icon"
+                             th:data-skill-name="${e.key.getSkill() != null ? e.key.getSkill().getSkillName().toLowerCase() : ''}">
+                        <span th:text="'興味ある言語 = '+ (${e.key.getSkill() != null ? e.key.getSkill().getSkillName() : 'N/A'})"></span>
                     </div>
-                    <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
-                           name="employee-skill-name"
-                           th:value="${s.getSkill().skillName}"
-                           th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
-                    <label th:for="'checkbox-' + ${stat.index}"></label>
-                </div>
+                    <div class="employee-skills" th:each="s, stat : ${e.key.getSkills()}">
+                        <img class="skill-icon skill-icon-${stat.index}"
+                             th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
+                        <div class="employee-skill" style="display: flex; justify-content: space-between;">
+                        <span class="skill-name"
+                              style="flex: 1;"
+                              th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
+                            <span class="skill-career"
+                                  style="flex: 1; text-align: right;"
+                                  th:attr="data-month=${s.getSkillCareer()}"></span>
+                        </div>
+                        <input type="checkbox" class="skill-checkbox" th:id="'checkbox-' + ${stat.index}"
+                               name="employee-skill-name"
+                               th:value="${s.getSkill().skillName}"
+                               th:attr="data-employee-id=${e.key.getEmployeeId()},data-commute-time=${e.value},data-employee-name=${e.key.getName()}, data-skill-career=${s.getSkillCareer()}, data-end-date=${e.key.getLastProjectEndDate()}">
+                        <label th:for="'checkbox-' + ${stat.index}"></label>
+                    </div>
 
-                <div class="clear-checkbox-container">
-                    <button type="button" class="clear-checkbox-button"  th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">チェックボックス一括クリア</button>
-                </div>
+                    <div class="clear-checkbox-container">
+                        <button type="button" class="clear-checkbox-button"
+                                th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">チェックボックス一括クリア</button>
+                    </div>
 
-                <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
-                <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
+                    <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
+                    <div class="waiting-period" th:attr="data-end-date=${e.key.getLastProjectEndDate()}">計算中</div>
 
-                <div class="assign-button-container">
-                    <button class="assign-button"
-                            th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
-                        配属する
-                    </button>
+                    <div class="assign-button-container">
+                        <button class="assign-button"
+                                th:attr="data-employee-id=${e.key.getEmployeeId()}, data-project-id=${Projects.getProjectId()}">
+                            配属する
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
