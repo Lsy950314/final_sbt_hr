@@ -1110,6 +1110,10 @@
             confirmButton.style.backgroundColor = '#d9534f'; // 기본 배경색으로 되돌림
         };
 
+        confirmButton.onclick = function() {
+            confirmCancelAssignment(projectId, employeeId); // 여기에 필요한 projectId와 employeeId 전달
+        };
+
         modalRequirementsList.appendChild(confirmButton);
 
         document.getElementById('project-requirement-modal').style.display = 'block';

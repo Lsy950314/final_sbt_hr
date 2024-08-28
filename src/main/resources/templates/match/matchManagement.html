@@ -114,7 +114,14 @@
                             const employeeEntry = document.querySelector(`.employee-entry[data-employee-id="${employeeId}"]`);
                             if (employeeEntry) {
                                 employeeEntry.scrollIntoView({behavior: 'smooth'});
+                                employeeEntry.classList.add('highlight');
+
+                                // 일정 시간 후에 배경색을 원래대로 되돌림
+                                setTimeout(() => {
+                                    employeeEntry.classList.remove('highlight');
+                                }, 1500); // 2초 동안 하이라이트 유지
                             }
+
                         });
                         selectedInfoBody.appendChild(employeeInfoRow);
                     } else {
@@ -499,6 +506,11 @@
             margin: 10px 0;
             width: 94%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            background-color: #ffff99; /* 밝은 노란색으로 하이라이트 */
+            transition: background-color 0.5s ease; /* 부드러운 전환 효과 */
         }
 
         .employee-name,
