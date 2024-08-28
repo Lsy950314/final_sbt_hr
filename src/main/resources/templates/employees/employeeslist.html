@@ -132,6 +132,17 @@
             flex-direction: column; /* 자식 요소들을 세로로 정렬합니다. */
         }
 
+        .employee-name {
+            font-size: min(2vw, 13px); /* 글씨 크기를 뷰포트 너비에 따라 자동 조정, 최대 20px */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block; /* 요소 크기에 따라 텍스트 줄이기 */
+            max-width: 100%; /* 부모 요소 크기에 맞게 텍스트 너비를 제한 */
+        }
+
+
+
 
         .modal {
             display: none; /* 모달을 기본적으로 숨김 처리합니다. */
@@ -617,6 +628,24 @@
     </div>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allocationSelect = document.getElementById('filterByAllocation');
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterAllocation = urlParams.get('filterAllocation');
+
+        if (filterAllocation === '-1') {
+            // URL 파라미터에 filterAllocation=-1이 있으면 未配属 상태로 설정
+            allocationSelect.value = '-1';
+        } else {
+            // 그렇지 않으면 全体の状態으로 설정
+            allocationSelect.value = "";
+        }
+
+        // 필요할 경우 필터를 적용하는 함수 호출
+        if (filterAllocation !== null) {
+            applyFiltersByAllocation();
+        }
+    });
 
 
     // 필터링과 정렬을 모두 처리하는 함수
@@ -1124,11 +1153,11 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Ensure that the initial value is set to "全体の状態"
-        const allocationSelect = document.getElementById('filterByAllocation');
-        allocationSelect.value = ""; // Set the initial value to "全体の状態"
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     // Ensure that the initial value is set to "全体の状態"
+    //     const allocationSelect = document.getElementById('filterByAllocation');
+    //     allocationSelect.value = ""; // Set the initial value to "全体の状態"
+    // });
 
 
 </script>
