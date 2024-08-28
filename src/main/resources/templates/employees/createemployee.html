@@ -161,9 +161,24 @@
         const hasDuplicates = validateDuplicateSkills(); // 중복 체크
         if (hasDuplicates) {
             event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
-            console.log('Form submission prevented due to duplicate skills.'); // 폼 제출이 막혔을 때 로그 출력
-            // alert('同じプログラミング言語のキャリアを重複して入力できません');
+            return;
+
         }
+        // 이미지 파일이 선택되지 않은 경우 null로 설정
+        const imageInput = document.getElementById('imageFile');
+        if (!imageInput.files || imageInput.files.length === 0) {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'imageFile';
+            hiddenInput.value = null;  // null로 설정
+            document.querySelector('form').appendChild(hiddenInput);
+        }
+
+
+
+
+
+
     }
 
 </script>
