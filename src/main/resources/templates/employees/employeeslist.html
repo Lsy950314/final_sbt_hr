@@ -552,15 +552,24 @@
 
         <!--        필터링 및 정렬        -->
         <div style="display: flex">
+<!--            이름 검색 -->
             <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="社員名検索" type="text">
-
-
-
+<!--            배속 상태 검색-->
             <select id="filterByAllocation">
                 <option value="">全体の状態</option>
                 <option value="-1">未配属</option>
                 <option value="1">配属</option>
             </select>
+<!--            현재 프로젝트 종료일 내림차순/최근 참여한 종료 프로젝트 오름차순/입사일 내림차순/입사일 오름차순 -->
+            <select id="sortOptions" onchange="applySorting()">
+                <option value="">選択</option>
+                <option value="currentProjectEndDateDesc">現在プロジェクト終了日降順</option>
+                <option value="lastProjectEndDateAsc">最近参加案件終了日昇順</option>
+                <option value="hireDateDesc">入社日降順</option>
+                <option value="hireDateAsc">入社日昇順</option>
+            </select>
+
+
         </div>
 
         <div class="members">
@@ -644,6 +653,82 @@
             }
         });
     });
+
+    //현재 프로젝트 종료일 내림차순/최근 참여한 종료 프로젝트 오름차순/입사일 내림차순/입사일 오름차순 드롭다운 선택 따른 필터링
+    function applySorting() {
+        const sortOption = document.getElementById('sortOptions').value;
+        const employees = Array.from(document.querySelectorAll('.members > .employee'));
+
+        // 정렬 로직에 따라 employees 배열을 정렬하고, 값이 없는 경우를 필터링합니다.
+        let filteredEmployees = [];
+
+
+        // 정렬 로직에 따라 employees 배열을 정렬합니다.
+        switch(sortOption) {
+            case 'lastProjectEndDateAsc':
+                employees.sort((a, b) => {
+                    const dateA = getDateValue(a, 'last-project-end-date');
+                    const dateB = getDateValue(b, 'last-project-end-date');
+
+                    // 날짜 값이 없으면 Infinity를 반환하여 뒤로 정렬
+                    const timeA = isNaN(dateA.getTime()) ? Infinity : dateA.getTime();
+                    const timeB = isNaN(dateB.getTime()) ? Infinity : dateB.getTime();
+
+                    console.log('Time A:', timeA, 'Time B:', timeB); // 디버깅을 위해 추가
+
+                    return timeA - timeB; // 오름차순 정렬
+                });
+                break;
+
+            case 'currentProjectEndDateDesc':
+                employees.sort((a, b) => {
+                    const dateA = getDateValue(a, 'current-project-end-date');
+                    const dateB = getDateValue(b, 'current-project-end-date');
+
+                    // 날짜 값이 없으면 -Infinity를 반환하여 뒤로 정렬
+                    const timeA = isNaN(dateA.getTime()) ? -Infinity : dateA.getTime();
+                    const timeB = isNaN(dateB.getTime()) ? -Infinity : dateB.getTime();
+
+                    console.log('Time A:', timeA, 'Time B:', timeB); // 디버깅을 위해 추가
+
+                    return timeB - timeA; // 내림차순 정렬
+                });
+                break;
+
+
+            case 'hireDateDesc':
+                employees.sort((a, b) => {
+                    const dateA = getDateValue(a, 'hire-date');
+                    const dateB = getDateValue(b, 'hire-date');
+                    return dateB - dateA; // 내림차순 정렬
+                });
+                break;
+            case 'hireDateAsc':
+                employees.sort((a, b) => {
+                    const dateA = getDateValue(a, 'hire-date');
+                    const dateB = getDateValue(b, 'hire-date');
+                    return dateA - dateB; // 오름차순 정렬
+                });
+                break;
+            default:
+                return; // 선택이 없을 경우 정렬을 적용하지 않음
+        }
+
+        const employeesContainer = document.querySelector('.members');
+        employees.forEach(employee => {
+            employeesContainer.appendChild(employee);
+        });
+    }
+
+    function getDateValue(employee, dateType) {
+        const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
+        if (dateText && dateText !== 'Not allocated' && dateText !== 'No experience') {
+            return new Date(dateText);
+        }
+        return new Date(0);
+    }
+
+
 
 
 
@@ -845,7 +930,6 @@
             }
         };
 
-        updateHireDateSortOptions();
 
         document.getElementById('filterByEmployeeName').addEventListener('input', applyFiltersAndSort);
         document.getElementById('filterByAllocation').addEventListener('change', applyFiltersAndSort);

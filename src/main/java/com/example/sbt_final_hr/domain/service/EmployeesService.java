@@ -158,8 +158,7 @@ public class EmployeesService {
     }
 
     public List<EmployeesRequest> findAllEmployeesSummary() {
-        List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
-        return employeesSummary;
+        return employeesRepository.findAllEmployeesSummary();
     }
 
     public Map<String, Integer> getCountEmployees(){
