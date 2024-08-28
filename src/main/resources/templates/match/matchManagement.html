@@ -86,13 +86,12 @@
 
                     if (this.checked) {
                         const employeeId = this.getAttribute('data-employee-id');
-                        const skillName = skill.toLowerCase(); // 스킬 이름 소문자 변환
+                        const skillName = skill.toLowerCase();
                         const employeeInfoRow = document.createElement('div');
                         employeeInfoRow.classList.add('table-row');
                         employeeInfoRow.setAttribute('data-employee-name', name);
                         employeeInfoRow.setAttribute('data-employee-id', employeeId);
 
-                        // 스킬 아이콘과 이름을 포함한 HTML 생성
                         employeeInfoRow.innerHTML = `
     <div class="table-cell" data-employee-name="${name}">${name}</div>
     <div class="table-cell" data-skill-name="${skillName}">
@@ -179,11 +178,18 @@
                     const skillName = this.getAttribute('data-skill-name').toLowerCase();
                     const isChecked = this.checked;
 
+                    const requiredExperienceElement = this.closest('.project-requirement').querySelector('.requirement-experience');
+                    const requiredExperience = parseFloat(requiredExperienceElement.getAttribute('data-experience'));
+
                     document.querySelectorAll('.employee-entry .skill-checkbox').forEach(employeeSkillCheckbox => {
                         const employeeSkillName = employeeSkillCheckbox.value.toLowerCase();
+                        const employeeSkillCareer = parseFloat(employeeSkillCheckbox.getAttribute('data-skill-career'));
 
-                        if (employeeSkillName === skillName) {
+                        if (employeeSkillName === skillName && employeeSkillCareer >= requiredExperience) {
                             employeeSkillCheckbox.checked = isChecked;
+                            employeeSkillCheckbox.dispatchEvent(new Event('change'));
+                        } else if (employeeSkillName === skillName) {
+                            employeeSkillCheckbox.checked = false;
                             employeeSkillCheckbox.dispatchEvent(new Event('change'));
                         }
                     });
@@ -301,22 +307,22 @@
         }
 
         function assignEmployeeToProject(employeeId, projectId, projectRequirementsId) {
-            if (confirm('プロジェクトに配属しますか')) {
+            if (confirm('プロジェクトに配属しますか？')) {
                 fetch(`/matchEmployeeProject?employeeId=${employeeId}&projectId=${projectId}&projectRequirementsId=${projectRequirementsId}`)
                     .then(response => {
                         if (response.ok) {
-                            alert('配属完了');
+                            alert('配属を完了しました。');
                             window.location.href = '/matchManagement';
                         } else {
-                            alert('配属失敗');
+                            alert('配属に失敗しました。');
                         }
                     })
                     .catch(error => {
-                        console.error('Error: ', error);
-                        alert('サーバーエラー');
+                        console.error('エラー: ', error);
+                        alert('サーバーエラーが発生しました。');
                     });
             } else {
-                alert('配属処理がキャンセルされました')
+                alert('配属がキャンセルされました。');
             }
 
         }
