@@ -561,7 +561,7 @@
 
             </div>
 
-            <button id="clearSelectionButton" onclick="clearRadioSelection()" style="display: none;">解除</button>
+            <button id="clearSelectionButton" onclick="clearRadioSelection()" style="visibility: hidden;">解除</button>
 
             <select id="sortHireDateBy" style="visibility: hidden;">
                 <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
@@ -623,13 +623,14 @@
 </div>
 <script>
     function clearRadioSelection() {
-        const hireDateSelect = document.getElementById('sortHireDateBy');
         const radioButtons = document.querySelectorAll('input[name="sortCriteria"]');
-        let anyChecked = false;
 
         radioButtons.forEach((radio) => {
             radio.checked = false;
         });
+
+        // 라디오 버튼 선택 해제 후 해제 버튼 숨기기
+        document.getElementById('clearSelectionButton').style.visibility = 'hidden';
 
         // 라디오 버튼 선택 해제 후 입사일 기준 내림차순으로 정렬을 다시 적용하도록 호출
         toggleHireDateSortOptions();
@@ -971,10 +972,14 @@
 
         if (anyChecked) {
             hireDateSelect.style.visibility = 'visible';
+            //8월 28일 12:19 시도중
+            document.getElementById('clearSelectionButton').style.visibility = 'visible'; // 해제 버튼 보이기
+            //8월 28일 12:19 시도중
             updateHireDateSortOptions();
             console.log('updateHireDateSortOptions called');
         } else {
             hireDateSelect.style.visibility = 'hidden';
+            document.getElementById('clearSelectionButton').style.visibility = 'hidden'; // 해제 버튼 숨기기
         }
     }
 
