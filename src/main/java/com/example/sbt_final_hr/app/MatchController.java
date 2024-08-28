@@ -91,9 +91,9 @@ public class MatchController {
         if (matchService.matchCancel(projectId, employeeId, projectRequirementsId)) {
             httpSession.removeAttribute("projects");
             httpSession.removeAttribute("projectsType");
-            return ResponseEntity.ok("취소 성공");
+            return ResponseEntity.ok("キャンセル成功");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("취소 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("キャンセル失敗");
         }
 
     }

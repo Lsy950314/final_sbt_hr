@@ -256,14 +256,14 @@
             <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
             <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" value="${requiredCount}" required>
         </div>
-        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">요구사항 삭제</button>
+        <button type="button" onclick="deleteRequirement(this, ${projectId}, ${skillId}, ${requiredExperience})">要求スキル削除</button>
         <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
     `;
             requirementsContainer.appendChild(requirementItem);
         }
 
         function deleteRequirement(button, projectId, skillId, requiredExperience) {
-            if (confirm('정말 이 요구사항을 삭제하시겠습니까?')) {
+            if (confirm('本当にこの要求スキルを削除しますか？')) {
                 fetch(`/deleteRequirement`, {
                     method: 'DELETE',
                     headers: {
@@ -276,7 +276,7 @@
                     })
                 }).then(response => {
                     if (response.ok) {
-                        alert('요구사항이 삭제되었습니다.');
+                        alert('要求スキルが削除されました。');
                         // 삭제된 후 페이지를 다시 로드
                         location.reload();
                     } else {
@@ -297,7 +297,7 @@
         function validateForm() {
             const requirementsContainer = document.getElementById('requirementsContainer');
             if (requirementsContainer.children.length === 0) {
-                alert('At least one requirement must be added.');
+                alert('少なくとも1つの要求スキルが必要です。');
                 return false;
             }
 
@@ -307,17 +307,17 @@
                 const experience = item.querySelector('input[name$=".requiredExperience"]');
                 const count = item.querySelector('input[name$=".requiredCount"]');
                 if (!skill.value || !experience.value || !count.value) {
-                    alert('All requirement fields must be filled out.');
+                    alert('すべての要求スキルのフィールドを入力してください。');
                     return false;
                 }
 
                 if (parseFloat(experience.value) <= 0) {
-                    alert('Required Experience must be a positive number.');
+                    alert('必要な経験値は正の数でなければなりません。');
                     return false;
                 }
 
                 if (parseFloat(count.value) <= 0) {
-                    alert('Required Count must be a positive number.');
+                    alert('必要な人数は正の数でなければなりません。');
                     return false;
                 }
             }

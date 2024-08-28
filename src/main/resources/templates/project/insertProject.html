@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Flatpickr CSS -->
+    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Flatpickr 일본어 설정 -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,9 +53,9 @@
         }
 
         .menu-icon {
-            width: 20%; /* 이미지의 너비 설정 */
-            height: auto; /* 이미지의 높이 설정 */
-            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+            width: 20%;
+            height: auto;
+            vertical-align: middle;
         }
 
         .menus li:hover {
@@ -208,7 +206,7 @@
             autocomplete.addListener('place_changed', function () {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
-                    alert("No details available for input: '" + place.name + "'");
+                    alert("入力された場所の詳細は利用できません: '" + place.name + "'");
                     return;
                 }
 
@@ -261,35 +259,34 @@
                 const requirementItem = button.parentElement;
                 requirementItem.remove();
             } else {
-                alert('At least one requirement must be present.');
+                alert('少なくとも1つの要求スキルが必要です。');
             }
         }
 
         function validateForm() {
             const requirementsContainer = document.getElementById('requirementsContainer');
             if (requirementsContainer.children.length === 0) {
-                alert('At least one requirement must be added.');
+                alert('少なくとも1つの要求スキルが必要です。');
                 return false;
             }
 
-            // 각 필드가 채워져 있는지 확인
             const requirementItems = document.querySelectorAll('.requirement-item');
             for (const item of requirementItems) {
                 const skill = item.querySelector('select');
                 const experience = item.querySelector('input[name$=".requiredExperience"]');
                 const count = item.querySelector('input[name$=".requiredCount"]');
                 if (!skill.value || !experience.value || !count.value) {
-                    alert('All requirement fields must be filled out.');
+                    alert('すべての要求スキルのフィールドを入力してください。');
                     return false;
                 }
 
                 if (parseFloat(experience.value) < 0) {
-                    alert('Required Experience must be a positive number.');
+                    alert('必要な経験値は正の数でなければなりません。');
                     return false;
                 }
 
                 if (parseFloat(count.value) <= 0) {
-                    alert('Required Count must be a positive number.');
+                    alert('必要な人数は正の数でなければなりません。');
                     return false;
                 }
             }
