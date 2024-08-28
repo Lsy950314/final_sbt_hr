@@ -1364,14 +1364,14 @@
                     const allSelects = document.querySelectorAll('select[id^="star-point-"]');
                     let allValid = true;
 
-                    allSelects.forEach(select => {
+                    for (const select of allSelects) {
                         if (select.value === "") { // "スコア選択"이 선택된 상태
                             allValid = false;
                             alert('すべての社員に点数を選択してください。');
                             select.focus();
-                            return false; // 반복문 종료
+                            break; // 반복문 종료
                         }
-                    });
+                    }
 
 
                     if (allValid) {

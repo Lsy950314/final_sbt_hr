@@ -277,7 +277,7 @@ public class ProjectController {
 
     @PostMapping("/completeProject")
     public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload, HttpSession httpSession) {
-        Long projectId = ((Number) payload.get("projectId")).longValue();
+        Long projectId = Long.parseLong((String) payload.get("projectId"));
         List<Map<String, Object>> projectParticipantsInfos = (List<Map<String, Object>>) payload.get("projectParticipantsInfos");
         System.out.println("Project ID: " + projectId);
         for (Map<String, Object> participantInfo : projectParticipantsInfos) {

@@ -196,6 +196,19 @@
                 });
             });
 
+            document.querySelectorAll('.project-requirement').forEach(requirement => {
+                requirement.addEventListener('click', function(event) {
+                    // 체크박스 요소 찾기
+                    const checkbox = this.querySelector('.skill-filter-checkbox');
+
+                    // 클릭된 요소가 체크박스가 아니면 체크 상태를 토글
+                    if (event.target !== checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change')); // 체크박스의 change 이벤트 트리거
+                    }
+                });
+            });
+
         }); //document.addEventListener
 
         function filterEmployeesByCommuteTime() {
@@ -239,9 +252,9 @@
                 let bValue = b.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
 
                 if (isNumeric) {
-                    if (dataAttribute === 'data-skill-career') {
-                        return parseFloat(bValue) - parseFloat(aValue);
-                    }
+                    // if (dataAttribute === 'data-skill-career') {
+                    //     return parseFloat(bValue) - parseFloat(aValue);
+                    // }
                     return parseFloat(aValue) - parseFloat(bValue);
                 } else if (isDate) {
                     return new Date(aValue) - new Date(bValue);
@@ -389,6 +402,11 @@
             margin: 10px 0;
             width: 100%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .project-requirement:hover {
+            background-color: #f0f8ff; /* 호버 시 배경색 변경 (연한 파란색 예시) */
         }
 
         #selected-info {
@@ -411,6 +429,7 @@
         .table-row {
             display: flex;
             justify-content: space-between;
+            transition: background-color 0.3s ease;
         }
 
         #selected-info-body .table-row:hover {
@@ -662,17 +681,18 @@
 
         .header-cell {
             position: relative;
-            cursor: pointer; /* 마우스를 올리면 포인터 커서로 변경 */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .header-cell:hover {
-            background-color: #d3d3d3; /* 호버 시 배경색 변경 */
-            cursor: pointer; /* 포인터 커서로 변경 */
+            background-color: #d3d3d3;
+            cursor: pointer;
         }
 
         .header-cell::after {
-            content: ' ⇅'; /* 기본 화살표 기호 */
-            font-size: 12px; /* 기호 크기 조정 */
+            content: ' ⇅';
+            font-size: 12px;
             position: absolute;
             top: 50%;
             transform: translateY(-50%); /* 수직 가운데 정렬 */
