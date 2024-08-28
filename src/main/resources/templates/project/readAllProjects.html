@@ -851,7 +851,7 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="assign-btn" onclick="navigateToMatchManagement()">配属ページへ</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 配属社員リストへ
+                    <button id="employeeList-btn"> 配属社員リストへ
                     </button>
                     <button id="update-btn">修正</button>
                     <button id="delete-btn">削除</button>
@@ -911,6 +911,10 @@
 
                 document.getElementById('project-title').textContent = `${data.project.projectId} . ${data.project.projectName}`;
                 document.getElementById('project-dates').textContent = `${data.project.startDate} ~ ${data.project.endDate}`;
+
+                document.getElementById('employeeList-btn').onclick = function() {
+                    readEmployeesByProjectId(projectId); // 동적으로 얻은 projectId 사용
+                };
 
                 let statusText;
                 let statusClass = "";
