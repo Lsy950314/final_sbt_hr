@@ -174,7 +174,7 @@
                 sortTableByColumn('data-end-date', false, true);
             });
 
-        }); //document.addEventListener 끝
+        }); //document.addEventListener
 
         function filterEmployeesByCommuteTime() {
             const filterValue = document.getElementById('commute-time-filter').value;
@@ -704,9 +704,9 @@
                     <img class="skill-icon skill-icon-${stat.index}"
                          th:data-skill-name="${s.getSkill() != null ? s.getSkill().getSkillName().toLowerCase() : ''}">
                     <div class="employee-skill" style="display: flex; justify-content: space-between;">
-    <span class="skill-name"
-          style="flex: 1;"
-          th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
+                        <span class="skill-name"
+                        style="flex: 1;"
+                        th:text="${s.getSkill() != null ? s.getSkill().getSkillName() : 'N/A'}"></span>
                         <span class="skill-career"
                               style="flex: 1; text-align: right;"
                               th:attr="data-month=${s.getSkillCareer()}"></span>
