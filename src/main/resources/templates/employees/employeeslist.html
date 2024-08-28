@@ -556,19 +556,17 @@
             <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="社員名検索" type="text">
 <!--            배속 상태 검색-->
             <select id="filterByAllocation">
-                <option value="">全体の状態</option>
+                <option value="" selected>全体の状態</option>
                 <option value="-1">未配属</option>
                 <option value="1">配属</option>
             </select>
 <!--            현재 프로젝트 종료일 내림차순/최근 참여한 종료 프로젝트 오름차순/입사일 내림차순/입사일 오름차순 -->
             <select id="sortOptions" onchange="applySorting()">
-                <option value="">選択</option>
                 <option value="currentProjectEndDateDesc">現在プロジェクト終了日降順</option>
                 <option value="lastProjectEndDateAsc">最近参加案件終了日昇順</option>
-                <option value="hireDateDesc">入社日降順</option>
+                <option value="hireDateDesc" selected>入社日降順</option>
                 <option value="hireDateAsc">入社日昇順</option>
             </select>
-
 
         </div>
 
@@ -619,92 +617,64 @@
     </div>
 </div>
 <script>
-    //이름 검색에 따른 튜플 필터링
-    function filterByEmployeeName() {
-        const filterText = document.getElementById('filterByEmployeeName').value.toLowerCase();
-        const employees = document.querySelectorAll('.members > .employee');
 
+
+    // 필터링과 정렬을 모두 처리하는 함수
+    function applyFiltersAndSorting() {
+        const filterText = document.getElementById('filterByEmployeeName').value.toLowerCase();
+        const selectedAllocation = document.getElementById('filterByAllocation').value;
+        const sortOption = document.getElementById('sortOptions').value;
+        const employees = Array.from(document.querySelectorAll('.members > .employee'));
+
+        // 이름 및 배속 상태 필터링 적용
         employees.forEach(employee => {
             const employeeName = employee.querySelector('.employee-name').textContent.toLowerCase();
-            if (employeeName.includes(filterText)) {
+            const allocationImg = employee.querySelector('.allocation img');
+            const allocationValue = allocationImg ? (allocationImg.alt === 'Unassigned' ? '-1' : (allocationImg.alt === 'Assigned' ? '1' : '0')) : null;
+
+            const matchesName = employeeName.includes(filterText);
+            const matchesAllocation = selectedAllocation === "" || allocationValue === selectedAllocation;
+
+            if (matchesName && matchesAllocation) {
                 employee.style.display = ''; // 조건에 맞으면 표시
             } else {
                 employee.style.display = 'none'; // 조건에 맞지 않으면 숨김
             }
         });
-    }
 
-    document.getElementById('filterByEmployeeName').addEventListener('input', filterByEmployeeName);
+        // 필터링된 결과에 대해 정렬 적용
+        const filteredEmployees = employees.filter(employee => employee.style.display !== 'none');
 
-
-    //배속 상태에 따른 튜플 필터링
-    document.getElementById('filterByAllocation').addEventListener('change', function () {
-        const selectedValue = this.value;
-        const employees = document.querySelectorAll('.members > .employee');
-
-        employees.forEach(employee => {
-            const allocationImg = employee.querySelector('.allocation img');
-            const allocationValue = allocationImg ? (allocationImg.alt === 'Unassigned' ? '-1' : (allocationImg.alt === 'Assigned' ? '1' : '0')) : null;
-
-            if (selectedValue === "" || allocationValue === selectedValue) {
-                employee.style.display = '';
-            } else {
-                employee.style.display = 'none';
-            }
-        });
-    });
-
-    //현재 프로젝트 종료일 내림차순/최근 참여한 종료 프로젝트 오름차순/입사일 내림차순/입사일 오름차순 드롭다운 선택 따른 필터링
-    function applySorting() {
-        const sortOption = document.getElementById('sortOptions').value;
-        const employees = Array.from(document.querySelectorAll('.members > .employee'));
-
-        // 정렬 로직에 따라 employees 배열을 정렬하고, 값이 없는 경우를 필터링합니다.
-        let filteredEmployees = [];
-
-
-        // 정렬 로직에 따라 employees 배열을 정렬합니다.
-        switch(sortOption) {
+        switch (sortOption) {
             case 'lastProjectEndDateAsc':
-                employees.sort((a, b) => {
+                filteredEmployees.sort((a, b) => {
                     const dateA = getDateValue(a, 'last-project-end-date');
                     const dateB = getDateValue(b, 'last-project-end-date');
-
-                    // 날짜 값이 없으면 Infinity를 반환하여 뒤로 정렬
                     const timeA = isNaN(dateA.getTime()) ? Infinity : dateA.getTime();
                     const timeB = isNaN(dateB.getTime()) ? Infinity : dateB.getTime();
-
-                    console.log('Time A:', timeA, 'Time B:', timeB); // 디버깅을 위해 추가
-
                     return timeA - timeB; // 오름차순 정렬
                 });
                 break;
 
             case 'currentProjectEndDateDesc':
-                employees.sort((a, b) => {
+                filteredEmployees.sort((a, b) => {
                     const dateA = getDateValue(a, 'current-project-end-date');
                     const dateB = getDateValue(b, 'current-project-end-date');
-
-                    // 날짜 값이 없으면 -Infinity를 반환하여 뒤로 정렬
                     const timeA = isNaN(dateA.getTime()) ? -Infinity : dateA.getTime();
                     const timeB = isNaN(dateB.getTime()) ? -Infinity : dateB.getTime();
-
-                    console.log('Time A:', timeA, 'Time B:', timeB); // 디버깅을 위해 추가
-
                     return timeB - timeA; // 내림차순 정렬
                 });
                 break;
 
-
             case 'hireDateDesc':
-                employees.sort((a, b) => {
+                filteredEmployees.sort((a, b) => {
                     const dateA = getDateValue(a, 'hire-date');
                     const dateB = getDateValue(b, 'hire-date');
                     return dateB - dateA; // 내림차순 정렬
                 });
                 break;
             case 'hireDateAsc':
-                employees.sort((a, b) => {
+                filteredEmployees.sort((a, b) => {
                     const dateA = getDateValue(a, 'hire-date');
                     const dateB = getDateValue(b, 'hire-date');
                     return dateA - dateB; // 오름차순 정렬
@@ -714,12 +684,19 @@
                 return; // 선택이 없을 경우 정렬을 적용하지 않음
         }
 
+        // 정렬된 결과를 DOM에 반영
         const employeesContainer = document.querySelector('.members');
-        employees.forEach(employee => {
+        filteredEmployees.forEach(employee => {
             employeesContainer.appendChild(employee);
         });
     }
 
+    // 이벤트 리스너 등록
+    document.getElementById('filterByEmployeeName').addEventListener('input', applyFiltersAndSorting);
+    document.getElementById('filterByAllocation').addEventListener('change', applyFiltersAndSorting);
+    document.getElementById('sortOptions').addEventListener('change', applyFiltersAndSorting);
+
+    // Helper function to get date value
     function getDateValue(employee, dateType) {
         const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
         if (dateText && dateText !== 'Not allocated' && dateText !== 'No experience') {
@@ -727,6 +704,10 @@
         }
         return new Date(0);
     }
+
+
+
+
 
 
 
@@ -1141,6 +1122,12 @@
                 }
             }
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ensure that the initial value is set to "全体の状態"
+        const allocationSelect = document.getElementById('filterByAllocation');
+        allocationSelect.value = ""; // Set the initial value to "全体の状態"
     });
 
 
