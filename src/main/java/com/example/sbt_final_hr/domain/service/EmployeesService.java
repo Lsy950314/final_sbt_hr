@@ -60,14 +60,18 @@ public class EmployeesService {
 
     public boolean restoreEndDates(Long employeeId) {
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(RuntimeException::new);
+        // 첫 프로젝트의 경우에도 true 반환
         if (employees.getPreviousProjectEndDate() != null) {
+            // 기존 로직: 이전 종료일이 있는 경우
             employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
-            employees.setPreviousProjectEndDate(null);
-            employees.setCurrentProjectEndDate(null);
-            employeesRepository.save(employees);
-            return true;
+        } else {
+            // 이전 종료일이 없는 경우(첫 프로젝트)
+            employees.setLastProjectEndDate(null);
         }
-        return false;
+        employees.setPreviousProjectEndDate(null);
+        employees.setCurrentProjectEndDate(null);
+        employeesRepository.save(employees);
+        return true;
     }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {

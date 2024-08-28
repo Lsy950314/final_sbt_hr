@@ -1,7 +1,6 @@
 package com.example.sbt_final_hr.app;
 
 import com.example.sbt_final_hr.domain.model.dto.EmployeesProjectsRequest;
-import com.example.sbt_final_hr.domain.model.dto.EmployeesRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectRequirementsRequest;
 import com.example.sbt_final_hr.domain.model.dto.ProjectsRequest;
 import com.example.sbt_final_hr.domain.model.entity.*;
@@ -219,7 +218,7 @@ public class ProjectController {
                 if (matchingRequirement.getRequiredExperience() != requirementsRequest.getRequiredExperience()
                         || matchingRequirement.getRequiredCount() != requirementsRequest.getRequiredCount()) {
                     // 에러 메시지와 함께 업데이트 차단
-                    model.addAttribute("errorMessage", "배정된 인원이 있는 요구사항을 변경할 수 없습니다. 먼저 해당 배정을 취소하세요.");
+                    model.addAttribute("errorMessage", "配属されている社員がいる要求スキルを変更することはできません。まずその配属をキャンセルしてください。");
                     model.addAttribute("projectsRequest", projectsRequest);
                     model.addAttribute("apiKey", apiKey);
                     model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
@@ -277,7 +276,7 @@ public class ProjectController {
 
     @PostMapping("/completeProject")
     public ResponseEntity<?> completeProject(@RequestBody Map<String, Object> payload, HttpSession httpSession) {
-        Long projectId = ((Number) payload.get("projectId")).longValue();
+        Long projectId = Long.parseLong((String) payload.get("projectId"));
         List<Map<String, Object>> projectParticipantsInfos = (List<Map<String, Object>>) payload.get("projectParticipantsInfos");
         System.out.println("Project ID: " + projectId);
         for (Map<String, Object> participantInfo : projectParticipantsInfos) {
