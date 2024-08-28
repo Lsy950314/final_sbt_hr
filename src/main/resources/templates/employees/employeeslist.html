@@ -558,7 +558,10 @@
                 <label for="lastProjectEndDateAsc">直近案件終了日昇順</label>
                 <input id="currentProjectEndDateDesc" name="sortCriteria" onclick="toggleHireDateSortOptions()" type="radio" value="currentProjectEndDateDesc">
                 <label for="currentProjectEndDateDesc">現在案件終了日降順</label>
+
             </div>
+
+            <button id="clearSelectionButton" onclick="clearRadioSelection()" style="display: none;">解除</button>
 
             <select id="sortHireDateBy" style="visibility: hidden;">
                 <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
@@ -619,6 +622,20 @@
     </div>
 </div>
 <script>
+    function clearRadioSelection() {
+        const hireDateSelect = document.getElementById('sortHireDateBy');
+        const radioButtons = document.querySelectorAll('input[name="sortCriteria"]');
+        let anyChecked = false;
+
+        radioButtons.forEach((radio) => {
+            radio.checked = false;
+        });
+
+        // 라디오 버튼 선택 해제 후 입사일 기준 내림차순으로 정렬을 다시 적용하도록 호출
+        toggleHireDateSortOptions();
+        applyFiltersAndSort();
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         const modal = document.getElementById("myModal");
         const btns = document.querySelectorAll(".modal-button");
@@ -894,7 +911,7 @@
 
         const filteredEmployees = employees.filter(employee => employee.style.display === '');
 
-        if (filterByName === "") {
+        if (filterByName === "" && !primarySortCriteria) {
             // 검색창이 비어 있을 때 입사일 기준 내림차순으로 정렬
             filteredEmployees.sort((a, b) => {
                 const hireDateA = getDateValue(a, 'hire-date');
