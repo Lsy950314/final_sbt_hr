@@ -86,7 +86,7 @@
 
         .contents {
             background-color: #f5f5f5;
-            width: 1170px;
+            width: 82vw;
             height: auto;
             border-radius: 15px 15px 0 0;
             overflow-y: auto;
@@ -154,22 +154,16 @@
         }
 
         .project-name-header, .client-company-header, .project-name, .client-company {
-            min-width: 270px;
-            max-width: 270px;
+            min-width: 24vw;
+            max-height: 3vh;
             flex: 0 0 270px;
         }
 
         .projects > div > div {
-            margin-left: 10px;
-            margin-right: 10px;
             float: left;
-            width: 200px; /* 각 div의 고정된 너비 */
-            margin-top: 10px; /* 간격을 주기 위해 추가 */
-            margin-bottom: 10px; /* 간격을 주기 위해 추가 */
+            margin: 10px;
             box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-            align-items: center; /* 텍스트 상하 중앙 정렬 */
             padding-top: 5px;
-            flex-direction: column;
         }
 
         .header, .row {
@@ -857,7 +851,7 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="assign-btn" onclick="navigateToMatchManagement()">配属ページへ</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 配属社員リストへ
+                    <button id="employeeList-btn"> 配属社員リストへ
                     </button>
                     <button id="update-btn">修正</button>
                     <button id="delete-btn">削除</button>
@@ -918,6 +912,10 @@
                 document.getElementById('project-title').textContent = `${data.project.projectId} . ${data.project.projectName}`;
                 document.getElementById('project-dates').textContent = `${data.project.startDate} ~ ${data.project.endDate}`;
 
+                document.getElementById('employeeList-btn').onclick = function() {
+                    readEmployeesByProjectId(projectId); // 동적으로 얻은 projectId 사용
+                };
+
                 let statusText;
                 let statusClass = "";
                 switch (data.project.status) {
@@ -932,7 +930,7 @@
                         statusText = "終了";
                         break;
                     default:
-                        statusText = "ステータスが分かりません"; // 예상치 못한 값에 대한 기본값
+                        statusText = "ステータスが分かりません。"; // 예상치 못한 값에 대한 기본값
                 }
 
                 const modalBody = document.getElementById('modal-body');
@@ -1017,7 +1015,7 @@
                 openModal();
             })
             .catch(error => {
-                console.error('Error fetching project details:', error);
+                console.error('プロジェクトの詳細を取得中にエラーが発生しました:', error);
             });
     }
 
@@ -1031,7 +1029,7 @@
         const employeeDropdown = document.getElementById('employeeDropdown');
         const selectedIndex = employeeDropdown.value;
         if (selectedIndex === "") {
-            alert("社員を選んでください");
+            alert("社員を選んでください。");
             return;
         }
         // console.log('epId 배열:' + epID);
@@ -1045,11 +1043,11 @@
                 if (Array.isArray(projectRequirements)) {
                     openProjectRequirementModal(projectId, employeeId, projectRequirements);
                 } else {
-                    console.error("Error: projectRequirements is not an array");
+                    console.error("エラー: projectRequirements が配列ではありません");
                 }
             })
             .catch(error => {
-                console.error('Error fetching project requirements:', error);
+                console.error('要求スキルの取得中にエラーが発生しました:', error);
             });
     }
 
@@ -1112,6 +1110,10 @@
             confirmButton.style.backgroundColor = '#d9534f'; // 기본 배경색으로 되돌림
         };
 
+        confirmButton.onclick = function() {
+            confirmCancelAssignment(projectId, employeeId); // 여기에 필요한 projectId와 employeeId 전달
+        };
+
         modalRequirementsList.appendChild(confirmButton);
 
         document.getElementById('project-requirement-modal').style.display = 'block';
@@ -1120,7 +1122,7 @@
     function confirmCancelAssignment(projectId, employeeId) {
         const selectedRequirement = document.querySelector('input[name="projectRequirement"]:checked');
         if (!selectedRequirement) {
-            alert('項目を選んでください');
+            alert('項目を選んでください。');
             return;
         }
 
@@ -1143,17 +1145,17 @@
         })
             .then(response => response.text())
             .then(result => {
-                if (result === "취소 성공") {
-                    alert("配属がキャンセルされました");
+                if (result === "キャンセル成功") {
+                    alert("配属がキャンセルされました。");
                     // 필요하다면 모달을 닫거나 페이지를 새로고침
                     location.reload()
                 } else {
-                    alert("配属がキャンセルが失敗しました");
+                    alert("配属がキャンセルが失敗しました。");
                 }
             })
             .catch(error => {
-                console.error('Error cancelling assignment:', error);
-                alert("配属がキャンセルの途中エラーが発生しました");
+                console.error('配属キャンセル中にエラーが発生しました:', error);
+                alert("配属がキャンセルの途中エラーが発生しました。");
             });
     }
 
@@ -1273,7 +1275,7 @@
     }
 
     function deleteProject(projectId) {
-        if (confirm("本当にプロジェクトを削除しますか")) {
+        if (confirm("本当にプロジェクトを削除しますか？")) {
             location.href = "/deleteProject?id=" + projectId;
         }
     }
@@ -1370,14 +1372,14 @@
                     const allSelects = document.querySelectorAll('select[id^="star-point-"]');
                     let allValid = true;
 
-                    allSelects.forEach(select => {
+                    for (const select of allSelects) {
                         if (select.value === "") { // "スコア選択"이 선택된 상태
                             allValid = false;
                             alert('すべての社員に点数を選択してください。');
                             select.focus();
-                            return false; // 반복문 종료
+                            break; // 반복문 종료
                         }
-                    });
+                    }
 
 
                     if (allValid) {
@@ -1398,7 +1400,7 @@
                 });
             })
             .catch(error => {
-                console.error('Error fetching project info:', error);
+                console.error('プロジェクト情報の取得中にエラーが発生しました:', error);
             });
 
         openCompleteModal();
@@ -1415,16 +1417,15 @@
         })
             .then(response => response.text())
             .then(text => {
-                console.log('Response from server:', text);
                 if (text === "プロジェクトが完了処理されました") {
                     closeCompleteModal();
                     window.location.href = '/readAllProjects';
                 } else {
-                    console.error('Unexpected response:', text);
+                    console.error('予期しないレスポンス:', text);
                 }
             })
             .catch(error => {
-                console.error('Error completing project:', error);
+                console.error('プロジェクトの完了中にエラーが発生しました:', error);
             });
     }
 
