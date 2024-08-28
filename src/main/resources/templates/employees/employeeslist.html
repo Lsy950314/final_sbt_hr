@@ -132,6 +132,7 @@
             flex-direction: column; /* 자식 요소들을 세로로 정렬합니다. */
         }
 
+
         .modal {
             display: none; /* 모달을 기본적으로 숨김 처리합니다. */
             position: fixed; /* 모달을 화면 중앙에 고정합니다. */
@@ -553,13 +554,13 @@
         <div style="display: flex">
             <input id="filterByEmployeeName" oninput="filterByEmployeeName()" placeholder="社員名検索" type="text">
             <div class="filterByProjectEndDate">
-                <input id="lastProjectEndDateAsc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="lastProjectEndDateAsc">
+                <input id="lastProjectEndDateAsc" name="sortCriteria" onclick="toggleHireDateSortOptions()" type="radio" value="lastProjectEndDateAsc">
                 <label for="lastProjectEndDateAsc">直近案件終了日昇順</label>
-                <input id="currentProjectEndDateDesc" name="sortCriteria" onclick="updateHireDateSortOptions()" type="radio" value="currentProjectEndDateDesc">
+                <input id="currentProjectEndDateDesc" name="sortCriteria" onclick="toggleHireDateSortOptions()" type="radio" value="currentProjectEndDateDesc">
                 <label for="currentProjectEndDateDesc">現在案件終了日降順</label>
             </div>
 
-            <select id="sortHireDateBy">
+            <select id="sortHireDateBy" style="visibility: hidden;">
                 <!-- 옵션은 JavaScript에 의해 동적으로 채워질 것입니다 -->
             </select>
 
@@ -855,13 +856,6 @@
         location.href = "/readAllProjects?employeeId=" + employeeId;
     }
 
-    function updateHireDateSortOptions() {
-        const hireDateSelect = document.getElementById('sortHireDateBy');
-        hireDateSelect.innerHTML = `
-        <option value="ascHireDate">入社日昇順</option>
-        <option value="descHireDate">入社日降順</option>
-    `;
-    }
 
     function applyFiltersAndSort() {
         const filterByName = document.getElementById('filterByEmployeeName').value.toLowerCase();
@@ -870,6 +864,8 @@
         const primarySortCriteria = document.querySelector('input[name="sortCriteria"]:checked') ? document.querySelector('input[name="sortCriteria"]:checked').value : null;
         const employees = Array.from(document.querySelectorAll('.members > .employee'));
         const employeesContainer = document.querySelector('.members');
+
+        console.log('Applying filters and sort:', { filterByName, selectedAllocation, sortBy, primarySortCriteria });
 
         employees.forEach(employee => {
             const employeeName = employee.querySelector('.employee-name').textContent.toLowerCase();
@@ -898,7 +894,14 @@
 
         const filteredEmployees = employees.filter(employee => employee.style.display === '');
 
-        if (primarySortCriteria) {
+        if (filterByName === "") {
+            // 검색창이 비어 있을 때 입사일 기준 내림차순으로 정렬
+            filteredEmployees.sort((a, b) => {
+                const hireDateA = getDateValue(a, 'hire-date');
+                const hireDateB = getDateValue(b, 'hire-date');
+                return hireDateB - hireDateA;
+            });
+        } else if (primarySortCriteria) {
             filteredEmployees.sort((a, b) => {
                 let primaryValueA, primaryValueB, secondaryValueA, secondaryValueB;
 
@@ -920,15 +923,44 @@
                     return primarySortResult;
                 }
             });
-
-
-
         }
 
         filteredEmployees.forEach(employee => {
             employeesContainer.appendChild(employee);
         });
+
+        console.log('Employees sorted and filtered');
     }
+
+    function updateHireDateSortOptions() {
+        const hireDateSelect = document.getElementById('sortHireDateBy');
+        hireDateSelect.innerHTML = `
+        <option value="ascHireDate">入社日昇順</option>
+        <option value="descHireDate">入社日降順</option>
+    `;
+        console.log('Hire date sort options updated');
+    }
+
+    function toggleHireDateSortOptions() {
+        const hireDateSelect = document.getElementById('sortHireDateBy');
+        const radioButtons = document.querySelectorAll('input[name="sortCriteria"]');
+        let anyChecked = false;
+
+        radioButtons.forEach((radio) => {
+            if (radio.checked) {
+                anyChecked = true;
+            }
+        });
+
+        if (anyChecked) {
+            hireDateSelect.style.visibility = 'visible';
+            updateHireDateSortOptions();
+            console.log('updateHireDateSortOptions called');
+        } else {
+            hireDateSelect.style.visibility = 'hidden';
+        }
+    }
+
 
     function getDateValue(employee, dateType) {
         const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
@@ -987,8 +1019,6 @@
             }
         });
     }
-
-
 
 
     // 페이지 로드 시 실행되는 함수. index에서 '곧 프로젝트 끝나는 사원 보러가기' 버튼 클릭시 실행.
@@ -1056,6 +1086,10 @@
             employeesContainer.appendChild(employee);
         });
     }
+
+
+
+
 
     function getDateValueFilter(employee, dateType) {
         const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
