@@ -176,6 +176,28 @@
 
         }); //document.addEventListener 끝
 
+        function filterEmployeesByCommuteTime() {
+            const filterValue = document.getElementById('commute-time-filter').value;
+            const employeeEntries = document.querySelectorAll('.employee-entry');
+
+            employeeEntries.forEach(entry => {
+                const commuteTimeElement = entry.querySelector('.commute-time');
+                const commuteTimeText = commuteTimeElement.textContent;
+                const commuteTime = parseInt(commuteTimeText.match(/\d+/)); // 정규식을 사용하여 숫자만 추출
+
+                if (isNaN(filterValue) || filterValue === '') {
+                    // 필터 값이 비어있거나 숫자가 아닌 경우 모든 항목 표시
+                    entry.style.display = '';
+                } else if (commuteTime <= filterValue) {
+                    // 통근 시간이 필터 값 이하인 경우 항목 표시
+                    entry.style.display = '';
+                } else {
+                    // 통근 시간이 필터 값보다 큰 경우 항목 숨기기
+                    entry.style.display = 'none';
+                }
+            });
+        }
+
         function setSortIndicator(sortedColumn) {
             // 모든 header-cell 요소에서 'sorted' 클래스를 제거합니다.
             document.querySelectorAll('.header-cell').forEach(cell => {
@@ -195,6 +217,9 @@
                 let bValue = b.querySelector(`[${dataAttribute}]`).getAttribute(dataAttribute);
 
                 if (isNumeric) {
+                    if (dataAttribute === 'data-skill-career') {
+                        return parseFloat(bValue) - parseFloat(aValue);
+                    }
                     return parseFloat(aValue) - parseFloat(bValue);
                 } else if (isDate) {
                     return new Date(aValue) - new Date(bValue);
@@ -410,7 +435,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0 20px 20px;
+            padding: 0 20px 0;
             /*margin: 0 auto;*/
             width: 91%;
         }
@@ -489,6 +514,11 @@
 
         .assign-button:hover {
             background-color: #0056b3;
+        }
+
+        .filter-container{
+            display: flex;
+            justify-content: center;
         }
 
 
@@ -651,7 +681,12 @@
             </div>
         </div>
     </div>
+
     <div class="center-panel">
+        <div class="filter-container">
+            <label for="commute-time-filter">予想通勤時間上限 (分):</label>
+            <input type="number" id="commute-time-filter" oninput="filterEmployeesByCommuteTime()">
+        </div>
         <div th:if="${#lists.isEmpty(employeeEntries)}" class="no-employee-entry">
             <div class="employee-name" style="text-align: center; color: #777;">
                 配属可能状態の社員無し
