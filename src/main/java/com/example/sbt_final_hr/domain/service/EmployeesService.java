@@ -91,6 +91,11 @@ public class EmployeesService {
     }
 
     public String saveImage(MultipartFile image) throws IOException {
+        if (image == null || image.isEmpty()) {
+            // 파일이 비어있는 경우 null 반환
+            return null;  // 또는 기본 이미지 경로를 지정할 수 있습니다. 예: "/img/default-photo.jpeg"
+        }
+
         ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
         File imgDir = imgDirResource.getFile();
 

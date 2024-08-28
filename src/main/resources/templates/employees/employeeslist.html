@@ -642,6 +642,7 @@
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
                             const defaultImage = '/img/default-photo.jpeg';
+                            console.log('Employee image:', data.image);
                             const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
 <div class="employeeIdAndNameAndButton">
@@ -778,6 +779,7 @@
                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if (dayDiff <= 7 && dayDiff >= 0) {
                     endDateElement.style.color = 'red';
+                    endDateElement.style.fontWeight = 'bold';
                 }
             }
         });
@@ -798,6 +800,7 @@
                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if (dayDiff >= 14) {
                     lastEndDateElement.style.color = 'blue';
+                    lastEndDateElement.style.fontWeight = 'bold';
                 }
             }
         });
@@ -1074,6 +1077,7 @@
                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if (dayDiff <= 7 && dayDiff >= 0) {
                     endDateElement.style.color = 'red';
+                    endDateElement.style.fontWeight = 'bold';
 
                     // 빨간색으로 변한 첫 번째 요소로 스크롤 이동
                     endDateElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1099,8 +1103,10 @@
             if (!isNaN(rating)) {
                 if (rating < 2.0) {
                     ratingElement.style.color = 'blue';
+                    ratingElement.style.fontWeight = 'bold';
                 } else if (rating >= 4.5) {
-                    ratingElement.style.color = 'rgba(255, 204, 0, 1)';
+                    ratingElement.style.color = 'rgba(255, 220, 0, 1)';
+                    ratingElement.style.fontWeight = 'bold';
                 }
             }
         });
