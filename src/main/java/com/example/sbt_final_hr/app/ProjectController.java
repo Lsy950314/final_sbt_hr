@@ -254,18 +254,12 @@ public class ProjectController {
             long skillId = ((Number) participantInfo.get("skillId")).longValue();
             double projectDuration = ((Number) participantInfo.get("projectDuration")).doubleValue();
 
-            // 프로젝트에 참여한 사원의 별점 업데이트 (employees_project table)
             employeesProjectsService.updateStarPointOfProjectParticipants(projectId, projectParticipantsInfos);
-            // 프로젝트에 참여한 사원들의 스킬 경력 업데이트(employees_skill table)
             employeesSkillService.updateSkillCareerOfProjectParticipants(projectParticipantsInfos);
-            // 프로젝트에 참여한 사원의 별점 평균 업데이트 (employees table)
             employeesService.updateStarPointAverageOfProjectParticipants(employeeId);
-            //LAST_PROJECT_END_DATE를 CURRENT_PROJECT_END_DATE의 값을 넣고, CURRENT_PROJECT_END_DATE의의 값을 null로
             employeesService.updateProjectEndDateOfProjectParticipants(employeeId);
-            //프로젝트에 참여한 사원의 allocation을 1 => -1 로 업데이트(employees table)
             employeesService.updateAllocationTo(employeeId, -1);
         }
-        // 프로젝트의 status를 1 => 2로 변경
         projectsService.updateStatusTo(projectId, 2);
         httpSession.removeAttribute("projects");
         httpSession.removeAttribute("projectsType");
