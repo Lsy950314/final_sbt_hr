@@ -90,7 +90,6 @@ public class EmployeesController {
         } else {
             List<EmployeesRequest> employees;
             employees = employeesService.findAllEmployeesSummary();
-            //model.addAttribute("employees", employees);
             httpSession.setAttribute("employees", employees);
         }
 
@@ -132,7 +131,6 @@ public class EmployeesController {
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
         response.put("latitude", employee.getLatitude());
         response.put("longitude", employee.getLongitude());
-        //8월 7일 10:48 시도중
         response.put("image", employee.getImage());
 
         List<Map<String, Object>> skills = new ArrayList<>();
@@ -144,11 +142,8 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
-        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
 
-
-        //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
         for (Projects project : recentProjects) {
             Map<String, Object> projectInfo = new HashMap<>();
@@ -193,8 +188,6 @@ public class EmployeesController {
         }
     }
 
-
-
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                  @RequestParam("imageFile") MultipartFile imageFile,
@@ -203,15 +196,14 @@ public class EmployeesController {
             String imagePath = employeesService.saveImage(imageFile);
 
             employeesRequest.setImage(imagePath);
-        } else {// 새로운 이미지가 업로드되지 않은 경우
+        } else {
             employeesRequest.setImage(employeesRequest.getExistingImage());
         }
         Employees employee = employeesRequest.toEntity();
-        employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
-        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
+        employeesService.save(employee);
+        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());
 
-
-        if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
+        if (employeesRequest.getEmployeesSkillRequests() != null) {
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
@@ -226,7 +218,5 @@ public class EmployeesController {
         employeesService.deleteById(id);
         return "redirect:/employees";
     }
-
-
 
 }
