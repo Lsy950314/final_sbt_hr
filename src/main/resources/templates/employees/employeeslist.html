@@ -628,12 +628,36 @@
     </div>
 </div>
 <script>
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const allocationSelect = document.getElementById('filterByAllocation');
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const filterAllocation = urlParams.get('filterAllocation');
+    //
+    //     if (filterAllocation === '-1') {
+    //         // URL 파라미터에 filterAllocation=-1이 있으면 未配属 상태로 설정
+    //         allocationSelect.value = '-1';
+    //     } else {
+    //         // 그렇지 않으면 全体の状態으로 설정
+    //         allocationSelect.value = "";
+    //     }
+    //
+    //     // 필요할 경우 필터를 적용하는 함수 호출
+    //     if (filterAllocation !== null) {
+    //         applyFiltersByAllocation();
+    //     }
+    // });
     document.addEventListener('DOMContentLoaded', function() {
         const allocationSelect = document.getElementById('filterByAllocation');
+        const sortOptionsSelect = document.getElementById('sortOptions');
         const urlParams = new URLSearchParams(window.location.search);
-        const filterAllocation = urlParams.get('filterAllocation');
 
-        if (filterAllocation === '-1') {
+        const filterAllocation = urlParams.get('filterAllocation');
+        const sortOption = urlParams.get('currentProjectEndDateDesc');
+
+        if (filterAllocation === '1') {
+            // URL 파라미터에 filterAllocation=1이 있으면 配属 상태로 설정
+            allocationSelect.value = '1';
+        } else if (filterAllocation === '-1') {
             // URL 파라미터에 filterAllocation=-1이 있으면 未配属 상태로 설정
             allocationSelect.value = '-1';
         } else {
@@ -641,12 +665,19 @@
             allocationSelect.value = "";
         }
 
-        // 필요할 경우 필터를 적용하는 함수 호출
-        if (filterAllocation !== null) {
-            applyFiltersByAllocation();
+        if (sortOption !== null) {
+            // URL 파라미터에 currentProjectEndDateDesc이 있으면 해당 옵션을 선택
+            sortOptionsSelect.value = 'currentProjectEndDateDesc';
+        } else {
+            // 그렇지 않으면 기본 선택 옵션을 유지
+            sortOptionsSelect.value = sortOptionsSelect.querySelector('option[selected]').value;
+        }
+
+        // 필터 및 정렬 적용 함수 호출
+        if (filterAllocation !== null || sortOption !== null) {
+            applyFiltersAndSorting();
         }
     });
-
 
     // 필터링과 정렬을 모두 처리하는 함수
     function applyFiltersAndSorting() {
@@ -733,13 +764,6 @@
         }
         return new Date(0);
     }
-
-
-
-
-
-
-
 
 
 
@@ -997,6 +1021,7 @@
             applyFiltersByAllocation();
         }
     });
+
     function applyFiltersByAllocation() {
         const filterByName = document.getElementById('filterByEmployeeName').value.toLowerCase();
         const selectedAllocation = document.getElementById('filterByAllocation').value;
@@ -1029,105 +1054,6 @@
     }
 
 
-    // 페이지 로드 시 실행되는 함수. index에서 '곧 프로젝트 끝나는 사원 보러가기' 버튼 클릭시 실행.
-    document.addEventListener('DOMContentLoaded', function () {
-        // URL에서 파라미터 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const filterAllocation = urlParams.get('filterAllocation');
-        const sortByEndDateDesc = urlParams.has('currentProjectEndDateDesc');
-
-        // 필터 조건이 충족될 때만 필터와 정렬 적용
-        if (filterAllocation === '1' && sortByEndDateDesc) {// 라디오 버튼과 select 박스의 값 설정
-            document.getElementById('currentProjectEndDateDesc').checked = true;
-            document.getElementById('filterByAllocation').value = '1';
-
-            // 필터 적용 함수 호출
-            applyFiltersAndSortByEndDate();
-
-            // 필터가 적용된 후 빨간색 요소로 스크롤
-            scrollToRedText();
-        }
-    });
-    // 페이지 로드 시 실행되는 함수. index에서 '곧 프로젝트 끝나는 사원 보러가기' 버튼 클릭시 실행.
-    function applyFiltersAndSortByEndDate() {
-        const filterByName = document.getElementById('filterByEmployeeName').value.toLowerCase();
-        const selectedAllocation = document.getElementById('filterByAllocation').value;
-        const employees = Array.from(document.querySelectorAll('.members > .employee'));
-
-        employees.forEach(employee => {
-            const employeeName = employee.querySelector('.employee-name').textContent.toLowerCase();
-            const allocationImage = employee.querySelector('.allocation img');
-            let allocationValue = null;
-
-            if (allocationImage) {
-                if (allocationImage.alt === 'Unassigned') {
-                    allocationValue = '-1';
-                } else if (allocationImage.alt === 'Preassigned') {
-                    allocationValue = '0';
-                } else if (allocationImage.alt === 'Assigned') {
-                    allocationValue = '1';
-                }
-            }
-
-            const matchesName = employeeName.includes(filterByName);
-            const matchesAllocation = selectedAllocation === "" || allocationValue === selectedAllocation;
-
-            if (matchesName && matchesAllocation) {
-                employee.style.display = '';
-            } else {
-                employee.style.display = 'none';
-            }
-        });
-
-        // 필터 적용 후 현재 프로젝트 종료일 내림차순으로 정렬
-        const filteredEmployees = employees.filter(employee => employee.style.display === '');
-
-        filteredEmployees.sort((a, b) => {
-            const endDateA = getDateValueFilter(a, 'current-project-end-date');
-            const endDateB = getDateValueFilter(b, 'current-project-end-date');
-            return endDateB - endDateA; // 내림차순
-        });
-
-        const employeesContainer = document.querySelector('.members');
-        filteredEmployees.forEach(employee => {
-            employeesContainer.appendChild(employee);
-        });
-    }
-
-
-
-
-
-    function getDateValueFilter(employee, dateType) {
-        const dateText = employee.querySelector(`.${dateType}`).textContent.trim();
-        if (dateText !== 'Not allocated' && dateText !== 'No experience' && dateText !== '') {
-            return new Date(dateText);
-        }
-        return new Date(0);
-    }
-
-    function scrollToRedText() {
-        const projectEndDates = document.querySelectorAll('.current-project-end-date');
-        const today = new Date();
-
-        for (let endDateElement of projectEndDates) {
-            const endDateText = endDateElement.getAttribute('data-current-project-end-date');
-            if (endDateText && endDateText !== 'Not allocated') {
-                const endDate = new Date(endDateText);
-                const timeDiff = endDate.getTime() - today.getTime();
-                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                if (dayDiff <= 7 && dayDiff >= 0) {
-                    endDateElement.style.color = 'red';
-                    endDateElement.style.fontWeight = 'bold';
-
-                    // 빨간색으로 변한 첫 번째 요소로 스크롤 이동
-                    endDateElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    break; // 첫 번째 요소로만 스크롤
-                }
-            }
-        }
-    }
-
     function visitGoogleMap(latitude, longitude) {
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
         window.open(googleMapsUrl, '_blank');
@@ -1153,11 +1079,70 @@
         });
     });
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     // Ensure that the initial value is set to "全体の状態"
-    //     const allocationSelect = document.getElementById('filterByAllocation');
-    //     allocationSelect.value = ""; // Set the initial value to "全体の状態"
-    // });
+    //곧 프로젝트 끝나는 사원 하이라이트
+    document.addEventListener('DOMContentLoaded', function() {
+        const allocationSelect = document.getElementById('filterByAllocation');
+        const sortOptionsSelect = document.getElementById('sortOptions');
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const filterAllocation = urlParams.get('filterAllocation');
+        const sortOption = urlParams.get('currentProjectEndDateDesc');
+
+        if (filterAllocation === '1' && sortOption !== null) {
+            // URL 파라미터에 filterAllocation=1이 있고 currentProjectEndDateDesc이 있으면 필터와 정렬을 적용
+            allocationSelect.value = '1';
+            sortOptionsSelect.value = 'currentProjectEndDateDesc';
+
+            // // 필터 및 정렬 적용 함수 호출
+            applyFiltersAndSorting();
+
+            // 7일 이하 남은 사원에게 색상 적용 및 자동 스크롤
+            highlightAndScrollToCriticalProjects();
+        }
+    });
+
+    function highlightAndScrollToCriticalProjects() {
+        const projectEndDates = document.querySelectorAll('.current-project-end-date');
+        const today = new Date();
+        let firstCriticalElement = null;
+
+        projectEndDates.forEach(endDateElement => {
+            const endDateText = endDateElement.getAttribute('data-current-project-end-date');
+            if (endDateText && endDateText !== '配属なし') {
+                const endDate = new Date(endDateText);
+                const timeDiff = endDate.getTime() - today.getTime();
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                if (dayDiff <= 7 && dayDiff >= 0) {
+                    // 튜플의 부모 요소에 반짝거리는 효과 적용
+                    const employeeElement = endDateElement.closest('.employee.allocation-assigned');
+                    employeeElement.classList.add('blink');
+
+                    if (!firstCriticalElement) {
+                        firstCriticalElement = employeeElement;
+                    }
+
+                    // 5초 후에 반짝거리는 효과 제거
+                    setTimeout(() => {
+                        employeeElement.classList.remove('blink');
+                    }, 5000);
+                }
+            }
+        });
+
+        // 첫 번째 중요한 요소를 화면의 중앙에 위치하도록 스크롤
+        if (firstCriticalElement) {
+            firstCriticalElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 </script>
