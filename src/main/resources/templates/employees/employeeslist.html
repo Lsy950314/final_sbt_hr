@@ -802,6 +802,7 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data)
                         const employeeDetails = document.getElementById("employeeDetails");
                         if (employeeDetails) {
                             const defaultImage = '/img/default-photo.jpeg';

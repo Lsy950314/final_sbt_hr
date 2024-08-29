@@ -105,7 +105,7 @@
 
         .projects {
             width: 98%;;
-            height: 82vh;
+            height: 85vh;
             margin-left: 1%;
             background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
             border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
@@ -116,6 +116,13 @@
             font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
             text-align: center;
             overflow-y: auto; /* 수직 스크롤바 추가 */
+
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        }
+
+        .projects::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .projects > div {
