@@ -408,8 +408,13 @@
             max-height: 200px; /* 최대 높이를 200px로 제한하여 스크롤이 필요한 경우 스크롤바가 나타나도록 합니다. */
         }
 
-        #skills-list li, .project-item {
+        #skills-list li {
             margin-bottom: 5px; /* 하단 여백을 5px 줍니다. */
+            padding: 5px; /* 내부 여백을 5px 줍니다. */
+            border: 1px solid #ddd; /* 경계선을 회색으로 설정합니다. */
+        }
+
+        .project-item {
             padding: 5px; /* 내부 여백을 5px 줍니다. */
             border: 1px solid #ddd; /* 경계선을 회색으로 설정합니다. */
         }
@@ -443,6 +448,15 @@
         .project-item .project-dates {
             display: block;
         }
+
+        .project-name {
+            white-space: nowrap;            /* 텍스트를 한 줄로 유지 */
+            overflow: hidden;               /* 넘치는 텍스트를 숨김 */
+            text-overflow: ellipsis;        /* 넘치는 부분을 ...으로 표시 */
+            width: 100%;                    /* 부모 요소의 너비에 맞춤 */
+        }
+
+
 
         /* 입력 필드 및 선택 박스 스타일 */
         input[type="text"], select {
@@ -898,9 +912,13 @@
                                     const projectItem = document.createElement('div');
                                     projectItem.className = 'project-item';
                                     projectItem.innerHTML = `
-<div style="display: block">
+<div style="display: flex">
+            <div><img style="width:20px; height:20px; margin-top:13px; margin-right:5px" src="/img/employees/codingproject.png"></div>
+            <div style="display:block">
             <div class="project-name">${project.projectName}</div>
-            <div class="project-dates">${project.startDate} ~ ${project.endDate}</div></div>
+            <div class="project-dates">${project.startDate} ~ ${project.endDate}</div>
+</div>
+            </div>
         `;
                                     projectsListElement.appendChild(projectItem);
                                 });
