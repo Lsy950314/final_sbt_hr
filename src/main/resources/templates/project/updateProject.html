@@ -311,7 +311,7 @@
                     return false;
                 }
 
-                if (parseFloat(experience.value) <= 0) {
+                if (parseFloat(experience.value) < 0) {
                     alert('必要な経験値は正の数でなければなりません。');
                     return false;
                 }
@@ -364,7 +364,7 @@
             </div>
         </div>
         <form th:action="@{/updateProject}" th:object="${projectsRequest}" th:onsubmit="validateForm()" method="post"
-              class="form-container" id="projectForm" onsubmit="beforeSubmit()">
+              class="form-container" id="projectForm">
             <div class="form-group">
                 <label for="projectName">プロジェクト名:</label>
                 <input type="text" id="projectName" th:field="*{projectName}" required>

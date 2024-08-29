@@ -213,17 +213,22 @@ public class ProjectController {
                     .filter(req -> req.getSkill().getSkillId().equals(requirementsRequest.getSkill().getSkillId()))
                     .findFirst().orElse(null);
 
-            // 기존 요구사항이 존재하고, fulfilledCount가 0이 아닌 경우
-            if (matchingRequirement != null && matchingRequirement.getFulfilledCount() > 0) {
-                if (matchingRequirement.getRequiredExperience() != requirementsRequest.getRequiredExperience()
-                        || matchingRequirement.getRequiredCount() != requirementsRequest.getRequiredCount()) {
-                    // 에러 메시지와 함께 업데이트 차단
-                    model.addAttribute("errorMessage", "配属されている社員がいる要求スキルを変更することはできません。まずその配属をキャンセルしてください。");
-                    model.addAttribute("projectsRequest", projectsRequest);
-                    model.addAttribute("apiKey", apiKey);
-                    model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
-                    model.addAttribute("skills", skillsService.getAllSkills());
-                    return "project/updateProject";
+            if (matchingRequirement != null) {
+                if (matchingRequirement.getFulfilledCount() > 0) {
+                    if (matchingRequirement.getRequiredExperience() != requirementsRequest.getRequiredExperience()
+                            || matchingRequirement.getRequiredCount() != requirementsRequest.getRequiredCount()) {
+                        // 에러 메시지와 함께 업데이트 차단
+                        model.addAttribute("errorMessage", "配属されている社員がいる要求スキルを変更することはできません。まずその配属をキャンセルしてください。");
+                        model.addAttribute("projectsRequest", projectsRequest);
+                        model.addAttribute("apiKey", apiKey);
+                        model.addAttribute("projectTypes", projectTypesService.getAllProjectTypes());
+                        model.addAttribute("skills", skillsService.getAllSkills());
+                        return "project/updateProject";
+                    } else {
+                        hasChanges = true;
+                    }
+                } else {
+                    hasChanges = true;
                 }
             } else {
                 hasChanges = true;
