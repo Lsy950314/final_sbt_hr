@@ -179,4 +179,9 @@ public class EmployeesService {
         return countEmployees;
     }
 
+    public boolean isallocation1(long employeeId) {
+        int allocationbyEmployeeId = employeesRepository.findAllocationByEmployeeId(employeeId);
+        return allocationbyEmployeeId == 1;
+    }
+
 }
