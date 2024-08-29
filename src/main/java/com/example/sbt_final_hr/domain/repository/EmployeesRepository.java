@@ -16,6 +16,8 @@ import java.util.List;
 public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     List<Employees> findByNameContainingIgnoreCase(String name);
 
+    // 특정 프로젝트 요구사항에 부합하는 사원 필터링
+    // allocation = -1 에 해당하는 index 를 생성해 두었음
     @Query("SELECT DISTINCT e FROM Employees e " +
             "JOIN e.skills es " +
             "JOIN ProjectRequirements pr ON pr.skill.skillId = es.skill.skillId " +
@@ -34,9 +36,11 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     @Query("UPDATE Employees e SET e.lastProjectEndDate = e.currentProjectEndDate, e.currentProjectEndDate = null WHERE e.employeeId = :employeeId")
     void updateProjectEndDates(@Param("employeeId") long employeeId);
 
+    //8월 6일 12:45 추가 사원 이름 기준 오름차순 select
     @Query("SELECT e FROM Employees e ORDER BY e.hireDate DESC")
     List<Employees> findAllOrderByEmployeeNameAsc();
 
+    //사원 allocation 바꾸는 코드
     @Query("UPDATE Employees e SET e.allocation = :num WHERE e.employeeId = :id")
     @Modifying
     int updateAllocationTo(Long id, int num);
@@ -47,12 +51,16 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     List<EmployeesRequest> findAllEmployeesSummary();
 
     @Query("SELECT COUNT(e) FROM Employees e")
-    int countAllEmployees();
+    int countAllEmployees(); // 총 사원 수
 
     @Query("SELECT COUNT(e) FROM Employees e WHERE e.allocation = 1")
-    int countAssignedEmployees();
+    int countAssignedEmployees(); // 현재 프로젝트 진행 중인 사원 수
 
     @Query("SELECT COUNT(e) FROM Employees e WHERE e.allocation =-1")
-    int countUnassignedEmployees();
+    int countUnassignedEmployees(); // 현재 대기중인 사원 수
+
+    @Query("SELECT e.allocation FROM Employees e WHERE e.employeeId = :employeeId")
+    int findAllocationByEmployeeId(@Param("employeeId") Long employeeId);
+
 
 }

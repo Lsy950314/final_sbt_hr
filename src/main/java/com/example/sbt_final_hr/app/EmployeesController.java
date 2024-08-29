@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -90,6 +92,7 @@ public class EmployeesController {
         } else {
             List<EmployeesRequest> employees;
             employees = employeesService.findAllEmployeesSummary();
+            //model.addAttribute("employees", employees);
             httpSession.setAttribute("employees", employees);
         }
 
@@ -133,6 +136,7 @@ public class EmployeesController {
         response.put("longitude", employee.getLongitude());
         response.put("image", employee.getImage());
 
+
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {
             Map<String, Object> skillInfo = new HashMap<>();
@@ -142,8 +146,11 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
+        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
 
+
+        //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
         for (Projects project : recentProjects) {
             Map<String, Object> projectInfo = new HashMap<>();
@@ -188,6 +195,8 @@ public class EmployeesController {
         }
     }
 
+
+
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                  @RequestParam("imageFile") MultipartFile imageFile,
@@ -196,14 +205,15 @@ public class EmployeesController {
             String imagePath = employeesService.saveImage(imageFile);
 
             employeesRequest.setImage(imagePath);
-        } else {
+        } else {// 새로운 이미지가 업로드되지 않은 경우
             employeesRequest.setImage(employeesRequest.getExistingImage());
         }
         Employees employee = employeesRequest.toEntity();
-        employeesService.save(employee);
-        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());
+        employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
+        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
 
-        if (employeesRequest.getEmployeesSkillRequests() != null) {
+
+        if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
@@ -213,10 +223,42 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
+//    @GetMapping("/delete/{id}")
+//    public String deleteEmployee(@PathVariable Long id) {
+//        employeesService.deleteById(id);
+//        return "redirect:/employees";
+//    }
+
+//    @GetMapping("/delete/{id}")
+//    public String deleteEmployee(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+//        // 서비스 계층에서 allocation 값 확인
+//        if (employeesService.isallocation1(id)) {
+//            // allocation이 1인 경우, 삭제를 막고 알림 메시지를 설정
+//            redirectAttributes.addFlashAttribute("alertMessage", "배정이 되어 있기 때문에 삭제를 할 수 없습니다.");
+//            return "redirect:/employees"; // 삭제를 막고 리스트 페이지로 리다이렉트
+//        }
+//
+//        // allocation이 1이 아닌 경우, 삭제 수행
+//        employeesService.deleteById(id);
+//        return "redirect:/employees"; // 삭제 후 리스트 페이지로 리다이렉트
+//    }
+
     @GetMapping("/delete/{id}")
-    public String deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        if (employeesService.isallocation1(id)) {
+            // allocation이 1인 경우, 삭제 불가
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // allocation이 1이 아닌 경우, 삭제 수행
         employeesService.deleteById(id);
-        return "redirect:/employees";
+        return ResponseEntity.ok().build();
     }
+
+
+
+
+
+
 
 }
