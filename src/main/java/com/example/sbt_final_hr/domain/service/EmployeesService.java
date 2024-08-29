@@ -48,24 +48,17 @@ public class EmployeesService {
     public void updateEndDates(Long employeeId, Long projectId) {
         Projects projects = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
-        // 취소 로직을 대비해서 값을 기록해 둠
         employees.setPreviousProjectEndDate(employees.getLastProjectEndDate());
-        // 최신화
         employees.setCurrentProjectEndDate(projects.getEndDate());
-        // 프로젝트에 참여 중인 상태가 될 것이므로 대기기간 계산 로직을 위한 최근 프로젝트 종료일은 null 로 만들어 줌
         employees.setLastProjectEndDate(null);
         employeesRepository.save(employees);
-        System.out.println("날짜 수정 성공");
     }
 
     public boolean restoreEndDates(Long employeeId) {
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(RuntimeException::new);
-        // 첫 프로젝트의 경우에도 true 반환
         if (employees.getPreviousProjectEndDate() != null) {
-            // 기존 로직: 이전 종료일이 있는 경우
             employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
         } else {
-            // 이전 종료일이 없는 경우(첫 프로젝트)
             employees.setLastProjectEndDate(null);
         }
         employees.setPreviousProjectEndDate(null);
@@ -96,8 +89,7 @@ public class EmployeesService {
 
     public String saveImage(MultipartFile image) throws IOException {
         if (image == null || image.isEmpty()) {
-            // 파일이 비어있는 경우 null 반환
-            return null;  // 또는 기본 이미지 경로를 지정할 수 있습니다. 예: "/img/default-photo.jpeg"
+            return null;
         }
 
         ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
@@ -149,13 +141,11 @@ public class EmployeesService {
         if (employeesRepository.updateAllocationTo(id, num)==1){
             employeesRepository.flush();
             entityManager.clear();
-            System.out.println("사원 상태 변경 성공");
             // 엔티티를 다시 로드하여 상태가 업데이트되었는지 확인
             Employees employee = employeesRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
             System.out.println("Updated allocation: " + employee.getAllocation());
             return true;
         } else {
-            System.out.println("사원 상태 변경 실패");
             return false;
         }
        

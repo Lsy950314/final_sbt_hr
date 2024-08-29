@@ -18,7 +18,7 @@ public class ProjectRequirementsRequest {
 
     public ProjectRequirements toEntity(Projects project) {
         ProjectRequirements projectRequirements = new ProjectRequirements();
-        projectRequirements.setId(this.id); // 업데이트 시 ID 설정
+        projectRequirements.setId(this.id);
         projectRequirements.setProject(project);
         projectRequirements.setSkill(this.skill);
         projectRequirements.setRequiredExperience(this.requiredExperience);

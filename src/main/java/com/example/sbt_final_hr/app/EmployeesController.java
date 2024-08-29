@@ -92,7 +92,6 @@ public class EmployeesController {
         } else {
             List<EmployeesRequest> employees;
             employees = employeesService.findAllEmployeesSummary();
-            //model.addAttribute("employees", employees);
             httpSession.setAttribute("employees", employees);
         }
 
@@ -146,11 +145,8 @@ public class EmployeesController {
         }
         response.put("skills", skills);
 
-        //8월 5일 17:02 추가중
         List<Projects> recentProjects = projectsService.findRecentProjectsByIds(projectIds);
 
-
-        //추후에 여기서 필요한 정보만 가져다 쓸 것
         List<Map<String, Object>> projectInfos = new ArrayList<>();
         for (Projects project : recentProjects) {
             Map<String, Object> projectInfo = new HashMap<>();
@@ -195,8 +191,6 @@ public class EmployeesController {
         }
     }
 
-
-
     @PostMapping("/update")
     public String updateEmployee(@ModelAttribute("employeesRequest") EmployeesRequest employeesRequest,
                                  @RequestParam("imageFile") MultipartFile imageFile,
@@ -205,15 +199,15 @@ public class EmployeesController {
             String imagePath = employeesService.saveImage(imageFile);
 
             employeesRequest.setImage(imagePath);
-        } else {// 새로운 이미지가 업로드되지 않은 경우
+        } else {
             employeesRequest.setImage(employeesRequest.getExistingImage());
         }
         Employees employee = employeesRequest.toEntity();
-        employeesService.save(employee);  // ID가 있는 경우 업데이트, 없는 경우 새로 추가
-        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());// 기존 스킬 삭제
+        employeesService.save(employee);
+        employeesSkillService.deleteByEmployeeId(employee.getEmployeeId());
 
 
-        if (employeesRequest.getEmployeesSkillRequests() != null) {// 새로운 스킬 저장
+        if (employeesRequest.getEmployeesSkillRequests() != null) {
             for (EmployeesSkillRequest employeesSkillRequest : employeesRequest.getEmployeesSkillRequests()) {
                 EmployeesSkill employeesSkill = employeesSkillRequest.toEntity(employee);
                 employeesSkillService.createOrUpdateEmployeesSkill(employeesSkill);
@@ -223,42 +217,14 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
-//    @GetMapping("/delete/{id}")
-//    public String deleteEmployee(@PathVariable Long id) {
-//        employeesService.deleteById(id);
-//        return "redirect:/employees";
-//    }
-
-//    @GetMapping("/delete/{id}")
-//    public String deleteEmployee(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-//        // 서비스 계층에서 allocation 값 확인
-//        if (employeesService.isallocation1(id)) {
-//            // allocation이 1인 경우, 삭제를 막고 알림 메시지를 설정
-//            redirectAttributes.addFlashAttribute("alertMessage", "배정이 되어 있기 때문에 삭제를 할 수 없습니다.");
-//            return "redirect:/employees"; // 삭제를 막고 리스트 페이지로 리다이렉트
-//        }
-//
-//        // allocation이 1이 아닌 경우, 삭제 수행
-//        employeesService.deleteById(id);
-//        return "redirect:/employees"; // 삭제 후 리스트 페이지로 리다이렉트
-//    }
-
     @GetMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         if (employeesService.isallocation1(id)) {
-            // allocation이 1인 경우, 삭제 불가
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // allocation이 1이 아닌 경우, 삭제 수행
         employeesService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-
-
-
-
-
 
 }
