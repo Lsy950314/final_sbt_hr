@@ -169,11 +169,13 @@ public class MatchService {
         List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
         long step1EndTime = System.currentTimeMillis();
         System.out.println("요구 스킬을 충족하는 사원들 : " + filteredEmployeesByRequirements);
+        System.out.println("해당 사원 수 : " + filteredEmployeesByRequirements.size());
 
         long step2StartTime = System.currentTimeMillis();
         Map<Employees, Integer> finalEmployees = filterByCommutingTime(filteredEmployeesByRequirements, project);
         long step2EndTime = System.currentTimeMillis();
         System.out.println("통근 시간 조건을 만족하는 사원들 : " + finalEmployees);
+        System.out.println("해당 사원 수 : " + finalEmployees.size());
 
         long endTime = System.currentTimeMillis();
 

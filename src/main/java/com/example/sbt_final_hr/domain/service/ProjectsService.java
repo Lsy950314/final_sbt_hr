@@ -87,9 +87,20 @@ public class ProjectsService {
         Projects existingProject = projectsRepository.findById(projectsRequest.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectsRequest.getProjectId()));
 
-        Projects project = projectsRequest.toEntity(projectType);
-        project.setRegistrationDate(existingProject.getRegistrationDate()); // 기존 등록일 유지
-        projectsRepository.save(project);
+        existingProject.setProjectName(projectsRequest.getProjectName());
+        existingProject.setWorkLocation(projectsRequest.getWorkLocation());
+        existingProject.setClientCompany(projectsRequest.getClientCompany());
+        existingProject.setStartDate(projectsRequest.getStartDate());
+        existingProject.setEndDate(projectsRequest.getEndDate());
+        existingProject.setStatus(projectsRequest.getStatus());
+        existingProject.setLatitude(projectsRequest.getLatitude());
+        existingProject.setLongitude(projectsRequest.getLongitude());
+        existingProject.setContactPhone(projectsRequest.getContactPhone());
+        existingProject.setContactName(projectsRequest.getContactName());
+        existingProject.setProjectType(projectType); // 프로젝트 타입 설정
+
+        // 업데이트된 프로젝트를 저장
+        projectsRepository.save(existingProject);
         System.out.println("업데이트 성공");
         return existingProject;
     }
