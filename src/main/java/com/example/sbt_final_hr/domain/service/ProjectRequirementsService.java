@@ -42,9 +42,11 @@ public class ProjectRequirementsService {
             existing.setRequiredCount(projectRequirements.getRequiredCount());
             // 필요한 경우 다른 필드들도 업데이트 가능
             projectRequirementsRepository.save(existing);
+            System.out.println("기존 요구사항 업데이트 완료: " + existing.getId());
         } else {
             // 기존 요구사항이 없으면 새로 추가
             projectRequirementsRepository.save(projectRequirements);
+            System.out.println("새로운 요구사항 추가 완료: " + projectRequirements.getId());
         }
     }
 
