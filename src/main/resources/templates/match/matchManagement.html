@@ -16,7 +16,6 @@
             'css': '/img/skillicons/css-icon.png',
             'vue.js': '/img/skillicons/vue-js-icon.png',
             'react': '/img/skillicons/react-icon.png'
-            // 필요에 따라 추가
         };
 
 
@@ -29,7 +28,6 @@
                 }
             });
 
-            // 선호 스킬 아이콘 설정
             document.querySelectorAll('.preferred-skill-icon').forEach(iconElement => {
                 const preferredSkillName = iconElement.getAttribute('data-skill-name');
                 if (skillIconMap[preferredSkillName]) {
@@ -37,7 +35,6 @@
                 }
             });
 
-            // 반복되는 스킬 아이콘 설정
             document.querySelectorAll('.employee-skills .skill-icon').forEach(function (imgElement) {
                 const skillName = imgElement.getAttribute('data-skill-name');
                 if (skillIconMap[skillName]) {
@@ -71,7 +68,6 @@
                     const commuteTime = this.getAttribute('data-commute-time');
                     const lastEndDate = this.getAttribute('data-end-date');
 
-                    // 반올림 처리
                     if (career) {
                         career = Math.round(parseFloat(career) * 10) / 10;
                     }
@@ -108,7 +104,6 @@
                             skillIconElement.src = skillIconMap[skillName];
                         }
 
-                        // row 를 누르면 해당 사원 위치로 스크롤 시키기
                         employeeInfoRow.addEventListener('click', function () {
                             const employeeId = this.getAttribute('data-employee-id');
                             const employeeEntry = document.querySelector(`.employee-entry[data-employee-id="${employeeId}"]`);
@@ -116,16 +111,14 @@
                                 employeeEntry.scrollIntoView({behavior: 'smooth'});
                                 employeeEntry.classList.add('highlight');
 
-                                // 일정 시간 후에 배경색을 원래대로 되돌림
                                 setTimeout(() => {
                                     employeeEntry.classList.remove('highlight');
-                                }, 1500); // 2초 동안 하이라이트 유지
+                                }, 1500);
                             }
 
                         });
                         selectedInfoBody.appendChild(employeeInfoRow);
                     } else {
-                        // 체크 해제 시 해당 행 제거
                         const existingRow = selectedInfoBody.querySelector(`.table-row[data-employee-name="${name}"]`);
                         if (existingRow) {
                             selectedInfoBody.removeChild(existingRow);
@@ -155,33 +148,33 @@
                 }
             });
 
-            document.getElementById('sort-name').addEventListener('click', function() {
+            document.getElementById('sort-name').addEventListener('click', function () {
                 setSortIndicator(this);
                 sortTableByColumn('data-employee-name');
             });
 
-            document.getElementById('sort-skill').addEventListener('click', function() {
+            document.getElementById('sort-skill').addEventListener('click', function () {
                 setSortIndicator(this);
                 sortTableByColumn('data-skill-name');
             });
 
-            document.getElementById('sort-career').addEventListener('click', function() {
+            document.getElementById('sort-career').addEventListener('click', function () {
                 setSortIndicator(this);
                 sortTableByColumn('data-skill-career', true);
             });
 
-            document.getElementById('sort-commute').addEventListener('click', function() {
+            document.getElementById('sort-commute').addEventListener('click', function () {
                 setSortIndicator(this);
                 sortTableByColumn('data-commute-time', true);
             });
 
-            document.getElementById('sort-waiting').addEventListener('click', function() {
+            document.getElementById('sort-waiting').addEventListener('click', function () {
                 setSortIndicator(this);
                 sortTableByColumn('data-end-date', false, true);
             });
 
             document.querySelectorAll('.skill-filter-checkbox').forEach(skillFilterCheckbox => {
-                skillFilterCheckbox.addEventListener('change', function() {
+                skillFilterCheckbox.addEventListener('change', function () {
                     const skillName = this.getAttribute('data-skill-name').toLowerCase();
                     const isChecked = this.checked;
 
@@ -204,14 +197,12 @@
             });
 
             document.querySelectorAll('.project-requirement').forEach(requirement => {
-                requirement.addEventListener('click', function(event) {
-                    // 체크박스 요소 찾기
+                requirement.addEventListener('click', function (event) {
                     const checkbox = this.querySelector('.skill-filter-checkbox');
 
-                    // 클릭된 요소가 체크박스가 아니면 체크 상태를 토글
                     if (event.target !== checkbox) {
                         checkbox.checked = !checkbox.checked;
-                        checkbox.dispatchEvent(new Event('change')); // 체크박스의 change 이벤트 트리거
+                        checkbox.dispatchEvent(new Event('change'));
                     }
                 });
             });
@@ -226,28 +217,23 @@
             employeeEntries.forEach(entry => {
                 const commuteTimeElement = entry.querySelector('.commute-time');
                 const commuteTimeText = commuteTimeElement.textContent;
-                const commuteTime = parseInt(commuteTimeText.match(/\d+/)); // 정규식을 사용하여 숫자만 추출
+                const commuteTime = parseInt(commuteTimeText.match(/\d+/));
 
                 if (isNaN(filterValue) || filterValue === '') {
-                    // 필터 값이 비어있거나 숫자가 아닌 경우 모든 항목 표시
                     entry.style.display = '';
                 } else if (commuteTime <= filterValue) {
-                    // 통근 시간이 필터 값 이하인 경우 항목 표시
                     entry.style.display = '';
                 } else {
-                    // 통근 시간이 필터 값보다 큰 경우 항목 숨기기
                     entry.style.display = 'none';
                 }
             });
         }
 
         function setSortIndicator(sortedColumn) {
-            // 모든 header-cell 요소에서 'sorted' 클래스를 제거합니다.
             document.querySelectorAll('.header-cell').forEach(cell => {
                 cell.classList.remove('sorted');
             });
 
-            // 클릭된 헤더 셀에 'sorted' 클래스를 추가합니다.
             sortedColumn.classList.add('sorted');
         }
 
@@ -280,8 +266,8 @@
             const yearsDifference = currentDate.getFullYear() - end.getFullYear();
             const monthsDifference = (yearsDifference * 12) + (currentDate.getMonth() - end.getMonth());
             const daysDifference = currentDate.getDate() - end.getDate();
-            const totalMonths = monthsDifference + (daysDifference / 30); // approximate days to month fraction
-            return totalMonths.toFixed(1); // to one decimal place
+            const totalMonths = monthsDifference + (daysDifference / 30);
+            return totalMonths.toFixed(1);
         }
 
         function updateWaitingPeriods() {
@@ -299,11 +285,9 @@
         }
 
         function selectProjectRequest(employeeId, projectId) {
-            // 모달을 엽니다.
             const modal = document.getElementById('project-requirement-modal');
             modal.style.display = 'block';
 
-            // 요구사항 목록을 렌더링
             const modalRequirementsList = document.getElementById('modal-requirements-list');
             modalRequirementsList.innerHTML = '';
 
@@ -356,10 +340,8 @@
         document.addEventListener('DOMContentLoaded', updateWaitingPeriods);
 
         function clearEmployeeCheckboxes(employeeId) {
-            // 특정 employeeId를 가진 체크박스들을 모두 선택 해제
             document.querySelectorAll(`.skill-checkbox[data-employee-id="${employeeId}"]`).forEach(checkbox => {
                 checkbox.checked = false;
-                // 해당 체크박스에 연결된 change 이벤트 트리거
                 checkbox.dispatchEvent(new Event('change'));
             });
         }
@@ -374,7 +356,7 @@
         .button-container {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px; /* 버튼과 아래 콘텐츠 사이의 간격 */
+            margin-bottom: 10px;
         }
 
         .main-page-button,
@@ -398,7 +380,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 5px 20px; /* top and bottom: 5px, left and right: 20px */
+            padding: 5px 20px;
             width: 85%;
         }
 
@@ -414,7 +396,7 @@
         }
 
         .project-requirement:hover {
-            background-color: #f0f8ff; /* 호버 시 배경색 변경 (연한 파란색 예시) */
+            background-color: #f0f8ff;
         }
 
         #selected-info {
@@ -429,7 +411,7 @@
 
         .table-header {
             display: block;
-            background-color: #f5f5f5; /* 헤더의 배경색 */
+            background-color: #f5f5f5;
             font-weight: bold;
             text-align: left;
         }
@@ -441,23 +423,23 @@
         }
 
         #selected-info-body .table-row:hover {
-            background-color: #d3d3d3; /* 원하는 배경색으로 변경 */
+            background-color: #d3d3d3;
             cursor: url('/img/project/move-to-employee.png'), auto;
         }
 
         .table-cell {
-            flex: 1; /* 모든 셀이 동일한 너비를 갖도록 설정 */
+            flex: 1;
             padding: 8px;
             box-sizing: border-box;
-            text-align: center; /* 가운데 정렬 */
+            text-align: center;
         }
 
         .table-row:nth-child(even) {
-            background-color: #f9f9f9; /* 짝수 행의 배경색 */
+            background-color: #f9f9f9;
         }
 
         .table-row:nth-child(odd) {
-            background-color: #ffffff; /* 홀수 행의 배경색 */
+            background-color: #ffffff;
         }
 
         .requirement-skill,
@@ -485,7 +467,6 @@
             flex-direction: column;
             align-items: center;
             padding: 0 20px 0;
-            /*margin: 0 auto;*/
             width: 91%;
         }
 
@@ -499,7 +480,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .no-employee-entry{
+        .no-employee-entry {
             background-color: #ffffff;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -510,8 +491,8 @@
         }
 
         .highlight {
-            background-color: #ffff99; /* 밝은 노란색으로 하이라이트 */
-            transition: background-color 0.5s ease; /* 부드러운 전환 효과 */
+            background-color: #ffff99;
+            transition: background-color 0.5s ease;
         }
 
         .employee-name,
@@ -570,18 +551,16 @@
             background-color: #0056b3;
         }
 
-        .filter-container{
+        .filter-container {
             display: flex;
             justify-content: center;
         }
 
-
         .compare-button {
             background-color: #8B5E3C;
-            color: #FFFFFF; /* 대비를 위한 텍스트 색상 */
+            color: #FFFFFF;
             font-family: 'Arial', sans-serif;
         }
-
 
         #project-requirement-modal {
             position: fixed;
@@ -622,20 +601,20 @@
             padding: 10px;
             background-color: #f5f5f5;
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .left-panel::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .project-requirement.completed-project {
-            background-color: #d3d3d3; /* 어두운 배경색을 설정 (여기서는 연한 회색) */
-            opacity: 0.8; /* 살짝 어둡게 만들기 위해 투명도 조정 */
+            background-color: #d3d3d3;
+            opacity: 0.8;
         }
 
         .count-info {
-            font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
+            font-weight: bold;
             color: #6a89cc;
         }
 
@@ -643,10 +622,6 @@
             font-weight: bold;
             color: red;
         }
-
-
-        /*8월 16일 민승현 왼쪽 패널 작업 코드 여기에 */
-
 
         .center-panel {
             width: 30%;
@@ -656,8 +631,8 @@
         }
 
         .scroll-container {
-            max-height: 94vh; /* 스크롤 영역의 최대 높이 */
-            overflow-y: auto; /* 스크롤을 가능하게 설정 */
+            max-height: 94vh;
+            overflow-y: auto;
         }
 
         .scroll-container::-webkit-scrollbar {
@@ -667,8 +642,8 @@
         .skill-icon {
             width: 20px;
             height: 20px;
-            margin-right: 5px; /* 텍스트와의 간격 조정 */
-            vertical-align: middle; /* 아이콘과 텍스트를 수직으로 가운데 정렬 */
+            margin-right: 5px;
+            vertical-align: middle;
         }
 
         .right-panel {
@@ -676,14 +651,14 @@
             padding: 10px;
             background-color: #e9e9e9;
             overflow-y: auto;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .right-panel::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
-        .requirement-modal-box{
+        .requirement-modal-box {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
@@ -708,17 +683,17 @@
             font-size: 12px;
             position: absolute;
             top: 50%;
-            transform: translateY(-50%); /* 수직 가운데 정렬 */
-            color: #17c71e; /* 기호 색상 */
+            transform: translateY(-50%);
+            color: #17c71e;
         }
 
         .header-cell.sorted::after {
-            content: ' ✔'; /* 정렬 중인 셀에 체크 표시 기호 */
+            content: ' ✔';
         }
 
         .header-cell.sorted {
-            background-color: #c3eeff; /* 정렬 중인 셀의 배경색 */
-            font-weight: bold; /* 정렬 중인 셀의 글씨를 굵게 */
+            background-color: #c3eeff;
+            font-weight: bold;
         }
 
     </style>
@@ -737,7 +712,8 @@
                 <div class="requirement-skill">
                     <img class="skill-icon" th:data-skill-name="${pr.getSkill().getSkillName().toLowerCase()}">
                     <span th:text="${pr.getSkill().getSkillName()}"></span>
-                    <input type="checkbox" class="skill-filter-checkbox" th:attr="data-skill-name=${pr.getSkill().getSkillName().toLowerCase()}">
+                    <input type="checkbox" class="skill-filter-checkbox"
+                           th:attr="data-skill-name=${pr.getSkill().getSkillName().toLowerCase()}">
                 </div>
                 <div class="requirement-experience" th:attr="data-experience=${pr.getRequiredExperience()}"></div>
                 <div th:class="${pr.fulfilledCount < pr.getRequiredCount()} ? 'count-info low-fulfillment' : 'count-info'"
@@ -786,7 +762,9 @@
 
                     <div class="clear-checkbox-container">
                         <button type="button" class="clear-checkbox-button"
-                                th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">チェックボックス一括クリア</button>
+                                th:onclick="'clearEmployeeCheckboxes(' + '\'' + ${e.key.getEmployeeId()} + '\'' + ')'">
+                            チェックボックス一括クリア
+                        </button>
                     </div>
 
                     <div class="commute-time" th:text="'予想通勤時間 : ' + ${e.value} + '分'"></div>
@@ -826,18 +804,15 @@
                     </div>
                 </div>
                 <div id="selected-info-body">
-                    <!-- 체크박스를 클릭하여 행이 추가됨 -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 모달 창 -->
     <div id="project-requirement-modal" style="display: none;">
         <div class="requirement-modal-box">
             <h3>要求項目の選択</h3>
             <div id="modal-requirements-list">
-                <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
             <button onclick="closeModal()">閉じる</button>
         </div>
