@@ -116,7 +116,7 @@
             <div class="form-group">
                 <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
                 <input type="number" style="font-size: 14pt" id="employeesSkillRequests[${index}].skillCareer" name="employeesSkillRequests[${index}].skillCareer" required
-                 min="1" oninput="this.value = Math.max(this.value, 1)">
+                 min="0.1" step="0.1" oninput="this.value = Math.max(this.value, 0)">
                 ヶ月
             </div>
             <button type="button" id="delete-btn" onclick="removeSkills(this)">追加取り消し</button>
@@ -242,7 +242,7 @@
 
     .contents {
         background-color: #f5f5f5;
-        width: 1170px;
+        width: 82vw;
         height: auto;
         border-radius: 15px 15px 0 0;
         overflow-y: auto;
@@ -258,7 +258,6 @@
 
     .contents p {
         height: 35px;
-        margin-left: 30px;
     }
 
     form {
@@ -340,7 +339,7 @@
 
     #back-to-employeeslist {
         font-family: "Noto Sans JP", sans-serif;
-        font-size: 14px;
+        font-size: 16px;
         color: #fff;
         background: linear-gradient(45deg, #4a90e2, #87cefa);
         border: none;
@@ -349,11 +348,12 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: background 0.3s ease, transform 0.3s ease;
+        margin-left: 10px
     }
 
     .button-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         margin-bottom: 10px;
     }
 

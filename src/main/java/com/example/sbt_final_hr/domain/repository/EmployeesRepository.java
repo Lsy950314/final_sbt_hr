@@ -46,6 +46,7 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
             "FROM Employees e ORDER BY e.hireDate DESC")
     List<EmployeesRequest> findAllEmployeesSummary();
 
+
     @Query("SELECT COUNT(e) FROM Employees e")
     int countAllEmployees();
 

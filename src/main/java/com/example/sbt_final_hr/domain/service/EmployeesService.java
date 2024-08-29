@@ -155,6 +155,7 @@ public class EmployeesService {
         return employeesRepository.findAllEmployeesSummary();
     }
 
+
     public Map<String, Integer> getCountEmployees(){
         Map<String, Integer> countEmployees = new HashMap<>();
 
