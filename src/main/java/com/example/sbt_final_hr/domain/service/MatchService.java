@@ -56,7 +56,6 @@ public class MatchService {
         } else {
             return false;
         }
-
     }
 
     public boolean matchCancel(Long projectId, Long employeeId, Long projectRequirementsId) {
