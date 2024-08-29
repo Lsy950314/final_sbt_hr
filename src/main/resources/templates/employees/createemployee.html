@@ -3,11 +3,9 @@
 <head>
     <title>プロジェクトチーム編成システム</title>
     <meta charset="UTF-8">
-    <!-- Flatpickr CSS -->
+    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Flatpickr 일본어 설정 -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 </head>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9AYeyskwcrm1_A8f_o0maHvMsBIiZ6BI&libraries=places&language=ja"></script>
@@ -15,7 +13,6 @@
     let map;
     let marker;
     let autocomplete;
-    // let skillCount = 0;
 
     const skills = /*[[${skills}]]*/[];
 
@@ -75,7 +72,6 @@
             label.textContent = "ファイルを選択";
         }
 
-        // 이미지 미리보기 업데이트
         previewImage(event);
     }
 
@@ -84,7 +80,7 @@
         reader.onload = function () {
             const output = document.getElementById('imagePreview');
             output.src = reader.result;
-            output.style.display = 'block';  // 이미지를 표시합니다.
+            output.style.display = 'block';
         };
         reader.readAsDataURL(event.target.files[0]);
     }
@@ -96,7 +92,7 @@
 
     function addSkillCareer() {
         if (validateDuplicateSkills()) {
-            return; // 중복이 있으면 새로운 항목을 추가하지 않습니다.
+            return;
         }
 
         const skillCareerContainer = document.getElementById('skillCareerContainer');
@@ -151,26 +147,35 @@
 
     document.getElementById('addSkillCareer-btn').addEventListener('click', function (event) {
         if (validateDuplicateSkills()) {
-            event.preventDefault(); // 중복이 있을 때 추가 버튼이 동작하지 않도록 합니다.
+            event.preventDefault();
         } else {
             addSkillCareer();
         }
     });
 
     function handleSubmit(event) {
-        const hasDuplicates = validateDuplicateSkills(); // 중복 체크
+        const hasDuplicates = validateDuplicateSkills();
         if (hasDuplicates) {
-            event.preventDefault(); // 중복이 있을 때 폼 제출을 막습니다.
-            console.log('Form submission prevented due to duplicate skills.'); // 폼 제출이 막혔을 때 로그 출력
-            // alert('同じプログラミング言語のキャリアを重複して入力できません');
+            event.preventDefault();
+            return;
+
+        }
+
+        const imageInput = document.getElementById('imageFile');
+        if (!imageInput.files || imageInput.files.length === 0) {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'imageFile';
+            hiddenInput.value = null;
+            document.querySelector('form').appendChild(hiddenInput);
         }
     }
 
 </script>
 <style>
     body {
-        overflow-y: hidden; /* Y축 스크롤 비활성화 */
-        overflow-x: auto; /* X축 스크롤 활성화 */
+        overflow-y: hidden;
+        overflow-x: auto;
         padding: 0;
         margin: 0;
     }
@@ -207,11 +212,11 @@
         display: block;
         width: 100%;
         height: 100%;
-        text-align: center; /* 텍스트 가운데 정렬 */
-        padding: 15px 20px; /* a 요소에 패딩을 적용 */
+        text-align: center;
+        padding: 15px 20px;
         box-sizing: border-box;
-        text-decoration: none; /* 밑줄 제거 */
-        color: inherit; /* 부모 요소의 색상을 상속 */
+        text-decoration: none;
+        color: inherit;
     }
 
     .menus {
@@ -223,9 +228,9 @@
     }
 
     .menu-icon {
-        width: 20%; /* 이미지의 너비 설정 */
-        height: auto; /* 이미지의 높이 설정 */
-        vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+        width: 20%;
+        height: auto;
+        vertical-align: middle;
     }
 
     .menus li:hover {
@@ -244,11 +249,11 @@
         scrollbar-width: none;
 
         display: flex;
-        flex-direction: column; /* 수직 방향으로 요소 배치 */
+        flex-direction: column;
     }
 
     .contents::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
+        display: none;
     }
 
     .contents p {
@@ -258,23 +263,23 @@
 
     form {
         max-width: 50%;
-        max-height: 750px; /* 폼의 최대 높이를 설정합니다 */
+        max-height: 750px;
         background: rgba(173, 216, 230, 0.2);
         margin: 0 auto;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow-y: auto; /* 폼 내부에서 수직 스크롤을 활성화합니다 */
-        scrollbar-width: none; /* Firefox에서 스크롤바를 숨깁니다 */
+        overflow-y: auto;
+        scrollbar-width: none;
     }
 
     form::-webkit-scrollbar {
-        width: 0px; /* Chrome, Safari, Opera에서 스크롤바를 숨깁니다 */
-        background: transparent; /* 스크롤바 트랙을 투명하게 만듭니다 */
+        width: 0px;
+        background: transparent;
     }
 
     form::-webkit-scrollbar-thumb {
-        background-color: transparent; /* 스크롤바 핸들을 투명하게 만듭니다 */
+        background-color: transparent;
     }
 
     .form-group {
@@ -334,37 +339,37 @@
     }
 
     #back-to-employeeslist {
-        font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴을 사용합니다. */
-        font-size: 14px; /* 글자 크기를 14px로 설정합니다. */
-        color: #fff; /* 텍스트 색상을 흰색으로 설정합니다. */
-        background: linear-gradient(45deg, #4a90e2, #87cefa); /* 버튼 배경색을 그라데이션으로 설정합니다. */
-        border: none; /* 기본 테두리를 제거합니다. */
-        border-radius: 20px; /* 버튼에 둥근 테두리를 적용합니다. */
-        padding: 7px 14px; /* 내부 여백을 설정합니다. */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 효과를 추가합니다. */
-        cursor: pointer; /* 마우스 포인터를 손가락 모양으로 변경합니다. */
-        transition: background 0.3s ease, transform 0.3s ease; /* 배경색과 크기 변화에 부드러운 전환 효과를 적용합니다. */
+        font-family: "Noto Sans JP", sans-serif;
+        font-size: 14px;
+        color: #fff;
+        background: linear-gradient(45deg, #4a90e2, #87cefa);
+        border: none;
+        border-radius: 20px;
+        padding: 7px 14px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
     }
 
     .button-container {
         display: flex;
-        justify-content: flex-end; /* 버튼을 오른쪽 끝으로 이동 */
-        margin-bottom: 10px; /* 버튼과 폼 사이의 간격 */
+        justify-content: flex-end;
+        margin-bottom: 10px;
     }
 
     button {
         display: inline-block;
         text-align: center;
-        margin: 0 auto; /* 버튼을 가운데 정렬 */
+        margin: 0 auto;
     }
 
     button[type="submit"], button[type="button"] {
         display: block;
-        margin: 0 auto; /* submit 및 추가 버튼을 가운데 정렬 */
+        margin: 0 auto;
     }
 
     #back-to-employeeslist {
-        margin: 0; /* 오버라이드: 오른쪽으로 붙는 버튼은 margin 제거 */
+        margin: 0;
     }
 
     .custom-file-upload {
@@ -448,11 +453,13 @@
                 <label for="imageFile">プロフィール写真登録</label>
                 <div class="custom-file-upload">
                     <label for="imageFile" id="fileLabel">ファイルを選択</label>
-                    <input type="file" id="imageFile" name="imageFile" style="display: none;" onchange="updateFileName(event)">
+                    <input type="file" id="imageFile" name="imageFile" style="display: none;"
+                           onchange="updateFileName(event)">
                 </div>
                 <br/>
                 <div style="text-align: center;">
-                    <img id="imagePreview" style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
+                    <img id="imagePreview"
+                         style="display:none; max-width: 200px; border-radius: 4px; margin: 5px auto; display: block;">
                 </div>
             </div>
 
@@ -499,24 +506,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('contactNumber').addEventListener('input', function (event) {
-            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+            let input = event.target.value.replace(/-/g, '');
 
             if (input.length > 3 && input.length <= 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3);
             } else if (input.length > 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
             }
-
-            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+            event.target.value = input;
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         flatpickr("#hireDate", {
-            locale: "ja", // 일본어 설정
-            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            locale: "ja",
+            dateFormat: "Y-m-d",
             altInput: true,
-            altFormat: "Y年m月d日" // 화면에 표시될 형식
+            altFormat: "Y年m月d日"
         });
     });
 </script>

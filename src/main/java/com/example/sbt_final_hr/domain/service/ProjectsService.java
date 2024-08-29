@@ -83,14 +83,22 @@ public class ProjectsService {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
 
-        // 기존 프로젝트를 찾고 등록일은 변경하지 않도록 설정
         Projects existingProject = projectsRepository.findById(projectsRequest.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectsRequest.getProjectId()));
 
-        Projects project = projectsRequest.toEntity(projectType);
-        project.setRegistrationDate(existingProject.getRegistrationDate()); // 기존 등록일 유지
-        projectsRepository.save(project);
-        System.out.println("업데이트 성공");
+        existingProject.setProjectName(projectsRequest.getProjectName());
+        existingProject.setWorkLocation(projectsRequest.getWorkLocation());
+        existingProject.setClientCompany(projectsRequest.getClientCompany());
+        existingProject.setStartDate(projectsRequest.getStartDate());
+        existingProject.setEndDate(projectsRequest.getEndDate());
+        existingProject.setStatus(projectsRequest.getStatus());
+        existingProject.setLatitude(projectsRequest.getLatitude());
+        existingProject.setLongitude(projectsRequest.getLongitude());
+        existingProject.setContactPhone(projectsRequest.getContactPhone());
+        existingProject.setContactName(projectsRequest.getContactName());
+        existingProject.setProjectType(projectType); // 프로젝트 타입 설정
+
+        projectsRepository.save(existingProject);
         return existingProject;
     }
 
@@ -103,7 +111,6 @@ public class ProjectsService {
         return projectsRepository.findByProjectIdIn(projectIds);
     }
 
-    //8월 5일 17:02 추가중
     public List<Projects> findRecentProjectsByIds(List<Long> projectIds) {
         List<Projects> projects = projectsRepository.findByProjectIdIn(projectIds);
 
@@ -112,7 +119,5 @@ public class ProjectsService {
                 .limit(3)
                 .collect(Collectors.toList());
     }
-
-
 
 }

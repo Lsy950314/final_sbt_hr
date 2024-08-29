@@ -26,22 +26,13 @@ public class EmployeesSkill {
     @ManyToOne
     @JoinColumn(name = "Employee_ID", nullable = false)
     private Employees employee;
-    //chatgpt는 employeeId 말고 employee 이렇게 쓰라는데 모르겠네. DB컬럼명과 혼동된다고해서.
-    //employeeId->employee
 
     @ManyToOne
     @JoinColumn(name = "Skill_Language", nullable = false)
     private Skills skill;
-    //chatgpt는 skillLanguage 말고 skill 이렇게 쓰라는데 모르겠네. DB컬럼명과 혼동된다고해서.
-    //skillLanguage->skill
 
-    //8월 3일 21:23 소수점 값을 더해주기 위해서 int -> double 변경하였습니다.
     @Column(name = "Skill_Career", nullable = false)
     private double skillCareer;
-
-//
-//    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-//    private List<EmployeesSkill> skills;
 
     public EmployeesSkillRequest toDto() {
         EmployeesSkillRequest employeesSkillRequest = new EmployeesSkillRequest();
@@ -51,10 +42,6 @@ public class EmployeesSkill {
         employeesSkillRequest.setSkillCareer(this.skillCareer);
         return employeesSkillRequest;
     }
-
-
-
-
 
 }
 

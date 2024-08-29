@@ -48,26 +48,23 @@ public class EmployeesService {
     public void updateEndDates(Long employeeId, Long projectId) {
         Projects projects = projectsRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
-        // 취소 로직을 대비해서 값을 기록해 둠
         employees.setPreviousProjectEndDate(employees.getLastProjectEndDate());
-        // 최신화
         employees.setCurrentProjectEndDate(projects.getEndDate());
-        // 프로젝트에 참여 중인 상태가 될 것이므로 대기기간 계산 로직을 위한 최근 프로젝트 종료일은 null 로 만들어 줌
         employees.setLastProjectEndDate(null);
         employeesRepository.save(employees);
-        System.out.println("날짜 수정 성공");
     }
 
     public boolean restoreEndDates(Long employeeId) {
         Employees employees = employeesRepository.findById(employeeId).orElseThrow(RuntimeException::new);
         if (employees.getPreviousProjectEndDate() != null) {
             employees.setLastProjectEndDate(employees.getPreviousProjectEndDate());
-            employees.setPreviousProjectEndDate(null);
-            employees.setCurrentProjectEndDate(null);
-            employeesRepository.save(employees);
-            return true;
+        } else {
+            employees.setLastProjectEndDate(null);
         }
-        return false;
+        employees.setPreviousProjectEndDate(null);
+        employees.setCurrentProjectEndDate(null);
+        employeesRepository.save(employees);
+        return true;
     }
 
     public void saveEmployeeSkill(EmployeesSkill employeesSkill) {
@@ -91,6 +88,10 @@ public class EmployeesService {
     }
 
     public String saveImage(MultipartFile image) throws IOException {
+        if (image == null || image.isEmpty()) {
+            return null;
+        }
+
         ClassPathResource imgDirResource = new ClassPathResource("static/img/employees/");
         File imgDir = imgDirResource.getFile();
 
@@ -140,21 +141,18 @@ public class EmployeesService {
         if (employeesRepository.updateAllocationTo(id, num)==1){
             employeesRepository.flush();
             entityManager.clear();
-            System.out.println("사원 상태 변경 성공");
             // 엔티티를 다시 로드하여 상태가 업데이트되었는지 확인
             Employees employee = employeesRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
             System.out.println("Updated allocation: " + employee.getAllocation());
             return true;
         } else {
-            System.out.println("사원 상태 변경 실패");
             return false;
         }
        
     }
 
     public List<EmployeesRequest> findAllEmployeesSummary() {
-        List<EmployeesRequest> employeesSummary = employeesRepository.findAllEmployeesSummary();
-        return employeesSummary;
+        return employeesRepository.findAllEmployeesSummary();
     }
 
     public Map<String, Integer> getCountEmployees(){
@@ -169,6 +167,11 @@ public class EmployeesService {
         countEmployees.put("unassignedEmployees", unassignedEmployees);
 
         return countEmployees;
+    }
+
+    public boolean isallocation1(long employeeId) {
+        int allocationbyEmployeeId = employeesRepository.findAllocationByEmployeeId(employeeId);
+        return allocationbyEmployeeId == 1;
     }
 
 }

@@ -7,14 +7,13 @@
     <title>プロジェクトチーム編成システム</title>
     <style>
         .status-icon img {
-            width: 20px; /* 이미지의 너비를 24px로 설정 */
-            height: 20px; /* 이미지의 높이를 24px로 설정 */
-            object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */
-            margin: 0 5px; /* 이미지 주위에 약간의 여백을 추가 */
-            vertical-align: middle; /* 텍스트와 함께 있을 때 이미지의 세로 정렬을 중앙으로 설정 */
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            margin: 0 5px;
+            vertical-align: middle;
         }
 
-        /* 상태에 따른 css 설정 */
         .project-unassigned {
         }
 
@@ -25,8 +24,8 @@
         }
 
         body {
-            overflow-y: hidden; /* Y축 스크롤 비활성화 */
-            overflow-x: auto;   /* X축 스크롤 활성화 */
+            overflow-y: hidden;
+            overflow-x: auto;
             padding: 0;
             margin: 0;
         }
@@ -57,8 +56,8 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center; /* 텍스트 가운데 정렬 */
-            padding: 15px 20px; /* a 요소에 패딩을 적용 */
+            text-align: center;
+            padding: 15px 20px;
             box-sizing: border-box;
         }
 
@@ -72,9 +71,9 @@
         }
 
         .menu-icon {
-            width: 20%; /* 이미지의 너비 설정 */
-            height: auto; /* 이미지의 높이 설정 */
-            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+            width: 20%;
+            height: auto;
+            vertical-align: middle;
         }
 
         .menus li:hover {
@@ -86,7 +85,7 @@
 
         .contents {
             background-color: #f5f5f5;
-            width: 1170px;
+            width: 82vw;
             height: auto;
             border-radius: 15px 15px 0 0;
             overflow-y: auto;
@@ -94,7 +93,7 @@
         }
 
         .contents::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .contents p {
@@ -105,25 +104,47 @@
 
         .projects {
             width: 98%;;
-            height: 82vh;
+            height: 85vh;
             margin-left: 1%;
-            background: rgba(173, 216, 230, 0.2); /* 하늘색 투명 배경 */
-            border: 1px solid rgba(173, 216, 230, 0.3); /* 투명한 경계 */
+            background: rgba(173, 216, 230, 0.2);
+            border: 1px solid rgba(173, 216, 230, 0.3);
             border-radius: 15px 15px 0 0;
-            backdrop-filter: blur(10px); /* 글라스 효과 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
-            color: #333; /* 어두운 글자색 */
-            font-family: "Arial", sans-serif; /* 깔끔한 폰트 */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-family: "Arial", sans-serif;
             text-align: center;
-            overflow-y: auto; /* 수직 스크롤바 추가 */
+            overflow-y: auto;
+
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .projects::-webkit-scrollbar {
+            display: none;
         }
 
         .projects > div {
             display: flex;
             margin-right: 40px;
-            overflow: hidden; /* Clearfix 효과를 위해 추가 */
+            overflow: hidden;
             align-items: center;
             border-bottom: 1px solid #c6c6c6;
+        }
+
+        .project-name,
+        .client-company {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+
+        #project-title,
+        #project-info .value {
+            white-space: normal;
+            overflow-wrap: break-word;
         }
 
         .allocation-header, .allocation {
@@ -139,58 +160,51 @@
         }
 
         .project-name-header, .client-company-header, .project-name, .client-company {
-            min-width: 270px;
-            max-width: 270px;
+            min-width: 24vw;
+            max-height: 3vh;
             flex: 0 0 270px;
         }
 
         .projects > div > div {
-            margin-left: 10px;
-            margin-right: 10px;
             float: left;
-            width: 200px; /* 각 div의 고정된 너비 */
-            margin-top: 10px; /* 간격을 주기 위해 추가 */
-            margin-bottom: 10px; /* 간격을 주기 위해 추가 */
-            box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
-            align-items: center; /* 텍스트 상하 중앙 정렬 */
+            margin: 10px;
+            box-sizing: border-box;
             padding-top: 5px;
-            flex-direction: column;
         }
 
         .header, .row {
-            display: contents; /* 부모 요소를 제거하고 자식 요소들을 해당 위치에 배치 */
+            display: contents;
         }
 
         .header > div {
             font-weight: bold;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
-            text-align: center; /* 텍스트 좌우 중앙 정렬 */
-            line-height: 40px; /* 상하 중앙 정렬을 위해 div 높이와 동일하게 설정 */
-            height: 40px; /* 각 div의 높이 설정 */
-            display: flex; /* flexbox를 사용하여 상하 중앙 정렬 */
-            align-items: center; /* 상하 중앙 정렬 */
-            justify-content: center; /* 좌우 중앙 정렬 */
+            text-align: center;
+            line-height: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 모달 css */
-
+        /* modal css */
         .modal {
-            display: none; /* 숨김 처리 */
-            position: fixed; /* 모달을 화면 중앙에 고정 */
-            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
             background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; /* 모달을 화면 중앙에 배치합니다. */
+            margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 75%;
@@ -199,30 +213,40 @@
         }
 
         #project-finish-modal {
-            background-color: #fefefe; /* 모달 내부 배경색을 흰색으로 설정합니다. */
+            background-color: #fefefe;
             margin: 5% auto;
-            padding: 20px; /* 모달 내부 패딩을 설정합니다. */
-            border: 1px solid #888; /* 모달 테두리를 연한 회색으로 설정합니다. */
-            width: 50%; /* 모달 너비를 화면의 75%로 설정합니다. */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
             height: auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 약간의 그림자 효과를 추가합니다. */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10pt;
         }
 
         .modal-button {
-            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 14px; /* 글자 크기 */
-            color: #fff; /* 텍스트 색상 */
+            font-family: "Noto Sans JP", sans-serif;
+            font-size: 14px;
+            color: #fff;
             background: linear-gradient(
                     45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
-            ); /* 버튼 배경색 그라데이션 */
-            border: none; /* 기본 테두리 제거 */
-            border-radius: 20px; /* 둥근 테두리 */
-            padding: 3px 8px; /* 내부 여백 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-            cursor: pointer; /* 커서 변경 */
-            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+                    #4a90e2,
+                    #87cefa
+            );
+            border: none;
+            border-radius: 20px;
+            padding: 3px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background: linear-gradient(
+                    45deg,
+                    #3a7adf,
+                    #6bbce5
+            );
+            transform: scale(1.03);
         }
 
         .modal-projects > div {
@@ -271,10 +295,10 @@
         #project-info .label {
             background-color: #71b6ff;
             font-weight: bold;
-            width: 150px; /* 가로 길이를 150px로 설정 */
-            white-space: nowrap; /* 줄바꿈 방지 */
-            overflow: hidden; /* 넘치는 텍스트는 숨김 */
-            text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+            width: 20%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             padding: 10px;
             border: 1px solid #ddd;
             vertical-align: top;
@@ -286,7 +310,7 @@
         }
 
         #project-info .value {
-            width: 80%;
+            width: 70%;
         }
 
         .modal-projectRequirements div {
@@ -303,7 +327,7 @@
         .skill-info {
             display: flex;
             flex: 1;
-            text-align: left; /* 왼쪽 정렬 */
+            text-align: left;
             align-items: center;
         }
 
@@ -315,14 +339,14 @@
 
         .experience-info {
             flex: 1;
-            text-align: center; /* 가운데 정렬 */
+            text-align: center;
         }
 
         .count-info {
             flex: 1;
-            text-align: right; /* 오른쪽 정렬 */
-            font-weight: bold; /* 기본적으로 글씨를 굵게 설정 */
-            color: black; /* 기본적으로 검은색 글씨 */
+            text-align: right;
+            font-weight: bold;
+            color: black;
         }
 
         .low-fulfillment {
@@ -340,45 +364,44 @@
             margin-bottom: 5px;
         }
 
-        /* 매칭 취소를 위한 프로젝트 요구사항 선택 모달 */
-
+        /* requirement-modal */
         #project-requirement-modal {
-            display: none; /* 숨김 처리 */
-            position: fixed; /* 모달을 화면 중앙에 고정 */
-            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
         #project-requirement-modal .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; /* 중앙 정렬 */
+            margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
         }
 
-        /* 프로젝트 추가 버튼 스타일 */
-
+        /* add-projects button */
         #add-projects {
             margin-left: 960px;
-            font-family: "Noto Sans JP", sans-serif; /* 일본어 텍스트에 어울리는 글꼴 사용 */
-            font-size: 16px; /* 글자 크기 */
-            color: #fff; /* 텍스트 색상 */
+            font-family: "Noto Sans JP", sans-serif;
+            font-size: 16px;
+            color: #fff;
             background: linear-gradient(
                     45deg,
-                    #4a90e2, /* 파란색 계열 시작 색상 */ #87cefa /* 파란색 계열 끝 색상 */
-            ); /* 버튼 배경색 그라데이션 */
-            border: none; /* 기본 테두리 제거 */
-            border-radius: 20px; /* 둥근 테두리 */
-            padding: 7px 14px; /* 내부 여백 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 상자 그림자 */
-            cursor: pointer; /* 커서 변경 */
-            transition: background 0.3s ease, transform 0.3s ease; /* 부드러운 전환 효과 */
+                    #4a90e2,
+                    #87cefa
+            );
+            border: none;
+            border-radius: 20px;
+            padding: 7px 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         a {
@@ -391,31 +414,28 @@
             gap: 10px;
         }
 
-        /* update-btn 스타일 */
+        /* update-btn */
         #update-btn, #yes-btn {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #6c757d; /* 회색 계열 */
+            background-color: #6c757d;
             color: white;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
         }
 
-        /* update-btn 호버 효과 */
         #update-btn, #yes-btn:hover {
             background-color: #5a6268;
             transform: translateY(-2px);
         }
 
-        /* update-btn 활성화 효과 */
         #update-btn, #yes-btn:active {
             background-color: #545b62;
             transform: translateY(0);
         }
 
-        /* delete-btn 스타일 */
         #delete-btn, #no-btn {
             padding: 10px 20px;
             border: none;
@@ -427,13 +447,11 @@
             transition: background-color 0.3s, transform 0.3s;
         }
 
-        /* delete-btn 호버 효과 */
         #delete-btn, #no-btn:hover {
             background-color: #b11212;
             transform: translateY(-2px);
         }
 
-        /* delete-btn 활성화 효과 */
         #delete-btn, #no-btn:active {
             background-color: #b11212;
             transform: translateY(0);
@@ -468,7 +486,7 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             font-size: 14px;
-            margin-left: 8px;
+            margin-left: 2vw;
             margin-right: 8px;
             margin-bottom: 12px;
             box-sizing: border-box;
@@ -497,7 +515,6 @@
             display: none;
         }
 
-        /* 레이아웃 조정 */
         #filterByProjectName, #filterByProjectId {
             width: 220px;
         }
@@ -506,15 +523,12 @@
             width: 180px;
         }
 
-        /* 라벨 스타일링 */
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
             color: #34495e;
         }
-
-        /* 전체 필터 및 정렬 섹션 스타일 */
 
         .filter-container {
             display: flex;
@@ -525,7 +539,7 @@
             display: none;
         }
 
-        .container{
+        .container {
             height: auto;
             width: 95vw;
         }
@@ -535,12 +549,12 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid #b7c6ec;
-            padding: 10px 0; /* 각 항목 간격 조정 */
+            padding: 10px 0;
             transition: background-color 0.3s ease;
         }
 
         .cancel-requirement-item:hover {
-            background-color: #f0f0f0; /* 마우스가 올라갈 때 배경색을 어둡게 변경 */
+            background-color: #f0f0f0;
         }
 
         .cancel-requirement-skill-info {
@@ -566,15 +580,15 @@
         }
 
         .cancel-requirement-modal {
-            display: none; /* 숨김 처리 */
-            position: fixed; /* 모달을 화면 중앙에 고정 */
-            z-index: 1; /* 다른 콘텐츠 위에 표시 */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4); /* 투명한 배경 */
+            background-color: rgba(0, 0, 0, 0.4);
         }
 
         .cancel-requirement-modal-content {
@@ -601,36 +615,37 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 15px;
-            transition: background-color 0.3s ease; /* 배경색 전환 애니메이션 */
+            transition: background-color 0.3s ease;
         }
 
         .complete-button:hover {
-            background-color: #218838; /* 호버 시 더 짙은 녹색 */
+            background-color: #218838;
+            transform: scale(1.03);
         }
 
-        .cancel-employees-select{
+        .cancel-employees-select {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .cancel-employees-select select {
-            width: 75%; /* select 요소의 너비를 부모 요소에 맞춤 */
-            margin-bottom: 10px; /* 버튼과의 간격 조정 */
+            width: 75%;
+            margin-bottom: 10px;
         }
 
         .cancel-employees-select button {
-            width: 40%; /* 버튼의 너비를 컨텐츠에 맞춤 */
-            padding: 8px 16px; /* 버튼의 패딩 조정 */
-            background-color: #d9534f; /* 버튼의 배경색 */
-            color: white; /* 버튼의 텍스트 색상 */
-            border: none; /* 버튼의 테두리 제거 */
-            border-radius: 5px; /* 버튼의 모서리 둥글게 */
-            cursor: pointer; /* 버튼에 커서 포인터 추가 */
+            width: 40%;
+            padding: 8px 16px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         .cancel-employees-select button:hover {
-            background-color: #c9302c /* 버튼에 호버 시 더 진한 배경색 */
+            background-color: #c9302c
         }
 
         .projectFinishAndYesOrNoButton {
@@ -648,17 +663,17 @@
             background-color: #f9f9f9;
             height: auto;
             max-height: 750pt;
-            overflow-y: auto; /* 수직 스크롤을 활성화 */
-            scrollbar-width: none; /* Firefox에서 스크롤바 숨김 */
+            overflow-y: auto;
+            scrollbar-width: none;
         }
 
         #assigned-employees-evaluation::-webkit-scrollbar {
-            width: 0px;  /* Chrome, Safari, Opera에서 스크롤바 숨김 */
-            background: transparent; /* 스크롤바 트랙을 투명하게 설정 */
+            width: 0px;
+            background: transparent;
         }
 
         #assigned-employees-evaluation::-webkit-scrollbar-thumb {
-            background-color: transparent; /* 스크롤바 핸들을 투명하게 설정 */
+            background-color: transparent;
         }
 
         .employee-table {
@@ -677,26 +692,26 @@
         .employee-table-row {
             display: flex;
             width: 100%;
-            align-items: center; /* 수직 방향으로 가운데 정렬 */
-            justify-content: center; /* 수평 방향으로 가운데 정렬 */
-            text-align: center; /* 텍스트를 가운데 정렬 */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             border: 1px solid #ddd;
         }
 
         .employee-table-cell {
-            flex: 1; /* 모든 셀을 동일한 너비로 */
+            flex: 1;
             padding: 8px;
             box-sizing: border-box;
-            border-left: 1px solid #ddd; /* Add left border */
-            border-right: 1px solid #ddd; /* Add right border */
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
         }
 
         .employee-table-cell:first-child {
-            border-left: none; /* Remove left border for the first cell */
+            border-left: none;
         }
 
         .employee-table-cell:last-child {
-            border-right: none; /* Remove right border for the last cell */
+            border-right: none;
         }
 
         .header-cell {
@@ -706,28 +721,36 @@
             border: 1px solid #ddd;
         }
 
-
         .header-cell {
             font-weight: bold;
             background-color: #71b6ff;
             text-align: center;
-            border-left: 1px solid #ddd; /* Add left border */
-            border-right: 1px solid #ddd; /* Add right border */
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
         }
 
         .header-cell:first-child {
-            border-left: none; /* Remove left border for the first header cell */
+            border-left: none;
         }
 
         .header-cell:last-child {
-            border-right: none; /* Remove right border for the last header cell */
+            border-right: none;
         }
 
 
+        #lookOnMap {
+            border: none;
+            border-radius: 5px;
+            background-color: #87cefa;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
 
-
-
-
+        #lookOnMap:hover {
+            background-color: #6bb5e6;
+            transform: translateY(-2px);
+        }
 
     </style>
 </head>
@@ -760,19 +783,18 @@
         <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
         </p>
 
-        <!--        필터링 및 정렬        -->
         <div class="filter-container">
-            <input type="text" id="filterByProjectName" placeholder="プロジェクト名で検索" oninput="filterByProjectName()">
+            <input type="text" id="filterByProjectName" placeholder="プロジェクト名で検索"
+                   oninput="filterByProjectName()">
 
-            <input type="text" id="filterByClientName" placeholder="クライアント会社で検索" oninput="filterByClientName()">
+            <input type="text" id="filterByClientName" placeholder="クライアント会社で検索"
+                   oninput="filterByClientName()">
 
             <select id="sortProjectsByDate" th:onchange="sortProjectsByDate()">
                 <option value="startDate" th:selected="${sortBy == 'startDate'}">開始日順</option>
                 <option value="endDate" th:selected="${sortBy == 'endDate'}">終了日順</option>
             </select>
-            <!--    직접 검색하지 않고 아이디 값 받아와서 검색할 때     -->
             <input type="text" id="filterByProjectId" oninput="filterByProjectId()" style="display: none">
-            <!--        프로젝트 상태에 따라 필터링         -->
             <select id="filterByStatus" th:onchange="filterByStatus()">
                 <option value="" th:selected="${filterStatus == null}">全て</option>
                 <option value="-1" th:selected="${filterStatus == -1}">配属必要</option>
@@ -817,53 +839,46 @@
         </div>
     </div>
 
-    <!-- 모달 팝업 -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span style="display: none;" class="close-button" onclick="closeModal()">&times;</span>
-            <!-- 새로운 제목 영역 추가 -->
             <div style="display: flex; justify-content: space-between; align-items: center">
-                <div>
+                <div style="width: 55%">
                     <span id="project-title" style="font-weight: bold; font-size: 25px;"></span>
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button id="assign-btn" onclick="navigateToMatchManagement()">配属ページへ</button>
-                    <button id="employeeList-btn" th:onclick="'readEmployeesByProjectId('+${session.projectId}+')'"> 配属社員リストへ
+                    <button id="employeeList-btn"> 配属社員リストへ
                     </button>
                     <button id="update-btn">修正</button>
                     <button id="delete-btn">削除</button>
                 </div>
             </div>
             <div id="modal-body">
-                <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
         </div>
     </div>
 
-    <!-- 배정 취소를 위한 프로젝트 요구사항 선택 모달 -->
     <div id="project-requirement-modal" class="cancel-requirement-modal">
         <div class="cancel-requirement-modal-content">
             <h3>配属中のスキルを選んでください</h3>
             <div id="modal-requirements-list" class="modal-requirements-list">
-                <!-- 여기서 요구사항 목록을 렌더링 -->
             </div>
         </div>
     </div>
 
-    <!-- 완료 모달 팝업 -->
     <div id="complete-modal" class="modal">
         <div class="modal-content" id="project-finish-modal">
             <span style="display: none;" class="close-button" onclick="closeCompleteModal()">&times;</span>
             <div id="complete-modal-body">
-                <!-- 여기에 동적으로 내용이 추가됩니다 -->
             </div>
         </div>
     </div>
 </div>
 
+
 <script th:inline="javascript">
-    // 이미지 설정
     const skillIconMap = {
         'java': '/img/skillicons/java-icon.png',
         'javascript': '/img/skillicons/javascript-icon.png',
@@ -877,7 +892,6 @@
         'css': '/img/skillicons/css-icon.png',
         'vue.js': '/img/skillicons/vue-js-icon.png',
         'react': '/img/skillicons/react-icon.png'
-        // 필요에 따라 추가
     };
 
     function showProjectDetails(projectId) {
@@ -889,6 +903,10 @@
 
                 document.getElementById('project-title').textContent = `${data.project.projectId} . ${data.project.projectName}`;
                 document.getElementById('project-dates').textContent = `${data.project.startDate} ~ ${data.project.endDate}`;
+
+                document.getElementById('employeeList-btn').onclick = function () {
+                    readEmployeesByProjectId(projectId);
+                };
 
                 let statusText;
                 let statusClass = "";
@@ -904,7 +922,7 @@
                         statusText = "終了";
                         break;
                     default:
-                        statusText = "ステータスが分かりません"; // 예상치 못한 값에 대한 기본값
+                        statusText = "ステータスが分かりません。";
                 }
 
                 const modalBody = document.getElementById('modal-body');
@@ -913,7 +931,7 @@
     <div class="project-info-left">
         <div class="data-row">
             <div class="label">勤務先住所:</div>
-            <div class="value">${data.project.workLocation}  <button onclick="visitGoogleMap(${data.project.latitude}, ${data.project.longitude})">地図で見る</button>
+            <div class="value">${data.project.workLocation}  <button  id="lookOnMap" onclick="visitGoogleMap(${data.project.latitude}, ${data.project.longitude})">地図で見る</button>
             </div>
         </div>
         <div class="data-row">
@@ -989,7 +1007,7 @@
                 openModal();
             })
             .catch(error => {
-                console.error('Error fetching project details:', error);
+                console.error('プロジェクトの詳細を取得中にエラーが発生しました:', error);
             });
     }
 
@@ -1003,36 +1021,31 @@
         const employeeDropdown = document.getElementById('employeeDropdown');
         const selectedIndex = employeeDropdown.value;
         if (selectedIndex === "") {
-            alert("社員を選んでください");
+            alert("社員を選んでください。");
             return;
         }
-        // console.log('epId 배열:' + epID);
         const employeeId = epID[selectedIndex];
-        // console.log('내가 선택한 사원:' + employeeId);
         fetch(`/getProjectRequirements?projectId=${projectId}`)
             .then(response => response.json())
             .then(projectRequirements => {
-                // 데이터 타입 확인
-                // console.log("Received projectRequirements:", projectRequirements);
                 if (Array.isArray(projectRequirements)) {
                     openProjectRequirementModal(projectId, employeeId, projectRequirements);
                 } else {
-                    console.error("Error: projectRequirements is not an array");
+                    console.error("エラー: projectRequirements が配列ではありません");
                 }
             })
             .catch(error => {
-                console.error('Error fetching project requirements:', error);
+                console.error('要求スキルの取得中にエラーが発生しました:', error);
             });
     }
 
     function openProjectRequirementModal(projectId, employeeId, projectRequirements) {
         const modalRequirementsList = document.getElementById('modal-requirements-list');
-        modalRequirementsList.innerHTML = '';  // 기존 내용을 초기화
+        modalRequirementsList.innerHTML = '';
 
-        // 프로젝트 요구사항을 모달에 렌더링
         projectRequirements.forEach(req => {
             const requirementElement = document.createElement('div');
-            requirementElement.classList.add('cancel-requirement-item'); // 새로운 클래스명 추가
+            requirementElement.classList.add('cancel-requirement-item');
             requirementElement.innerHTML = `
             <div class="cancel-requirement-skill-info">
              <input type="radio" name="projectRequirement" value="${req.id}">
@@ -1062,26 +1075,27 @@
         });
 
 
-
         const confirmButton = document.createElement('button');
         confirmButton.textContent = '配属キャンセル';
         confirmButton.style.width = '20%';
         confirmButton.style.margin = '3% auto 0 auto';
 
-// 배경색과 호버 시 배경색 적용
-        confirmButton.style.backgroundColor = '#d9534f'; // 버튼의 배경색을 중간 정도로 설정
+        confirmButton.style.backgroundColor = '#d9534f';
         confirmButton.style.color = 'white';
         confirmButton.style.border = 'none';
         confirmButton.style.borderRadius = '5px';
         confirmButton.style.cursor = 'pointer';
 
-// 호버 시 배경색 변화
-        confirmButton.onmouseover = function() {
-            confirmButton.style.backgroundColor = '#c9302c'; // 호버 시 더 진한 배경색
+        confirmButton.onmouseover = function () {
+            confirmButton.style.backgroundColor = '#c9302c';
         };
 
-        confirmButton.onmouseout = function() {
-            confirmButton.style.backgroundColor = '#d9534f'; // 기본 배경색으로 되돌림
+        confirmButton.onmouseout = function () {
+            confirmButton.style.backgroundColor = '#d9534f';
+        };
+
+        confirmButton.onclick = function () {
+            confirmCancelAssignment(projectId, employeeId);
         };
 
         modalRequirementsList.appendChild(confirmButton);
@@ -1092,7 +1106,7 @@
     function confirmCancelAssignment(projectId, employeeId) {
         const selectedRequirement = document.querySelector('input[name="projectRequirement"]:checked');
         if (!selectedRequirement) {
-            alert('項目を選んでください');
+            alert('項目を選んでください。');
             return;
         }
 
@@ -1115,17 +1129,16 @@
         })
             .then(response => response.text())
             .then(result => {
-                if (result === "취소 성공") {
-                    alert("配属がキャンセルされました");
-                    // 필요하다면 모달을 닫거나 페이지를 새로고침
+                if (result === "キャンセル成功") {
+                    alert("配属がキャンセルされました。");
                     location.reload()
                 } else {
-                    alert("配属がキャンセルが失敗しました");
+                    alert("配属がキャンセルが失敗しました。");
                 }
             })
             .catch(error => {
-                console.error('Error cancelling assignment:', error);
-                alert("配属がキャンセルの途中エラーが発生しました");
+                console.error('配属キャンセル中にエラーが発生しました:', error);
+                alert("配属がキャンセルの途中エラーが発生しました。");
             });
     }
 
@@ -1141,7 +1154,6 @@
         projects.forEach(project => {
             const projectStatus = project.querySelector('.status').textContent.trim();
 
-            // 선택된 상태와 프로젝트 상태가 일치하거나, 모든 상태가 선택된 경우
             if (selectedStatus === "" || projectStatus === selectedStatus) {
                 project.style.display = '';
             } else {
@@ -1206,7 +1218,6 @@
             return projectDate >= currentDate;
         });
 
-        // 현재 날짜보다 이전의 항목들 (과거)
         const pastProjects = projects.filter(project => {
             const projectDate = new Date(project.querySelector(`.${sortClass}`).textContent);
             return projectDate < currentDate;
@@ -1218,19 +1229,16 @@
             return aValue - bValue;
         });
 
-        // 과거 항목들을 정렬
         pastProjects.sort((a, b) => {
             const aValue = new Date(a.querySelector(`.${sortClass}`).textContent);
             const bValue = new Date(b.querySelector(`.${sortClass}`).textContent);
             return aValue - bValue;
         });
 
-        // 정렬된 순서대로 다시 배치
         futureProjects.concat(pastProjects).forEach(project => {
             projectsContainer.appendChild(project);
         });
 
-        // 그 아래에 과거 프로젝트를 배치
         pastProjects.forEach(project => {
             projectsContainer.appendChild(project);
         });
@@ -1245,7 +1253,7 @@
     }
 
     function deleteProject(projectId) {
-        if (confirm("本当にプロジェクトを削除しますか")) {
+        if (confirm("本当にプロジェクトを削除しますか？")) {
             location.href = "/deleteProject?id=" + projectId;
         }
     }
@@ -1255,7 +1263,7 @@
     }
 
     document.querySelectorAll('.complete-button').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const projectId = this.closest('.project').querySelector('.project-id').textContent.trim();
             showCompleteModal(projectId, this);
         });
@@ -1268,12 +1276,11 @@
 
         const projectEndDate = new Date(endDateElement.textContent.trim());
 
-        // 현재 날짜를 가져옵니다.
         const currentDate = new Date();
 
         if (currentDate < projectEndDate) {
             alert("まだ終了日以前です。");
-            return; // 로직을 중단
+            return;
         }
 
         const completeModalBody = document.getElementById('complete-modal-body');
@@ -1308,7 +1315,6 @@
                 projectFinishTitle.innerHTML = `プロジェクト「${data.project.projectName}」を完了処理しますか？`;
 
                 const employeesDiv = document.getElementById('assigned-employees');
-// 해당 프로젝트 참여 사원에게 해당 안건 점수 부여
                 employeesDiv.innerHTML = `
     <p>参加社員の評価点数入力してください</p>
     <div class="employee-table">
@@ -1327,7 +1333,7 @@
                 <div class="employee-table-cell">
                     <select class="star-point" id="star-point-${index}"
                     style="padding: 0; margin:0 ">
-                        <option value="" selected>選択</option> <!-- 기본값으로 선택될 옵션 -->
+                        <option value="" selected>選択</option>
                         ${[...Array(11)].map((_, i) => `
                             <option value="${(i / 2).toFixed(1)}">${(i / 2).toFixed(1)}</option>`).join('')}
                     </select> / 5
@@ -1337,19 +1343,18 @@
 </div>`;
 
 
-                // "はい" 버튼 클릭 시 completeProject 함수 호출
                 document.getElementById('yes-btn').addEventListener('click', function () {
                     const allSelects = document.querySelectorAll('select[id^="star-point-"]');
                     let allValid = true;
 
-                    allSelects.forEach(select => {
-                        if (select.value === "") { // "スコア選択"이 선택된 상태
+                    for (const select of allSelects) {
+                        if (select.value === "") {
                             allValid = false;
                             alert('すべての社員に点数を選択してください。');
                             select.focus();
-                            return false; // 반복문 종료
+                            break;
                         }
-                    });
+                    }
 
 
                     if (allValid) {
@@ -1361,7 +1366,7 @@
                                 skillId: ep.skill.skillId,
                                 projectDuration: parseFloat(ep.projectDuration)
                             };
-                            console.log(result); // 콘솔에 출력
+                            console.log(result);
                             return result;
                         });
                         completeProject(projectId, projectParticipantsInfos);
@@ -1370,7 +1375,7 @@
                 });
             })
             .catch(error => {
-                console.error('Error fetching project info:', error);
+                console.error('プロジェクト情報の取得中にエラーが発生しました:', error);
             });
 
         openCompleteModal();
@@ -1387,16 +1392,15 @@
         })
             .then(response => response.text())
             .then(text => {
-                console.log('Response from server:', text);
                 if (text === "プロジェクトが完了処理されました") {
                     closeCompleteModal();
                     window.location.href = '/readAllProjects';
                 } else {
-                    console.error('Unexpected response:', text);
+                    console.error('予期しないレスポンス:', text);
                 }
             })
             .catch(error => {
-                console.error('Error completing project:', error);
+                console.error('プロジェクトの完了中にエラーが発生しました:', error);
             });
     }
 
@@ -1434,7 +1438,6 @@
             const startDate = new Date(startDateElement.textContent.trim());
             const endDate = new Date(endDateElement.textContent.trim());
 
-            // 시작일이나 종료일이 현재 날짜에 임박했을 경우 스타일 추가
             const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
             const imminentEnd = (endDate - currentDate) / (1000 * 60 * 60 * 24);
 
@@ -1463,8 +1466,6 @@
         sortProjectsByDate();
     }
 
-
 </script>
 </body>
-
 </html>

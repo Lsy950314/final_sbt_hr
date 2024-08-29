@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Flatpickr CSS -->
+    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <!-- Flatpickr 일본어 설정 -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,9 +53,9 @@
         }
 
         .menu-icon {
-            width: 20%; /* 이미지의 너비 설정 */
-            height: auto; /* 이미지의 높이 설정 */
-            vertical-align: middle; /* 이미지와 텍스트를 수직으로 가운데 정렬 */
+            width: 20%;
+            height: auto;
+            vertical-align: middle;
         }
 
         .menus li:hover {
@@ -208,7 +206,7 @@
             autocomplete.addListener('place_changed', function () {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
-                    alert("No details available for input: '" + place.name + "'");
+                    alert("入力された場所の詳細は利用できません: '" + place.name + "'");
                     return;
                 }
 
@@ -237,17 +235,17 @@
 
             requirementItem.innerHTML = `
     <div class="form-group">
-        <label for="projectRequirements[${index}].skill.skillId">Skill:</label>
+        <label for="projectRequirements[${index}].skill.skillId">言語:</label>
         <select id="projectRequirements[${index}].skill.skillId" name="projectRequirements[${index}].skill.skillId" required>
             ${skillOptions}
         </select>
     </div>
     <div class="form-group">
-        <label for="projectRequirements[${index}].requiredExperience">Required Experience:</label>
-        <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" required>
+        <label for="projectRequirements[${index}].requiredExperience">要求スキル経験:</label>
+        <input type="number" id="projectRequirements[${index}].requiredExperience" name="projectRequirements[${index}].requiredExperience" step="0.1" required>ヶ月
     </div>
     <div class="form-group">
-        <label for="projectRequirements[${index}].requiredCount">Required Count:</label>
+        <label for="projectRequirements[${index}].requiredCount">要求人数:</label>
         <input type="number" id="projectRequirements[${index}].requiredCount" name="projectRequirements[${index}].requiredCount" required>
     </div>
     <button type="button" onclick="removeRequirement(this)" style="position: absolute; right: 5px; bottom: 5px; background:none;border:none;font-size:20px;color:#e74c3c;">&times;</button>
@@ -261,35 +259,34 @@
                 const requirementItem = button.parentElement;
                 requirementItem.remove();
             } else {
-                alert('At least one requirement must be present.');
+                alert('少なくとも1つの要求スキルが必要です。');
             }
         }
 
         function validateForm() {
             const requirementsContainer = document.getElementById('requirementsContainer');
             if (requirementsContainer.children.length === 0) {
-                alert('At least one requirement must be added.');
+                alert('少なくとも1つの要求スキルが必要です。');
                 return false;
             }
 
-            // 각 필드가 채워져 있는지 확인
             const requirementItems = document.querySelectorAll('.requirement-item');
             for (const item of requirementItems) {
                 const skill = item.querySelector('select');
                 const experience = item.querySelector('input[name$=".requiredExperience"]');
                 const count = item.querySelector('input[name$=".requiredCount"]');
                 if (!skill.value || !experience.value || !count.value) {
-                    alert('All requirement fields must be filled out.');
+                    alert('すべての要求スキルのフィールドを入力してください。');
                     return false;
                 }
 
-                if (parseFloat(experience.value) <= 0) {
-                    alert('Required Experience must be a positive number.');
+                if (parseFloat(experience.value) < 0) {
+                    alert('必要な経験値は正の数でなければなりません。');
                     return false;
                 }
 
                 if (parseFloat(count.value) <= 0) {
-                    alert('Required Count must be a positive number.');
+                    alert('必要な人数は正の数でなければなりません。');
                     return false;
                 }
             }
@@ -399,24 +396,24 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('contactPhone').addEventListener('input', function (event) {
-            let input = event.target.value.replace(/-/g, ''); // 현재 입력된 값에서 하이픈을 제거합니다.
+            let input = event.target.value.replace(/-/g, '');
 
             if (input.length > 3 && input.length <= 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3); // 4자리 이상일 경우 첫 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3);
             } else if (input.length > 7) {
-                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11); // 8자리 이상일 경우 두 번째 하이픈을 추가합니다.
+                input = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
             }
 
-            event.target.value = input; // 하이픈이 포함된 값을 입력 필드에 설정합니다.
+            event.target.value = input;
         });
 
     });
     document.addEventListener('DOMContentLoaded', function() {
         flatpickr("#startDate, #endDate", {
-            locale: "ja", // 일본어 설정
-            dateFormat: "Y-m-d", // 날짜 형식 (연-월-일)
+            locale: "ja",
+            dateFormat: "Y-m-d",
             altInput: true,
-            altFormat: "Y年m月d日" // 화면에 표시될 형식
+            altFormat: "Y年m月d日"
         });
     });
 </script>
