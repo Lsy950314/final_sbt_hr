@@ -23,13 +23,11 @@ public class SkillsController {
     public ResponseEntity<Void> skillDelete(@RequestBody Map<String, String> payload) {
         Long id = Long.parseLong(payload.get("id"));
         skillsService.deleteSkills(id);
-        return ResponseEntity.ok().build(); // 상태 코드 200 OK 반환
+        return ResponseEntity.ok().build();
     }
-
 
     @GetMapping("/skillUpdate")
     public String skillUpdateController(Model model, @RequestParam Map<String, String> payload) {
-        // `payload`: `{"id":"pk"}` 이 경우에는 키-밸류 쌍이 하나 뿐일 것
         long id = Long.parseLong(payload.get("id"));
         Skills skills = skillsService.getSkillsById((long) id);
         SkillsRequest skillsRequest = new SkillsRequest();

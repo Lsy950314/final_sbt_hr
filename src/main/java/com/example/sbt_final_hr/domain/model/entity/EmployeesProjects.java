@@ -44,6 +44,6 @@ public class EmployeesProjects {
     private Double projectDuration;
 
     @Column(name ="star_point", nullable = true)
-    private Double starPoint; //별점요소 추가
+    private Double starPoint;
 
 }

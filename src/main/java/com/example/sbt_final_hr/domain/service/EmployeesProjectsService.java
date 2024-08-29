@@ -58,7 +58,6 @@ public class EmployeesProjectsService {
         try {
             Projects projects = projectsService.getProjectById(projectsId);
             Double projectDuration = projects.getTotalProjectDurationInMonths();
-            System.out.println(projectDuration);
 
             EmployeesProjectsRequest employeesProjectsRequest = new EmployeesProjectsRequest();
 
@@ -71,11 +70,8 @@ public class EmployeesProjectsService {
 
             EmployeesProjects savedEntity = employeesProjectsRepository.save(employeesProjectsRequest.toEntity());
 
-            // save가 null을 반환하지 않으면 성공으로 간주하고 true 반환
-            System.out.println("사원-프로젝트 테이블 추가 성공");
             return savedEntity != null;
         } catch (Exception e) {
-            // 예외가 발생하면 false 반환
             e.printStackTrace();
             return false;
         }
@@ -94,14 +90,10 @@ public class EmployeesProjectsService {
         return employees;
     }
 
-    //Transactional import 바꿈(jakarta->springframework)
-    //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateStarPointOfProjectParticipants(Long projectId, List<Map<String, Object>> projectParticipantsInfos) {
         for (Map<String, Object> participantInfo : projectParticipantsInfos) {
             Long employeeId = ((Number) participantInfo.get("employeeId")).longValue();
             Double starPoint = ((Number) participantInfo.get("starPoint")).doubleValue();
-            //ORA-12838: 병렬로 수정한 후 객체를 읽거나 수정할 수 없습니다 오류 때문에
             DefaultTransactionDefinition def = new DefaultTransactionDefinition();
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             TransactionStatus status = transactionManager.getTransaction(def);
@@ -114,16 +106,11 @@ public class EmployeesProjectsService {
                 throw e;
             }
 
-
         }
     }
 
     public List<EmployeesProjects> findByEmployeeId(long employeeId) {
         return employeesProjectsRepository.findByEmployee_EmployeeId(employeeId);
     }
-
-
-
-
 
 }

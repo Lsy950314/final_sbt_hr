@@ -27,12 +27,12 @@ public interface ProjectsRepository extends JpaRepository<Projects, Long> {
     List<ProjectsRequest> findAllProjectsSummary();
 
     @Query("SELECT COUNT(p) FROM Projects p")
-    int countAllProjects(); // 총 프로젝트 개수
+    int countAllProjects();
 
     @Query("SELECT COUNT(p) FROM Projects p WHERE p.status = 1")
-    int countAssignedProjects(); // 현재 진행 중인 프로젝트 (배정된 프로젝트)
+    int countAssignedProjects();
 
     @Query("SELECT COUNT(p) FROM Projects p WHERE p.status = -1")
-    int countUnassignedProjects(); // 미배정 프로젝트 개수
+    int countUnassignedProjects();
 
 }

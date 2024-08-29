@@ -24,7 +24,7 @@ public class ProjectsRequest {
     private LocalDate startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
-    private int status = -1; // -> 배치 로직 거치고 나면 1로 바뀌어 있음
+    private int status = -1;
     private Double latitude;
     private Double longitude;
     private String contactPhone;
@@ -33,7 +33,7 @@ public class ProjectsRequest {
     private LocalDateTime registrationDate;
     private Long projectTypeId;
 
-    private List<ProjectRequirementsRequest> projectRequirements; // 요구스킬 스택을 위한 추가 부분
+    private List<ProjectRequirementsRequest> projectRequirements;
 
     public Projects toEntity(ProjectTypes projectType) {
         Projects project = new Projects();
@@ -72,7 +72,6 @@ public class ProjectsRequest {
     public ProjectsRequest() {
     }
 
-    // 필요한 필드만 포함하는 생성자
     public ProjectsRequest(Long projectId, String projectName, String clientCompany, LocalDate startDate, LocalDate endDate, int status) {
         this.projectId = projectId;
         this.projectName = projectName;

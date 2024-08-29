@@ -1,6 +1,5 @@
 package com.example.sbt_final_hr.domain.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,8 +72,6 @@ public class Projects {
         LocalDate adjustedEndDate = startDate.plusMonths(monthsBetween);
         long daysRemaining = ChronoUnit.DAYS.between(adjustedEndDate, endDate);
 
-
-        // 남은 일수를 개월 단위로 변환하여 합산
         return monthsBetween + (Double) (daysRemaining / 30.4375);
     }
 }

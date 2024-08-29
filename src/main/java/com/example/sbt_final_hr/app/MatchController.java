@@ -33,31 +33,18 @@ public class MatchController {
         this.projectRequirementsService = projectRequirementsService;
     }
 
-    @GetMapping("/check")
-    public String check() {
-        return "employees/check";
-    }
-
-
     @GetMapping("/matchManagement")
     public String matchManagement(HttpSession session, Model model, SessionStatus sessionStatus) {
         Long projectId = (Long) session.getAttribute("projectId");
         List<ProjectRequirements> projectRequirements = projectRequirementsService.getRequirementsByProjectId(projectId);
-//      List<ProjectRequirements> projectRequirements = (List<ProjectRequirements>) session.getAttribute("projectRequirements");
-//      List<EmployeesProjects> employeesProjects = (List<EmployeesProjects>) session.getAttribute("employeesProjects");
         if (projectId == null || projectRequirements == null) {
             return "redirect:/readAllProjects";
         }
 
-
         Projects projects = projectsService.getProjectById(projectId);
 
         model.addAttribute("Projects", projects);
-
         model.addAttribute("projectRequirements", projectRequirements);
-
-//      model.addAttribute("employeesProjects", employeesProjects);
-
         model.addAttribute("currentDate", LocalDate.now());
 
         Map<Employees, Integer> filteredEmployeesTransitTimes = matchService.filterEmployeesForProject(projects);
