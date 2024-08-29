@@ -25,12 +25,10 @@ public class SkillsService {
         return skillsRepository.findAll();
     }
 
-
     public void saveSkills(SkillsRequest skillsRequest) {
         Skills skills = skillsRequest.toEntity();
         skillsRepository.save(skills);
     }
-
 
     public void deleteSkills(Long id) {
         skillsRepository.deleteById(id);

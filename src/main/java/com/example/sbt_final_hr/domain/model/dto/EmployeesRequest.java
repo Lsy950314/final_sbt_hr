@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class EmployeesRequest {
-    private Long employeeId;  // ID 필드 추가
+    private Long employeeId;
     private String name;
     private String address;
     private Double latitude;
@@ -41,7 +41,7 @@ public class EmployeesRequest {
 
     public Employees toEntity() throws IOException {
         Employees employee = new Employees();
-        employee.setEmployeeId(this.employeeId); // ID 설정
+        employee.setEmployeeId(this.employeeId);
         employee.setName(this.name);
         employee.setAddress(this.address);
         employee.setLatitude(this.latitude);
@@ -59,7 +59,7 @@ public class EmployeesRequest {
     }
 
     public Employees toEntity(String imgPath) throws IOException {
-        this.setImage(imgPath); // 이미지를 설정합니다.
+        this.setImage(imgPath);
         return this.toEntity();
     }
 
@@ -67,11 +67,9 @@ public class EmployeesRequest {
         return existingImage;
     }
 
-    //8월 9일 10:44 read 기능 최적화 관련 시도중
     public EmployeesRequest() {
     }
 
-    //8월 9일 10:44 read 기능 최적화 관련 시도중
     public EmployeesRequest(Long employeeId, String name, Double starPointAverage, LocalDate currentProjectEndDate, LocalDate lastProjectEndDate, LocalDate hireDate, int allocation) {
         this.employeeId = employeeId;
         this.name = name;
@@ -81,12 +79,5 @@ public class EmployeesRequest {
         this.hireDate = hireDate;
         this.allocation = allocation;
     }
-
-
-
-
-
-
-
 
 }

@@ -13,15 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeesSkillRepository extends JpaRepository<EmployeesSkill, Long>{
-    List<EmployeesSkill> findByEmployeeEmployeeId(Long employeeId);
-//    void deleteByEmployeeEmployeeId(Long employeeId);
-
     @Modifying
     @Transactional
     @Query("DELETE FROM EmployeesSkill es WHERE es.employee.employeeId = :employeeId")
     void deleteByEmployeeEmployeeId(@Param("employeeId") Long employeeId);
 
-    //8월 3일 21:12 시도중
     @Modifying
     @Transactional
     @Query("UPDATE EmployeesSkill es SET es.skillCareer = es.skillCareer + :projectDuration WHERE es.employee.employeeId = :employeeId AND es.skill.skillId = :skillId")

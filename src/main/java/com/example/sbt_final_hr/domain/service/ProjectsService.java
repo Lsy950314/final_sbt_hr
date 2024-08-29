@@ -83,7 +83,6 @@ public class ProjectsService {
         ProjectTypes projectType = projectTypesRepository.findById(projectsRequest.getProjectTypeId())
                 .orElseThrow(() -> new RuntimeException("Invalid project type ID"));
 
-        // 기존 프로젝트를 찾고 등록일은 변경하지 않도록 설정
         Projects existingProject = projectsRepository.findById(projectsRequest.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectsRequest.getProjectId()));
 
@@ -99,9 +98,7 @@ public class ProjectsService {
         existingProject.setContactName(projectsRequest.getContactName());
         existingProject.setProjectType(projectType); // 프로젝트 타입 설정
 
-        // 업데이트된 프로젝트를 저장
         projectsRepository.save(existingProject);
-        System.out.println("업데이트 성공");
         return existingProject;
     }
 
@@ -114,7 +111,6 @@ public class ProjectsService {
         return projectsRepository.findByProjectIdIn(projectIds);
     }
 
-    //8월 5일 17:02 추가중
     public List<Projects> findRecentProjectsByIds(List<Long> projectIds) {
         List<Projects> projects = projectsRepository.findByProjectIdIn(projectIds);
 
@@ -123,7 +119,5 @@ public class ProjectsService {
                 .limit(3)
                 .collect(Collectors.toList());
     }
-
-
 
 }
