@@ -45,11 +45,6 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     @Modifying
     int updateAllocationTo(Long id, int num);
 
-//    @Query("SELECT new com.example.sbt_final_hr.domain.model.dto.EmployeesRequest(" +
-//            "e.employeeId, e.name, e.starPointAverage, e.currentProjectEndDate, e.lastProjectEndDate, e.hireDate, e.allocation) " +
-//            "FROM Employees e ORDER BY e.hireDate DESC")
-
-    //8월 9일 10:13 read기능 최적화 관련 시도중
     @Query("SELECT new com.example.sbt_final_hr.domain.model.dto.EmployeesRequest(" +
             "e.employeeId, e.name, e.starPointAverage, e.currentProjectEndDate, e.lastProjectEndDate, e.hireDate, e.allocation) " +
             "FROM Employees e ORDER BY e.hireDate DESC")
@@ -64,6 +59,8 @@ public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     @Query("SELECT COUNT(e) FROM Employees e WHERE e.allocation =-1")
     int countUnassignedEmployees(); // 현재 대기중인 사원 수
 
+    @Query("SELECT e.allocation FROM Employees e WHERE e.employeeId = :employeeId")
+    int findAllocationByEmployeeId(@Param("employeeId") Long employeeId);
 
 
 }

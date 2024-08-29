@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
@@ -132,8 +134,8 @@ public class EmployeesController {
         response.put("preferredProjectType", employee.getProjectType().getProjectTypeName());
         response.put("latitude", employee.getLatitude());
         response.put("longitude", employee.getLongitude());
-        //8월 7일 10:48 시도중
         response.put("image", employee.getImage());
+
 
         List<Map<String, Object>> skills = new ArrayList<>();
         for (EmployeesSkill skill : employeeSkills) {
@@ -221,11 +223,41 @@ public class EmployeesController {
         return "redirect:/employees";
     }
 
+//    @GetMapping("/delete/{id}")
+//    public String deleteEmployee(@PathVariable Long id) {
+//        employeesService.deleteById(id);
+//        return "redirect:/employees";
+//    }
+
+//    @GetMapping("/delete/{id}")
+//    public String deleteEmployee(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+//        // 서비스 계층에서 allocation 값 확인
+//        if (employeesService.isallocation1(id)) {
+//            // allocation이 1인 경우, 삭제를 막고 알림 메시지를 설정
+//            redirectAttributes.addFlashAttribute("alertMessage", "배정이 되어 있기 때문에 삭제를 할 수 없습니다.");
+//            return "redirect:/employees"; // 삭제를 막고 리스트 페이지로 리다이렉트
+//        }
+//
+//        // allocation이 1이 아닌 경우, 삭제 수행
+//        employeesService.deleteById(id);
+//        return "redirect:/employees"; // 삭제 후 리스트 페이지로 리다이렉트
+//    }
+
     @GetMapping("/delete/{id}")
-    public String deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        if (employeesService.isallocation1(id)) {
+            // allocation이 1인 경우, 삭제 불가
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // allocation이 1이 아닌 경우, 삭제 수행
         employeesService.deleteById(id);
-        return "redirect:/employees";
+        return ResponseEntity.ok().build();
     }
+
+
+
+
 
 
 

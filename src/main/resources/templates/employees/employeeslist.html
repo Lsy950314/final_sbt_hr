@@ -548,6 +548,7 @@
 
 </head>
 <body>
+
 <div class="container" style="display: flex">
     <div class="menu">
         <ul class="menus">
@@ -624,7 +625,7 @@
                      th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : '配属なし'}"></div>
                 <div class="last-project-end-date"
                      th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
-                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : '案件経験なし'}"></div>
+                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : '完了経験なし'}"></div>
                 <div class="hire-date" th:text="${e.hireDate}"></div>
                 <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
@@ -642,24 +643,7 @@
     </div>
 </div>
 <script>
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const allocationSelect = document.getElementById('filterByAllocation');
-    //     const urlParams = new URLSearchParams(window.location.search);
-    //     const filterAllocation = urlParams.get('filterAllocation');
-    //
-    //     if (filterAllocation === '-1') {
-    //         // URL 파라미터에 filterAllocation=-1이 있으면 未配属 상태로 설정
-    //         allocationSelect.value = '-1';
-    //     } else {
-    //         // 그렇지 않으면 全体の状態으로 설정
-    //         allocationSelect.value = "";
-    //     }
-    //
-    //     // 필요할 경우 필터를 적용하는 함수 호출
-    //     if (filterAllocation !== null) {
-    //         applyFiltersByAllocation();
-    //     }
-    // });
+
     document.addEventListener('DOMContentLoaded', function() {
         const allocationSelect = document.getElementById('filterByAllocation');
         const sortOptionsSelect = document.getElementById('sortOptions');
@@ -1012,19 +996,28 @@
 
     function deleteEmployee(employeeId) {
         if (confirm("本当に削除しますか？")) {
-            location.href = `/employees/delete/${employeeId}`;
+            // 서버에 DELETE 요청을 보내는 대신 GET 요청으로 처리
+            fetch(`/employees/delete/${employeeId}`, { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        // 삭제가 성공적으로 완료된 경우
+                        location.href = '/employees'; // 삭제 후 리스트 페이지로 리다이렉트
+                    } else if (response.status === 403) {
+                        // 삭제가 불가능한 경우 (allocation이 1인 경우)
+                        alert("現在案件に配属されているため削除ができません。"); // alert 창을 띄워 사용자에게 알림
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     }
+
 
     function readProjectsByEmployeeId(employeeId) {
         location.href = "/readAllProjects?employeeId=" + employeeId;
     }
 
-
-
-
-    // 페이지 로드 시 실행되는 함수. index에서 '대기중인 사원 보러가기' 버튼 클릭시 실행.
-    // 페이지 로드 시 실행되는 함수
     document.addEventListener('DOMContentLoaded', function () {
         // URL에서 파라미터 추출
         const urlParams = new URLSearchParams(window.location.search);
@@ -1092,6 +1085,7 @@
                 } else if (rating >= 4.5) {
                     ratingElement.style.color = 'rgba(255, 220, 0, 1)';
                     ratingElement.style.fontWeight = 'bold';
+                    ratingElement.style.textShadow = '1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black';
                 }
             }
         });
@@ -1155,14 +1149,9 @@
     }
 
 
-
-
-
-
-
-
-
-
 </script>
+
+
+
 </body>
 </html>
