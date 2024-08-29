@@ -227,7 +227,11 @@ public class ProjectController {
                     } else {
                         hasChanges = true;
                     }
+                } else {
+                    hasChanges = true;
                 }
+            } else {
+                hasChanges = true;
             }
         }
 
