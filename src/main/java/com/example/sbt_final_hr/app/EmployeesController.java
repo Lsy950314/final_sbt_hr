@@ -220,11 +220,9 @@ public class EmployeesController {
     @GetMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         if (employeesService.isallocation1(id)) {
-            // allocation이 1인 경우, 삭제 불가
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // allocation이 1이 아닌 경우, 삭제 수행
         employeesService.deleteById(id);
         return ResponseEntity.ok().build();
     }
