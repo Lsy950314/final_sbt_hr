@@ -78,7 +78,7 @@
             <div class="form-group">
                 <label for="employeesSkillRequests[${index}].skillCareer">経歴年数</label>
                 <input type="number" id="employeesSkillRequests[${index}].skillCareer" style="font-size: 14pt" name="employeesSkillRequests[${index}].skillCareer" required
-                min="1" oninput="this.value = Math.max(this.value, 1)">
+                min="0.1" step="any" oninput="this.value = Math.max(this.value, 0)">
                 ヶ月
             </div>
             <button type="button" id="delete-btn" onclick="removeSkillCareer(this)">追加取り消し</button>
@@ -530,7 +530,7 @@
 
                     <label>経歴年数</label>
                     <input type="number" style="font-size: 14pt" th:field="*{employeesSkillRequests[__${iter.index}__].skillCareer}"
-                    required min="1" oninput="this.value = Math.max(this.value, 1)"/>ヶ月
+                    required min="0.1" step="any" oninput="this.value = Math.max(this.value, 0)"/>ヶ月
                     <button type="button" id="delete-btn" style="margin-top: 8px" onclick="removeSkillCareer(this)">追加取り消し</button>
                 </div>
             </div>
@@ -545,6 +545,12 @@
 
             <input type="text" id="latitude" style="display: none;" th:field="*{latitude}"/><br/>
             <input type="text" id="longitude" style="display: none;" th:field="*{longitude}"/><br/>
+            <input type="text" id="lastProjectEndDate" style="display: none;" th:field="*{lastProjectEndDate}"/><br/>
+            <input type="text" id="currentProjectEndDate" style="display: none;" th:field="*{currentProjectEndDate}"/><br/>
+            <input type="text" id="starPointAverage" style="display: none;" th:field="*{starPointAverage}"/><br/>
+            <input type="text" id="allocation" style="display: none;" th:field="*{allocation}"/><br/>
+
+
             <div id="map" style="display: none;"></div>
 
 

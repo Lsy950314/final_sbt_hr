@@ -613,7 +613,7 @@
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))" th:each="e : ${session.employees}">
                 <div class="allocation">
-                    <img alt="Unassigned" src="/img/employees/unassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == -1}">
+                    <img alt="Unassigned" src="/img/employees/unassigned(2).png" style="width: 15px; height: 15px;" th:if="${e.allocation == -1}">
                     <img alt="Preassigned" src="/img/employees/preassigned.png" style="width: 15px; height: 15px;" th:if="${e.allocation == 0}">
                     <img alt="Assigned" src="/img/employees/verified-user.png" style="width: 25px; height: 25px;" th:if="${e.allocation == 1}">
                 </div>
@@ -1012,7 +1012,6 @@
                 });
         }
     }
-
 
     function readProjectsByEmployeeId(employeeId) {
         location.href = "/readAllProjects?employeeId=" + employeeId;
