@@ -67,7 +67,7 @@
 
         .contents {
             background-color: #f5f5f5;
-            width: 1170px;
+            width: 82vw;
             height: auto;
             border-radius: 15px 15px 0 0;
             overflow-y: auto;
@@ -173,8 +173,9 @@
         }
 
         #add-employees {
-            margin-right: 20px;
-            margin-top: 70px;
+            margin-right: 220px;
+            margin-top: 30px;
+            font-size: 16px;
         }
 
         #employee-info .data-row {
@@ -510,6 +511,7 @@
                     <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
                     社員リスト
                 </a>
+
             </li>
             <li>
                 <a href="/readAllProjects">
@@ -556,7 +558,7 @@
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))" th:each="e : ${session.employees}">
                 <div class="allocation">
-                    <img alt="Unassigned" src="/img/employees/unassigned.png" style="width: 15px; height: 15px;"
+                    <img alt="Unassigned" src="/img/employees/unassigned(2).png" style="width: 15px; height: 15px;"
                          th:if="${e.allocation == -1}">
                     <img alt="Preassigned" src="/img/employees/preassigned.png" style="width: 15px; height: 15px;"
                          th:if="${e.allocation == 0}">
@@ -571,7 +573,7 @@
                      th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : '配属なし'}"></div>
                 <div class="last-project-end-date"
                      th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
-                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : '完了経験なし'}"></div>
+                     th:text="${e.currentProjectEndDate != null ? '現在配属中' : (e.lastProjectEndDate != null ? e.lastProjectEndDate : '完了経験なし')}"></div>
                 <div class="hire-date" th:text="${e.hireDate}"></div>
                 <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
@@ -745,7 +747,7 @@
         </div>
         <div class="data-row">
             <div class="label">最近プロジェクト完了日:</div>
-            <div class="value">${data.lastProjectEndDate || 'プロジェクト経験なし'}</div>
+            <div class="value">${data.currentProjectEndDate != null ? '現在配属中' : (data.lastProjectEndDate != null ? data.lastProjectEndDate : 'プロジェクト経験なし')}</div>
         </div>
         <div class="data-row">
             <div class="label">現在プロジェクト終了日:</div>
