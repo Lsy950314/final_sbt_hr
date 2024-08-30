@@ -126,17 +126,18 @@
                     }
                 });
 
-                const experienceElements = document.querySelectorAll('.requirement-experience');
-                experienceElements.forEach(function (element) {
-                    const experience = parseFloat(element.getAttribute('data-experience'));
-                    if (!isNaN(experience)) {
-                        const years = Math.round((experience / 12) * 10) / 10;
-                        const displayYears = years % 1 === 0 ? years.toFixed(0) : years.toFixed(1);
-                        element.textContent = `必要経歴: ${displayYears}年`;
-                    } else {
-                        element.textContent = '必要経歴: 0年';
-                    }
-                });
+            });
+
+            const experienceElements = document.querySelectorAll('.requirement-experience');
+            experienceElements.forEach(function (element) {
+                const experience = parseFloat(element.getAttribute('data-experience'));
+                if (!isNaN(experience)) {
+                    const years = Math.round((experience / 12) * 10) / 10;
+                    const displayYears = years % 1 === 0 ? years.toFixed(0) : years.toFixed(1);
+                    element.textContent = `必要経歴: ${displayYears}年`;
+                } else {
+                    element.textContent = '必要経歴: 0年';
+                }
             });
 
             document.querySelectorAll('.employee-skill').forEach(function (element) {
