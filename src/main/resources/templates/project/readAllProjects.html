@@ -56,9 +56,11 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
+            text-align: start;
             padding: 15px 20px;
             box-sizing: border-box;
+            font-family: 'Meiryo UI',serif;
+            font-weight: bold;
         }
 
 
@@ -182,7 +184,9 @@
         }
 
         .header > div {
+            font-family: "Meiryo UI",serif;
             font-weight: bold;
+            font-size: 17px;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
             text-align: center;
@@ -298,6 +302,7 @@
         }
 
         #project-info .label {
+            font-family: "Meiryo UI",serif;
             background-color: #71b6ff;
             font-weight: bold;
             width: 20%;
@@ -757,6 +762,8 @@
             transform: translateY(-2px);
         }
 
+
+
     </style>
 </head>
 <body>
@@ -765,19 +772,19 @@
         <ul class="menus">
             <li>
                 <a href="/index">
-                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/home (2).png" alt="" class="menu-icon">
                     メイン·ページ
                 </a>
             </li>
             <li>
                 <a href="/employees">
-                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/businessman.png" alt="" class="menu-icon">
                     社員リスト
                 </a>
             </li>
             <li>
                 <a href="/readAllProjects">
-                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/project (1).png" alt="" class="menu-icon">
                     プロジェクトリスト
                 </a>
             </li>
@@ -785,7 +792,7 @@
     </div>
 
     <div class="contents">
-        <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
+        <p style="font-family: 'Meiryo UI',serif;font-weight: bold;font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
         </p>
 
         <div class="filter-container">
@@ -849,7 +856,7 @@
             <span style="display: none;" class="close-button" onclick="closeModal()">&times;</span>
             <div style="display: flex; justify-content: space-between; align-items: center">
                 <div style="width: 55%">
-                    <span id="project-title" style="font-weight: bold; font-size: 25px;"></span>
+                    <span id="project-title" style="font-family:'Meiryo UI',serif;font-weight: bold; font-size: 25px;"></span>
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
