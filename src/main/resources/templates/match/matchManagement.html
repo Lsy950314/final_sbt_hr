@@ -697,6 +697,32 @@
             font-weight: bold;
         }
 
+        .detail-button {
+            font-family: "Noto Sans JP", sans-serif;
+            font-size: 14px;
+            color: #fff;
+            background: linear-gradient(
+                    45deg,
+                    #4a90e2,
+                    #87cefa
+            );
+            border: none;
+            border-radius: 20px;
+            padding: 3px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .detail-button:hover {
+            background: linear-gradient(
+                    45deg,
+                    #3a7adf,
+                    #6bbce5
+            );
+            transform: scale(1.03);
+        }
+
     </style>
 </head>
 <body>
@@ -737,7 +763,8 @@
         <div class="scroll-container">
             <div class="employee-list" th:each="e : ${employeeEntries}">
                 <div class="employee-entry" th:attr="data-employee-id=${e.key.getEmployeeId()}">
-                    <div class="employee-name" th:text="${e.key.getName()}"></div>
+                    <div class="employee-name" th:text="${e.key.getName()}" style="display: inline-block; margin-right: 1vw;"></div>
+                    <button class="detail-button" th:onclick="'location.href=\'/employees?employeeId=' + ${e.key.getEmployeeId()} + '\''" style="display: inline-block;">詳細</button>
                     <div class="employee-preferred-skill">
                         <img class="preferred-skill-icon skill-icon"
                              th:data-skill-name="${e.key.getSkill() != null ? e.key.getSkill().getSkillName().toLowerCase() : ''}">
