@@ -591,7 +591,7 @@
                     <img th:src="'/img/employees/allocated(2).png'"
                          alt="現在配属中"
                          th:if="${e.currentProjectEndDate != null}"
-                         style="width: 16px; height: 16px; margin-right: 5px;">
+                         style="width: 12px; height: 12px; margin-right: 5px;">
                     <span th:text="${e.currentProjectEndDate != null ? '現在配属中' : ''}"></span>
 
                     <!-- 配属なし 인 경우 (이미지 없음) -->
@@ -601,7 +601,7 @@
                     <img th:src="'/img/employees/noexperience.png'"
                          alt="完了経験なし"
                          th:if="${e.currentProjectEndDate == null && e.lastProjectEndDate == null}"
-                         style="width: 16px; height: 16px; margin-right: 5px;">
+                         style="width: 12px; height: 12px; margin-right: 5px;">
                     <span th:text="${e.currentProjectEndDate == null && e.lastProjectEndDate == null ? '完了経験なし' : ''}"></span>
 
                 </div>
@@ -760,7 +760,7 @@
 <div class="employeeIdAndNameAndButton">
 <div id="employee-title" style="font-family: 'Meiryo UI',serif;font-weight: bold; font-size: 25px;">${data.employeeId}.${data.name}</div>
 <div>
-    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">プロジェクト参加履歴</button>
+    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">参加案件情報詳細</button>
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
     <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">削除</button>
 </div>
