@@ -1293,7 +1293,7 @@
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `
 <div class="projectFinishAndYesOrNoButton">
-<div id="project-finish-title" style="font-weight: bold; font-size: 25px;">プロジェクトを完了処理しますか？</div>
+<div id="project-finish-title" style="font-family:'Meiryo UI', serif;font-weight: bold; font-size: 20px;">プロジェクトを完了処理しますか？</div>
                             <div id="complete-button-container">
                                 <button id="yes-btn">はい</button>
                                 <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
@@ -1323,10 +1323,10 @@
 
                 const employeesDiv = document.getElementById('assigned-employees');
                 employeesDiv.innerHTML = `
-    <p>参加社員の評価点数入力してください</p>
+    <p style="font-family: 'Meiryo UI', serif;font-weight:bold;font-size:15px">参加社員の評価点数入力してください</p>
     <div class="employee-table">
     <div class="employee-table-header">
-        <div class="employee-table-row">
+        <div class="employee-table-row" style="font-family:'Meiryo UI', serif;font-weight:bold;">
             <div class="employee-table-cell header-cell">社員番号また名前</div>
             <div class="employee-table-cell header-cell">担当プログラミング言語</div>
             <div class="employee-table-cell header-cell">評価点数</div>
