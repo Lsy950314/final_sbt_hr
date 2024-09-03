@@ -119,7 +119,6 @@ public class MatchService {
 
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
-
     private int getDurationWithMode(double employeeLatitude, double employeeLongitude, double projectLatitude, double projectLongitude, String modeKey) throws IOException {
         HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(request -> request.setParser(JSON_FACTORY.createJsonObjectParser()));
 
@@ -149,21 +148,10 @@ public class MatchService {
     }
 
     public Map<Employees, Integer> filterEmployeesForProject(Projects project) {
-        long startTime = System.currentTimeMillis();
 
-        long step1StartTime = System.currentTimeMillis();
         List<Employees> filteredEmployeesByRequirements = findEmployeesByProjectRequirements(project);
-        long step1EndTime = System.currentTimeMillis();
 
-        long step2StartTime = System.currentTimeMillis();
         Map<Employees, Integer> finalEmployees = filterByCommutingTime(filteredEmployeesByRequirements, project);
-        long step2EndTime = System.currentTimeMillis();
-
-        long endTime = System.currentTimeMillis();
-
-//        System.out.println("Total time: " + (endTime - startTime) + " milliseconds");
-//        System.out.println("Step 1 (filterEmployeesByProjectRequirements) took: " + (step1EndTime - step1StartTime) + " milliseconds");
-//        System.out.println("Step 2 (filterByCommutingTime) took: " + (step2EndTime - step2StartTime) + " milliseconds");
 
         return finalEmployees;
     }

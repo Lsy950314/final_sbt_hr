@@ -132,6 +132,11 @@
             overflow: hidden;
             align-items: center;
             border-bottom: 1px solid #c6c6c6;
+            transition: background-color 0.3s ease;
+        }
+
+        .projects > div:hover {
+            background-color: rgba(173, 216, 230, 0.4);
         }
 
         .project-name,
@@ -787,7 +792,7 @@
     </div>
 
     <div class="contents">
-        <p style="font-family: 'Meiryo UI',serif;font-weight: bold;font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
+        <p style="font-family: 'Meiryo UI',serif;font-weight: bold;font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト登録</button></span>
         </p>
 
         <div class="filter-container">
@@ -1438,12 +1443,15 @@
     function updateProjectDatesStyles() {
         const projects = document.querySelectorAll('.projects > .project');
         const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
 
         projects.forEach(project => {
             const startDateElement = project.querySelector('.start-date');
             const endDateElement = project.querySelector('.end-date');
             const startDate = new Date(startDateElement.textContent.trim());
             const endDate = new Date(endDateElement.textContent.trim());
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
 
             const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
             const imminentEnd = (endDate - currentDate) / (1000 * 60 * 60 * 24);
