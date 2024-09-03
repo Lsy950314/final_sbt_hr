@@ -1406,6 +1406,7 @@
             .then(text => {
                 if (text === "プロジェクトが完了処理されました") {
                     closeCompleteModal();
+                    alert("プロジェクトの完了処理が正常に完了しました。");
                     window.location.href = '/readAllProjects';
                 } else {
                     console.error('予期しないレスポンス:', text);
