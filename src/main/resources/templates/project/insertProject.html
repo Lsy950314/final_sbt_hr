@@ -39,9 +39,11 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
+            text-align: start;
             padding: 15px 20px;
             box-sizing: border-box;
+            font-family: 'Meiryo UI',serif;
+            font-weight: bold;
         }
 
         .menus {
@@ -63,6 +65,7 @@
             color: #fff;
             border-top-right-radius: 40px;
             border-bottom-right-radius: 40px;
+            width: 100%;
         }
 
         a {
@@ -302,26 +305,26 @@
         <ul class="menus">
             <li>
                 <a href="/index">
-                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/home (2).png" alt="" class="menu-icon">
                     メイン·ページ
                 </a>
             </li>
             <li>
                 <a href="/employees">
-                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/businessman.png" alt="" class="menu-icon">
                     社員リスト
                 </a>
             </li>
             <li>
                 <a href="/readAllProjects">
-                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/project (1).png" alt="" class="menu-icon">
                     プロジェクトリスト
                 </a>
             </li>
         </ul>
     </div>
     <div class="insert-contents">
-        <h1>プロジェクト登録</h1>
+        <h1 style="font-family: 'Meiryo UI', serif; font-weight: bold; font-size: 26px">プロジェクト登録</h1>
         <form th:action="@{/createProject}" th:object="${projectsRequest}" method="post" class="form-container"
               onsubmit="return validateForm()">
             <div class="form-group">

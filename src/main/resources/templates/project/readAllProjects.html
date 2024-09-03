@@ -56,9 +56,11 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
+            text-align: start;
             padding: 15px 20px;
             box-sizing: border-box;
+            font-family: 'Meiryo UI',serif;
+            font-weight: bold;
         }
 
 
@@ -130,6 +132,11 @@
             overflow: hidden;
             align-items: center;
             border-bottom: 1px solid #c6c6c6;
+            transition: background-color 0.3s ease;
+        }
+
+        .projects > div:hover {
+            background-color: rgba(173, 216, 230, 0.4);
         }
 
         .project-name,
@@ -177,7 +184,9 @@
         }
 
         .header > div {
+            font-family: "Meiryo UI",serif;
             font-weight: bold;
+            font-size: 17px;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
             text-align: center;
@@ -293,6 +302,7 @@
         }
 
         #project-info .label {
+            font-family: "Meiryo UI",serif;
             background-color: #71b6ff;
             font-weight: bold;
             width: 20%;
@@ -752,6 +762,8 @@
             transform: translateY(-2px);
         }
 
+
+
     </style>
 </head>
 <body>
@@ -760,19 +772,19 @@
         <ul class="menus">
             <li>
                 <a href="/index">
-                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/home (2).png" alt="" class="menu-icon">
                     メイン·ページ
                 </a>
             </li>
             <li>
                 <a href="/employees">
-                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/businessman.png" alt="" class="menu-icon">
                     社員リスト
                 </a>
             </li>
             <li>
                 <a href="/readAllProjects">
-                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/project (1).png" alt="" class="menu-icon">
                     プロジェクトリスト
                 </a>
             </li>
@@ -780,7 +792,7 @@
     </div>
 
     <div class="contents">
-        <p style="font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト追加</button></span>
+        <p style="font-family: 'Meiryo UI',serif;font-weight: bold;font-size: 26px">プロジェクトリスト <span><button th:onclick="createProject()" id="add-projects">プロジェクト登録</button></span>
         </p>
 
         <div class="filter-container">
@@ -844,7 +856,7 @@
             <span style="display: none;" class="close-button" onclick="closeModal()">&times;</span>
             <div style="display: flex; justify-content: space-between; align-items: center">
                 <div style="width: 55%">
-                    <span id="project-title" style="font-weight: bold; font-size: 25px;"></span>
+                    <span id="project-title" style="font-family:'Meiryo UI',serif;font-weight: bold; font-size: 25px;"></span>
                     <span id="project-dates" style="margin-left: 10px; font-size: 18px; color: grey;"></span>
                 </div>
                 <div style="display: flex; gap: 10px;">
@@ -1286,7 +1298,7 @@
         const completeModalBody = document.getElementById('complete-modal-body');
         completeModalBody.innerHTML = `
 <div class="projectFinishAndYesOrNoButton">
-<div id="project-finish-title" style="font-weight: bold; font-size: 25px;">プロジェクトを完了処理しますか？</div>
+<div id="project-finish-title" style="font-family:'Meiryo UI', serif;font-weight: bold; font-size: 20px;">プロジェクトを完了処理しますか？</div>
                             <div id="complete-button-container">
                                 <button id="yes-btn">はい</button>
                                 <button id="no-btn" onclick="closeCompleteModal()">いいえ</button>
@@ -1316,10 +1328,10 @@
 
                 const employeesDiv = document.getElementById('assigned-employees');
                 employeesDiv.innerHTML = `
-    <p>参加社員の評価点数入力してください</p>
+    <p style="font-family: 'Meiryo UI', serif;font-weight:bold;font-size:15px">参加社員の評価点数入力してください</p>
     <div class="employee-table">
     <div class="employee-table-header">
-        <div class="employee-table-row">
+        <div class="employee-table-row" style="font-family:'Meiryo UI', serif;font-weight:bold;">
             <div class="employee-table-cell header-cell">社員番号また名前</div>
             <div class="employee-table-cell header-cell">担当プログラミング言語</div>
             <div class="employee-table-cell header-cell">評価点数</div>
@@ -1431,12 +1443,15 @@
     function updateProjectDatesStyles() {
         const projects = document.querySelectorAll('.projects > .project');
         const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
 
         projects.forEach(project => {
             const startDateElement = project.querySelector('.start-date');
             const endDateElement = project.querySelector('.end-date');
             const startDate = new Date(startDateElement.textContent.trim());
             const endDate = new Date(endDateElement.textContent.trim());
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
 
             const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
             const imminentEnd = (endDate - currentDate) / (1000 * 60 * 60 * 24);

@@ -39,9 +39,11 @@
             display: block;
             width: 100%;
             height: 100%;
-            text-align: center;
+            text-align: start;
             padding: 15px 20px;
             box-sizing: border-box;
+            font-family: 'Meiryo UI',serif;
+            font-weight: bold;
         }
 
         .menus {
@@ -67,7 +69,7 @@
 
         .contents {
             background-color: #f5f5f5;
-            width: 1170px;
+            width: 82vw;
             height: auto;
             border-radius: 15px 15px 0 0;
             overflow-y: auto;
@@ -105,6 +107,11 @@
             overflow: hidden;
             align-items: center;
             border-bottom: 1px solid #c6c6c6;
+            transition: background-color 0.3s ease;
+        }
+
+        .members > div:hover {
+            background-color: rgba(173, 216, 230, 0.4);
         }
 
         .allocation-header, .allocation {
@@ -173,8 +180,9 @@
         }
 
         #add-employees {
-            margin-right: 20px;
-            margin-top: 70px;
+            margin-right: 220px;
+            margin-top: 30px;
+            font-size: 16px;
         }
 
         #employee-info .data-row {
@@ -445,7 +453,9 @@
         }
 
         .header > div {
+            font-family: "Meiryo UI",serif;
             font-weight: bold;
+            font-size: 17px;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
             text-align: center;
@@ -488,6 +498,10 @@
             height: auto;
             width: 95vw;
         }
+        
+        .label {
+            font-family: "Meiryo UI",serif;
+        }
 
 
     </style>
@@ -501,26 +515,27 @@
         <ul class="menus">
             <li>
                 <a href="/index">
-                    <img src="/img/dashBoard/mainPage.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/home (2).png" alt="" class="menu-icon">
                     メイン·ページ
                 </a>
             </li>
             <li>
                 <a href="/employees">
-                    <img src="/img/dashBoard/employee-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/businessman.png" alt="" class="menu-icon">
                     社員リスト
                 </a>
+
             </li>
             <li>
                 <a href="/readAllProjects">
-                    <img src="/img/dashBoard/project-list.png" alt="" class="menu-icon">
+                    <img src="/img/dashBoard/project (1).png" alt="" class="menu-icon">
                     プロジェクトリスト
                 </a>
             </li>
         </ul>
     </div>
     <div class="contents">
-        <p style="display: flex; justify-content: space-between; align-items: center; font-size: 26px">社員リスト <span><button
+        <p style="display: flex; justify-content: space-between; align-items: center;font-family: 'Meiryo UI',serif; font-size: 26px; font-weight: bold;">社員リスト <span><button
                 id="add-employees"
                 th:onclick="createEmployee()">社員追加</button></span></p>
 
@@ -556,7 +571,7 @@
                 (${e.allocation} == 0 ? 'allocation-preassigned' :
                 (${e.allocation} == 1 ? 'allocation-assigned' : '')))" th:each="e : ${session.employees}">
                 <div class="allocation">
-                    <img alt="Unassigned" src="/img/employees/unassigned.png" style="width: 15px; height: 15px;"
+                    <img alt="Unassigned" src="/img/employees/unassigned(2).png" style="width: 15px; height: 15px;"
                          th:if="${e.allocation == -1}">
                     <img alt="Preassigned" src="/img/employees/preassigned.png" style="width: 15px; height: 15px;"
                          th:if="${e.allocation == 0}">
@@ -565,13 +580,32 @@
                 </div>
                 <div class="employee-name" th:text="${e.name}"></div>
                 <div class="employee-rating"
-                     th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : '評価なし'}"></div>
+                     th:text="${e.starPointAverage != null ? T(java.lang.Math).round(e.starPointAverage * 10) / 10.0 : 'なし'}"></div>
                 <div class="current-project-end-date"
                      th:attr="data-current-project-end-date=${e.currentProjectEndDate}"
                      th:text="${e.currentProjectEndDate !=null ? e.currentProjectEndDate : '配属なし'}"></div>
                 <div class="last-project-end-date"
-                     th:attr="data-last-project-end-date=${e.lastProjectEndDate}"
-                     th:text="${e.lastProjectEndDate !=null ? e.lastProjectEndDate : '完了経験なし'}"></div>
+                     th:attr="data-last-project-end-date=${e.lastProjectEndDate}">
+
+                    <!-- 現在配属中 인 경우 -->
+                    <img th:src="'/img/employees/allocated(2).png'"
+                         alt="現在配属中"
+                         th:if="${e.currentProjectEndDate != null}"
+                         style="width: 12px; height: 12px; margin-right: 5px;">
+                    <span th:text="${e.currentProjectEndDate != null ? '現在配属中' : ''}"></span>
+
+                    <!-- 配属なし 인 경우 (이미지 없음) -->
+                    <span th:text="${e.currentProjectEndDate == null && e.lastProjectEndDate != null ? e.lastProjectEndDate : ''}"></span>
+
+                    <!-- 完了経験なし 인 경우 -->
+                    <img th:src="'/img/employees/noexperience.png'"
+                         alt="完了経験なし"
+                         th:if="${e.currentProjectEndDate == null && e.lastProjectEndDate == null}"
+                         style="width: 12px; height: 12px; margin-right: 5px;">
+                    <span th:text="${e.currentProjectEndDate == null && e.lastProjectEndDate == null ? '完了経験なし' : ''}"></span>
+
+                </div>
+
                 <div class="hire-date" th:text="${e.hireDate}"></div>
                 <div class="seeDetails">
                     <button class="modal-button" th:data-employee-id="${e.employeeId}">詳細を見る</button>
@@ -724,9 +758,9 @@
                             const employeeImage = data.image ? data.image : defaultImage;
                             employeeDetails.innerHTML = `
 <div class="employeeIdAndNameAndButton">
-<div id="employee-title" style="font-weight: bold; font-size: 25px;">${data.employeeId}.${data.name}</div>
+<div id="employee-title" style="font-family: 'Meiryo UI',serif;font-weight: bold; font-size: 25px;">${data.employeeId}.${data.name}</div>
 <div>
-    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">プロジェクト参加履歴</button>
+    <button id="projectList-btn" onclick="readProjectsByEmployeeId(${data.employeeId})">参加案件情報詳細</button>
     <button id="update-btn" onclick="updateEmployee(${data.employeeId})">修正</button>
     <button id="delete-btn" onclick="deleteEmployee(${data.employeeId})">削除</button>
 </div>
@@ -745,7 +779,7 @@
         </div>
         <div class="data-row">
             <div class="label">最近プロジェクト完了日:</div>
-            <div class="value">${data.lastProjectEndDate || 'プロジェクト経験なし'}</div>
+            <div class="value">${data.currentProjectEndDate != null ? '現在配属中' : (data.lastProjectEndDate != null ? data.lastProjectEndDate : 'プロジェクト経験なし')}</div>
         </div>
         <div class="data-row">
             <div class="label">現在プロジェクト終了日:</div>
