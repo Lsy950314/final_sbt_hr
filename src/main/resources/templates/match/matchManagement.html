@@ -297,13 +297,19 @@
                 // console.log(pr)
                 const requirementDiv = document.createElement('div');
                 const experienceYear = (pr.requiredExperience / 12).toFixed(1);
-                requirementDiv.textContent = `${pr.skill.skillName}, 経歴: ${experienceYear}年`;
+                const skillName = pr.skill.skillName.toLowerCase();
+                const iconSrc = skillIconMap[skillName] || '';
+
+                requirementDiv.innerHTML = `
+            <img src="${iconSrc}" alt="${pr.skill.skillName}" class="skill-icon" style="margin-right: 5px;">
+            ${pr.skill.skillName}, 経歴: ${experienceYear}年
+        `;
                 requirementDiv.setAttribute('data-requirement-id', pr.id);
                 requirementDiv.classList.add('requirement-option');
 
                 requirementDiv.addEventListener('click', function () {
                     const projectRequirementsId = this.getAttribute('data-requirement-id');
-                    console.log(projectRequirementsId)
+                    // console.log(projectRequirementsId)
                     assignEmployeeToProject(employeeId, projectId, projectRequirementsId);
                     closeModal();
                 });
