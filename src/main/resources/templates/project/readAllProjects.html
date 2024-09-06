@@ -1443,12 +1443,15 @@
     function updateProjectDatesStyles() {
         const projects = document.querySelectorAll('.projects > .project');
         const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
 
         projects.forEach(project => {
             const startDateElement = project.querySelector('.start-date');
             const endDateElement = project.querySelector('.end-date');
             const startDate = new Date(startDateElement.textContent.trim());
             const endDate = new Date(endDateElement.textContent.trim());
+            startDate.setHours(0, 0, 0, 0);
+            endDate.setHours(0, 0, 0, 0);
 
             const imminentStart = (startDate - currentDate) / (1000 * 60 * 60 * 24);
             const imminentEnd = (endDate - currentDate) / (1000 * 60 * 60 * 24);
